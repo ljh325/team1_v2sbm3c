@@ -4,7 +4,6 @@ build/
 !**/src/test/**/build/
 
 ### STS ###
-application.properties
 .apt_generated
 .factorypath
 .springBeans
