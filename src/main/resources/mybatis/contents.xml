@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.contents.ContentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 게시글 등록 -->
+  <insert id = "create" parameterType="dev.mvc.contents.ContentsVO">
+    INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1)
+    VALUES (contents_seq.nextval, #{memberno}, #{cateno}, #{contents_admin}, #{title}, #{content}, #{recom}, #{viewcnt}, 
+                #{commentcnt}, #{passwd}, #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1})
+  </insert>
+  
+  <!-- 모든 등록된 게시글 목록 -->
+  <select id = "list_all" resultType="dev.mvc.contents.ContentsVO">
+    
+    
+  </select>
+  
+</mapper>

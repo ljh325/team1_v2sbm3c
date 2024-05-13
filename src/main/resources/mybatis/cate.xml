@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.cate.CateDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 카테고리 생성 -->
+  <insert id="create" parameterType="dev.mvc.cate.CateVO">
+    INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
+    VALUES (cate_seq.nextval, #{name}, #{namesub}, 0, sysdate, #{seqno}, 'Y', #{adminno})
+  </insert>
+  
+  <!-- 카테고리 전체보기 -->
+  <select id="list_all" resultType="dev.mvc.cate.CateVO">
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+    FROM cate
+    ORDER BY seqno ASC
+  </select>
+  
+  <!-- 카테고리 조회 -->
+  <select id="read" resultType="dev.mvc.cate.CateVO" parameterType="Integer">
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+    FROM cate
+    WHERE cateno = #{cateno}
+  </select>
+  
+  <!-- 카테고리 내용 수정  -->
+  <update id="update" parameterType="dev.mvc.cate.CateVO">
+    UPDATE cate
+    SET name=#{name}, namesub=#{namesub}, cnt=#{cnt}, rdate=sysdate, seqno=#{seqno}, visible=#{visible}
+    WHERE cateno=#{cateno}
+  </update>
+  
+  <!--  카테고리 제거  -->
+  <delete id="delete" parameterType="Integer">
+    DELETE FROM cate WHERE cateno=#{cateno}
+  </delete>
+
+  <!-- 출력 순서 높임 -->
+  <update id="update_seqno_forward" parameterType="Integer">
+    UPDATE cate
+    SET seqno= seqno -1
+    WHERE cateno = #{cateno}
+  </update>
+
+  <!-- 출력 순서 낮춤 -->
+  <update id="update_seqno_backward" parameterType="Integer">
+    UPDATE cate
+    SET seqno= seqno +1
+    WHERE cateno = #{cateno}
+  </update>
+
+  <!-- 카테고리 공개 설정 -->
+  <update id="update_visible_y" parameterType="Integer">
+    UPDATE cate 
+    SET visible='Y' 
+    WHERE cateno=#{cateno}
+  </update>
+  
+  <!-- 카테고리 비공개 설정 -->
+  <update id="update_visible_n" parameterType="Integer">
+    UPDATE cate 
+    SET visible='N' 
+    WHERE cateno=#{cateno}
+  </update>
+  
+  <!-- 회원/비회원에게 공개할 중분류 목록 -->
+  <select id="list_all_name_y" resultType="dev.mvc.cate.CateVO">
+    SELECT cateno, name, seqno, visible
+    FROM cate 
+    WHERE name IN (
+        SELECT DISTINCT name
+        FROM cate
+    ) AND namesub = '-' AND visible='Y'
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 회원/비회원에게 공개할 소분류 목록 -->
+  <select id="list_all_namesub_y" resultType="dev.mvc.cate.CateVO" parameterType="String">
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible
+    FROM cate
+    WHERE name=#{name} AND namesub != '-' AND visible='Y'
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 관리자용 검색 목록 -->
+  <select id="list_search" resultType="dev.mvc.cate.CateVO" parameterType="String">
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible
+    FROM cate
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'  
+    </if>
+        
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+  <select id="list_search_paging" resultType="dev.mvc.cate.CateVO" parameterType="Map">
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, r
+    FROM (
+        SELECT cateno, name, namesub, cnt, rdate, seqno, visible, rownum as r
+        FROM (
+            SELECT cateno, name, namesub, cnt, rdate, seqno, visible
+            FROM cate
+            
+            <if test="word != null and word != ''">
+              WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'
+            </if>
+         
+            ORDER BY seqno ASC
+        )
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num} <!-- WHERE r >= 1 AND r <= 3 -->
+  </select>
+
+  <!-- 검색된 레코드 수 -->
+  <select id="list_search_count" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM cate
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'  
+    </if>
+        
+    ORDER BY seqno ASC
+  </select>
+  
+</mapper>
