@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 주찬 xml   (o)표시: 수정 완료  -->
+<!--
+    MEMBERNO                          NUMBER(10)     NOT NULL    PRIMARY KEY,
+    ID                                VARCHAR2(30)     NOT NULL,
+    PASSWD                            VARCHAR2(200)    NOT NULL,
+    MNAME                             VARCHAR2(30)     NOT NULL,
+    TEL                               VARCHAR2(14)     NOT NULL,
+    ZIPCODE                           VARCHAR2(5)    NULL ,
+    ADDRESS1                          VARCHAR2(80)     NULL ,
+    ADDRESS2                          VARCHAR2(50)     NULL ,
+    MDATE                             DATE     NOT NULL,
+    GRADE                             NUMBER(2)    NOT NULL,
+    PROFILE                           VARCHAR2(1000)     NULL ,
+    POINT                             NUMBER(10)     NOT NULL, 
+-->
+<mapper namespace="dev.mvc.member.MemberDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+
+</mapper>

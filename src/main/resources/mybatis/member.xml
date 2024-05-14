@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- 주찬 xml   (o): 수정 완료  -->
+<!-- 주찬 xml   (o)표시: 수정 완료  -->
 <!--
     MEMBERNO                          NUMBER(10)     NOT NULL    PRIMARY KEY,
     ID                                VARCHAR2(30)     NOT NULL,
@@ -14,9 +14,7 @@
     MDATE                             DATE     NOT NULL,
     GRADE                             NUMBER(2)    NOT NULL,
     PROFILE                           VARCHAR2(1000)     NULL ,
-    POINT                             NUMBER(10)     NOT NULL,
-    
-    
+    POINT                             NUMBER(10)     NOT NULL, 
 -->
 <mapper namespace="dev.mvc.member.MemberDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
@@ -29,9 +27,9 @@
   
   <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
   <insert id="join" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, profile)
+    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{tel}, #{zipcode}, 
-                 #{address1}, #{address2}, sysdate, #{profile})
+                 #{address1}, #{address2}, sysdate)
   </insert>
 
   <!-- (o) 관리자 회원 전체조회 || profile (X) -->
