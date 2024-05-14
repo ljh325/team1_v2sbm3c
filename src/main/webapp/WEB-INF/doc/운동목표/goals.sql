@@ -43,7 +43,8 @@ VALUES (goals_seq.nextval, 4, sysdate, 50, 15, 165);
 
 -- READ
 SELECT goalsno, memberno, gdate, kg, ckg, cm
-FROM goals;
+FROM goals
+WHERE memberno = 2;
 
 SELECT goalsno, memberno, gdate, kg, ckg, cm
 FROM goals
@@ -51,7 +52,7 @@ WHERE kg > 60;
 
 -- UPDATE
 UPDATE goals
-SET kg = 65
+SET kg = 65, ckg = 10, cm = 175
 WHERE memberno = 1;
 
 UPDATE goals
