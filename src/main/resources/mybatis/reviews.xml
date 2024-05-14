@@ -3,20 +3,32 @@
 
 <!-- 주찬 xml   (o)표시: 수정 완료  -->
 <!--
-    MEMBERNO                          NUMBER(10)     NOT NULL    PRIMARY KEY,
-    ID                                VARCHAR2(30)     NOT NULL,
-    PASSWD                            VARCHAR2(200)    NOT NULL,
-    MNAME                             VARCHAR2(30)     NOT NULL,
-    TEL                               VARCHAR2(14)     NOT NULL,
-    ZIPCODE                           VARCHAR2(5)    NULL ,
-    ADDRESS1                          VARCHAR2(80)     NULL ,
-    ADDRESS2                          VARCHAR2(50)     NULL ,
-    MDATE                             DATE     NOT NULL,
-    GRADE                             NUMBER(2)    NOT NULL,
-    PROFILE                           VARCHAR2(1000)     NULL ,
-    POINT                             NUMBER(10)     NOT NULL, 
+
+REVIEWNO    NUMBER(10)    NOT NULL, (리뷰번호)
+STAR        NUMBER(10)    NOT NULL, (별점)
+CONTENTS    VARCHAR2(10)  NOT NULL, (내용)
+RDATE       DATE          NOT NULL, (등록일)
+CNT         NUMBER(10)    NOT NULL, (리뷰수)
+MEMBERNO    NUMBER(10)    NOT NULL, (회원 번호)
+EATNO       NUMBER(10)    NOT NULL, (식품 번호)
+
 -->
-<mapper namespace="dev.mvc.member.MemberDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.review.ReviewDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
+  <!-- 리뷰 전체 조회 -->
+  <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
+    SELECT contentsno, memberno, cateno, title, content, recom, cnt, replycnt, passwd, word, rdate,
+              file1, file1saved, thumb1, size1, map, youtube
+    FROM contents
+    WHERE contentsno = #{contentsno}
+  </select>
+  
 
+  <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
+    SELECT memberno, cateno, title, content, recom, cnt, replycnt, passwd, word, rdate,
+              file1, file1saved, thumb1, size1, map, youtube
+    FROM contents
+    WHERE contentsno = #{contentsno}
+  
+  </select>
 </mapper>
