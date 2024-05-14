@@ -1,13 +1,14 @@
 DROP TABLE goals;
-DROP TABLE goals CASCADE;
+DROP TABLE goals CASCADE CONSTRAINTS;
 
 CREATE TABLE GOALS(
 		GOALSNO                       		NUMBER(10)		 NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NULL ,
 		GDATE                         		DATE		     NOT NULL,
 		KG                            		NUMBER(10)		 NOT NULL,
-		CKG                           		NUMBER(10)		 NOT NULL
---        FOREIGN KEY(memberno) REFERENCES member(memberno)
+		CKG                           		NUMBER(10)		 NOT NULL,
+        CM                                  NUMBER(3)        NOT NULL,
+        FOREIGN KEY(memberno) REFERENCES member(memberno)
 );
 
 COMMENT ON TABLE GOALS is '운동 목표';
@@ -16,6 +17,7 @@ COMMENT ON COLUMN GOALS.MEMBERNO is '회원 번호';
 COMMENT ON COLUMN GOALS.GDATE is '등록일';
 COMMENT ON COLUMN GOALS.KG is '체중';
 COMMENT ON COLUMN GOALS.CKG is '체지방';
+COMMENT ON COLUMN GOALS.CM is '신장';
 
 DROP SEQUENCE goals_seq;
 
@@ -27,23 +29,23 @@ CREATE SEQUENCE goals_seq
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 -- CREATE
-INSERT INTO goals(goalsno, memberno, gdate, kg, ckg)
-VALUES (goals_seq.nextval, 1, sysdate, 70, 10);
+INSERT INTO goals(goalsno, memberno, gdate, kg, ckg, cm)
+VALUES (goals_seq.nextval, 1, sysdate, 70, 10, 175);
 
-INSERT INTO goals(goalsno, memberno, gdate, kg, ckg)
-VALUES (goals_seq.nextval, 2, sysdate, 80, 15);
+INSERT INTO goals(goalsno, memberno, gdate, kg, ckg, cm)
+VALUES (goals_seq.nextval, 2, sysdate, 80, 15, 174);
 
-INSERT INTO goals(goalsno, memberno, gdate, kg, ckg)
-VALUES (goals_seq.nextval, 3, sysdate, 48, 18);
+INSERT INTO goals(goalsno, memberno, gdate, kg, ckg, cm)
+VALUES (goals_seq.nextval, 3, sysdate, 48, 18, 160);
 
-INSERT INTO goals(goalsno, memberno, gdate, kg, ckg)
-VALUES (goals_seq.nextval, 4, sysdate, 50, 15);
+INSERT INTO goals(goalsno, memberno, gdate, kg, ckg, cm)
+VALUES (goals_seq.nextval, 4, sysdate, 50, 15, 165);
 
 -- READ
-SELECT goalsno, memberno, gdate, kg, ckg
+SELECT goalsno, memberno, gdate, kg, ckg, cm
 FROM goals;
 
-SELECT goalsno, memberno, gdate, kg, ckg
+SELECT goalsno, memberno, gdate, kg, ckg, cm
 FROM goals
 WHERE kg > 60;
 
@@ -54,6 +56,10 @@ WHERE memberno = 1;
 
 UPDATE goals
 SET ckg = 7
+WHERE memberno = 1;
+
+UPDATE goals
+SET cm = 175
 WHERE memberno = 1;
 
 

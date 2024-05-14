@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- 이재호 xml -->
+<!-- CREATE TABLE GOALS(
+    GOALSNO                           NUMBER(10)     NOT NULL,
+    MEMBERNO                          NUMBER(10)     NULL ,
+    GDATE                             DATE         NOT NULL,
+    KG                                NUMBER(10)     NOT NULL,
+    CKG                               NUMBER(10)     NOT NULL
+    CM                                  NUMBER(3)        NOT NULL,
+    FOREIGN KEY(memberno) REFERENCES member(memberno)
+); -->
+<mapper namespace="dev.mvc.goals.GoalsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 운동 목표 생성 -->
+  <insert id = "create" parameterType="dev.mvc.goals.GoalsVO">
+    INSERT INTO goals(goalsno, memberno, gdate, kg, ckg, cm)
+    VALUES (goals_seq.nextval, #{memberno}, sysdate, #{kg}, #{ckg}, #{cm})
+  </insert>
+  
+  <!-- 운동 목표 조회 -->
+  <select id = 'read' parameterType="dev.mvc.goals.GoalsVO">
+    SELECT goalsno, memberno, gdate, kg, ckg, cm
+    FROM goals
+    WHERE memberno = #{memberno}
+  </select>
+  
+  <!-- 운동 목표 수정 -->
+  <update id = 'update' parameterType="dev.mvc.goals.GoalsVO">
+    UPDATE goals
+    SET kg = #{kg}, ckg = #{ckg}, cm = #{cm}
+    WHERE memberno = #{memberno}
+  </update>
+  
+  <!-- 운동 목표 삭제 -->
+  <delete id = 'delete' parameterType="int">
+    DELETE FROM goals
+    WHERE memberno = #{memberno}
+  </delete>
+  
+</mapper>

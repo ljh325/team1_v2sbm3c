@@ -64,7 +64,106 @@
     WHERE contentsno = #{contentsno}
   </select>
   
-  <!-- -->
+  <!-- Youtube 등록, 수정, 삭제  -->
+  <update id="youtube" parameterType="HashMap">
+    UPDATE contents 
+    SET youtube=#{youtube} 
+    WHERE contentsno=#{contentsno}
+  </update>
+  
+  <!-- 카테고리별 검색 목록 -->
+  <select id="list_cate_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
+    SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+    FROM contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+        WHERE cateno=#{cateno}
+      </when>
+      <otherwise> <!-- 검색하는 경우 -->
+        WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+    ORDER BY contentsno DESC   
+  </select>
+   
+  <!-- 카테고리별 검색 결과수 -->
+  <select id="list_cate_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE cateno=#{cateno}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+  </select>   
+
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
+   SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, r
+   FROM (
+              SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, rownum as r
+              FROM (
+                        SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+                        FROM contents
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            WHERE cateno=#{cateno}
+                          </when>
+                          <otherwise>
+                            WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY contentsno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
+  <!-- 패스워드 검사 -->
+  <select id="password_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt 
+    FROM contents
+    WHERE contentsno = #{contentsno} AND passwd=#{passwd}
+  </select>
+  
+  <!-- 글 수정 -->
+  <update id="update_text" parameterType="dev.mvc.contents.ContentsVO">
+    UPDATE contents
+    SET title = #{title}, content = #{content},  tag = #{tag}
+    WHERE contentsno = #{contentsno}
+  </update>
+
+
+  <!-- 파일 수정 -->
+  <update id="update_file" parameterType="dev.mvc.contents.ContentsVO">
+    UPDATE contents
+    SET file1 = #{file1}, file1saved = #{file1saved}, thumb1 = #{thumb1}, size1 = #{size1}
+    WHERE contentsno = #{contentsno}
+  </update>  
+
+  <!-- 글 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM contents
+    WHERE contentsno=#{contentsno}
+  </delete>
+  
   
   
 </mapper>

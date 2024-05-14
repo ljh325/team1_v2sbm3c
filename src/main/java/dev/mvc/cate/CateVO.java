@@ -20,7 +20,9 @@ import lombok.Setter;
 //ADMINNO                           NUMBER(10)    NULL
 //--        FOREIGN KEY(adminno) REFERENCES admin(adminno)
 //);
-
+/**
+ * @author 이재호
+ */
 @Setter @Getter
 public class CateVO {
   /** 카테고리 번호*/
