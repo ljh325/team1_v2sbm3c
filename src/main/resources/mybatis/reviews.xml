@@ -23,7 +23,7 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호)
     WHERE contentsno = #{contentsno}
   </select>
   
-
+<!--
   <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
     SELECT memberno, cateno, title, content, recom, cnt, replycnt, passwd, word, rdate,
               file1, file1saved, thumb1, size1, map, youtube
@@ -31,4 +31,5 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호)
     WHERE contentsno = #{contentsno}
   
   </select>
+  -->
 </mapper>

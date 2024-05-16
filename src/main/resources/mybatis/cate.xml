@@ -6,20 +6,20 @@
   
   <!-- 카테고리 생성 -->
   <insert id="create" parameterType="dev.mvc.cate.CateVO">
-    INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
-    VALUES (cate_seq.nextval, #{name}, #{namesub}, 0, sysdate, #{seqno}, 'Y', #{adminno})
+    INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminsno)
+    VALUES (cate_seq.nextval, #{name}, #{namesub}, 0, sysdate, #{seqno}, 'Y', #{adminsno})
   </insert>
   
   <!-- 카테고리 전체보기 -->
   <select id="list_all" resultType="dev.mvc.cate.CateVO">
-    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno
     FROM cate
     ORDER BY seqno ASC
   </select>
   
   <!-- 카테고리 조회 -->
   <select id="read" resultType="dev.mvc.cate.CateVO" parameterType="Integer">
-    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+    SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno
     FROM cate
     WHERE cateno = #{cateno}
   </select>

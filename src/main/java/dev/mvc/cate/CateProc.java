@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("dev.mvc.cate.CateProcInter")
+@Component("dev.mvc.cate.CateProc")
 public class CateProc implements CateProcInter{
   
   @Autowired
