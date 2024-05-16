@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.validation.Valid;
 
 @RequestMapping("/cate")
 @Controller
@@ -34,6 +38,35 @@ public class CateCont {
     model.addAttribute("list", list);
 
     return "cate/create"; // /templates/cate/create.html
+  }
+  
+  @PostMapping(value="/create") // http://localhost:9091/cate/create
+  public String create(Model model, @Valid CateVO cateVO, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return "/cate/create";
+    }
+    
+    int cnt = this.cateProc.create(cateVO);
+    System.out.println("-> cnt: " + cnt);
+    
+    if (cnt == 1) {
+      model.addAttribute("code", "create_success");
+      model.addAttribute("name", cateVO.getName());
+      model.addAttribute("namesub", cateVO.getNamesub());
+    } else {
+      model.addAttribute("code", "create_fail");
+      model.addAttribute("cnt", cnt);
+      return "/cate/msg"; // /templates/cate/msg.html
+    }
+    return "cate/create";
+  }
+  
+  @GetMapping(value="/list_all")
+  public String list_all(Model model) {
+    ArrayList<CateVO> list = this.cateProc.list_all();
+    model.addAttribute("list",list);
+    
+    return "/cate/list_all"; // /cate/list_all.html
   }
 
 }

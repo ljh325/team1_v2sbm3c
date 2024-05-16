@@ -17,7 +17,7 @@ import lombok.Setter;
 //RDATE                             DATE        NOT NULL,
 //SEQNO                             NUMBER(5)   NOT NULL,
 //VISIBLE                           CHAR(1)       NOT NULL,
-//ADMINNO                           NUMBER(10)    NULL
+//ADMINSNO                           NUMBER(10)    NULL
 //--        FOREIGN KEY(adminno) REFERENCES admin(adminno)
 //);
 /**
@@ -59,6 +59,6 @@ public class CateVO {
   private String visible = "Y";
   
   /** 관리자 번호 */
-  private Integer adminno = 0;
+  private Integer adminsno = 0;
   
 }

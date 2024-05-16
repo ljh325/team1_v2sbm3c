@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+  <div layout:fragment="content">
+    <div class="title_line">카테고리</div>
+    
+    <table class="table table-hover">
+      <colgroup>
+        <col style='width: 10%;'/>
+        <col style='width: 20%;'/>
+        <col style='width: 20%;'/>
+        <col style='width: 10%;'/>    
+        <col style='width: 20%;'/>
+        <col style='width: 20%;'/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="th_bs">순서</th>
+          <th class="th_bs">중분류</th>
+          <th class="th_bs">소분류</th>
+          <th class="th_bs">자료수</th>
+          <th class="th_bs">등록일</th>
+          <th class="th_bs">기타</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="cateVO:${list}">
+          <td class="td_bs" th:text="${cateVO.cateno}"></td>
+          <td class="td_bs" ><a th:href="@{|./read/${cateVO.cateno}|}" style="display: block;" th:text="${cateVO.name}"></a></td>
+          <td class="td_bs"><a th:href="@{|./read/${cateVO.cateno}|}" style="display: block;" th:text="${cateVO.namesub}"></a></td> 
+          <td class="td_bs" th:text="${cateVO.cnt}"></td>
+          <td class="td_bs" th:text="${cateVO.rdate.substring(0,10)}"></td>
+          <td class="td_bs">
+            <img src="/cate/images/show.png" class="icon"> <!-- /static/cate/images/show.png -->
+            <img src="/cate/images/decrease.png" class="icon">
+            <img src="/cate/images/increase.png" class="icon">
+            <a th:href="@{|/cate/update/${cateVO.cateno}|}"><img src="/cate/images/update.png" class="icon"></a>
+            <a th:href="@{|/cate/delete/${cateVO.cateno}|}"><img src="/cate/images/delete.png" class="icon"></a>
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+    </div>
+</html>
