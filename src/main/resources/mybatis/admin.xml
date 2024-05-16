@@ -7,11 +7,11 @@
   <select id="login" resultType="int" parameterType="dev.mvc.admin.AdminVO">
     SELECT COUNT(*) as cnt
     FROM admin
-    WHERE id=#{adminid} AND password=#{password} 
+    WHERE adminid=#{adminid} AND password=#{password} 
   </select>
   
   <!-- 관리자 정보 -->
-  <select id="read_by_id" resultType="dev.mvc.admin.AdminVO" parameterType ="String">
+  <select id="read_by_adminid" resultType="dev.mvc.admin.AdminVO" parameterType ="String">
     SELECT adminno, adminid, password, grade 
     FROM admin
     WHERE adminid=#{adminid}
