@@ -164,6 +164,32 @@
     WHERE contentsno=#{contentsno}
   </delete>
   
+  <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
+  <select id="count_by_cate" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM contents 
+    WHERE cateno=#{cateno}
+  </select>
+  
+  <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
+  <delete id="delete_by_cate" parameterType="int">
+    DELETE FROM contents
+    WHERE cateno=#{cateno}
+  </delete>
+
+  <!-- 회원이 작성한 게시글 갯수를 리턴 -->
+  <select id="count_by_member" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM contents 
+    WHERE memberno=#{memberno}
+  </select>
+  
+  <!-- 회원이 작성한 모든 게시글 삭제 -->
+  <delete id="delete_by_member" parameterType="int">
+    DELETE FROM contents
+    WHERE memberno=#{memberno}
+  </delete>
+  
   
   
 </mapper>
