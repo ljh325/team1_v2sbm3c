@@ -2,7 +2,7 @@ DROP TABLE goals;
 DROP TABLE goals CASCADE CONSTRAINTS;
 
 CREATE TABLE GOALS(
-		GOALSNO                       		NUMBER(10)		 NOT NULL,
+		GOALSNO                       		NUMBER(10)		 NOT NULL   PRIMARY KEY,
 		MEMBERNO                      		NUMBER(10)		 NULL ,
 		GDATE                         		DATE		     NOT NULL,
 		KG                            		NUMBER(10)		 NOT NULL,
