@@ -177,7 +177,6 @@ public class CateCont {
   public String delete_process(Model model, int cateno) {
     int cnt = this.cateProc.delete(cateno); // 삭제
     System.out.println("-> delete cnt: " + cnt);
-    
     model.addAttribute("cnt", cnt);
     
     if (cnt == 1) {
@@ -186,6 +185,62 @@ public class CateCont {
       model.addAttribute("code", "delete_fail");
       return "cate/msg"; // /templates/cate/msg.html
     }
+    
   }
   
+  /**
+   * 출력 순서 높임: seqno 10 -> 1
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value="/update_seqno_forward")
+  public String update_seqno_forward(Model model, int cateno) {
+    
+    this.cateProc.update_seqno_forward(cateno);
+    
+    return "redirect:/cate/list_search"; 
+  }
+  
+  /**
+   * 출력 순서 낮춤: seqno 1 -> 10
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value="/update_seqno_backward")
+  public String update_seqno_backward(Model model, int cateno) {
+   
+    this.cateProc.update_seqno_backward(cateno);
+    
+    return "redirect:/cate/list_search";
+    
+  }
+  
+  /**
+   * 카테고리 공개 설정
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value="/update_visible_y")
+  public String update_visible_y(Model model, int cateno) {
+
+    this.cateProc.update_visible_y(cateno);
+    
+    return "redirect:/cate/list_search";  // /templates/cate/list_search.html
+  }
+  
+  /**
+   * 카테고리 비공개 설정
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value="/update_visible_n")
+  public String update_visible_n(Model model, int cateno) {
+    this.cateProc.update_visible_n(cateno);
+    
+    return "redirect:/cate/list_search";  // /templates/cate/list_search.html
+  }
 }

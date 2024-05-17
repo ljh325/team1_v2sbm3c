@@ -40,7 +40,7 @@
   <update id="update_seqno_forward" parameterType="Integer">
     UPDATE cate
     SET seqno= seqno -1
-    WHERE cateno = #{cateno}
+    WHERE cateno = #{cateno} AND seqno > 0
   </update>
 
   <!-- 출력 순서 낮춤 -->
