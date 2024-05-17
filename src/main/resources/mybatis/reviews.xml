@@ -5,31 +5,100 @@
 <!--
 
 REVIEWNO    NUMBER(10)    NOT NULL, (리뷰번호)
-STAR        NUMBER(10)    NOT NULL, (별점)
-CONTENTS    VARCHAR2(10)  NOT NULL, (내용)
-RDATE       DATE          NOT NULL, (등록일)
+STAR        NUMBER(10)    NOT NULL, (별점)o
+CONTENTS    VARCHAR2(10)  NOT NULL, (내용)o
+RDATE       DATE          NOT NULL, (등록일)o
+UDATE       DATE              NULL, (수정일)o
 CNT         NUMBER(10)    NOT NULL, (리뷰수)
-MEMBERNO    NUMBER(10)    NOT NULL, (회원 번호)
-EATNO       NUMBER(10)    NOT NULL, (식품 번호)
-
+MEMBERNO    NUMBER(10)    NOT NULL, (회원 번호) (FK)
+EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
+리뷰
+1. 리뷰 작성ㅇ
+2. 수정, 삭제, 조회ㅇ
+3. 전체 리뷰수ㅇ
+4. 별점에 따른 리뷰 조회(별점 높은 순 , 낮은 순)ㅇ
+5. 리뷰 키워드 검색 x (chat GPT)
+6. 최근 작성순ㅇ
+7. 오래된 작성순ㅇ
+8. 사진 넣을 까 말까 x
 -->
 <mapper namespace="dev.mvc.review.ReviewDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <!-- 리뷰 전체 조회 -->
   <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, title, content, recom, cnt, replycnt, passwd, word, rdate,
-              file1, file1saved, thumb1, size1, map, youtube
-    FROM contents
-    WHERE contentsno = #{contentsno}
+    SELECT reviewno, star, contents, rdate
+    FROM review
+    WHERE reviewno = #{reviewno}
   </select>
   
-<!--
-  <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT memberno, cateno, title, content, recom, cnt, replycnt, passwd, word, rdate,
-              file1, file1saved, thumb1, size1, map, youtube
-    FROM contents
-    WHERE contentsno = #{contentsno}
   
+   <!-- 리뷰 페이징 목록 -->
+  <select id="list_by_review_paging" resultType="dev.mvc.review.ReviewVO" parameterType="HashMap">
+   SELECT reviewno, star, contents, rdate, udate, r
+   FROM (
+              SELECT reviewno, star, contents, rdate, udate, rownum as r
+              FROM (
+                        SELECT reviewno, star, contents, rdate, udate
+                        FROM review
+                        ORDER BY reviewno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
   </select>
-  -->
+
+
+
+  <!-- 전체 리뷰 수 -->
+  <select id="review_cnt" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt
+    FROM review
+  </select>
+  
+  <!-- 리뷰 수정 | 수정일 확인 필요 -->
+  <update id="review_update" parameterType="dev.mvc.review.ReviewVO">
+    UPDATE review
+    SET star=#{star}, contents=#{contents} <!-- , rdate=#{rdate} ??--> 
+    WHERE reviewno = #{reviewno}
+  </update>
+  
+  <!-- 리뷰 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM review
+    WHERE reviewno=#{reviewno}
+  </delete>
+  
+  
+  <!-- 별점에 따른 리뷰 조회(별점 높은 순 , 낮은 순) -->
+  <select id="list_star" resultType="dev.mvc.review.ReviewVO" parameterType="int">
+    SELECT reviewno, star, contents, rdate, udate
+    FROM review
+    WHERE star = #{star}
+  </select>
+  
+  <!-- 최근 작성순 -->
+  <select id="recent_review" parameterType="dev.mvc.review.ReviewVO">
+    SELECT reviewno, star, contents, rdate, udate
+    FROM review
+    ORDER BY COALESCE(udate, rdate) DESC
+    <!-- COALESCE(A, B) -> update가 null이 아니면 update값 반환
+    update가 널값이고 rdate가 값존재하면 rdate반환, 둘다 널이면 널값 반환 -->
+  </select>
+  
+  <!-- 오래된 작성순 -->
+  <select id="old_review" parameterType="dev.mvc.review.ReviewVO">
+    SELECT reviewno, star, contents, rdate, udate
+    FROM review
+    ORDER BY COALESCE(udate, rdate) asc
+  </select>
+  
+  
+  
+  
+  
+  
+  
 </mapper>

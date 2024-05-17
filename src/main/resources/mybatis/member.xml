@@ -18,7 +18,7 @@
 -->
 <mapper namespace="dev.mvc.member.MemberDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-  <!-- (o) 회원 아이디 존재 유무 존재 1, 없으면 0 -->
+  <!-- (o)  중복 아이디 검사 || 존재 1, 없으면 0 -->
   <select id="checkID" resultType="int" parameterType="String">
     SELECT COUNT(id) as cnt
     FROM member
@@ -26,13 +26,13 @@
   </select>
   
   <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
-  <insert id="join" parameterType="dev.mvc.member.MemberVO">
+  <insert id="create" parameterType="dev.mvc.member.MemberVO">
     INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{tel}, #{zipcode}, 
                  #{address1}, #{address2}, sysdate)
   </insert>
 
-  <!-- (o) 관리자 회원 전체조회 || profile (X) -->
+  <!-- (o) 회원 전체 목록 || profile (X) -->
   <select id="userlist" resultType="dev.mvc.member.MemberVO">
     SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point
     FROM member
@@ -40,7 +40,7 @@
   </select>
   
   
-  <!-- memberno로 회원 정보 조회?? -->
+  <!-- memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
     SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade
     FROM member
@@ -54,7 +54,7 @@
     WHERE id = #{id}
   </select>
   
-  <!-- (o) 회원 정보 수정 -->
+  <!-- (o) 수정 처리 -->
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
     SET mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}, profile=#{profile}
@@ -62,13 +62,15 @@
   </update>
   
   
-  <!-- (o) 회원 탈퇴 || 탈퇴 성공 : 1, 실패 : 0 -->
-  <delete id="delete" parameterType="int">
-    DELETE FROM member
+  <!-- (o) 회원 삭제 처리 || 탈퇴 성공 : 1, 실패 : 0 -->
+  <!-- 회원등급 -> 관리자: 0, 회원: 1, 회원탈퇴: 99 -->
+  <update id="delete" parameterType="int">
+    UPDATE member
+    SET grade=99
     WHERE memberno=#{memberno}
-  </delete>
+  </update>
 
-  <!-- (o)로그인 || 로그인성공시 : 1, 실패 : 0-->
+  <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0-->
   <select id="login" resultType="int" parameterType="HashMap">
     SELECT COUNT(memberno) as cnt
     FROM member

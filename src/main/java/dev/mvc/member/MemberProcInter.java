@@ -2,8 +2,13 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;  // 구현 클래스를 교체하기 쉬운 구조 지원
 
-public interface MemberDAOInter {
+// import javax.servlet.http.HttpSession; // Spring Boot ~ 2.9
+import jakarta.servlet.http.HttpSession; //  Spring Boot 3.0~
+
+public interface MemberProcInter {
   /**
    * 중복 아이디 검사
    * @param id
@@ -38,6 +43,22 @@ public interface MemberDAOInter {
    */
   public MemberVO readById(String id);
 
+  
+  /**
+   * 로그인된 회원 계정인지 검사합니다.
+   * @param session
+   * @return true: 사용자
+   */
+  public boolean isMember(HttpSession session);
+
+  /**
+   * 로그인된 회원 관리자 계정인지 검사합니다.
+   * @param session
+   * @return true: 사용자
+   */
+  public boolean isMemberAdmin(HttpSession session);
+  
+  
   /**
    * 수정 처리
    * @param memberVO
@@ -72,3 +93,7 @@ public interface MemberDAOInter {
   public int login(HashMap<String, Object> map);
   
 }
+
+
+
+
