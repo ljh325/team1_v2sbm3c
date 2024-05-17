@@ -1,6 +1,10 @@
 <div th:fragment="navbarFragment">
   <div class="top_menu_img">
+<<<<<<< HEAD
     <div class="top_menu_label">생존 오지 오버랜딩 ver 4.0</div>
+=======
+    <div class="top_menu_label">테스트</div>
+>>>>>>> b815ed041bbd0d5149f87662b0f43b0d3b9c14e9
   </div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
       <div class="container-fluid">
@@ -40,19 +44,30 @@
                       </ul>
                   </li>
                   
+<<<<<<< HEAD
                   <li class="nav-item dropdown" th:if="${session.grade=='admin'}">
+=======
+                  <li class="nav-item dropdown">
+>>>>>>> b815ed041bbd0d5149f87662b0f43b0d3b9c14e9
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+<<<<<<< HEAD
                         <li class="nav-item"><a class="nav-link" href="/cate/list_search?now_page=1">카테고리 전체 목록</a></li>
+=======
+                        <li class="nav-item"><a class="nav-link" href="/cate/list_search">카테고리 전체 목록</a></li>
+>>>>>>> b815ed041bbd0d5149f87662b0f43b0d3b9c14e9
                         <li class="nav-item"><a class="nav-link" href="/member/list">회원 목록</a></li>
                         <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
                       </ul>
                   </li>
 
+<<<<<<< HEAD
                   <li class="nav-item"><a class="nav-link" href="/contents/create?cateno=5">컨텐츠 등록</a></li>
 
+=======
+>>>>>>> b815ed041bbd0d5149f87662b0f43b0d3b9c14e9
                   <li class="nav-item">
                       <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
                       <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
@@ -66,4 +81,7 @@
 
 </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b815ed041bbd0d5149f87662b0f43b0d3b9c14e9

@@ -227,5 +227,32 @@ public class CateProc implements CateProcInter{
      
     return str.toString(); 
   }
+  
+  @Override
+  public ArrayList<CateVOMenu> menu() {
+    // 중분류 목록을 저장할 객체 선언
+    ArrayList<CateVOMenu> menu = new ArrayList<CateVOMenu>();
+    
+    // 중분류 목록 로딩
+    ArrayList<CateVO> list = this.cateDAO.list_all_name_y();
+    
+    // 중분류 + 소분류 결합 
+    for (CateVO cateVO : list) {
+      CateVOMenu cateVOMenu = new CateVOMenu(); // 하나의 중분류 메뉴 그룹
+      
+      cateVOMenu.setName(cateVO.getName()); // 중분류명
+      
+      // 중분류명을 이용하여 소분류 목록을 가져옴.
+      ArrayList<CateVO> list_namesub = this.cateDAO.list_all_namesub_y(cateVO.getName());
+      cateVOMenu.setList_namesub(list_namesub);
+      
+      if (list_namesub.size() > 0) { // 소분류가 있는 경우만 메뉴 등록
+        menu.add(cateVOMenu);
+      }
+      
+    }
+    
+    return menu;
+  }
 
 }
