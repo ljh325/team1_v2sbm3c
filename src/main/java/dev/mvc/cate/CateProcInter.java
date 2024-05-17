@@ -114,4 +114,7 @@ public interface CateProcInter {
    */ 
   public String pagingBox(int now_page, String word, String list_file, int search_count, 
                                       int record_per_page, int page_per_block); 
+  
+  /** 메뉴 */
+  public ArrayList<CateVOMenu> menu();
 }
