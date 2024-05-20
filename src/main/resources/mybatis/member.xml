@@ -42,14 +42,14 @@
   
   <!-- memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
     FROM member
     WHERE memberno = #{memberno}
   </select>  
 
-  <!-- (o) id로 회원 정보 조회 -->
+  <!-- (o) (로그인) id로 회원 정보 조회 -->
   <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, profile, point
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, profile, point, birth, sex
     FROM member
     WHERE id = #{id}
   </select>
