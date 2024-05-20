@@ -1,5 +1,7 @@
 package dev.mvc.member;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -8,7 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.mvc.cate.CateVOMenu;
 import dev.mvc.tool.Security;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/member")
 @Controller
@@ -74,5 +80,49 @@ public class MemberCont {
   }
   
   
+  
+  
+  /**
+   * 관리자 전용 회원 조회
+   * @param model
+   * @param memberVO
+   * @return
+   */
+  @GetMapping(value="/list")
+  public String list(HttpSession session, Model model) {
+    
+
+      System.out.println("HttpSession ------)_)_))>>" + session);
+      ArrayList<MemberVO> list = this.memberProc.list();
+      
+      model.addAttribute("list", list);
+      
+      return "member/list";  // templates/member/list.html      
+// 조회 
+//    @GetMapping(value="/list")
+//    public String list(HttpSession session, Model model) {
+//      if (this.memberProc.isMemberAdmin(session)) {
+  //
+//        System.out.println("HttpSession ------)_)_))>>" + session);
+//        ArrayList<MemberVO> list = this.memberProc.list();
+//        
+//        model.addAttribute("list", list);
+//        
+//        return "member/list";  // templates/member/list.html      
+//      } else {
+//        //return "redirect:/member/login_form_need";  // redirect
+//        return "redirect:/member/list";
+//      }  
+  //
+//    }
+  }
+
+  
+  
+  
+  
+  
+  
+
   
 }
