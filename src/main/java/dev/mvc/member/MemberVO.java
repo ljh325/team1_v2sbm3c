@@ -46,6 +46,11 @@ public class MemberVO {
   private String profile = "";  
   /** 포인트 */
   private int point = 0;
+  /** 생일 */
+  private int birth;
+  /** sex */
+  private String sex = "";
+  
   
   
   //------------------------------------------

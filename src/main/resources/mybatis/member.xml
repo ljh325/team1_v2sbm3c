@@ -27,14 +27,14 @@
   
   <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate)
+    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, birth, sex)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{tel}, #{zipcode}, 
-                 #{address1}, #{address2}, sysdate)
+                 #{address1}, #{address2}, sysdate, #{birth}, #{sex})
   </insert>
 
   <!-- (o) 회원 전체 목록 || profile (X) -->
-  <select id="userlist" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point
+  <select id="list" resultType="dev.mvc.member.MemberVO">
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
     FROM member
     ORDER BY grade ASC, id ASC
   </select>
@@ -42,14 +42,14 @@
   
   <!-- memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
     FROM member
     WHERE memberno = #{memberno}
   </select>  
 
-  <!-- (o) id로 회원 정보 조회 -->
+  <!-- (o) (로그인) id로 회원 정보 조회 -->
   <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, profile, point
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, profile, point, birth, sex
     FROM member
     WHERE id = #{id}
   </select>

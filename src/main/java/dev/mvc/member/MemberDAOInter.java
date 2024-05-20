@@ -22,7 +22,7 @@ public interface MemberDAOInter {
    * 회원 전체 목록
    * @return
    */
-  public ArrayList<MemberVO> userlist();
+  public ArrayList<MemberVO> list();
 
   /**
    * memberno로 회원 정보 조회
