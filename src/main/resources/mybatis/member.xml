@@ -27,9 +27,9 @@
   
   <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate)
+    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, birth, sex)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{tel}, #{zipcode}, 
-                 #{address1}, #{address2}, sysdate)
+                 #{address1}, #{address2}, sysdate, #{birth}, #{sex})
   </insert>
 
   <!-- (o) 회원 전체 목록 || profile (X) -->

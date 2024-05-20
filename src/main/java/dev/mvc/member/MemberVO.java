@@ -41,11 +41,16 @@ public class MemberVO {
   /** 가입일 */
   private String mdate = "";
   /** 등급 */
-  private int grade = 1;
+  private int grade;
   /** 프로필 이미지 */
   private String profile = "";  
   /** 포인트 */
   private int point = 0;
+  /** 생일 */
+  private int birth;
+  /** sex */
+  private String sex = "";
+  
   
   
   //------------------------------------------
