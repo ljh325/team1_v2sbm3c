@@ -117,46 +117,139 @@
       }
     }
     
-    function send() { // 회원 가입 처리
-      let id = document.getElementById('id');
-      let id_msg = document.getElementById('id_msg');
-  
-      if (id.value.trim().length == 0) {
-        id_msg.innerHTML= 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
-        id_msg.classList.add('span_warning');    // class 적용
-        id.focus();
-  
-        return false;  // 회원 가입 진행 중지
+      function send() { // 회원 가입 처리
+      
+        // 아이디 유효성 검사 **
+        let id = document.getElementById('id');
+        let id_msg = document.getElementById('id_msg');
+
+        if (id.value.trim().length == 0) {
+          id_msg.innerHTML = 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+          id_msg.classList.add('span_warning');    // class 적용
+          id.focus();
+
+          return false;  // 회원 가입 진행 중지
+
+        }
         
-      }
+        
+        // 패스워드 유효성 검사 **
+        // 패스워드를 정상적으로 2번 입력했는지 확인
+        let passwd = document.getElementById('passwd');
+        let passwd1_msg = document.getElementById('passwd1_msg');
+        let passwd2 = document.getElementById('passwd2');
+        let passwd2_msg = document.getElementById('passwd2_msg');
+
+        if (passwd.value.length == 0) {
+          passwd1_msg.innerHTML = '패스워드 입력은 필수입니다.';
+          passwd1_msg.classList.add('span_warning');    // class 적용
+          mname.focus();
+
+          return false;  // 회원 가입 진행 중지
+        }
+        if (passwd2.value.length == 0) {
+          passwd2_msg.innerHTML = '패스워드 확인해주세요.';
+          passwd2_msg.classList.add('span_warning');    // class 적용
+          mname.focus();
+
+          return false;  // 회원 가입 진행 중지
+        } else if (passwd.value != passwd2.value) {
+          passwd2_msg.innerHTML = '입력된 패스워드가 일치하지 않습니다.';
+          passwd2_msg.classList.add('span_warning');    // class 적용
+          passwd.focus();  // 첫번째 패스워드로 focus 설정
+
+          return false;  // 회원 가입 진행 중지
+        } else {
+
+
+          // 성명 유효성 검사 **
+          let mname = document.getElementById('mname');
+          let mname_msg = document.getElementById('mname_msg');
+
+          if (mname.value.length == 0) {
+            mname_msg.innerHTML = '이름 입력은 필수입니다.';
+            mname_msg.classList.add('span_warning');    // class 적용
+            mname.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }
+          
+          // 전화 번호 유효성 검사 **
+          let tel = document.getElementById('tel');
+          let tel_msg = document.getElementById('tel_msg');
+
+          if (tel.value.length == 0) {
+            tel_msg.innerHTML = '전화번호 입력은 필수입니다.';
+            tel_msg.classList.add('span_warning');    // class 적용
+            tel.focus();
+            return false;  // 회원 가입 진행 중지
+          } else if (!/^\d+$/.test(tel.value)) {  // 전화번호가 숫자인지 확인
+          // ^\d+$는 정규식으로, 문자열이 오직 숫자(digit)로만 이루어져 있는지를 체크합니다.
+              tel_msg.innerHTML = '전화번호는 숫자만 입력 가능합니다.';
+              tel_msg.classList.add('span_warning');    // class 적용
+              tel.focus();
+              return false;  // 회원 가입 진행 중지
+          }
+          
+          
+          // 우편번호 유효성 검사 **  
+          let zipcode = document.getElementById('zipcode');
+          let zipcode_msg = document.getElementById('zipcode_msg');
+
+          if (zipcode.value.length == 0) {
+            zipcode_msg.innerHTML = '우편번호입력은 필수입니다.';
+            zipcode_msg.classList.add('span_warning');    // class 적용
+            zipcode.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }
+          
+          // 주소 유효성 검사 **  
+          let address1 = document.getElementById('address1');
+          let address1_msg = document.getElementById('address1_msg');
+
+          if (address1.value.length == 0) {
+            address1_msg.innerHTML = '주소입력은 필수입니다.';
+            address1_msg.classList.add('span_warning');    // class 적용
+            address1.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }
+          
+          
+          // 생년월일 유효성 검사 **  
+          let birth = document.getElementById('birth');
+          let birth_msg = document.getElementById('birth_msg');
+
+          if (birth.value.length == 0) {
+            birth_msg.innerHTML = '생년월일은 필수입니다.';
+            birth_msg.classList.add('span_warning');    // class 적용
+            birth.focus();
+
+            return false;  // 회원 가입 진행 중지
+          } 
+          
+          // 성별 유효성 검사 **  
+          let sex = document.getElementById('sex');
+          let sex_msg = document.getElementById('sex_msg');
+
+          if (sex.value.length == 0) {
+            sex_msg.innerHTML = '성별은 필수입니다.';
+            sex_msg.classList.add('span_warning');    // class 적용
+            sex.focus();
+
+            return false;  // 회원 가입 진행 중지
+          } else if (!['M', 'W'].includes(sex.value.toUpperCase())) {  // 성별이 M 또는 W인지 확인, 대소문자 구분 없음
+              sex_msg.innerHTML = '성별은 \'M\' 또는 \'W\'로만 입력 가능합니다.';
+              sex_msg.classList.add('span_warning');    // class 적용
+              sex.focus();  // 성별 입력란에 포커스 이동
+              return false;  // 회원 가입 진행 중지
+          }
+          
   
-      // 패스워드를 정상적으로 2번 입력했는지 확인
-      let passwd = document.getElementById('passwd');
-      let passwd2 = document.getElementById('passwd2');
-      let passwd2_msg = document.getElementById('passwd2_msg');
-  
-      if (passwd.value != passwd2.value) {
-        passwd2_msg.innerHTML= '입력된 패스워드가 일치하지 않습니다.';
-        passwd2_msg.classList.add('span_warning');    // class 적용
-        passwd.focus();  // 첫번째 패스워드로 focus 설정
-  
-        return false;  // 회원 가입 진행 중지
-      }
-  
-      let mname = document.getElementById('mname');
-      let mname_msg = document.getElementById('mname_msg');
-  
-      if (mname.value.length == 0) {
-        mname_msg.innerHTML= '이름 입력은 필수입니다.';
-        mname_msg.classList.add('span_warning');    // class 적용
-        mname.focus();
-  
-        return false;  // 회원 가입 진행 중지
-      }
-  
-      document.getElementById('frm').submit(); // required="required" 작동 안됨.
-      alert('회원가입 성공했습니다.')
-    }    
+        } // passwd2_msg else 끝
+        document.getElementById('frm').submit(); // required="required" 작동 안됨.
+      }    
   </script>
 
   <div class="title_line">회원 가입(*: 필수)</div>
@@ -183,29 +276,30 @@
       
       <div class="form-group">
         <label for="passwd">패스워드*</label> 
-        <input type='password' name='passwd' id='passwd' value='1234' required="required" 
+        <input type='password' name='passwd' id='passwd' value='' required="required" 
                   placeholder="패스워드" class="form-control form-control-sm" style="width: 30%;">
+        <span id='passwd1_msg'></span>  
       </div>
 
       <div class="form-group">
         <label for="passwd2">패스워드 확인*</label>
-        <input type='password' name='passwd2' id='passwd2' value='1234' required="required" 
+        <input type='password' name='passwd2' id='passwd2' value='' required="required" 
                   placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 30%;">
         <span id='passwd2_msg'></span>
       </div>
 
       <div class="form-group">
         <label for="mname">성명*</label>
-        <input type='text' name='mname' id='mname' value='하정우' required="required" 
+        <input type='text' name='mname' id='mname' value='' required="required" 
                    placeholder="성명" class="form-control form-control-sm" style="width: 30%;">
         <span id='mname_msg'></span>
       </div>   
   
       <div class="form-group">
-        <label for="tel">전화 번호*</label>
-        <input type='text' name='tel' id='tel' value='010-0000-0000' required="required" 
+        <label for="tel">전화 번호* (- 포함x)</label>
+        <input type='text' name='tel' id='tel' value='' required="required" 
                   placeholder="전화번호" class="form-control form-control-sm" style="width: 30%;">
-        예) 010-0000-0000
+        <span id='tel_msg'></span>
       </div>
       
       <div class="form-group"> 
@@ -214,12 +308,14 @@
                   class="form-control form-control-sm" style="width: 30%;">
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" 
                   class="btn btn-primary btn-sm" style="margin-top: 4px;">우편번호 찾기</button>
+        <span id='zipcode_msg'></span>
       </div>  
   
       <div class="form-group">
         <label for="address1" style="width: 100%;">주소</label>
         <input type='text' name='address1' id='address1' value='' placeholder="주소"
                    class="form-control form-control-sm">
+        <span id='address1_msg'></span>           
       </div>   
   
       <div class="form-group">
@@ -229,14 +325,16 @@
       </div> 
       
       <div class="form-group">
-        <label for="birth" style="width: 100%;">생년월일</label>
+        <label for="birth" style="width: 100%;">생년월일 (예: 012345)</label>
         <input type='text' name='birth' id='birth' value='' placeholder="생년월일"
                   class="form-control form-control-sm">
+        <span id='birth_msg'></span>          
       </div> 
       <div class="form-group">
         <label for="sex" style="width: 100%;">성별</label>
         <input type='text' name='sex' id='sex' value='' placeholder="성별"
                   class="form-control form-control-sm">
+        <span id='sex_msg'></span>          
       </div>   
 
 <!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
