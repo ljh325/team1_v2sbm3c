@@ -183,6 +183,20 @@
     WHERE memberno=#{memberno}
   </delete>
   
+  <!-- 조회수 -->
+  <update id="view" parameterType="int">
+    UPDATE contents
+    SET viewcnt = viewcnt + 1
+    WHERE contentsno = #{contentsno}
+  </update>
+  
+  <!-- 추천수 -->
+  <update id="recom" parameterType="int">
+    UPDATE contents
+    SET recom = recom + 1
+    WHERE contentsno = #{contentsno}
+  </update>
+  
   
   
 </mapper>

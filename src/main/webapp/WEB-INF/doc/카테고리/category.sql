@@ -9,8 +9,8 @@ CREATE TABLE CATE(
 		RDATE                         		DATE		    NOT NULL,
 		SEQNO                         		NUMBER(5)		NOT NULL,
 		VISIBLE                       		CHAR(1)		    NOT NULL,
-		ADMINNO                       		NUMBER(10)		NULL
---        FOREIGN KEY(adminno) REFERENCES admin(adminno)
+		ADMINNO                       		NUMBER(10)		NULL,
+        FOREIGN KEY(adminno) REFERENCES admin(adminno)
 );
 
 COMMENT ON TABLE CATE is '카테고리';

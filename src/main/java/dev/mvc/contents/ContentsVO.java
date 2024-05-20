@@ -75,6 +75,8 @@ public class ContentsVO {
   */
   private MultipartFile file1MF;
   
+  private MultipartFile file2MF;
+  
   /** 메인 이미지 크기 단위, 파일 크기 */
   private String size1_label = "";
   
@@ -86,5 +88,6 @@ public class ContentsVO {
   
   /** 미리보기 이미지*/
   private String thumb1 = "";
+  
 
 }

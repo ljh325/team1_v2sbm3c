@@ -128,5 +128,19 @@ public interface ContentsProcInter {
    */ 
   public String pagingBox(int cateno, int now_page, String word, String list_file, int search_count, int record_per_page,
       int page_per_block);
+  
+  /**
+   * 조회수 증가
+   * @param contentsno
+   * @return 조회수 증가 여부
+   */
+  public int view(int contentsno);
+  
+  /**
+   * 추천수 증가
+   * @param contentsno
+   * @return 추천수 증가 여부
+   */
+  public int recom(int contentsno);
 
 }
