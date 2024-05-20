@@ -12,9 +12,9 @@
   </div>
   
   <aside class="aside_right">
-    <a th:href="@{|/cate/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <a th:href="@{|/cate/list_search|}">목록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/cate/update/${cateVO.cateno}?word=${word}&now_page=${now_page}|}">수정</a>
+    <a th:href="@{|/cate/update?cateno=${cateVO.cateno}|}">수정</a>
     <span class="menu_devide">│</span>
     <a href="/cate/list_search">등록</a>
     <span class="menu_devide">│</span>

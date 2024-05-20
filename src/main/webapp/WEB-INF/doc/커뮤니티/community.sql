@@ -1,33 +1,31 @@
-DROP TABLE contents CASCADE;
+DROP TABLE contents CASCADE CONSTRAINTS;
 
 DROP TABLE contents;
 
 CREATE TABLE contents (
-    contentsno      NUMBER(10)      NOT NULL    PRIMARY KEY,
-    cateno          NUMBER(10)      NOT NULL,
-    contents_admin  NUMBER(1)      DEFAULT 0   NOT NULL, 
-    title           VARCHAR2(100)   NOT NULL,
-    content         CLOB            NOT NULL,
-    recom           NUMBER(7)       DEFAULT 0   NOT NULL,
-    viewcnt         NUMBER(7)       DEFAULT 0   NOT NULL,
-    commentcnt      NUMBER(7)       DEFAULT 0   NOT NULL,
-    passwd          VARCHAR2(15)    NOT NULL,
-    tag             VARCHAR2(100)   NOT NULL,
-    rdate           DATE            NOT NULL,
-    file1           VARCHAR2(100)  NULL,
-    file1saved      VARCHAR2(100)  NULL,
-    thumb1          VARCHAR2(100)  NULL,
-    size1           NUMBER(10)      NULL,
-    youtube         VARCHAR2(1000)  NULL,
-    memberno        NUMBER(10)      NULL
---    FOREIGN KEY (cateno) REFERENCES cate(cateno),
---    FOREIGN KEY (memberno) REFERENCES member(memberno)
+    CONTENTSNO                        NUMBER(10)     NOT NULL,
+    CATENO                            NUMBER(10)     NOT NULL,
+    TITLE                             VARCHAR2(100)    NOT NULL,
+    CONTENT                           CLOB     NOT NULL,
+    RECOM                             NUMBER(7)    DEFAULT 0     NOT NULL,
+    VIEWCNT                           NUMBER(7)    DEFAULT 0     NOT NULL,
+    COMMENTCNT                        NUMBER(7)    DEFAULT 0     NOT NULL,
+    PASSWD                            VARCHAR2(15)     NOT NULL,
+    TAG                               VARCHAR2(100)    NULL ,
+    RDATE                             DATE     NOT NULL,
+    FILE1                             VARCHAR2(1000)     NULL ,
+    FILE1SAVED                        VARCHAR2(1000)     NULL ,
+    THUMB1                            VARCHAR2(1000)     NULL ,
+    SIZE1                             NUMBER(10)     NULL ,
+    YOUTUBE                           VARCHAR2(1000)     NULL ,
+    MEMBERNO                          NUMBER(10)     NULL,
+    FOREIGN KEY (cateno) REFERENCES cate(cateno),
+    FOREIGN KEY (memberno) REFERENCES member(memberno)
     )
     
 COMMENT ON TABLE CONTENTS is '커뮤티니';
 COMMENT ON COLUMN CONTENTS.CONTENTSNO is '컨텐츠 번호';
 COMMENT ON COLUMN CONTENTS.CATENO is '카테고리 번호';
-COMMENT ON COLUMN CONTENTS.CONTENTS_ADMIN is '관리자권한';
 COMMENT ON COLUMN CONTENTS.TITLE is '제목';
 COMMENT ON COLUMN CONTENTS.CONTENT is '내용';
 COMMENT ON COLUMN CONTENTS.RECOM is '추천수';
@@ -52,35 +50,21 @@ CREATE SEQUENCE contents_seq
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 -- CREATE
-INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+INSERT INTO contents(contentsno, memberno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
        file1saved, thumb1, size1)
-VALUES (contents_seq.nextval, 1, 2, 0, '식단', '다이어트 식단 추천', 0, 0, 0, '1234', '다이어트,식단', sysdate, 'food.jpg', 'food_1.jpg',
+VALUES (contents_seq.nextval, 1, 6, '식단', '다이어트 식단 추천', 0, 0, 0, '1234', '다이어트,식단', sysdate, 'food.jpg', 'food_1.jpg',
         'food_t.jpg', 1000);
         
-INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
-       file1saved, thumb1, size1)
-VALUES (contents_seq.nextval, 1, 1, 0, '운동', '운동 추천', 0, 0, 0, '1234', '운동,다이어트', sysdate, 'health.jpg', 'health_1.jpg',
-        'health_t.jpg', 1000);
-
-INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
-       file1saved, thumb1, size1)
-VALUES (contents_seq.nextval, 1, 2, 0, '식단 짜는 방법', '식단 구성 추천', 0, 0, 0, '1234', '다이어트,식단', sysdate, 'food.jpg', 'food_1.jpg',
-        'food_t.jpg', 1000);
-
-INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
-       file1saved, thumb1, size1)
-VALUES (contents_seq.nextval, 1, 1, 0, '운동 방법', '다양한 운동 방법', 0, 0, 0, '1234', '다이어트,운동', sysdate, 'food.jpg', 'food_1.jpg',
-        'food_t.jpg', 1000);
         
 -- READ
-SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
-       file1saved, thumb1, size1, youtube
+SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+       file1saved, thumb1, size1
 FROM contents;
 
-SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
        file1saved, thumb1, size1, youtube
 FROM contents
-WHERE contentsno = 1;
+WHERE contentsno = 7;
 
 -- UPDATE
 UPDATE contents

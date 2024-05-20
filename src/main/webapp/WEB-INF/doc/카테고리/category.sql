@@ -57,7 +57,7 @@ SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
 FROM cate
 WHERE name = '식단';
 
-SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno
 FROM cate
 ORDER BY seqno ASC;
 
@@ -72,7 +72,7 @@ WHERE cateno = 3;
 
 UPDATE cate
 SET seqno = seqno - 1
-WHERE cateno = 4;
+WHERE cateno = 16 AND seqno > 0;
 
 UPDATE cate
 SET visible = 'N'

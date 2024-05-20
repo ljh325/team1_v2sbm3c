@@ -3,47 +3,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.contents.ContentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   <!-- 이재호 xml -->
-  <!-- CREATE TABLE contents (
-    contentsno      NUMBER(10)      NOT NULL    PRIMARY KEY,
-    cateno          NUMBER(10)      NOT NULL,
-    contents_admin  NUMBER(1)      DEFAULT 0   NOT NULL, 
-    title           VARCHAR2(100)   NOT NULL,
-    content         CLOB            NOT NULL,
-    recom           NUMBER(7)       DEFAULT 0   NOT NULL,
-    viewcnt         NUMBER(7)       DEFAULT 0   NOT NULL,
-    commentcnt      NUMBER(7)       DEFAULT 0   NOT NULL,
-    passwd          VARCHAR2(15)    NOT NULL,
-    tag             VARCHAR2(100)   NOT NULL,
-    rdate           DATE            NOT NULL,
-    file1           VARCHAR2(100)  NULL,
-    file1saved      VARCHAR2(100)  NULL,
-    thumb1          VARCHAR2(100)  NULL,
-    size1           NUMBER(10)      NULL,
-    youtube         VARCHAR2(1000)  NULL,
-    memberno        NUMBER(10)      NULL
+  <!-- CREATE TABLE CONTENTS(
+    CONTENTSNO                        NUMBER(10)     NOT NULL,
+    CATENO                            NUMBER(10)     NOT NULL,
+    TITLE                             VARCHAR2(100)    NOT NULL,
+    CONTENT                           CLOB     NOT NULL,
+    RECOM                             NUMBER(7)    DEFAULT 0     NOT NULL,
+    VIEWCNT                           NUMBER(7)    DEFAULT 0     NOT NULL,
+    COMMENTCNT                        NUMBER(7)    DEFAULT 0     NOT NULL,
+    PASSWD                            VARCHAR2(15)     NOT NULL,
+    TAG                               VARCHAR2(100)    NULL ,
+    RDATE                             DATE     NOT NULL,
+    FILE1                             VARCHAR2(1000)     NULL ,
+    FILE1SAVED                        VARCHAR2(1000)     NULL ,
+    THUMB1                            VARCHAR2(1000)     NULL ,
+    SIZE1                             NUMBER(10)     NULL ,
+    YOUTUBE                           VARCHAR2(1000)     NULL ,
+    MEMBERNO                          NUMBER(10)     NULL,
     FOREIGN KEY (cateno) REFERENCES cate(cateno),
     FOREIGN KEY (memberno) REFERENCES member(memberno)
-    ) -->
+); -->
   <!-- 게시글 등록 -->
   <insert id = "create" parameterType="dev.mvc.contents.ContentsVO">
-    INSERT INTO contents(contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
-                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1)
-    VALUES (contents_seq.nextval, #{memberno}, #{cateno}, #{contents_admin}, #{title}, #{content}, #{recom}, #{viewcnt}, 
+    INSERT INTO contents(contentsno, memberno, cateno, title, content, recom, viewcnt, 
+                                  commentcnt, passwd, tag, rdate, file1,file1saved, thumb1, size1)
+    VALUES (contents_seq.nextval, #{memberno}, #{cateno}, #{title}, #{content}, #{recom}, #{viewcnt}, 
                 #{commentcnt}, #{passwd}, #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1})
   </insert>
   
   <!-- 모든 등록된 게시글 목록 -->
   <select id = "list_all" resultType="dev.mvc.contents.ContentsVO">
-    SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1
     FROM contents
     ORDER BY contentsno DESC    
   </select>
   
   <!-- 특정 카테고리 게시글 목록  -->
   <select id = "list_cate" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1
     FROM contents
     WHERE cateno = #{cateno}
     ORDER BY contentsno DESC
@@ -58,7 +57,7 @@
   
   <!-- 게시글 조회 -->
   <select id = "read" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
     FROM contents
     WHERE contentsno = #{contentsno}
@@ -73,7 +72,7 @@
   
   <!-- 카테고리별 검색 목록 -->
   <select id="list_cate_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-    SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
     FROM contents
     <choose>
@@ -107,13 +106,13 @@
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
   <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-   SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+   SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, r
    FROM (
-              SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+              SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
                         commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, rownum as r
               FROM (
-                        SELECT contentsno, memberno, cateno, contents_admin, title, content, recom, viewcnt, 
+                        SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
                                   commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
                         FROM contents
                         <choose>
@@ -164,12 +163,6 @@
     WHERE contentsno=#{contentsno}
   </delete>
   
-  <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
-  <select id="count_by_cate" resultType="int" parameterType="int">
-    SELECT COUNT(*) as cnt 
-    FROM contents 
-    WHERE cateno=#{cateno}
-  </select>
   
   <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
   <delete id="delete_by_cate" parameterType="int">
