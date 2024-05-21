@@ -53,16 +53,23 @@ public class MhCont {
     System.out.println("-> MhCont created.");  
   }
   
-  // create 폼 출력
-  @GetMapping(value="/create/{memberno}") // http://localhost:9091/mh/create
-  public String create(HttpSession session,Model model,@PathVariable("memberno") int memberno) {
-    
-    
- 
+  
+  
+  /**
+   * 
+   * 생성 폼 
+   * @param session
+   * @param model
 
+   * @return
+   */
+  // create 폼 출력
+  @GetMapping(value="/create") // http://localhost:9091/mh/create
+  public String create(HttpSession session,Model model) {
+    
    
   if (this.memberProc.isMember(session)) {
-  session.setAttribute("memberno",memberno);
+  int memberno = (int)session.getAttribute("memberno");
   MhVO mhVO = new MhVO();
   mhVO.setMemberno(memberno);
   model.addAttribute("mhVO", mhVO);
@@ -93,8 +100,13 @@ public class MhCont {
    * @return
    */
   @PostMapping(value="/create") // http://localhost:9091/mh/create
-  public String create(HttpSession session,Model model, @Valid MhVO mhVO) {
-
+  public String create_process(HttpSession session,Model model, @Valid MhVO mhVO,BindingResult bindingResult) {
+    
+    if (bindingResult.hasErrors())
+    {
+      return "mh/create";
+      
+    }
     if (this.memberProc.isMember(session)) {
       
     int memberno = (int) session.getAttribute("memberno");
@@ -105,37 +117,40 @@ public class MhCont {
 
     
     int cnt = this.mhProc.create(mhVO);
+    
     System.out.println("-> cnt: " + cnt);
 
     model.addAttribute("cnt", cnt);
-
-    return "index";
+    if (cnt == 1) {
+      
+      return "redirect:/mh/list_all";
+      
+    } else {
+      model.addAttribute("code", "create_fail");
+      return "mh/msg"; // /templates/mh/msg.html
+      
+      
+    }
    }else {
      return "index";
     }
    }
   
    
-//    
-//    int cnt = this.mhProc.create(mhVO);
-//    System.out.println("-> cnt: " + cnt);
-//    
-//    if (cnt == 1) {
-//      model.addAttribute("code", "create_success");
-//      model.addAttribute("kg", mhVO.getKg());
-//      model.addAttribute("cm", mhVO.getCm());
-//    } else {
-//      model.addAttribute("code", "create_fail");
-//    }
-//    
-//    model.addAttribute("cnt", cnt);
-//    return "/mh/msg"; // /templates/mh/msg.html
-//  }
+   /**
+   * list_all 폼,목록
+   * http://localhost:9091/mh/list_all
+   * @param model
+   * @param m
+   * @param bindingResult
+   * @return
+    */
   
-  @GetMapping(value="/list_all/{memberno}")
-  public String list_all(HttpSession session,Model model,@PathVariable("memberno") Integer memberno, 
+  @GetMapping(value="/list_all")
+  public String list_all(HttpSession session,Model model,
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session)) {
+    int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
     model.addAttribute("list", list);
     return "/mh/list_all"; // /mh/list_all.html
@@ -154,26 +169,27 @@ public class MhCont {
   /**
    * 수정폼
    * @param model
-   * @param mhno 조회할 카테고리 번호
+   * @param mhno 조회할 mh 번호
    * @return
    */
-  @GetMapping(value="/update/{mhno}")
-  public String update(HttpSession session,Model model, 
-                                @PathVariable("mhno") Integer mhno) { 
-    if (this.memberProc.isMember(session)) {
-    
+  @GetMapping(value="/update")
+  public String update(HttpSession session,Model model, @RequestParam("mhno") int mhno) { 
 
-    ArrayList<MhVOMenu> menu = this.mhProc.menu();
-    model.addAttribute("menu", menu);
-    
+    if (this.memberProc.isMember(session)) {
+    int memberno = (int)session.getAttribute("memberno");
+    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
+    model.addAttribute("list", list);
     MhVO mhVO = this.mhProc.read(mhno);
     model.addAttribute("mhVO", mhVO);
+    ArrayList<MhVOMenu> menu = this.mhProc.menu();
+    model.addAttribute("menu", menu);
+  
     
     return "mh/update"; 
     }
     else {
     
-    return "mh/list_all";  // /templates/mh/update.html
+    return "mh/list_all";  
     }
   }
   
@@ -185,31 +201,36 @@ public class MhCont {
    * @return
    */
   @PostMapping(value="/update") // http://localhost:9091/mh/update
-  public String update_process(Model model, 
+  public String update_process(HttpSession session,
+                                       Model model, 
                                             @Valid MhVO mhVO, BindingResult bindingResult 
                                            ) {
-   
+    if (this.memberProc.isMember(session)) {
     
     if (bindingResult.hasErrors()) {
       
       
       return "mh/update";  // /templates/mh/update.html
     }
-    
+   
     int cnt = this.mhProc.update(mhVO);
 //    System.out.println("-> cnt: " + cnt);
 
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
-      return "redirect:/mh/list_all/" + mhVO.getMemberno();
+      
+      return "redirect:/mh/list_all";
       
     } else {
       model.addAttribute("code", "update_fail");
       return "mh/msg"; // /templates/mh/msg.html
     }
+    }else {
+      return "index";
+    }
 
   }
-  
+
   /**
    * Delete form
    * http://localhost:9091/mh/delete/1
@@ -217,26 +238,71 @@ public class MhCont {
    * @param mhno Mhgory number to delete.
    * @return
    */
-  @GetMapping(value="/delete/{mhno}")
-  public String delete(Model model, 
-                               @PathVariable("mhno") Integer mhno, 
-                               @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+  @GetMapping(value="/delete")
+  public String delete(HttpSession session,Model model, 
+                             
+                               @RequestParam("mhno") int mhno) {
+    
+    if (this.memberProc.isMember(session)) {
     ArrayList<MhVOMenu> menu = this.mhProc.menu();
     model.addAttribute("menu", menu);
     
+    
+    int memberno = (int)session.getAttribute("memberno");
+    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
+    model.addAttribute("list", list);
+    
+    
     MhVO mhVO = this.mhProc.read(mhno);
     model.addAttribute("mhVO", mhVO);
-    
+    }
+    else {
+      return "list_all";
+    }
 
    
-
-   
-    model.addAttribute("now_page", now_page);
-    
- 
-
-    
     return "mh/delete";  // /templates/mh/delete.html
+    
+  }
+  
+  
+  /**
+   * Delete form
+   * http://localhost:9091/mh/delete/1 삭제 프로스
+   * @param model
+   * @param mhno Mhgory number to delete.
+   * @return
+   */
+  @PostMapping(value="/delete")
+  public String delete_process(HttpSession session,Model model, 
+                             
+                               @RequestParam("mhno") int mhno) {
+    
+    if (this.memberProc.isMember(session)) {
+    ArrayList<MhVOMenu> menu = this.mhProc.menu();
+    model.addAttribute("menu", menu);
+    
+    
+    int memberno = (int)session.getAttribute("memberno");
+    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
+    model.addAttribute("list", list);
+    
+    
+    int cnt = this.mhProc.delete(mhno);
+    if (cnt == 1) {
+      
+      return "redirect:/mh/list_all";
+      
+    } else {
+      model.addAttribute("code", "delete_fail");
+      return "mh/msg"; // /templates/mh/msg.html
+       }
+    }
+    else {
+      return "list_all";
+    }
+
+  
     
   }
   

@@ -29,6 +29,10 @@
       <div th:if="${#fields.hasErrors('cm')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
         <div th:each="err : ${#lists.sort(#fields.errors('cm'))}" th:text="${err}"></div>
       </div>             
+      
+      
+      
+      
     </div>
       <div>
       <label>골격근량</label>

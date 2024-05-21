@@ -28,7 +28,7 @@
     <!-- MH 수정 -->
   <update id="update" parameterType="dev.mvc.mh.MhVO">
      UPDATE mh
-     SET kg = #{kg},ckg = #{ckg},cm = #{cm},muscle = #{muscle},memberno =#{memberno},insertdate = sysdate
+     SET kg = #{kg},ckg = #{ckg},cm = #{cm},muscle = #{muscle},insertdate = sysdate
      WHERE  MHNO = #{mhno}
   </update>
 

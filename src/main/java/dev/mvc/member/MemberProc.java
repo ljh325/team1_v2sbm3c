@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.mvc.contents.ContentsVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.HttpSession;
 
@@ -95,8 +96,18 @@ public class MemberProc implements MemberProcInter {
   
   @Override
   public int update(MemberVO memberVO) {
+    String passwd = memberVO.getPasswd();
+    // Security security = new Security();
+    String passwd_encoded = this.security.aesEncode(passwd);
+    memberVO.setPasswd(passwd_encoded);
     int cnt = this.memberDAO.update(memberVO);
     return cnt;
+  }
+  
+  @Override
+  public int update_profile(MemberVO memberVO) {
+      int cnt = this.memberDAO.update_profile(memberVO);
+      return cnt;
   }
   
   @Override
