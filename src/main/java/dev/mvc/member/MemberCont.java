@@ -3,6 +3,7 @@ package dev.mvc.member;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.cate.CateVOMenu;
 import dev.mvc.tool.Security;
@@ -36,8 +38,22 @@ public class MemberCont {
   public MemberCont() {
     System.out.println("-> MemberCont created.");  
   }
-  
-  
+  /***************************************************************************************/
+  @GetMapping(value="/checkID") // http://localhost:9093/member/checkID?id=admin
+  @ResponseBody
+  public String checkID(String id) {
+    System.out.println("-> id: " + id);
+    int cnt = this.memberProc.checkID(id);
+    
+    // return "cnt: " + cnt;
+    // return "{\"cnt\": " + cnt + "}";    // {"cnt": 1} JSON
+    
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
+  }
+  /***************************************************************************************/
   /***************************************************************************************/
   /**
    * 회원 가입 폼
@@ -81,7 +97,7 @@ public class MemberCont {
       model.addAttribute("cnt", 0);
     }
     
-    return "/index"; // /templates/member/msg.html 일단 메인화면으
+    return "member/msg"; // /templates/member/msg.html 일단 메인화면으
   }
   /***************************************************************************************/
   
@@ -93,7 +109,7 @@ public class MemberCont {
    * @param memberVO
    * @return
    */
-  @GetMapping(value="/list") // http://localhost:9091/member/list
+  @GetMapping(value="/list") // http://localhost:9093/member/list
   public String list(HttpSession session, Model model) {
     
 
@@ -131,7 +147,7 @@ public class MemberCont {
    * @param memberno 회원 번호
    * @return 회원 정보
    */
-  @GetMapping(value="/login") // http://localhost:9091/member/login
+  @GetMapping(value="/login") // http://localhost:9093/member/login
   public String login_form(Model model, HttpServletRequest request) {
   
     
@@ -196,6 +212,19 @@ public class MemberCont {
       return "member/msg"; // templates/member/msg.html로 이동  
     }
   
+  }
+  
+  /***************************************************************************************/
+  /**
+   * 로그아웃
+   * @param model
+   * @param memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/logout")
+  public String logout(HttpSession session, Model model) {
+    session.invalidate();  // 모든 세션 변수 삭제
+    return "redirect:/";
   }
   /***************************************************************************************/
 }

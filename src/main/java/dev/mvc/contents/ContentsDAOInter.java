@@ -115,5 +115,18 @@ public interface ContentsDAOInter {
    */
   public int delete_by_member(int memberno);
   
+  /**
+   * 조회수 증가
+   * @param contentsno
+   * @return 조회수 증가 여부
+   */
+  public int view(int contentsno);
+  
+  /**
+   * 추천수 증가
+   * @param contentsno
+   * @return 추천수 증가 여부
+   */
+  public int recom(int contentsno);
   
 }

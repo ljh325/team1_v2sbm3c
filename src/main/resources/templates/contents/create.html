@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${cateVO.name }" class="title_line_text"></span > 
+    > <span th:text="${cateVO.namesub}" class="title_line_text"></span > 
+    > 글 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a th:href="@{|./create?cateno=${cateVO.cateno}|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno_search_paging?cateno=${cateVO.cateno }|}">기본 목록형</a>    
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno_grid?cateno=${cateVO.cateno }|}">갤러리형</a>
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${contentsVO}" action='./create' enctype="multipart/form-data">
+    <input type="hidden" name="cateno" th:value="${cateVO.cateno}">
+    
+    <div>
+       <label>제목</label>
+       <input type='text' name='title' value='테스트 제목' required="required" placeholder="제목을 입력해주세요."
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>내용</label>
+       <textarea name='content' required="required" placeholder="내용을 입력해주세요." class="form-control" rows="12" style='width: 100%;'>테스트 내용</textarea>
+    </div>
+    <div>
+       <label>태그</label>
+       <input type='text' name='tag' value='테스트,태그,운동,식단' required="required" placeholder="#태그입력"
+                 class="form-control" style='width: 100%;'>
+    </div>   
+    <div>
+       <label>이미지</label>
+       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
+    </div>
+    <div>
+       <label>미리보기 이미지</label>
+       <input type='file' class="form-control" name='file2MF' id='file2MF' value='' placeholder="이미지 선택">
+    </div>     
+    <div>
+       <label>패스워드</label>
+       <input type='password' name='passwd' value='1234' required="required" 
+                 class="form-control" style='width: 50%;'>
+    </div>   
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" th:attr="onclick=|location.href='./list_cate?cateno=${cateVO.cateno}'|" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  
+  </form>
+
+</div>
+
+
+  
