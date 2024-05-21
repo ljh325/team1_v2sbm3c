@@ -1,0 +1,27 @@
+<div th:fragment="comment_list_fragment"> <!-- <div th:replace=... -->
+  <div class='menu_line'></div>
+
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 60%;' />
+      <col style='width: 5%;' />
+      <col style='width: 10%;' />
+      <col style='width: 5%;' />
+      <col style='width: 5%;' />
+    </colgroup>
+    <tr>
+
+
+    </tr>
+
+    <tr th:each="commentsVO:${list}" style="height: 90px;">
+      
+      <td class='td_left'>
+        <span th:text="|${commentsVO.id} |" style="font-weight: bold;"></span>
+        <span th:text="${commentsVO.rdate}"></span>
+        <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}">댓글 수정</a><br>
+        <span th:text="${commentsVO.contents}"></span>
+      </td>
+
+    </tr>
+  </table>

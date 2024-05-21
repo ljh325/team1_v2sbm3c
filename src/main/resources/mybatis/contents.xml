@@ -26,15 +26,15 @@
   <!-- 게시글 등록 -->
   <insert id = "create" parameterType="dev.mvc.contents.ContentsVO">
     INSERT INTO contents(contentsno, memberno, cateno, title, content, recom, viewcnt, 
-                                  commentcnt, passwd, tag, rdate, file1,file1saved, thumb1, size1)
+                                  commentcnt, passwd, tag, rdate, file1,file1saved, thumb1, size1,id)
     VALUES (contents_seq.nextval, #{memberno}, #{cateno}, #{title}, #{content}, #{recom}, #{viewcnt}, 
-                #{commentcnt}, #{passwd}, #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1})
+                #{commentcnt}, #{passwd}, #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1}, #{id})
   </insert>
   
   <!-- 모든 등록된 게시글 목록 -->
   <select id = "list_all" resultType="dev.mvc.contents.ContentsVO">
     SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, id
     FROM contents
     ORDER BY contentsno DESC    
   </select>
@@ -42,7 +42,7 @@
   <!-- 특정 카테고리 게시글 목록  -->
   <select id = "list_cate" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
     SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, id
     FROM contents
     WHERE cateno = #{cateno}
     ORDER BY contentsno DESC
@@ -58,7 +58,7 @@
   <!-- 게시글 조회 -->
   <select id = "read" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
     SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
     FROM contents
     WHERE contentsno = #{contentsno}
   </select>
@@ -73,7 +73,7 @@
   <!-- 카테고리별 검색 목록 -->
   <select id="list_cate_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
     SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
     FROM contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
@@ -107,13 +107,13 @@
   <!-- 카테고리별 검색 + 페이징 목록 -->
   <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, r
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
    FROM (
               SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, rownum as r
+                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
               FROM (
                         SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube
+                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
                         FROM contents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->

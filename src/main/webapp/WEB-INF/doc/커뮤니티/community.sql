@@ -19,10 +19,14 @@ CREATE TABLE contents (
     SIZE1                             NUMBER(10)     NULL ,
     YOUTUBE                           VARCHAR2(1000)     NULL ,
     MEMBERNO                          NUMBER(10)     NULL,
+    id                                VARCHAR2(30)   NULL,
     FOREIGN KEY (cateno) REFERENCES cate(cateno),
     FOREIGN KEY (memberno) REFERENCES member(memberno)
     )
+    ALTER TABLE contents
+    ADD CONSTRAINT pk_contents PRIMARY KEY (contentsno);
     
+    ALTER TABLE contents ADD (id   VARCHAR2(30))
 COMMENT ON TABLE CONTENTS is '커뮤티니';
 COMMENT ON COLUMN CONTENTS.CONTENTSNO is '컨텐츠 번호';
 COMMENT ON COLUMN CONTENTS.CATENO is '카테고리 번호';
@@ -66,6 +70,10 @@ SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, commentcnt,
 FROM contents
 WHERE contentsno = 7;
 
+SELECT c.contentsno, c.title, m.id 
+FROM contents c, member m
+WHERE c.memberno = m.memberno;
+
 -- UPDATE
 UPDATE contents
 SET title = '제목 수정'
@@ -78,6 +86,16 @@ WHERE contentsno = 1;
 UPDATE contents
 SET tag = '태그 수정'
 WHERE contentsno = 1;
+
+UPDATE contents
+SET viewcnt = viewcnt + 1
+WHERE contentsno = 12;
+
+UPDATE contents
+SET recom = recom + 1
+WHERE contentsno = 12;
+
+commit;
 
 -- DELETE
 DELETE FROM contents

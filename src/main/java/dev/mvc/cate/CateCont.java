@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev.mvc.admin.AdminProcInter;
+import dev.mvc.admin.AdminVO;
+import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -24,6 +27,14 @@ public class CateCont {
   @Autowired
   @Qualifier("dev.mvc.cate.CateProc")
   private CateProcInter cateProc;
+
+  @Autowired
+  @Qualifier("dev.mvc.member.MemberProc")
+  private MemberProcInter memberProc;
+
+  @Autowired
+  @Qualifier("dev.mvc.admin.AdminProc")
+  private AdminProcInter adminProc;
 
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
@@ -45,10 +56,13 @@ public class CateCont {
 //  }
 
   @PostMapping(value = "/create") // http://localhost:9091/cate/create
-  public String create(Model model, @Valid CateVO cateVO, BindingResult bindingResult) {
+  public String create(HttpSession session, Model model, @Valid CateVO cateVO, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return "cate/list_search";
     }
+    // int memberno = (int) session.getAttribute("memberno"); // adminno FK
+//  contentsVO.setMemberno(memberno);
+    cateVO.setAdminsno(1); // Test용
 
     int cnt = this.cateProc.create(cateVO);
     System.out.println("-> cnt: " + cnt);
@@ -66,14 +80,18 @@ public class CateCont {
   }
 
   @GetMapping(value = "/list_search")
-  public String list_all(Model model, CateVO cateVO) {
+  public String list_all(HttpSession session, Model model, CateVO cateVO) {
+
     ArrayList<CateVOMenu> menu = this.cateProc.menu();
     model.addAttribute("menu", menu);
 
     ArrayList<CateVO> list = this.cateProc.list_all();
     model.addAttribute("list", list);
 
+//    
+
     return "cate/list_search"; // /cate/list_all.html
+
   }
 
   /**
@@ -84,14 +102,19 @@ public class CateCont {
    * @return
    */
   @GetMapping(value = "/read")
-  public String read(Model model, int cateno) {
+  public String read(HttpSession session, Model model, int cateno) {
+    
     ArrayList<CateVOMenu> menu = this.cateProc.menu();
     model.addAttribute("menu", menu);
 
     CateVO cateVO = this.cateProc.read(cateno);
     model.addAttribute("cateVO", cateVO);
+    
+    AdminVO adminVO = this.adminProc.read(cateVO.getAdminsno());
+    model.addAttribute("adminVO", adminVO);
 
     return "cate/read"; // /templates/cate/read.html
+
   }
 
   /**
@@ -102,15 +125,19 @@ public class CateCont {
    * @return
    */
   @GetMapping(value = "/update")
-  public String update(Model model, int cateno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
-    model.addAttribute("menu", menu);
+  public String update(HttpSession session, Model model, int cateno) {
+    if (this.memberProc.isMemberAdmin(session)) {
+      ArrayList<CateVOMenu> menu = this.cateProc.menu();
+      model.addAttribute("menu", menu);
 
-    CateVO cateVO = this.cateProc.read(cateno);
-    model.addAttribute("cateVO", cateVO);
+      CateVO cateVO = this.cateProc.read(cateno);
+      model.addAttribute("cateVO", cateVO);
 
-    return "cate/update"; // /templates/cate/update.html
+      return "cate/update"; // /templates/cate/update.html
 
+    } else {
+      return "contents/msg";
+    }
   }
 
   /**
@@ -144,103 +171,137 @@ public class CateCont {
     }
 
   }
-  
+
   /**
-   * 삭제 폼
-   * http://localhost:9091/cate/delete/1
+   * 삭제 폼 http://localhost:9091/cate/delete/1
+   * 
    * @param model
    * @param cateno Category number to delete.
    * @return
    */
-  @GetMapping(value="/delete")
+  @GetMapping(value = "/delete")
   public String delete(Model model, int cateno) {
-    
-   
-      ArrayList<CateVOMenu> menu = this.cateProc.menu();
-      model.addAttribute("menu", menu);
-      
-      CateVO cateVO = this.cateProc.read(cateno);
-      model.addAttribute("cateVO", cateVO);
-     
-      return "cate/delete";  // /templates/cate/delete.html
-   
+
+    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    model.addAttribute("menu", menu);
+
+    CateVO cateVO = this.cateProc.read(cateno);
+    model.addAttribute("cateVO", cateVO);
+
+    return "cate/delete"; // /templates/cate/delete.html
+
   }
-  
+
   /**
    * 삭제 처리
+   * 
    * @param model
    * @param cateno 삭제할 레코드 번호
    * @param
    * @return
    */
-  @PostMapping(value="/delete")
+  @PostMapping(value = "/delete")
   public String delete_process(Model model, int cateno) {
     int cnt = this.cateProc.delete(cateno); // 삭제
     System.out.println("-> delete cnt: " + cnt);
     model.addAttribute("cnt", cnt);
-    
+
     if (cnt == 1) {
       return "redirect:/cate/list_search";
     } else {
       model.addAttribute("code", "delete_fail");
       return "cate/msg"; // /templates/cate/msg.html
     }
-    
+
   }
-  
+
   /**
    * 출력 순서 높임: seqno 10 -> 1
+   * 
    * @param model
    * @param cateno 조회할 카테고리 번호
    * @return
    */
-  @GetMapping(value="/update_seqno_forward")
+  @GetMapping(value = "/update_seqno_forward")
   public String update_seqno_forward(Model model, int cateno) {
-    
+
     this.cateProc.update_seqno_forward(cateno);
-    
-    return "redirect:/cate/list_search"; 
+
+    return "redirect:/cate/list_search";
   }
-  
+
   /**
    * 출력 순서 낮춤: seqno 1 -> 10
+   * 
    * @param model
    * @param cateno 조회할 카테고리 번호
    * @return
    */
-  @GetMapping(value="/update_seqno_backward")
+  @GetMapping(value = "/update_seqno_backward")
   public String update_seqno_backward(Model model, int cateno) {
-   
+
     this.cateProc.update_seqno_backward(cateno);
-    
+
     return "redirect:/cate/list_search";
-    
+
   }
-  
+
   /**
    * 카테고리 공개 설정
+   * 
    * @param model
    * @param cateno 조회할 카테고리 번호
    * @return
    */
-  @GetMapping(value="/update_visible_y")
+  @GetMapping(value = "/update_visible_y")
   public String update_visible_y(Model model, int cateno) {
 
     this.cateProc.update_visible_y(cateno);
-    
-    return "redirect:/cate/list_search";  // /templates/cate/list_search.html
+
+    return "redirect:/cate/list_search"; // /templates/cate/list_search.html
   }
-  
+
   /**
    * 카테고리 비공개 설정
+   * 
    * @param model
    * @param cateno 조회할 카테고리 번호
    * @return
    */
-  @GetMapping(value="/update_visible_n")
+  @GetMapping(value = "/update_visible_n")
   public String update_visible_n(Model model, int cateno) {
     this.cateProc.update_visible_n(cateno);
-    
-    return "redirect:/cate/list_search";  // /templates/cate/list_search.html
+
+    return "redirect:/cate/list_search"; // /templates/cate/list_search.html
+  }
+
+  /**
+   * 카테고리 공개 설정
+   * 
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value = "/update_admins_y")
+  public String update_admins_y(Model model, int cateno) {
+
+    this.cateProc.update_admins_y(cateno);
+
+    return "redirect:/cate/list_search"; // /templates/cate/list_search.html
+  }
+
+  /**
+   * 카테고리 비공개 설정
+   * 
+   * @param model
+   * @param cateno 조회할 카테고리 번호
+   * @return
+   */
+  @GetMapping(value = "/update_admins_n")
+  public String update_admins_n(Model model, int cateno) {
+
+    this.cateProc.update_admins_n(cateno);
+
+    return "redirect:/cate/list_search"; // /templates/cate/list_search.html
   }
 }

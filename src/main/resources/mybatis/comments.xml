@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.comments.CommentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 댓글 생성 -->
+  <insert id='create' parameterType="dev.mvc.comments.CommentsVO">
+    INSERT INTO comments(commentsno, contents, id, rdate, memberno, contentsno)
+    VALUES(comments_seq.nextval, #{contents}, #{id}, sysdate, #{memberno}, #{contentsno})  
+  </insert>
+  
+  <!-- 댓글 정보 조회 -->
+  <select id="read" resultType="dev.mvc.comments.CommentsVO" parameterType="int">
+    SELECT commentsno, contents, rdate, memberno, contentsno, id
+    FROM comments
+    WHERE commentsno = #{commentsno}
+  </select>
+  
+  <!-- 게시글 댓글 조회 -->
+  <select id='comment_list' resultType="dev.mvc.comments.CommentsVO" parameterType="int">
+    SELECT commentsno, contents, rdate, memberno, contentsno, id
+    FROM comments
+    WHERE contentsno = #{contentsno}
+    ORDER BY commentsno ASC
+  </select>
+  
+  <!-- 게시글에 등록된 댓글 갯수 -->
+  <select id = "comments_count" resultType="int" parameterType="int">
+    SELECT COUNT(commentsno)
+    FROM comments
+    WHERE contentsno= #{contentsno}
+  </select>
+  
+  <!-- 댓글 수정 -->
+  <update id="update" parameterType="dev.mvc.comments.CommentsVO">
+    UPDATE comments
+    SET contents = #{contents}
+    WHERE commentsno = #{commentsno}
+  </update>
+  
+  <!-- 댓글 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM comments
+    WHERE commentsno = #{commentsno}
+  </delete>
+  
+</mapper>

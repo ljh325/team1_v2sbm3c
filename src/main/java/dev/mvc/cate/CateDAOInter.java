@@ -68,6 +68,20 @@ public interface CateDAOInter {
   public int update_visible_n(int cateno);
   
   /**
+   * 카테고리 관리자 전용 설정
+   * @param cateno
+   * @return 설정된 카테고리 수
+   */
+  public int update_admins_y(int cateno);
+  
+  /** 
+   * 카테고리 관리자 전용 설정 해제
+   * @param cateno
+   * @return 설정된 카테고리 수
+   */
+  public int update_admins_n(int cateno);
+  
+  /**
    * 회원/비회원에게 공개할 중분류 목록
    * @return 중분류 목록
    */
