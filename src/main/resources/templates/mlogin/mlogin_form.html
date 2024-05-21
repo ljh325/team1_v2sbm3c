@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 정보</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+    
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 0 15px;
+    }
+    
+    .profile-image {
+        font-size: 1.5em;
+        color: #6c757d;
+    }
+    
+    .text-success {
+        color: #28a745 !important;
+    }
+    </style>
+
+</head>
+<body>
+<div layout:fragment="content">
+   
+  <div class="container">
+      <header class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <a onclick="history.back();" class="btn btn-link">&lt;</a>
+          <h1 class="h5 mb-0">나의 정보</h1>
+          <a href="#settings" class="btn btn-link">&#9881;</a>
+      </header>
+      <section class="profile mt-3">
+          <h2 class="h6"></h2>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span th:text="@{|-${memberVO.mname}-님의 로그인 내역 |}"></span>
+              <span class="profile-image">&#128100;</span>
+          </div>
+
+      </section>
+
+      <!-- mloginList가 null인지 확인하고, 반복문 내부의 코드에 문제가 없는지 확인합니다. -->
+      <section th:each="mloginVO : ${mloginVO}" class="add mt-3">
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>로그인 시간</span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <!-- logindate의 앞 10자리 (YYYY-MM-DD)만 출력 -->
+              <span class="add-value" th:text="${#strings.substring(mloginVO.logindate, 0, 10)}"></span>
+              <span class="add-value" th:text="@{|IP 주소: ${mloginVO.ip}|}"></span>
+          </div>
+
+      </section>
+
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>
