@@ -38,7 +38,7 @@ public class MhVO {
   
   /** 회원 번호 */
   @NotNull
-  private Integer memberno= 0;
+  private int memberno= 0;
   
  
 
