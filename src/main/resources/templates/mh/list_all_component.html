@@ -1,0 +1,60 @@
+<div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
+ <div style="display: flex; justify-content: center;">
+  <table class="table table-hover">
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>    
+      <col style='width: 15%;'/>
+      <col style='width: 25%;'/>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th_bs">번호</th>
+        <th class="th_bs">체중</th>
+        <th class="th_bs">신장</th>
+        <th class="th_bs">체지방</th>
+        <th class="th_bs">골격근량</th>
+        <th class="th_bs">회원번호</th>
+        <th class="th_bs">등록일</th>
+        
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="mhVO, status:${list}">
+        <td class="td_bs" th:text="${status.index + 1}"></td>
+        <td class="td_bs" th:text="${mhVO.kg}"></td>
+        <td class="td_bs" th:text="${mhVO.cm}"></td>
+        <td class="td_bs" th:text="${mhVO.ckg}"></td>
+        <td class="td_bs" th:text="${mhVO.muscle}"></td>
+        <td class="td_bs" th:text="${mhVO.memberno}"></td>
+        <td class="td_bs" th:text="${mhVO.insertdate.substring(5, 10)}"></td>
+        <td class="td_bs">
+              
+        
+         
+          <a th:href="@{|/mh/update/${mhVO.mhno}|}"><img src="/mh/images/update.png" class="icon"></a>
+          <a th:href="@{|/mh/delete/${mhVO.mhno}|}"><img src="/mh/images/delete.png" class="icon"></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="Bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
