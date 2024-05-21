@@ -46,6 +46,8 @@ public class MhCont {
 
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
   public int page_per_block = 10;
+
+  private Object mhVO;
   
   public MhCont() {
     System.out.println("-> MhCont created.");  
@@ -238,33 +240,34 @@ public class MhCont {
     
   }
   
-  /**
-   * Delete process
-   * @param model
-   * @param mhno 삭제할 레코드 번호
-   * @param bindingResult
-   * @return
-   */
-  @PostMapping(value="/delete")
-  public String delete_process(Model model, Integer mhno
-                                          ) {
-    int cnt = this.mhProc.delete(mhno); // 삭제
-    // System.out.println("-> cnt: " + cnt);
-    
-    model.addAttribute("cnt", cnt);
-    
-    // ----------------------------------------------------------------------------------------------------------
-    // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
-   
-    // ----------------------------------------------------------------------------------------------------------
-    
-    if (cnt == 1) {
-      return "redirect:/mh/list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
-    } else {
-      model.addAttribute("code", "delete_fail");
-      return "mh/msg"; // /templates/mh/msg.html
-    }
-  }
+//  /**
+//   * Delete process
+//   * @param model
+//   * @param mhno 삭제할 레코드 번호
+//   * @param bindingResult
+//   * @return
+//   */
+//  @PostMapping(value="/delete")
+//  public String delete_process(Model model, Integer mhno
+//                                          ) {
+//    int cnt = this.mhProc.delete(mhno); // 삭제
+//    // System.out.println("-> cnt: " + cnt);
+//   MhVO mhVO = this.mhProc.read(mhno);
+//   
+//    model.addAttribute("cnt", cnt);
+//    
+//    // ----------------------------------------------------------------------------------------------------------
+//    // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
+//   
+//    // ----------------------------------------------------------------------------------------------------------
+//    
+//    if (cnt == 1) {
+//      return "redirect:/mh/list_all/" +this.mhVO.getMemberno ;
+//    } else {
+//      model.addAttribute("code", "delete_fail");
+//      return "mh/msg"; // /templates/mh/msg.html
+//    }
+//  }
 
 
 
