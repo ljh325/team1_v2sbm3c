@@ -3,6 +3,8 @@ package dev.mvc.member;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.contents.ContentsVO;
+
 public interface MemberDAOInter {
   /**
    * 중복 아이디 검사
@@ -44,6 +46,13 @@ public interface MemberDAOInter {
    * @return
    */
   public int update(MemberVO memberVO);
+  
+  /**
+   * 파일 정보 수정
+   * @param memberVO
+   * @return 처리된 레코드 갯수
+   */
+  public int update_profile(MemberVO memberVO);
  
   /**
    * 회원 삭제 처리

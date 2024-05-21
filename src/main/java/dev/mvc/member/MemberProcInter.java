@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;  // 구현 클래스를 교체하기 쉬운 구조 지원
 
+import dev.mvc.contents.ContentsVO;
 // import javax.servlet.http.HttpSession; // Spring Boot ~ 2.9
 import jakarta.servlet.http.HttpSession; //  Spring Boot 3.0~
 
@@ -65,6 +66,13 @@ public interface MemberProcInter {
    * @return
    */
   public int update(MemberVO memberVO);
+  
+  /**
+   * 파일 정보 수정
+   * @param memberVO
+   * @return 처리된 레코드 갯수
+   */
+  public int update_profile(MemberVO memberVO);
  
   /**
    * 회원 삭제 처리
