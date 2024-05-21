@@ -40,7 +40,7 @@
   </select>
   
   
-  <!-- memberno로 회원 정보 조회 -->
+  <!-- (o) memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
     SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
     FROM member
@@ -57,39 +57,46 @@
   <!-- (o) 수정 처리 -->
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
-    SET mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}, profile=#{profile}
-    WHERE memberno=#{memberno}
+    SET mname=#{mname}, passwd=#{passwd}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2},
+    profile=#{profile}, profilesaved=#{profilesaved}, thumbs=#{thumbs}, sizes=#{sizes} WHERE memberno=#{memberno}
   </update>
+  
+  <!-- 파일 수정 -->
+  <update id="update_profile" parameterType="dev.mvc.member.MemberVO">
+    UPDATE member
+    SET profile=#{profile}, profilesaved=#{profilesaved}, thumbs=#{thumbs}, sizes=#{sizes}
+    WHERE memberno = #{memberno}
+  </update>  
   
   
   <!-- (o) 회원 삭제 처리 || 탈퇴 성공 : 1, 실패 : 0 -->
-  <!-- 회원등급 -> 관리자: 0, 회원: 1, 회원탈퇴: 99 -->
+  <!-- 회원등급 -> 일반회원: 1, 정지회원: 2, 탈퇴회원: 3 -->
   <update id="delete" parameterType="int">
     UPDATE member
-    SET grade=99
+    SET grade=3
     WHERE memberno=#{memberno}
   </update>
 
-  <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0-->
+  <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0 || 탈퇴회원:3 이 아닌 회원 로그인-->
   <select id="login" resultType="int" parameterType="HashMap">
     SELECT COUNT(memberno) as cnt
     FROM member
-    WHERE id=#{id} AND passwd=#{passwd}
+    WHERE id=#{id} AND passwd=#{passwd} AND grade != 3
   </select>
   
   <!--  (o) 현재 패스워드 검사 -->
-  <select id="passwd_check" parameterType="HashMap" resultType="int">
+  <!--<select id="passwd_check" parameterType="HashMap" resultType="int">
     SELECT COUNT(memberno) as cnt
     FROM member
     WHERE memberno=#{memberno} AND passwd=#{passwd}
-  </select>
+  </select>-->
    
   <!-- (o) 패스워드 변경 -->
-  <update id="passwd_update" parameterType="HashMap">
+  <!--<update id="passwd_update" parameterType="HashMap">
     UPDATE member
     SET passwd=#{passwd}
     WHERE memberno=#{memberno}
-  </update>
+  </update>-->
   
 </mapper>
 

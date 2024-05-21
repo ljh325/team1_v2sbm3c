@@ -13,7 +13,7 @@ public interface AdminDAOInter {
    * @param String
    * @return
    */
-  public AdminVO read_by_adminid(String adminid);
+  public AdminVO read_by_id(String id);
   
   /**
    * 회원 정보 조회

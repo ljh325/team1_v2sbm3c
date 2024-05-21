@@ -1,5 +1,7 @@
 package dev.mvc.member;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,8 +44,6 @@ public class MemberVO {
   private String mdate = "";
   /** 등급 */
   private int grade = 1;
-  /** 프로필 이미지 */
-  private String profile = "";  
   /** 포인트 */
   private int point = 0;
   /** 생일 */
@@ -63,5 +63,27 @@ public class MemberVO {
   private String passwd_save = "";
   /** 이동할 주소 저장 */
   private String url_address = "";
+//------------------------------------ 파일 업로드 관련 ---------------------------------------------
+  /**
+  이미지 파일
+  <input type='file' class="form-control" name='file1MF' id='file1MF' 
+             value='' placeholder="파일 선택">
+  */
+  private MultipartFile files1MF;
+
+  
+  /** 메인 이미지 크기 단위, 파일 크기 */
+  private String sizes_label = "";
+  
+  /** 등록 파일 */
+  private String profile = "";
+  
+  /** 저장된 등록 파일 */
+  private String profilesaved = "";
+  
+  /** 미리보기 이미지*/
+  private String thumbs = "";
+  /** 메인 이미지 크기 */
+  private long sizes;
   
 }
