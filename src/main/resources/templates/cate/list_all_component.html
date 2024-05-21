@@ -33,6 +33,14 @@
           <span th:unless="${cateVO.visible == 'Y'}">
             <a th:href="@{|/cate/update_visible_y?cateno=${cateVO.cateno}|}"><img src="/cate/images/hide.png" class="icon" title="숨김"></a> <!-- /static/cate/images/hide.png -->
           </span>
+          
+          <span th:if="${cateVO.admins == 'Y'}">
+            <a th:href="@{|/cate/update_admins_n?cateno=${cateVO.cateno}|}"><img src="/cate/images/lock.png" class="icon" title="관리자용"></a> <!-- /static/cate/images/show.png -->
+          </span>
+          <span th:unless="${cateVO.admins == 'Y'}">
+            <a th:href="@{|/cate/update_admins_y?cateno=${cateVO.cateno}|}"><img src="/cate/images/lock_off.png" class="icon" title="일반"></a> <!-- /static/cate/images/hide.png -->
+          </span>
+          
           <a th:href="@{|/cate/update_seqno_forward?cateno=${cateVO.cateno}|}"><img src="/cate/images/increase.png" class="icon"></a>
           <a th:href="@{|/cate/update_seqno_backward?cateno=${cateVO.cateno}|}"><img src="/cate/images/decrease.png" class="icon"></a>
           <a th:href="@{|/cate/update?cateno=${cateVO.cateno}|}"><img src="/cate/images/update.png" class="icon"></a>

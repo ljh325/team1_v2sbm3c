@@ -1,6 +1,35 @@
 <!DOCTYPE html> 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <script>
+    
+    function checkID() {
+      
+        let url = './check_login'
+        fetch(url, {
+            method: 'GET',
+            // headers: {
+            //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+            // },
+            // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
+        })
+        .then(response => response.json())
+        .then(rdata => {
+          if (rdata.check == 0) { // 로그인 X
+            alert("로그인 후 추천 가능합니다.")              
+          } 
+        })
+        .catch(error => { // 서버 다운등 통신 에러
+            console.error('Error:', error);
+        });                  
+
+       // ---------------------------------------------------------------------------------------
+       // fetch 관련 종료
+       // ---------------------------------------------------------------------------------------
+        
+      }
+   
+  </script>
   <div class='title_line'>
     <span th:text="${cateVO.name }" class="title_line_text"></span > 
     > <span th:text="${cateVO.namesub}" class="title_line_text"></span > 
@@ -10,6 +39,8 @@
       <a th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}">목록</a>
       <span class='menu_divide' >│</span>
       <a th:href="@{|/contents/create?cateno=${cateVO.cateno}|}">등록</a>
+      <span class='menu_divide' >│</span>
+      <a th:href="@{|/contents/youtube?cateno=${cateVO.cateno }&contentsno=${contentsVO.contentsno}|}">Youtube</a>
       <span class='menu_divide' >│</span>
       <a th:href="@{|/contents/update_text?contentsno=${contentsVO.contentsno}|}">글 수정</a>
       <span class='menu_divide' >│</span>
@@ -54,8 +85,16 @@
         </div>
 
       </li>
- 
       
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
+        <span th:if="${session.memberno != null}">
+          <button id = "recom" type="button" th:attr="onclick=|location.href='/contents/recom?contentsno=${contentsVO.contentsno}'|" class="btn btn-secondary btn-sm">추천</button>
+        </span>
+        
+        <span th:unless="${session.memberno != null}">
+          <button id = "recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
+        </span>
+      </li>
       
       <li class="li_none" style="clear: both;" th:text="|태그(키워드): ${contentsVO.tag}|">
       </li>
@@ -69,7 +108,11 @@
       </li>   
     </ul>
   </fieldset>
-
+  <div class='title_line'>
+    
+  </div>
+  <div th:replace="~{comments/comm::comments_fragment}"></div>
+  </div>
 </div>
 
 </body>

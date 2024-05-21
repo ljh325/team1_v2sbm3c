@@ -10,15 +10,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 //CREATE TABLE CATE(
-//CATENO                            NUMBER(10)    NOT NULL   PRIMARY KEY,
-//NAME                              VARCHAR2(30)    NOT NULL,
-//NAMESUB                           VARCHAR2(30)    NOT NULL,
-//CNT                               NUMBER(7)   NOT NULL,
-//RDATE                             DATE        NOT NULL,
-//SEQNO                             NUMBER(5)   NOT NULL,
-//VISIBLE                           CHAR(1)       NOT NULL,
-//ADMINSNO                           NUMBER(10)    NULL
-//--        FOREIGN KEY(adminno) REFERENCES admin(adminno)
+//    CATENO                            NUMBER(10)    NOT NULL   PRIMARY KEY,
+//    NAME                              VARCHAR2(30)    NOT NULL,
+//    NAMESUB                           VARCHAR2(30)    NOT NULL,
+//    CNT                               NUMBER(7)   NOT NULL,
+//    RDATE                             DATE        NOT NULL,
+//    SEQNO                             NUMBER(5)   NOT NULL,
+//    VISIBLE                           CHAR(1)       NOT NULL,
+//    ADMINSNO                          NUMBER(10)    NULL,
+//        ADMINS                              CHAR(1)         NOT NULL,
+//        FOREIGN KEY(adminsno) REFERENCES admins(adminsno)
 //);
 /**
  * @author 이재호
@@ -51,7 +52,7 @@ public class CateVO {
   @NotNull(message="출력 순서는 필수 입력 항목입니다.")
   @Min(value = 1)
   @Max(value = 1000000)
-  private Integer seqno = 0;
+  private Integer seqno;
   
   /** 출력 모드*/
   @NotEmpty(message="출력 모드는 필수 입력 항목입니다.")
@@ -60,5 +61,8 @@ public class CateVO {
   
   /** 관리자 번호 */
   private Integer adminsno = 0;
+  
+  /** 관리자 전용 */
+  private String admins = "N";
   
 }

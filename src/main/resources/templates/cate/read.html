@@ -25,6 +25,7 @@
   
   <div class="container mt-3" style="width: 50%; margin: 5px auto;">
     <ul class="list-group list-group-flush">
+      <li class="list-group-item">등록한 관리자: <span th:text="${cateVO.adminsno}"></span></li>
       <li class="list-group-item">번호: <span th:text="${cateVO.cateno}"></span></li>
       <li class="list-group-item">중분류: <span th:text="${cateVO.name}"></span></li>
       <li class="list-group-item">소분류: <span th:text="${cateVO.namesub}"></span></li>
@@ -32,6 +33,7 @@
       <li class="list-group-item">등록일: <span th:text="${cateVO.rdate}"></span></li>
       <li class="list-group-item">출력 순서: <span th:text="${cateVO.seqno}"></span></li>
       <li class="list-group-item">출력 모드: <span th:text="${cateVO.visible}"></span></li>
+      <li class="list-group-item">관리자 전용: <span th:text="${cateVO.admins}"></span></li>
     </ul>  
   </div>
 

@@ -28,8 +28,18 @@
       <input type="hidden" name="now_page" th:value="${now_page}">
   
       <div class="msg_warning">건강정보를 삭제하면 복구 할 수 없습니다.</div>
-      <label>건강 정보 날짜</label>: <span th:text="${mhVO.insertdate}"></span>
-      
+       <div>
+          <label>체중:</label>: <span th:text="${mhVO.kg}"></span>
+       </div>
+       <div>
+          <label>체지방:</label>: <span th:text="${mhVO.ckg}"></span>
+       </div>
+       <div>
+          <label>신장:</label>: <span th:text="${mhVO.cm}"></span>
+       </div>
+       <div>
+          <label>골격근량:</label>: <span th:text="${mhVO.muscle}"></span>
+       </div>
       
       <div class="content_body_bottom">
         <button type="submit" class="btn btn-secondary btn-sm">삭제</button>

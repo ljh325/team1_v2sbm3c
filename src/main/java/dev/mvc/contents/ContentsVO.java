@@ -66,6 +66,9 @@ public class ContentsVO {
   /** Youtube 스크립트 */
   private String youtube = "";
   
+  /** 작성자 id */
+  private String id = "";
+  
   
 //------------------------------------ 파일 업로드 관련 ---------------------------------------------
   /**
@@ -88,6 +91,7 @@ public class ContentsVO {
   
   /** 미리보기 이미지*/
   private String thumb1 = "";
+
   
 
 }
