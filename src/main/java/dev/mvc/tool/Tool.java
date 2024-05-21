@@ -5,8 +5,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -60,7 +58,7 @@ public class Tool {
       if (file.endsWith("jpg") || file.endsWith(".jpeg") || file.endsWith(".png") || file.endsWith("gif")
           || file.endsWith("txt") || file.endsWith("hwp") || file.endsWith("xls") || file.endsWith("xlsx")
           || file.endsWith("ppt") || file.endsWith("pptx") || file.endsWith("zip") || file.endsWith("tar")
-          || file.endsWith("gz") || file.endsWith("ipynb") || file.endsWith("doc") || file.endsWith("sql")) {
+          || file.endsWith("gz") || file.endsWith("ipynb") || file.endsWith("doc")) {
         sw = true;
       }
     }
@@ -281,9 +279,8 @@ public class Tool {
     String path = "";
     
     try{
-      //System.out.println("--> User dir: " + System.getProperty("user.dir"));
+      // System.out.println("--> User dir: " + System.getProperty("user.dir"));
       path = request.getRealPath(dir) + "/";  
-      // path = request.getRealPath(dir) + "/";
       // System.out.println("--> Upload path: " + path);
     }catch(Exception e){
       System.out.println(e.toString());
@@ -412,10 +409,6 @@ public class Tool {
   public static synchronized String youtubeResize(String url, int resizeWidth) {
     String[] tokens = url.split(" "); // 공백으로 문자열 분리
     
-    for(String item : tokens) {
-      System.out.println(item);
-    }
-    
     // 정수 추출
     int width = Integer.parseInt(tokens[1].replaceAll("[^0-9]", ""));
     int height = Integer.parseInt(tokens[2].replaceAll("[^0-9]", ""));
@@ -438,15 +431,10 @@ public class Tool {
     return sb.toString();
   }
   
-   /**
-   * 한글 -> 16진수 UTF-8 문자코드로 변환
-   * @param str
-   * @return
-   */
-  public static synchronized String encode(String str) {
-    return URLEncoder.encode(str, StandardCharsets.UTF_8);
-  }
-
 }
+
+
+
+
 
 

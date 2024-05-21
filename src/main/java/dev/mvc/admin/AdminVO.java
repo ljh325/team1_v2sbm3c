@@ -2,8 +2,10 @@ package dev.mvc.admin;
 
 public class AdminVO {
   private int adminno;
-  private String adminid;
-  private String password;
+  private String id;
+  private String passwd;
+  private String aname;
+  private String adate;
   private int grade;
   
   public int getAdminno() {
@@ -12,19 +14,30 @@ public class AdminVO {
   public void setAdminno(int adminno) {
     this.adminno = adminno;
   }
-  public String getAdminid() {
-    return adminid;
+  public String getId() {
+    return id;
   }
-  public void setAdminid(String adminid) {
-    this.adminid = adminid;
+  public void setId(String id) {
+    this.id = id;
   }
-  public String getPassword() {
-    return password;
+  public String getPasswd() {
+    return passwd;
   }
-  public void setPassword(String password) {
-    this.password = password;
+  public void setPasswd(String passwd) {
+    this.passwd = passwd;
   }
-
+  public String getAname() {
+    return aname;
+  }
+  public void setAname(String aname) {
+    this.aname = aname;
+  }
+  public String getAdate() {
+    return adate;
+  }
+  public void setAdate(String adate) {
+    this.adate = adate;
+  }
   public int getGrade() {
     return grade;
   }
@@ -32,12 +45,5 @@ public class AdminVO {
     this.grade = grade;
   }
   
-  @Override
-  public String toString() {
-    return "AdminVO [adminno=" + adminno + ", adminid=" + adminid + ", password=" + password + ", grade=" + grade + "]";
-  }
-  
   
 }
-
-
