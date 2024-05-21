@@ -1,26 +1,27 @@
 package dev.mvc.admin;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 public interface AdminProcInter {
+  
   /**
    * 로그인
-   * @param AdminVO
-   * @return
+   * @param adminVO The AdminVO object containing admin credentials
+   * @return An integer representing the login result (e.g., 0 for success, 1 for failure)
    */
   public int login(AdminVO adminVO);
   
   /**
    * 관리자 정보
-   * @param String
-   * @return
+   * @param id The ID of the admin to read information for
+   * @return The AdminVO object containing admin information
    */
-  public AdminVO read_by_adminid(String adminid);
+  public AdminVO read_by_id(String id);
   
   /**
    * 관리자 로그인 체크
-   * @param session
-   * @return
+   * @param session The HttpSession object for the current session
+   * @return A boolean indicating whether the current session belongs to an admin
    */
   public boolean isAdmin(HttpSession session);
   
@@ -30,7 +31,5 @@ public interface AdminProcInter {
    * @return
    */
   public AdminVO read(int admino);
-  
+
 }
-
-

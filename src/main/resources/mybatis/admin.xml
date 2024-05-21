@@ -6,22 +6,21 @@
   <!-- 로그인 -->
   <select id="login" resultType="int" parameterType="dev.mvc.admin.AdminVO">
     SELECT COUNT(*) as cnt
-    FROM admin
-    WHERE adminid=#{adminid} AND password=#{password} 
+    FROM admins
+    WHERE id=#{id} AND passwd=#{passwd} 
   </select>
   
   <!-- 관리자 정보 -->
-  <select id="read_by_adminid" resultType="dev.mvc.admin.AdminVO" parameterType ="String">
-    SELECT adminno, adminid, password, grade 
-    FROM admin
-    WHERE adminid=#{adminid}
+  <select id="read_by_id" resultType="dev.mvc.admin.AdminVO" parameterType ="String" >
+    SELECT adminno, id, passwd, aname, adate, grade 
+    FROM admins
+    WHERE id=#{id}
   </select>
   
-  <!-- adminno를 통한 회원 정보 -->
-  <select id="read" resultType="dev.mvc.admin.AdminVO" parameterType ="int">
-    SELECT adminno, adminid, password, grade
-    FROM admin
+    <!-- adminno를 통한 회원 정보 -->
+  <select id="read" resultType="dev.mvc.admin.AdminVO" parameterType ="int" >
+    SELECT adminno, id, passwd, aname, adate, grade 
+    FROM admins
     WHERE adminno=#{adminno}
   </select>
-  
 </mapper>

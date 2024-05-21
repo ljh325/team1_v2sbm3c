@@ -1,13 +1,13 @@
 package dev.mvc.admin;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import jakarta.servlet.http.HttpSession;
+
 @Component("dev.mvc.admin.AdminProc")
 public class AdminProc implements AdminProcInter {
-  @Autowired // AdminDAOInter interface를 구현한 클래스의 객체를 만들어 자동으로 할당해라.
+  @Autowired
   private AdminDAOInter adminDAO;
   
   @Override
@@ -17,11 +17,11 @@ public class AdminProc implements AdminProcInter {
   }
 
   @Override
-  public AdminVO read_by_adminid(String adminid) {
-    AdminVO adminVO = this.adminDAO.read_by_adminid(adminid);
+  public AdminVO read_by_id(String id) {
+    AdminVO adminVO = this.adminDAO.read_by_id(id);
     return adminVO;
   }
-
+  
   @Override
   public boolean isAdmin(HttpSession session) {
     boolean admin = false;
@@ -35,16 +35,11 @@ public class AdminProc implements AdminProcInter {
     }
     
     return admin;
-    
   }
-
   @Override
   public AdminVO read(int admino) {
     AdminVO adminVO = this.adminDAO.read(admino);
     return adminVO;
   }
   
-  
 }
-
-
