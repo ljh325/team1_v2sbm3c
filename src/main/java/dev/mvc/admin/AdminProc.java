@@ -1,45 +1,45 @@
 package dev.mvc.admin;
 
+
+
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpSession;
+import dev.mvc.member.MemberVO;
+import dev.mvc.tool.Security;
+
 
 @Component("dev.mvc.admin.AdminProc")
 public class AdminProc implements AdminProcInter {
   @Autowired
   private AdminDAOInter adminDAO;
   
+  @Autowired
+  Security security;
+  
   @Override
-  public int login(AdminVO adminVO) {
-    int cnt = this.adminDAO.login(adminVO);
+  public int checkID(String id) {
+    int cnt = this.adminDAO.checkID(id);
     return cnt;
   }
 
   @Override
-  public AdminVO read_by_id(String id) {
-    AdminVO adminVO = this.adminDAO.read_by_id(id);
-    return adminVO;
-  }
-  
-  @Override
-  public boolean isAdmin(HttpSession session) {
-    boolean admin = false;
+  public int create(AdminVO adminVO) {
+    String passwd = adminVO.getPasswd();
     
-    if (session != null) {
-      String admin_id = (String)session.getAttribute("admin_id");
-      
-      if (admin_id != null) {
-        admin = true;
-      }
-    }
-    
-    return admin;
+    String passwd_encoded = this.security.aesEncode(passwd);
+    adminVO.setPasswd(passwd_encoded);
+
+    int cnt = this.adminDAO.create(adminVO);
+    return cnt;
   }
+
   @Override
-  public AdminVO read(int admino) {
-    AdminVO adminVO = this.adminDAO.read(admino);
-    return adminVO;
+  public ArrayList<AdminVO> admins_list() {
+    ArrayList<AdminVO> admins_list = this.adminDAO.admins_list();
+    return admins_list;
   }
-  
+
 }

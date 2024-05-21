@@ -1,25 +1,32 @@
 package dev.mvc.admin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import dev.mvc.member.MemberVO;
+
 public interface AdminDAOInter {
-  /**
-   * 로그인
-   * @param AdminVO
-   * @return
-   */
-  public int login(AdminVO adminVO);
   
   /**
-   * 회원 정보
-   * @param String
-   * @return
+   * 관리자 아이디 중복 검사
+   * @param id
+   * @return 중복 아이디 갯수
    */
-  public AdminVO read_by_id(String id);
+  public int checkID(String id);
   
   /**
-   * 회원 정보 조회
-   * @param admino
+   * 관리자 가입
+   * @param adminVO
+   * @return 추가한 레코드 갯수
+   */
+  public int create(AdminVO adminVO);
+  
+  /**
+   * 관리자 전체 목록
    * @return
    */
-  public AdminVO read(int admino);
+  public ArrayList<AdminVO> admins_list();
+  
+
   
 }

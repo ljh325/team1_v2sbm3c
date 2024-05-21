@@ -3,24 +3,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="dev.mvc.admin.AdminDAOInter">
-  <!-- 로그인 -->
-  <select id="login" resultType="int" parameterType="dev.mvc.admin.AdminVO">
-    SELECT COUNT(*) as cnt
-    FROM admins
-    WHERE id=#{id} AND passwd=#{passwd} 
-  </select>
-  
-  <!-- 관리자 정보 -->
-  <select id="read_by_id" resultType="dev.mvc.admin.AdminVO" parameterType ="String" >
-    SELECT adminno, id, passwd, aname, adate, grade 
+
+
+  <!-- (o)  중복 아이디 검사 || 존재 1, 없으면 0 -->
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
     FROM admins
     WHERE id=#{id}
   </select>
   
-    <!-- adminno를 통한 회원 정보 -->
-  <select id="read" resultType="dev.mvc.admin.AdminVO" parameterType ="int" >
-    SELECT adminno, id, passwd, aname, adate, grade 
+  <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
+  <insert id="create" parameterType="dev.mvc.admin.AdminVO">
+    INSERT INTO admins(adminsno, id, passwd, aname, adate, grade )
+    VALUES (admin_seq.nextval, #{id}, #{passwd}, #{aname}, sysdate, #{grade})
+  </insert>
+
+  <!-- (o) 회원 전체 목록 || profile (X) -->
+  <select id="admins_list" resultType="dev.mvc.admin.AdminVO">
+    SELECT adminsno, id, passwd, aname, adate, grade
     FROM admins
-    WHERE adminno=#{adminno}
+    ORDER BY grade ASC, id ASC
   </select>
+
+ 
+  
+
+
 </mapper>
