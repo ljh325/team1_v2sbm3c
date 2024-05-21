@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -225,6 +226,189 @@ public class MemberCont {
   public String logout(HttpSession session, Model model) {
     session.invalidate();  // 모든 세션 변수 삭제
     return "redirect:/";
+  }
+  /***************************************************************************************/
+  
+  
+  /***************************************************************************************/
+  /**
+   * 수정 처리
+   * @param model
+   * @param memberVO
+   * @return
+   */
+  @PostMapping(value="/update")
+  public String update_proc(Model model, MemberVO memberVO) {
+    int cnt = this.memberProc.update(memberVO); // 수정
+    
+    if (cnt == 1) {
+      model.addAttribute("code", "update_success");
+      model.addAttribute("mname", memberVO.getMname());
+      model.addAttribute("id", memberVO.getId());
+    } else {
+      model.addAttribute("code", "update_fail");
+    }
+    
+    model.addAttribute("cnt", cnt);
+    
+    return "member/msg"; // /templates/member/msg.html
+  }
+  /***************************************************************************************/
+  
+  
+  /***************************************************************************************/
+  /**
+   * 삭제
+   * @param model
+   * @param memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/delete")
+  public String delete(Model model, int memberno) {
+    System.out.println("-> delete memberno: " + memberno);
+    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    return "member/delete";  // templates/member/delete.html
+  }
+  /**
+   * 회원 Delete process
+   * @param model
+   * @param memberno 삭제할 레코드 번호
+   * @return
+   */
+  @PostMapping(value="/delete")
+  public String delete_process(Model model, Integer memberno) {
+    int cnt = this.memberProc.delete(memberno);
+    
+    if (cnt == 1) {
+      return "redirect:/member/list";
+    } else {
+      model.addAttribute("code", "delete_fail");
+      return "member/msg"; // /templates/member/msg.html
+    }
+  }
+  /***************************************************************************************/
+  
+  
+  /***************************************************************************************/
+  /**
+   * 패스워드 수정 폼
+   * @param model
+   * @param memberno
+   * @return
+   */
+  @GetMapping(value="/passwd_update_form")
+  public String passwd_update_form(HttpSession session, Model model) {
+    int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
+    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    
+    model.addAttribute("memberVO", memberVO);
+    
+    return "member/passwd_update_form"; // /member/passwd_update_form.html   
+  }
+  /**
+   * 
+   * 현재 패스워드 확인 - 기존 패스워드 비교 대상
+   * @param session
+   * @param current_passwd
+   * @return 1: 일치, 0: 불일치
+   * 
+   *   <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE memberno=#{memberno} AND passwd=#{passwd}
+    </select>
+   
+  <!-- (o) 패스워드 변경 -->
+  <update id="passwd_update" parameterType="HashMap">
+    UPDATE member
+    SET passwd=#{passwd}
+    WHERE memberno=#{memberno}
+  </update>
+   */
+  @PostMapping(value="/passwd_check")
+  @ResponseBody
+  public String passwd_check(HttpSession session, @RequestBody String json_src) {
+    System.out.println("-> json_src: " + json_src); // json_src: {"current_passwd":"1234"}
+    JSONObject src = new JSONObject(json_src); // String -> JSON
+    String current_passwd =  (String)src.get("current_passwd"); // 값 가져오기
+    // System.out.println("-> current_passwd: " + current_passwd);
+    
+    try {
+      Thread.sleep(3000);
+    } catch(Exception e) {
+      
+    }
+    
+    int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("memberno", memberno);
+    // map.put("passwd", new Security().aesEncode(current_passwd));
+    map.put("passwd", this.security.aesEncode(current_passwd));
+    
+    int cnt = this.memberProc.passwd_check(map);
+    
+    JSONObject json = new JSONObject();
+    json.put("cnt", cnt);
+    
+    return json.toString();   
+  }
+  /**
+   * 패스워드 변경
+   * http://localhost:9091/member/passwd_update_proc?current_passwd=00000000000&passwd=7777
+   * @param session
+   * @param model
+   * @param current_passwd 현재 패스워드
+   * @param passwd 새로운 패스워드
+   * @return
+   */
+  @PostMapping(value="/passwd_update_proc")
+  public String passwd_update_proc(HttpSession session, 
+                                                    Model model, 
+                                                    String current_passwd, 
+                                                    String passwd) {
+    
+    if (this.memberProc.isMember(session)) {
+      int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("memberno", memberno);
+      // map.put("passwd", new Security().aesEncode(current_passwd)); // 현재 패스워드 이름 주의
+      map.put("passwd", this.security.aesEncode(current_passwd)); // 현재 패스워드 이름 주의
+      
+      // System.out.println("-> passwd_update_proc current_passwd: " + current_passwd);
+      // Form 없이 해커가 해킹 했을 경우를 대비하여 다시 패스워드 검사
+      int cnt = this.memberProc.passwd_check(map); 
+      
+      if (cnt == 0) { // 현재 패스워드 불일치
+        model.addAttribute("code", "passwd_not_equal");
+        model.addAttribute("cnt", 0);
+        
+      } else { // 현재 패스워드 일치
+        HashMap<String, Object> map_new_passwd = new HashMap<String, Object>();
+        map_new_passwd.put("memberno", memberno);
+        // map_new_passwd.put("passwd", new Security().aesEncode(passwd)); // 새로운 패스워드
+        map_new_passwd.put("passwd", this.security.aesEncode(passwd)); // 새로운 패스워드
+        // System.out.println("-> passwd_update_proc passwd 변경: " + passwd);
+        
+        int passwd_change_cnt = this.memberProc.passwd_update(map_new_passwd);
+        
+        if (passwd_change_cnt == 1) {
+          model.addAttribute("code", "passwd_change_success");
+          model.addAttribute("cnt", 1);
+        } else {
+          model.addAttribute("code", "passwd_change_fail");
+          model.addAttribute("cnt", 0);
+        }
+      }
+
+      return "member/msg";   // /templates/member/msg.html
+    } else {
+      return "redirect:/member/login_form_need";
+    }
+
   }
   /***************************************************************************************/
 }
