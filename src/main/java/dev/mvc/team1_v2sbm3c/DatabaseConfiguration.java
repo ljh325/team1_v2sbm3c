@@ -23,7 +23,8 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.contents",
                                          "dev.mvc.admin",
                                          "dev.mvc.review",
-                                         "dev.mvc.goals"
+                                         "dev.mvc.goals",
+                                         "dev.mvc.mh"
                                          }) // 개발 package(테이블)
 public class DatabaseConfiguration {
     
