@@ -1,18 +1,24 @@
 package dev.mvc.admin;
 
 public class AdminVO {
-  private int adminno;
+  /** 관리자 번호*/
+  private int adminsno;
+  /** 아이디(이메일) */
   private String id;
+  /** 패스워드 */
   private String passwd;
+  /** 회원 성명 */
   private String aname;
+  /** 가입 일 */
   private String adate;
+  /** 등급 */
   private int grade;
   
-  public int getAdminno() {
-    return adminno;
+  public int getAdminsno() {
+    return adminsno;
   }
-  public void setAdminno(int adminno) {
-    this.adminno = adminno;
+  public void setAdminno(int adminsno) {
+    this.adminsno = adminsno;
   }
   public String getId() {
     return id;
