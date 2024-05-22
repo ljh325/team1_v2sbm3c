@@ -14,10 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
+import dev.mvc.contents.Contents;
 import dev.mvc.contents.ContentsProcInter;
 import dev.mvc.contents.ContentsVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
+import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 
 @RequestMapping(value = "/comments")
@@ -75,7 +77,6 @@ public class CommentsCont {
 
     ArrayList<CommentsVO> list = this.commentsProc.comment_list(contentsno);
     model.addAttribute("list", list);
-    System.out.println("댓글 작성 내용 ->" + commentsVO.getContents());
 
     return "comments/comm_list";
 
@@ -99,6 +100,15 @@ public class CommentsCont {
     return "comments/update";
   }
 
+  /**
+   * 댓글 수정 Proc
+   * @param session
+   * @param model
+   * @param ra
+   * @param commentsVO
+   * @param contentsno
+   * @return
+   */
   @PostMapping(value = "/update")
   public String update(HttpSession session, Model model, RedirectAttributes ra, CommentsVO commentsVO,
                               int contentsno) {
@@ -111,4 +121,24 @@ public class CommentsCont {
     return "redirect:/contents/read"; // 페이지 자동 이동
 
   }
+  
+  /**
+   * 댓글 삭제
+   * 
+   * @return
+   */
+  @GetMapping(value = "/delete")
+  public String delete(RedirectAttributes ra, Model model , int commentsno, int contentsno) {
+    
+   
+    System.out.println("---->> commentsno: " + commentsno);
+    int cnt = this.commentsProc.delete(commentsno);
+
+    ra.addAttribute("contentsno", contentsno);
+
+    return "redirect:/contents/read";
+
+  }
+  
+  
 }

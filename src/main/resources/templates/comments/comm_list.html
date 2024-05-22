@@ -19,7 +19,8 @@
       <td class='td_left'>
         <span th:text="|${commentsVO.id} |" style="font-weight: bold;"></span>
         <span th:text="${commentsVO.rdate}"></span>
-        <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}">댓글 수정</a><br>
+        <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}" style="margin-left: 10px;">수정</a>
+        <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}" style="margin-left: 10px;">삭제</a><br><br>
         <span th:text="${commentsVO.contents}"></span>
       </td>
 

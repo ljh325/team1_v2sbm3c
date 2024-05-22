@@ -266,7 +266,6 @@ public class ContentsCont {
     
     ArrayList<CommentsVO> list = this.commentsProc.comment_list(contentsno);
     model.addAttribute("list", list);
-    System.out.println("댓글 작성 내용 ->" + commentsVO.getContents());
 
     this.contentsProc.view(contentsno);
 
@@ -276,6 +275,8 @@ public class ContentsCont {
 
     return "contents/read";
   }
+  
+
 
   /**
    * 로그인 확인

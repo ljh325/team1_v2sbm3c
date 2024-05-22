@@ -8,7 +8,7 @@
   
   <form name='frm' method='post' th:object="${commentsVO}" action='./update'>
     <input type="hidden" name="commentsno" th:value="${commentsVO.commentsno}">
-    
+    <input type="hidden" name="contentsno" th:value="${commentsVO.contentsno}">
     
     <div>
        <label>내용</label>
@@ -16,7 +16,7 @@
     </div>
    
     <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="submit" class="btn btn-secondary btn-sm">수정</button>
       
     </div>
   
