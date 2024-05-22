@@ -14,7 +14,7 @@
   
   <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
   <insert id="create" parameterType="dev.mvc.admin.AdminVO">
-    INSERT INTO admins(adminsno, id, passwd, aname, adate, grade )
+    INSERT INTO admins(adminsno, id, passwd, aname, adate, grade)
     VALUES (admin_seq.nextval, #{id}, #{passwd}, #{aname}, sysdate, #{grade})
   </insert>
 
@@ -24,9 +24,41 @@
     FROM admins
     ORDER BY grade ASC, id ASC
   </select>
-
- 
+  <!-- (o) adminsno로 관리자 정보 조회 -->
+  <select id="read" resultType="dev.mvc.admin.AdminVO" parameterType="int">
+    SELECT adminsno, id, passwd, aname, adate, grade
+    FROM admins
+    WHERE adminsno = #{adminsno}
+  </select>  
+   <!-- (o) (로그인) id로 관리자 정보 조회 -->
+  <select id="read_by_id" resultType="dev.mvc.admin.AdminVO" parameterType="String">
+    SELECT adminsno, id, passwd, aname, adate, grade
+    FROM admins
+    WHERE id = #{id}
+  </select>
   
+    <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0 || 탈퇴회원:3 이 아닌 회원 로그인-->
+  <select id="login" resultType="int" parameterType="HashMap">
+    SELECT COUNT(adminsno) as cnt
+    FROM admins
+    WHERE id=#{id} AND passwd=#{passwd} AND grade != 3
+  </select>
+  
+    <!-- (o) 수정 처리 -->
+  <update id="update" parameterType="dev.mvc.admin.AdminVO">
+    UPDATE admins
+    SET aname=#{aname}, passwd=#{passwd}
+    WHERE adminsno=#{adminsno}
+  </update>
+
+
+  
+  <!-- (o) 회원 삭제 처리 || 탈퇴 성공 : 1, 실패 : 0 -->
+  <!-- 회원등급 -> 일반회원: 1, 정지회원: 2, 탈퇴회원: 3 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM admins
+    WHERE adminsno=#{adminsno}
+  </delete>
 
 
 </mapper>

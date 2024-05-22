@@ -6,41 +6,45 @@
        
   <table class="table table-striped" style='width: 100%;'>
     <colgroup>
-      <col style='width: 5%;'/>
       <col style='width: 10%;'/>
+      <col style='width: 15%;'/>
       <col style='width: 15%;'/>
       <col style='width: 15%;'/>
       <col style='width: 30%;'/>
       <col style='width: 15%;'/>
-      <col style='width: 10%;'/>
+      
     </colgroup>
     <tr>
-      <th class='th_bs'> </th>
+      <th class='th_bs'></th>
       <th class='th_bs'>ID</th>
       <th class='th_bs'>성명</th>
       <th class='th_bs'>등록일</th>
       <th class='th_bs'>관리자등급</th>
-      <th class='th_bs'> </th>
+      <th class='th_bs'>기타</th>
     </tr>
    
-    <tr th:each="adminVO, status:${admins_list}">
-      <td class='td_basic'>
-        <div>
-          <div th:if="${adminVO.grade == 1}"><img src='/member/images/user.png' title="회원" class="icon"></div>
-          <div th:if="${adminVO.grade == 2}"><img src='/member/images/pause.png' title="정지 회원" class="icon"></div>
-          <div th:if="${adminVO.grade == 3}"><img src='/member/images/x.png' title="탈퇴 회원" class="icon"></div>
-        </div>
-      </td>
-      <td class='td_left'><a th:text="${adminVO.id}"></a></td>
-      <td class='td_left'><a th:text="${adminVO.aname}"></a></td>
-      <td class='td_basic' th:text="${adminVO.adate.substring(0, 10)}"></td>
-      <td class='td_basic' th:text="${adminVO.grade}"></td>
-      <td class='td_basic'>
-        <a><img src='/admin/images/update.png' title='수정' class="icon"></a>
-        <a><img src='/admin/images/delete.png' title='삭제' class="icon"></a>
-      </td>
-      
-    </tr>
+
+    
+    <tr th:each="adminVO, status : ${admins_list}">
+  <td class='td_basic'>
+      <div>
+        <div th:if="${adminVO.grade == 1}"><img src='/admin/images/user.png' title="관리자" class="icon"></div>
+        <div th:if="${adminVO.grade == 2}"><img src='/admin/images/pause.png' title="정지 회원" class="icon"></div>
+        <div th:if="${adminVO.grade == 3}"><img src='/admin/images/x.png' title="탈퇴 회원" class="icon"></div>
+      </div>
+  </td>
+  <td class='td_left'><a th:href="@{|./read?adminsno=${adminVO.adminsno}|}" th:text="${adminVO.id}"></a></td>
+  <td class='td_left'><a th:href="@{|./read?adminsno=${adminVO.adminsno}|}" th:text="${adminVO.aname}"></a></td>
+  <td class='td_basic' th:text="${adminVO.adate.substring(0, 10)}"></td>
+  <td class='td_basic' th:text="${adminVO.grade != null ? adminVO.grade : 'Unknown'}"></td>
+  <td class='td_basic'>
+    <a th:href="@{|./read?adminsno=${adminVO.adminsno}|}"><img src='/admin/images/update.png' title='수정' class="icon"></a>
+    <a th:href="@{|./delete?adminsno=${adminVO.adminsno}|}"><img src='/admin/images/delete.png' title='삭제' class="icon"></a>
+  </td>
+</tr>
+    
+    
+    
   </table>
    
   <div class='bottom_menu'>
