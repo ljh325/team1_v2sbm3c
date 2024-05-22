@@ -1,5 +1,7 @@
 package dev.mvc.member;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.cate.CateVOMenu;
 import dev.mvc.contents.Contents;
+import dev.mvc.mlogin.MloginProcInter;
+import dev.mvc.mlogin.MloginVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -35,6 +39,12 @@ public class MemberCont {
   @Qualifier("dev.mvc.member.MemberProc")  // @Service("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
 
+  
+  @Autowired
+  @Qualifier("dev.mvc.mlogin.MloginProc")  // @Service("dev.mvc.mlogin.MloginProc")
+  private MloginProcInter mloginProc;
+  
+  
   @Autowired
   // dev.mvc.tool.Tool.java
   // dev.mvc.team1_v2sbm3c.SecurityConfig.java
@@ -67,7 +77,7 @@ public class MemberCont {
    * @param memberVO
    * @return
    */
-  @GetMapping(value="/create") // http://localhost:9091/member/create
+  @GetMapping(value="/create") // http://localhost:9093/member/create
   public String create_form(Model model, MemberVO memberVO) {
     return "member/create";    // /template/member/create.html
   }
@@ -106,6 +116,53 @@ public class MemberCont {
     return "member/msg"; // /templates/member/msg.html 일단 메인화면으
   }
   /***************************************************************************************/
+  
+  
+  /***************************************************************************************/
+  /**
+   * 회원정보 조회
+   * @param model
+   * @param memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/read") // http://localhost:9093/member/raed
+  public String read(HttpSession session, Model model) {
+    
+    int memberno = (int)session.getAttribute("memberno"); // session에서 memberno가져오기
+    //String grade = (String)session.getAttribute("grade"); // 등급: 일반회원 1, 정지회원 2, 탈퇴회원 3
+
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    
+
+//    // 사용자: member && 11 ~ 20
+//    // if (grade.equals("member") && (gradeno >= 11 && gradeno <= 20) && memberno == (int)session.getAttribute("memberno")) {
+//    if (grade.equals("member") &&  memberno == (int)session.getAttribute("memberno")) {
+//      // System.out.println("-> read memberno: " + memberno);
+//      
+//      MemberVO memberVO = this.memberProc.read(memberno);
+//      model.addAttribute("memberVO", memberVO);
+//      
+//      return "member/read";  // templates/member/read.html
+//      
+//    } else if (grade.equals("admin")) {
+//      // System.out.println("-> read memberno: " + memberno);
+//      
+//      MemberVO memberVO = this.memberProc.read(memberno);
+//      model.addAttribute("memberVO", memberVO);
+//      
+//      return "member/read";  // templates/member/read.html
+//    } else {
+//      return "redirect:/member/login_form_need";  // redirect
+//    }
+    
+    
+    return "member/read";  // templates/member/read.html    
+  }
+  /***************************************************************************************/
+  
+  
   
   
   /***************************************************************************************/
@@ -179,6 +236,7 @@ public class MemberCont {
                                      HttpServletRequest request,
                                      HttpServletResponse response,
                                      Model model, 
+                                     MloginVO mloginVO,
                                      String id, 
                                      String passwd,
                                      @RequestParam(value="id_save", defaultValue = "") String id_save,
@@ -204,6 +262,12 @@ public class MemberCont {
       session.setAttribute("grade", memberVO.getGrade()); //세션에 grade 저장
       
       
+      int memberno = (int)session.getAttribute("memberno"); // 로그인 성공시 세션에서 memberno를 가져옴
+      mloginVO.setMemberno(memberno); // 세션에서 가져온 memberno를  로그인 내역 테이블의 mloginVO의 memberno에 저장
+      mloginVO.setIp(ip);
+      
+      int cnts = this.mloginProc.mlogin_insert(mloginVO);
+      model.addAttribute("cnts", cnts);
       // grade 범위 (1 ~ 3)
       // 일반회원  1  == member
       // 정지회원  2  == black
@@ -230,7 +294,7 @@ public class MemberCont {
    * @param model
    * @return
    */
-  @GetMapping(value="/logout")
+  @GetMapping(value="/logout") // http://localhost:9093/member/logout
   public String logout(HttpSession session, Model model) {
     session.invalidate();  // 모든 세션 변수 삭제
     return "redirect:/"; // 홈으로 이동

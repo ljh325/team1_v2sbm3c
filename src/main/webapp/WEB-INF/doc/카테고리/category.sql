@@ -1,5 +1,5 @@
 DROP table cate;
-DROP table cate CASCADE;
+DROP table cate CASCADE CONSTRAINTS;
 
 CREATE TABLE CATE(
 		CATENO                        		NUMBER(10)		NOT NULL   PRIMARY KEY,
@@ -9,8 +9,9 @@ CREATE TABLE CATE(
 		RDATE                         		DATE		    NOT NULL,
 		SEQNO                         		NUMBER(5)		NOT NULL,
 		VISIBLE                       		CHAR(1)		    NOT NULL,
-		ADMINNO                       		NUMBER(10)		NULL,
-        FOREIGN KEY(adminno) REFERENCES admin(adminno)
+		ADMINSNO                       		NUMBER(10)		NULL,
+        ADMINS                              CHAR(1)         NOT NULL,
+        FOREIGN KEY(adminsno) REFERENCES admins(adminsno)
 );
 
 COMMENT ON TABLE CATE is '카테고리';
@@ -21,7 +22,7 @@ COMMENT ON COLUMN CATE.CNT is '관련 자료수';
 COMMENT ON COLUMN CATE.RDATE is '등록일';
 COMMENT ON COLUMN CATE.SEQNO is '출력 순서';
 COMMENT ON COLUMN CATE.VISIBLE is '출력 모드';
-COMMENT ON COLUMN CATE.ADMINNO is '관리자 번호';
+COMMENT ON COLUMN CATE.ADMINSNO is '관리자 번호';
 
 DROP SEQUENCE cate_seq;
 
@@ -33,31 +34,31 @@ CREATE SEQUENCE cate_seq
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
   
 -- CREATE
-INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
-VALUES (cate_seq.nextval, '운동', '-', 0, sysdate, 1, 'Y', 1);
+INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins)
+VALUES (cate_seq.nextval, '운동', '-', 0, sysdate, 1, 'Y', 5,'N');
 
-INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
+INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins)
 VALUES (cate_seq.nextval, '식단', '-', 0, sysdate, 2, 'Y', 1);
 
-INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
+INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins)
 VALUES (cate_seq.nextval, '운동', '운동 추천', 0, sysdate, 10, 'Y', 1);
 
-INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminno)
+INSERT INTO cate(cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins)
 VALUES (cate_seq.nextval, '식단', '식단 추천', 0, sysdate, 20, 'Y', 1);
 
 -- READ
-SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins
 FROM cate;
 
-SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins
 FROM cate
 WHERE name = '운동';
 
-SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminno
+SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins
 FROM cate
 WHERE name = '식단';
 
-SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno
+SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins
 FROM cate
 ORDER BY seqno ASC;
 
@@ -82,6 +83,13 @@ UPDATE cate
 SET visible = 'Y'
 WHERE cateno = 3 AND visible = 'N';
 
+UPDATE cate
+SET admins = 'Y'
+WHERE cateno = 6 AND admins = 'N';
+
+UPDATE cate
+SET admins = 'N'
+WHERE cateno = 6 AND admins = 'Y';
 
 -- DELETE
 DELETE FROM cate

@@ -66,6 +66,20 @@ public class CateProc implements CateProcInter{
     int cnt = this.cateDAO.update_visible_n(cateno);
     return cnt;
   }
+  
+  
+
+  @Override
+  public int update_admins_y(int cateno) {
+    int cnt = this.cateDAO.update_admins_y(cateno);
+    return cnt;
+  }
+
+  @Override
+  public int update_admins_n(int cateno) {
+    int cnt = this.cateDAO.update_admins_n(cateno);
+    return cnt;
+  }
 
   @Override
   public ArrayList<CateVO> list_all_name_y() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- 주찬 xml   (o)표시: 수정 완료  -->
+<!-- 주찬 xml 회원  (o)표시: 수정 완료  -->
 <!--
     MEMBERNO                          NUMBER(10)     NOT NULL    PRIMARY KEY,
     ID                                VARCHAR2(30)     NOT NULL,
@@ -42,7 +42,8 @@
   
   <!-- (o) memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex,
+    profile, profilesaved, thumbs, sizes
     FROM member
     WHERE memberno = #{memberno}
   </select>  

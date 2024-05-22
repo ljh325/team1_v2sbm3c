@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <div th:fragment="navbarFragment">
+=======
+<div th:fragment="navbarFragment"><!-- 내비게이션 바 수정 필요-->
+>>>>>>> 35f8d24ea166b7567e2e2865ed2c214cbeac7b8e
 
   <div  style="display: flex; justify-content: right;">
   <!-- 회원 정보 탑 메뉴-->
@@ -38,8 +42,19 @@
               <li class="nav-item"><a class="nav-link" href="/admin/create">관리자 가입</a></li>
               <li class="nav-item" th:if="${session.adminsno == null}"><a class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a></li>
               <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/logout" th:text="@{|${session.aname}로그아웃|}"></a></li>      
+<<<<<<< HEAD
               <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/admins_list">관리자 목록</a></li>
               <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="#">관리자 로그인 내역</a></li>
+=======
+              <li class="nav-item"><a class="nav-link" href="/admin/admins_list">관리자 목록</a></li>
+              <li class="nav-item" th:if="${session.adminsno != null}">
+                  <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
+              </li>
+  
+              <li class="nav-item"><a class="nav-link" href="#">관리자 아이디 찾기</a></li>         
+              <li class="nav-item"><a class="nav-link" href="#">관리자 비밀번호 찾기</a></li>
+              <li class="nav-item" th:if="${session.adminsno!=null}"><a class="nav-link" href="#">관리자 로그인 내역</a></li>
+>>>>>>> 35f8d24ea166b7567e2e2865ed2c214cbeac7b8e
             </ul>
         </div>
   </div>
