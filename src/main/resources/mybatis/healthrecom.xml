@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.healthrecom.HealthrecomDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 운동 목표 생성 -->
+  <insert id = "create" parameterType="dev.mvc.healthrecom.HealthrecomVO">
+    INSERT INTO healthrecom(healthrecomno,hrecom, goalsno, mhno,rdate)
+    VALUES (healthrecom_seq.nextval,#{healthrecomno}, #{recom}, #{goalsno},#{mhno},sysdate)
+  </insert>
+  
+  <!-- 운동 목표 조회 -->
+  <select id = 'read' resultType="dev.mvc.healthrecom.HealthrecomVO" parameterType="Integer">
+    SELECT healthrecomno,hrecom, goalsno, mhno,rdate
+    FROM healthrecom
+    WHERE healthrecomno = #{healthrecomno}
+  </select>
+  
+
+    <!-- 운동 추천 목록 조회 -->
+  <select id = 'list_all' parameterType="dev.mvc.healthrecom.HealthrecomVO">
+    
+    SELECT hr.*
+    FROM healthrecom hr
+    JOIN mh mh ON hr.mhno = mh.mhno
+    JOIN member m ON mh.memberno = m.memberno
+    WHERE m.memberno = #{memberno}
+  
+  </select>
+     
+  <!-- 운동 추천 -->
+  <delete id = 'delete' parameterType="int">
+   DELETE FROM HEALTHRECOM
+   WHERE healthrecomno = #{healthrecomno}
+  </delete>
+  
+ 
+   <delete id = 'delete_m' parameterType="int">
+   DELETE FROM HEALTHRECOM
+   WHERE mhno = #{mhno}
+  </delete>
+  
+  <delete id = 'delete_g' parameterType="int">
+   DELETE FROM HEALTHRECOM
+   WHERE goalsno = #{goalsno}
+  </delete>
+  
+  
+</mapper>

@@ -15,7 +15,7 @@ public class MhProc implements MhProcInter {
   private MhDAOInter mhDAO;
   
   public MhProc() {
-    // System.out.println("-> MhProc created.");  
+    // System.out.println("-> GoalsProc created.");  
   }
   
   @Override
@@ -50,20 +50,13 @@ public class MhProc implements MhProcInter {
 
  
 
-  @Override
-  public ArrayList<MhVOMenu> menu() {
-    // 중분류 목록을 저장할 객체 선언
-    ArrayList<MhVOMenu> menu = new ArrayList<MhVOMenu>();
+
     
 
     
 
       
       
-    
-    
-    return menu;
-  }
 
   @Override
   public ArrayList<MhVO> list_search(String word) {

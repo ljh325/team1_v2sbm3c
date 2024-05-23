@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    운동목표 > 
+    <span th:text="${goalsVO.gdate}" class="title_line_text"></span >
+ 
+    삭제
+  </div>
+  
+  <aside class="aside_right">
+    <a href="/goals/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/goals/update?goalsno=${goalsVO.goalsno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a href="/goals/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  
+  <div id='panel_delete' style='padding: 10px 0px 10px 0px; background-color: #F9F9F9; width: 100%; text-align: center;'>
+
+    <form name="frm" th:object="${goalsVO}" method="post" action="/goals/delete">
+      <input type="hidden" name="goalsno" th:value="${goalsVO.goalsno}">
+
+      <input type="hidden" name="now_page" th:value="${now_page}">
+  
+      <div class="msg_warning">!!운동목표를 삭제하면 해당되는 추천메뉴도 사라집니다!!</div>
+       <div>
+          <label>체중:</label>: <span th:text="${goalsVO.kg}"></span>
+       </div>
+       <div>
+          <label>체지방:</label>: <span th:text="${goalsVO.ckg}"></span>
+       </div>
+       <div>
+          <label>신장:</label>: <span th:text="${goalsVO.cm}"></span>
+       </div>
+       <div>
+          <label>골격근량:</label>: <span th:text="${goalsVO.muscle}"></span>
+       </div>
+      
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+        <button type="button" th:attr="onclick=|location.href='/goals/list_all'|" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+    </form>  
+ 
+  </div>  
+
+  <!-- /templates/goals/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
+    
+</div>
+</html>
+

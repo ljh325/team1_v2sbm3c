@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+    <div class="title_line">
+   <a href="/goals/list_all">회원 건강 정보</a>
+    /
+  <a href="/goals/list_all">운동 목표</a>
+    /
+  운동 추천
+   /
+  <a href="/foodrecom/list_all">식단 추천</a>
+   
+  </div>
+  
+  <aside class="aside_right">
+    <a href="/mh/list_all">새로운 추천</a>
+    
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+
+  <div style="width: 80%; margin: 0px auto;">
+
+  </div>
+    
+  <!-- /mh/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{healthrecom/list_all_component::list_all_fragment}"></div>
+  
+</div>
+</html>
+
+
+
+
+
+
+

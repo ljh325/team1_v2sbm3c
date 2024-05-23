@@ -10,11 +10,11 @@
   </div>
   
   <aside class="aside_right">
-    <a th:href="@{|/mh/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <a href="/mh/list_all">목록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/mh/update/${mhVO.mhno}?word=${word}&now_page=${now_page}|}">수정</a>
+    <a th:href="@{|/mh/update?mhno=${mhVO.mhno}|}">수정</a>
     <span class="menu_devide">│</span>
-    <a href="/mh/list_search">등록</a>
+    <a href="/mh/create">등록</a>
     <span class="menu_devide">│</span>
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
@@ -27,7 +27,7 @@
 
       <input type="hidden" name="now_page" th:value="${now_page}">
   
-      <div class="msg_warning">건강정보를 삭제하면 복구 할 수 없습니다.</div>
+      <div class="msg_warning">!!건강 정보를 삭제하면 해당되는 추천메뉴도 사라집니다!!.</div>
        <div>
           <label>체중:</label>: <span th:text="${mhVO.kg}"></span>
        </div>
@@ -43,7 +43,7 @@
       
       <div class="content_body_bottom">
         <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
-        <button type="button" th:attr="onclick=|location.href='/mh/list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소</button>
+        <button type="button" th:attr="onclick=|location.href='/mh/list_all'|" class="btn btn-secondary btn-sm">취소</button>
       </div>
     </form>  
  

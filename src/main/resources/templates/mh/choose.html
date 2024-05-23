@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+   <div class="title_line">
+   회원 건강 정보
+   >
+   운동 목표
+  </div>
+  
+  <aside class="aside_right">
+    <a href="/mh/create">등록</a>
+    
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+
+  <div style="width: 80%; margin: 0px auto;">
+
+  </div>
+  
+  <div th:replace="~{/mh/goals_list::list_all_fragment}"></div>
+
+</div>
+</html>
+
+
+
+
+
+
+

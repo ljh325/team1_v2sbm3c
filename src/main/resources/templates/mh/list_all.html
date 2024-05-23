@@ -2,7 +2,15 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-  <div class="title_line">회원 건강 정보</div>
+  <div class="title_line">회원 건강 정보
+    /
+  <a href="/goals/list_all">운동 목표</a>
+    /
+  <a href="/healthrecom/list_all">운동 추천</a>
+   /
+  <a href="/foodrecom/list_all">식단 추천</a>
+  </div>
+  
   <aside class="aside_right">
     <a href="/mh/create">등록</a>
     
