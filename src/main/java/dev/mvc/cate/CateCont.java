@@ -87,6 +87,7 @@ public class CateCont {
 
     ArrayList<CateVO> list = this.cateProc.list_all();
     model.addAttribute("list", list);
+    
 
 //    
 

@@ -179,6 +179,7 @@ public class ContentsCont {
 //        type3 권장
 //        return "redirect:/contents/list_all";
 //        ra.addFlashAttribute("cateno", contentsVO.getCateno()); // controller-> controller: X
+      this.cateProc.cate_count_increase(contentsVO.getCateno());
       ra.addAttribute("cateno", contentsVO.getCateno()); // controller -> controller : O
 
       return "redirect:/contents/list_cate";
@@ -576,7 +577,7 @@ public class ContentsCont {
    */
   @PostMapping(value = "/delete")
   public String delete(RedirectAttributes ra, Model model, int contentsno, int cateno) {
-
+    
     // -------------------------------------------------------------------
     // 파일 삭제 시작
     // -------------------------------------------------------------------
@@ -613,7 +614,10 @@ public class ContentsCont {
 //      }
 //    }
     // -------------------------------------------------------------------------------------
-
+    CateVO cateVO = this.cateProc.read(cateno);
+    if(cateVO.getCateno()>0) {
+      this.cateProc.cate_count_decrease(cateno);
+    } 
     ra.addAttribute("cateno", cateno);
 //    ra.addAttribute("word", word);
 //    ra.addAttribute("now_page", now_page);
