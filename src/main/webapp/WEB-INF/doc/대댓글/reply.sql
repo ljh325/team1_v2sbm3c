@@ -74,7 +74,7 @@ WHERE memberno = 37;
 -- UPDATE
 UPDATE reply
 SET contents = '대댓글 수정'
-WHERE replyno = 1;
+WHERE replyno = 21;
 
 -- DELETE
 DELETE FROM reply

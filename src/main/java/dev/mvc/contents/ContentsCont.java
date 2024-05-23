@@ -2,6 +2,7 @@ package dev.mvc.contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import dev.mvc.comments.CommentsProcInter;
 import dev.mvc.comments.CommentsVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
+import dev.mvc.reply.ReplyProcInter;
+import dev.mvc.reply.ReplyVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -48,6 +51,10 @@ public class ContentsCont {
   @Autowired
   @Qualifier("dev.mvc.comments.CommentsProc")
   private CommentsProcInter commentsProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.reply.ReplyProc")
+  private ReplyProcInter replyProc;
 
   @Autowired
   Security security;
@@ -250,7 +257,7 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/read")
-  public String read(Model model, int contentsno, CommentsVO commentsVO) {
+  public String read(Model model, int contentsno) {
     ArrayList<CateVOMenu> menu = this.cateProc.menu();
     model.addAttribute("menu", menu);
 
@@ -260,18 +267,15 @@ public class ContentsCont {
     contentsVO.setSize1_label(size1_label);
 
     model.addAttribute("contentsVO", contentsVO);
-
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
     model.addAttribute("cateVO", cateVO);
     
     ArrayList<CommentsVO> list = this.commentsProc.comment_list(contentsno);
     model.addAttribute("list", list);
+   
 
     this.contentsProc.view(contentsno);
 
-    // 조회에서 화면 하단에 출력
-    // ArrayList<ReplyVO> reply_list = this.replyProc.list_contents(contentsno);
-    // mav.addObject("reply_list", reply_list);
 
     return "contents/read";
   }

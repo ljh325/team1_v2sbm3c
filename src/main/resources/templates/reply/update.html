@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${replyVO}" action='/reply/update'>
+    <input type="hidden" name="commentsno" th:value="${replyVO.commentsno}">
+    <input type="hidden" name="contentsno" th:value="${replyVO.contentsno}">
+    <input type="hidden" name="memberno" th:value="${replyVO.memberno}">
+    <input type="hidden" name="replyno" th:value="${replyVO.replyno}">
+    
+    <div>
+       <label>내용</label>
+       <textarea name='contents' required="required" class="form-control" rows="4" style='width: 100%;' th:text='${replyVO.contents}'> </textarea>
+    </div>
+   
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">수정</button>
+      
+    </div>
+  
+  </form>
+
+</div>
+</html>

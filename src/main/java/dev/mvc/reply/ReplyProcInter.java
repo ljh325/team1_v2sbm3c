@@ -2,7 +2,7 @@ package dev.mvc.reply;
 
 import java.util.ArrayList;
 
-public interface ReplyDAOInter {
+public interface ReplyProcInter {
   
   /**
    * 대댓글 생성
@@ -73,5 +73,4 @@ public interface ReplyDAOInter {
    * @return 삭제 여부
    */
   public int delete_all(int commentsno);
-  
 }

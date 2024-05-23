@@ -126,7 +126,7 @@ public class CateCont {
    */
   @GetMapping(value = "/update")
   public String update(HttpSession session, Model model, int cateno) {
-    if (this.memberProc.isMemberAdmin(session)) {
+    
       ArrayList<CateVOMenu> menu = this.cateProc.menu();
       model.addAttribute("menu", menu);
 
@@ -135,9 +135,7 @@ public class CateCont {
 
       return "cate/update"; // /templates/cate/update.html
 
-    } else {
-      return "contents/msg";
-    }
+    
   }
 
   /**
