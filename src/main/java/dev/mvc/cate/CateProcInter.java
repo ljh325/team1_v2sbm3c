@@ -39,6 +39,26 @@ public interface CateProcInter {
   public int delete(int cateno);
   
   /**
+   * 카테고리 자료수 증가
+   * @param cateno
+   * @return 증가한 자료 수
+   */
+  public int cate_count_increase(int cateno);
+  
+  /**
+   * 카테고리 자료수 감소
+   * @param cateno
+   * @return 감소한 자료 수
+   */
+  public int cate_count_decrease(int cateno);
+  
+  /**
+   * 카테고리 전체 자료수
+   * @return 전체 자료수
+   */
+  public int cate_count_read();
+  
+  /**
    * 카테고리 출력 순서 높임
    * @param cateno
    * @return 출력 순서 높아진 카테고리 수

@@ -31,6 +31,28 @@ public class CateProc implements CateProcInter{
     return cateVO;
   }
 
+  
+  
+  @Override
+  public int cate_count_increase(int cateno) {
+    int cnt = this.cateDAO.cate_count_increase(cateno);
+    return cnt;
+  }
+
+  @Override
+  public int cate_count_decrease(int cateno) {
+    int cnt = this.cateDAO.cate_count_decrease(cateno);
+    return cnt;
+  }
+  
+  
+
+  @Override
+  public int cate_count_read() {
+    int cnt = this.cateDAO.cate_count_read();
+    return cnt;
+  }
+
   @Override
   public int update(CateVO cateVO) {
     int cnt = this.cateDAO.update(cateVO);

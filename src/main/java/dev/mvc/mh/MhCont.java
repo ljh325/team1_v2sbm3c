@@ -18,14 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.foodrecom.FoodrecomProcInter;
+import dev.mvc.goals.GoalsProcInter;
+import dev.mvc.goals.GoalsVO;
+import dev.mvc.healthrecom.HealthrecomProcInter;
 import dev.mvc.mh.MhVO;
-import dev.mvc.mh.MhVOMenu;
-import dev.mvc.mh.MhVO;
-import dev.mvc.mh.MhVOMenu;
-import dev.mvc.cate.CateVO;
-import dev.mvc.cate.CateVOMenu;
 import dev.mvc.member.MemberProcInter;
-import dev.mvc.mh.MhVO;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,6 +34,20 @@ public class MhCont {
   @Autowired
   @Qualifier("dev.mvc.mh.MhProc")
   private MhProcInter mhProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.goals.GoalsProc")
+  private GoalsProcInter goalsProc;
+  
+  
+  @Autowired
+  @Qualifier("dev.mvc.foodrecom.FoodrecomProc")
+  private FoodrecomProcInter foodrecomProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.healthrecom.HealthrecomProc")
+  private HealthrecomProcInter healthrecomProc;
+  
   
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
@@ -50,9 +62,36 @@ public class MhCont {
   private Object mhVO;
   
   public MhCont() {
-    System.out.println("-> MhCont created.");  
+    System.out.println("-> Goals created.");  
   }
   
+  
+  /**
+   * 조회폼
+   * 
+   * @param model
+   * @param 조회할 mhno
+   * @return
+   */
+  @PostMapping(value = "/read")
+  public String read(HttpSession session,Model model,@RequestParam("mhno") int mhno ) {
+    if (this.memberProc.isMember(session)) {
+    int memberno = (int)session.getAttribute("memberno");  
+    MhVO mhVO = this.mhProc.read(mhno);
+    mhVO.setMemberno(memberno);  
+    model.addAttribute("mhVO", mhVO);
+    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
+    model.addAttribute("list", list);
+    
+    return "mh/read";
+    }
+    else {
+      return "index";
+    }
+ 
+
+     // /templates/cate/read.html
+  }
   
   
   /**
@@ -111,8 +150,7 @@ public class MhCont {
       
     int memberno = (int) session.getAttribute("memberno");
     mhVO.setMemberno(memberno);
-    ArrayList<MhVOMenu> menu = this.mhProc.menu();
-    model.addAttribute("menu", menu);
+
     
 
     
@@ -160,7 +198,35 @@ public class MhCont {
     }
   }
   
+  /**
+   * 조회폼
+   * 
+   * @param model
+   * @param 조회할 mhno
+   * @return
+   */
+  @GetMapping(value = "/choose")
+  public String choose(HttpSession session,Model model,@RequestParam("mhno") int mhno ) {
+    if (this.memberProc.isMember(session)) {
+    int memberno = (int)session.getAttribute("memberno");  
+    MhVO mhVO = this.mhProc.read(mhno);
+    ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
+    mhVO.setMemberno(memberno);  
+    model.addAttribute("mhVO", mhVO);
+
+    model.addAttribute("list", list);
+    
+    return "mh/choose";
+    }
+    else {
+      return "index";
+    }
+ 
+
+     // /templates/cate/read.html
+  }
   
+ 
   
   
   
@@ -181,9 +247,7 @@ public class MhCont {
     model.addAttribute("list", list);
     MhVO mhVO = this.mhProc.read(mhno);
     model.addAttribute("mhVO", mhVO);
-    ArrayList<MhVOMenu> menu = this.mhProc.menu();
-    model.addAttribute("menu", menu);
-  
+
     
     return "mh/update"; 
     }
@@ -244,9 +308,7 @@ public class MhCont {
                                @RequestParam("mhno") int mhno) {
     
     if (this.memberProc.isMember(session)) {
-    ArrayList<MhVOMenu> menu = this.mhProc.menu();
-    model.addAttribute("menu", menu);
-    
+
     
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
@@ -257,7 +319,7 @@ public class MhCont {
     model.addAttribute("mhVO", mhVO);
     }
     else {
-      return "list_all";
+      return "index";
     }
 
    
@@ -279,15 +341,15 @@ public class MhCont {
                                @RequestParam("mhno") int mhno) {
     
     if (this.memberProc.isMember(session)) {
-    ArrayList<MhVOMenu> menu = this.mhProc.menu();
-    model.addAttribute("menu", menu);
+
     
     
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
     model.addAttribute("list", list);
     
-    
+//    this.healthrecomProc.delete(mhno);
+//    this.mhProc.delete(mhno);
     int cnt = this.mhProc.delete(mhno);
     if (cnt == 1) {
       

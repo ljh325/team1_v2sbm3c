@@ -67,4 +67,10 @@
     WHERE replyno = #{replyno}
   </delete>
   
+  <!-- 댓글 내 대댓글 전체 삭제 -->
+  <delete id="delete_all" parameterType="int">
+    DELETE FROM reply
+    WHERE commentsno = #{commentsno}
+  </delete>
+  
 </mapper>

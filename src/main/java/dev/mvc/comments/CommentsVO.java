@@ -32,5 +32,17 @@ public class CommentsVO {
   
   /** 댓글 작성 게시글 번호 */
   private int contentsno;
+  
+  @Override
+  public String toString() {
+      return "CommentsVO{" +
+          "commentsno=" + this.commentsno +
+          ", contents='" + this.contents + '\'' +
+          ", rdate='" + this.rdate + '\'' +
+          ", id='" + this.id + '\'' +
+          ", memberno='" + this.memberno + '\'' +
+          ", contentsno='" + this.contentsno + '\'' +
+          '}';
+  }
 
 }

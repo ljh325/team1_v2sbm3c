@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+   
+
+  <div class="title_line">운동 목표 조회</div>
+  
+  
+  
+   <aside class="aside_right">
+    <a href="/goals/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/goals/update?goalsno=${goalsVO.goalsno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/goals/delete?goalsno=${goalsVO.goalsno}|}">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/goals/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+
+ <div class="menu_line"></div>
+  
+  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
+      <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
+      <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
+      <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
+ 
+    </ul>  
+  </div>
+
+  <!-- /templates/goals/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
+ 
+</div>
+</html>
+
+
+

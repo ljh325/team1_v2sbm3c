@@ -1,0 +1,23 @@
+<div th:fragment="reply_list_fragment"> <!-- <div th:replace=... -->
+  <div class='menu_line'></div>
+
+  <table class="table table-striped" style='width: 100%; margin-left:15px;'>
+    <colgroup>
+      <col style='width: 60%;' />
+      <col style='width: 5%;' />
+      <col style='width: 10%;' />
+      <col style='width: 5%;' />
+      <col style='width: 5%;' />
+    </colgroup>
+
+    <tr th:each="replyVO:${list}" style="height: 90px;">
+      <td class='td_left'>
+        <span th:text="|${replyVO.id} |" style="font-weight: bold;"></span>
+        <span th:text="${replyVO.rdate}"></span>
+        <a th:href="@{|/reply/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}|}" style="margin-left: 10px;">수정</a>
+        <a th:href="@{|/reply/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}&memberno=${commentsVO.memberno}|}" style="margin-left: 10px;">삭제</a><br> 
+        <span th:text="${replyVO.contents}"></span><br><br><br>
+      </td>
+    </tr>
+      
+  </table>

@@ -9,20 +9,25 @@
       <col style='width: 5%;' />
       <col style='width: 5%;' />
     </colgroup>
-    <tr>
 
-
-    </tr>
-
-    <tr th:each="commentsVO:${list}" style="height: 90px;">
-      
+    <tr th:each="commentsVO,status:${list}" style="height: 90px;">
       <td class='td_left'>
-        <span th:text="|${commentsVO.id} |" style="font-weight: bold;"></span>
+        <span th:text="|${commentsVO.id} ${commentsVO.commentsno}|" style="font-weight: bold;"></span>
         <span th:text="${commentsVO.rdate}"></span>
-        <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}" style="margin-left: 10px;">수정</a>
-        <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}" style="margin-left: 10px;">삭제</a><br><br>
-        <span th:text="${commentsVO.contents}"></span>
-      </td>
+        <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}"
+          style="margin-left: 10px;">수정</a>
+        <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}"
+          style="margin-left: 10px;">삭제</a>
+        <a th:href="@{|/reply/create?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&memberno=${commentsVO.memberno}|}"
+          style="margin-left:10px;">대댓글 작성 및 목록</a><br><br>
+        <span th:text="${commentsVO.contents}"></span><br><br><br>
 
-    </tr>
+    </td>
+  </tr>
+
   </table>
+
+
+
+<!--  /reply/reply_list.html 파일의 reply_list_fragment import 
+        <div th:replace="~{reply/reply_list::reply_list_fragment}"></div>-->

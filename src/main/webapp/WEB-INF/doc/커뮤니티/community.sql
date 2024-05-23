@@ -56,7 +56,7 @@ CREATE SEQUENCE contents_seq
 -- CREATE
 INSERT INTO contents(contentsno, memberno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
        file1saved, thumb1, size1)
-VALUES (contents_seq.nextval, 1, 6, '식단', '다이어트 식단 추천', 0, 0, 0, '1234', '다이어트,식단', sysdate, 'food.jpg', 'food_1.jpg',
+VALUES (contents_seq.nextval, 1, 100, '식단', '다이어트 식단 추천', 0, 0, 0, '1234', '다이어트,식단', sysdate, 'food.jpg', 'food_1.jpg',
         'food_t.jpg', 1000);
         
         
