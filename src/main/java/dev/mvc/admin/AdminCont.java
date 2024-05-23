@@ -1,5 +1,6 @@
 package dev.mvc.admin;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.alogin.AloginProcInter;
+import dev.mvc.alogin.AloginVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +43,11 @@ public class AdminCont {
   @Autowired
   @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProcInter adminProc;
-
+  
+  @Autowired
+  @Qualifier("dev.mvc.alogin.AloginProc")
+  private AloginProcInter aloginProc;
+  
   @Autowired
   private Security security;
 
@@ -105,12 +112,12 @@ public class AdminCont {
    * @param adminVO
    * @return
    */
-  @GetMapping(value="/admins_list")
-  public String admins_list(HttpSession session, Model model) {
+  @GetMapping(value="/list")
+  public String list(HttpSession session, Model model) {
     System.out.println("HttpSession ------)_)_))>>" + session);
-    ArrayList<AdminVO> admins_list = this.adminProc.admins_list(); // 관리자 회원 목록 실행
-    model.addAttribute("admins_list", admins_list); // 회원 목록 반환
-    return "admin/admins_list"; // templates/admin/admins_list.html
+    ArrayList<AdminVO> list = this.adminProc.list(); // 관리자 회원 목록 실행
+    model.addAttribute("list", list); // 회원 목록 반환
+    return "admin/list"; // templates/admin/list.html
   }
 
   /**
@@ -192,6 +199,19 @@ public class AdminCont {
   public String login_form(Model model, HttpServletRequest request) {
     return "admin/login"; // templates/admin/login.html
   }
+  
+  /**
+   * 로그인 need
+   * @param model
+   * @param no 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/login_need")
+  public String login_need(Model model, HttpServletRequest request) {
+    return "admin/login_need"; // templates/admin/login_need.html
+  }
+
+  
 
   /**
    * Cookie 기반 로그인 처리
@@ -212,6 +232,7 @@ public class AdminCont {
                            Model model, 
                            String id, 
                            String passwd,
+                           AloginVO aloginVO,
                            @RequestParam(value="id_save", defaultValue = "") String id_save,
                            @RequestParam(value="passwd_save", defaultValue = "") String passwd_save) {
 
@@ -221,20 +242,34 @@ public class AdminCont {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
     map.put("passwd", this.security.aesEncode(passwd));
-
+    
     int cnt = this.adminProc.login(map);
     System.out.println("-> login_proc cnt: " + cnt);
-
+    
+    
+    
+    
+    
     model.addAttribute("cnt", cnt);
 
     if (cnt == 1) {
+     // saveLoginHistory(id, ip);
+      
       // id를 이용하여 회원 정보 조회
       AdminVO adminVO = this.adminProc.read_by_id(id);
       session.setAttribute("adminsno", adminVO.getAdminsno());
       session.setAttribute("id", adminVO.getId());
       session.setAttribute("aname", adminVO.getAname());
       session.setAttribute("grade", adminVO.getGrade());
-
+      
+      int adminsno = (int)session.getAttribute("adminsno");
+      aloginVO.setAdminsno(adminsno); // 세션에서 가져온 adminsno를  로그인 내역 테이블의 aloginVO의 adminsno에 저장
+      aloginVO.setIp(ip);
+      
+      int log = this.aloginProc.alogin_insert(aloginVO); //실행
+      System.out.println("로그인 내역" + log);
+      
+      
       if (adminVO.getGrade() >= 1 && adminVO.getGrade() <= 10) {
         session.setAttribute("grade", "admin");
       } else if (adminVO.getGrade() >= 11 && adminVO.getGrade() <= 20) {
@@ -285,6 +320,12 @@ public class AdminCont {
     }
   }
 
+
+
+
+
+  
+  
   /**
    * 로그아웃
    * @param model

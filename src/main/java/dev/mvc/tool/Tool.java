@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -430,6 +432,14 @@ public class Tool {
     
     return sb.toString();
   }
+  /**
+  * 한글 -> 16진수 UTF-8 문자코드로 변환
+  * @param str
+  * @return
+  */
+ public static synchronized String encode(String str) {
+   return URLEncoder.encode(str, StandardCharsets.UTF_8);
+ }
   
 }
 

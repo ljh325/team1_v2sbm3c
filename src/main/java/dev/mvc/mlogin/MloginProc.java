@@ -14,7 +14,7 @@ public class MloginProc implements MloginProcInter {
   private MloginDAOInter mloginDAO;
   
   public MloginProc(){
-    System.out.println("-> MloginProc created.");
+    System.out.println("-> AloginProc created.");
   }
 
 

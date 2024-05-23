@@ -43,13 +43,13 @@ public class CateCont {
   public int page_per_block = 10;
 
   public CateCont() {
-    System.out.println("-> CateCont created.");
+    System.out.println("-> HtcateCont created.");
   }
 
 //  @GetMapping(value = "/create") // http://localhost:9091/cate/create
 //  public String create(Model model) {
 //
-//    ArrayList<CateVO> list = this.cateProc.list_all();
+//    ArrayList<HtcateVO> list = this.cateProc.list_all();
 //    model.addAttribute("list", list);
 //
 //    return "cate/create"; // /templates/cate/create.html

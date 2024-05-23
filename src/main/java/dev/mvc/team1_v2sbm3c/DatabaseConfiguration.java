@@ -22,9 +22,11 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.member",
                                          "dev.mvc.contents",
                                          "dev.mvc.admin",
+                                         "dev.mvc.alogin",
                                          "dev.mvc.review",
                                          "dev.mvc.goals",
                                          "dev.mvc.mh",
+                                         "dev.mvc.htc",
                                          "dev.mvc.mlogin",
                                          "dev.mvc.comments",
                                          "dev.mvc.reply"

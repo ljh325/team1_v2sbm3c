@@ -26,7 +26,7 @@ public interface AdminDAOInter {
    * 관리자 전체 목록
    * @return
    */
-  public ArrayList<AdminVO> admins_list();
+  public ArrayList<AdminVO> list();
   
   /**
    * adminsno로 관리자 정보 조회
