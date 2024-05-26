@@ -32,6 +32,13 @@ public interface ContentsDAOInter {
   public int list_cate_count(int cateno);
   
   /**
+   * 전체 등록된 게시글 갯수
+   * @param cateno
+   * @return 등록된 게시글 갯수
+   */
+  public int list_all_count();
+  
+  /**
    * 게시글 조회
    * @param contentsno
    * @return 게시글 내용
@@ -44,6 +51,27 @@ public interface ContentsDAOInter {
    * @return  등록/수정/삭제된 갯수
    */
   public int youtube(HashMap<String, Object> hashmap);
+  
+  /**
+   * 게시글 전체 검색 목록
+   * @param hashmap
+   * @return 검색된 게시글 목록
+   */
+  public ArrayList<ContentsVO> list_all_search(HashMap<String, Object> hashmap);
+  
+  /**
+   * 게시글 전체 검색 결과 수
+   * @param hashmap
+   * @return 검색 결과 수
+   */
+  public int list_all_search_count(HashMap<String, Object> hashmap);
+  
+  /**
+   * 게시글 전체 검색 + 페이징 목록
+   * @param hashmap
+   * @return 검색된 게시글 목록
+   */
+  public ArrayList<ContentsVO> list_all_search_paging(HashMap<String, Object> hashmap);
   
   /**
    * 카테고리별 검색 목록

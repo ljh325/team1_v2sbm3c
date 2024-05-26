@@ -3,15 +3,25 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
-  <div class='title_line'>전체 글 목록</div>
+  <div class='title_line'>
+  <span th:if="${word != ''}" th:text="|> ${word} ${search_count}건|" class="title_line_text"></span>
+
+  </div>
 
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+ <!--   <span th:if="${session.grade == 'admin'}"> -->
+      
+    <!--</span> -->
   </aside> 
+  
+  <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{contents/list_all_search_component::list_all_search_fragment}"></div>
    
   <div class='menu_line'></div>
        
-  <table class="table table-striped" style='width: 100%;'>
+<table class="table table-striped" style='width: 100%;'>
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 65%;'/>
@@ -32,6 +42,7 @@
     <tr th:each="contentsVO, status:${list}" th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}'|"
          style="cursor:pointer; height: 90px;">
       <td class='td_basic' style="vertical-align: middle; text-align: center;">
+        
         <div th:if="${contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png') or contentsVO.file1.endsWith('gif')}">
           <img th:src="@{|/contents/storage/${contentsVO.thumb1}|}" style="width: 120px; height: 90px;">
         </div>
@@ -43,8 +54,10 @@
         <div th:if="${contentsVO.size1 == 0}">
           <img src="/contents/images/post.png" style="width: 120px; height: 90px;">
         </div>
+        
+        
+
       </td>
-         
       <td class='td_left'>
        <span th:text="${contentsVO.title}" style="font-weight: bold;"></span><br>
        <span th:if="${contentsVO.content.length() > 160}"
@@ -69,13 +82,18 @@
        <td class="td_left" style="text-align: center;">
          <span th:text="${contentsVO.recom}"></span>
        </td>
-     
     </tr>
+    
+    <tr th:if="${list.size() == 0}">
+      <td colspan="2" style="text-align: center;">관련 글이 등록되지 않았습니다.</td>
+    </tr>
+    
   </table>
-   
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
-  </div>
+  
+  
+    <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
 
 </div>
 </html>

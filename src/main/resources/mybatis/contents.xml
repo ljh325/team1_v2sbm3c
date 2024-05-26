@@ -55,6 +55,12 @@
     WHERE cateno= #{cateno}
   </select>
   
+  <!-- 특정 카테고리 등록된 게시글 갯수 -->
+  <select id = "list_all_count" resultType="int">
+    SELECT COUNT(contentsno)
+    FROM contents
+  </select>
+  
   <!-- 게시글 조회 -->
   <select id = "read" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
     SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
@@ -70,6 +76,71 @@
     WHERE contentsno=#{contentsno}
   </update>
   
+  <!-- 모든 등록된 게시글 검색 목록 -->
+  <select id="list_all_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
+    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
+    FROM contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+        
+      </when>
+      <otherwise> <!-- 검색하는 경우 -->
+        WHERE  (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+    ORDER BY contentsno DESC   
+  </select>
+  
+  <!-- 전체 게시글 검색 결과수 -->
+  <select id="list_all_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+  </select>   
+  
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_all_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
+   SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
+   FROM (
+              SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
+              FROM (
+                        SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
+                        FROM contents
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            
+                          </when>
+                          <otherwise>
+                            WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY contentsno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
   <!-- 카테고리별 검색 목록 -->
   <select id="list_cate_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
     SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
@@ -82,7 +153,7 @@
       <otherwise> <!-- 검색하는 경우 -->
         WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
                                                   OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                                                  OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
     ORDER BY contentsno DESC   
@@ -99,7 +170,7 @@
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
         WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
                                                   OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                                                  OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
   </select>   
@@ -122,7 +193,7 @@
                           <otherwise>
                             WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
                                                               OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
-                                                              OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                                                              OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
                         ORDER BY contentsno DESC

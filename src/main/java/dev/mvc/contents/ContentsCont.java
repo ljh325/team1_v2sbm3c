@@ -22,10 +22,12 @@ import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
 import dev.mvc.comments.CommentsProcInter;
 import dev.mvc.comments.CommentsVO;
+import dev.mvc.htc.HtcProcInter;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.reply.ReplyProcInter;
 import dev.mvc.reply.ReplyVO;
+import dev.mvc.htc.HtcVOMenu;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -55,6 +57,10 @@ public class ContentsCont {
   @Autowired
   @Qualifier("dev.mvc.reply.ReplyProc")
   private ReplyProcInter replyProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.htc.HtcProc")
+  private HtcProcInter htcProc;
 
   @Autowired
   Security security;
@@ -79,7 +85,10 @@ public class ContentsCont {
    */
   @GetMapping(value = "/create")
   public String create(Model model, ContentsVO contentsVO, int cateno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     CateVO cateVO = this.cateProc.read(cateno);
@@ -197,59 +206,167 @@ public class ContentsCont {
 
 //      return "redirect:/member/login_form_need";
   }
-
+  
   /**
-   * 관리자 전용 전체 게시글 목록
-   * 
-   * @param session
-   * @param model
+   * 카테고리 별 목록 + 검색 + 페이징
+   * http://www.localhost:9091/contents/list_by_cateno?cateno=5
+   * http://www.localhost:9091/contents/list_by_cateno?cateno=6
    * @return
    */
   @GetMapping(value = "/list_all")
-  public String list_all(HttpSession session, Model model) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+  public String list_all_search_paging(HttpSession session, Model model, 
+                                               @RequestParam(name="word", defaultValue="") String word,
+                                               @RequestParam(name="now_page", defaultValue="1") int now_page) {
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
-    System.out.println("-> list_all");
+    
+    int list_cnt = this.contentsProc.list_all_count();
+    System.out.println("->list_cnt: " + list_cnt);
 
-//    if (this.memberProc.isMemberAdmin(session) == true) {
-
-//      int memberno = (int)session.getAttribute("memberno");
-    int memberno = 1;
-    MemberVO memberVO = this.memberProc.read(memberno);
-    model.addAttribute("memberVO", memberVO);
-
-    ArrayList<ContentsVO> list = this.contentsProc.list_all();
-
+    
+    word = Tool.checkNull(word).trim();
+    
+    HashMap <String, Object> map = new HashMap<String, Object>();
+    map.put("word", word);
+    map.put("now_page", now_page);
+    
+    ArrayList<ContentsVO> list = this.contentsProc.list_all_search_paging(map);
     model.addAttribute("list", list);
-
-    return "contents/list_all";
-
-//    } else {
-//      return "redirect:/member/login_form_need"; // /WEB-INF/views/admin/login_need.jsp
-//
-//    }
+    
+    model.addAttribute("word", word);
+    
+    int search_count = this.contentsProc.list_all_search_count(map);
+    String paging = this.contentsProc.pagingBox_all(now_page, 
+        word, "/contents/list_all", search_count, Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    model.addAttribute("search_count", search_count);
+    
+    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+    model.addAttribute("no", no);
+    
+    return "contents/list_all_search_paging";
 
   }
 
+//  /**
+//   * 관리자 전용 전체 게시글 목록
+//   * 
+//   * @param session
+//   * @param model
+//   * @return
+//   */
+//  @GetMapping(value = "/list_all")
+//  public String list_all(HttpSession session, Model model) {
+//    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+//    model.addAttribute("menu1", menu1);
+//    
+//    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
+//    model.addAttribute("menu", menu);
+//    
+//    System.out.println("-> list_all");
+//
+////    if (this.memberProc.isMemberAdmin(session) == true) {
+//
+////      int memberno = (int)session.getAttribute("memberno");
+//    int memberno = 1;
+//    MemberVO memberVO = this.memberProc.read(memberno);
+//    model.addAttribute("memberVO", memberVO);
+//
+//    ArrayList<ContentsVO> list = this.contentsProc.list_all();
+//
+//    model.addAttribute("list", list);
+//
+//    return "contents/list_all";
+//
+////    } else {
+////      return "redirect:/member/login_form_need"; // /WEB-INF/views/admin/login_need.jsp
+////
+////    }
+//
+//  }
+  
   /**
-   * 카테고리 별 게시글 목록
-   * 
+   * 카테고리 별 목록 + 검색 + 페이징
+   * http://www.localhost:9091/contents/list_by_cateno?cateno=5
+   * http://www.localhost:9091/contents/list_by_cateno?cateno=6
    * @return
    */
   @GetMapping(value = "/list_cate")
-  public String list_cate(HttpSession session, Model model, ContentsVO contentsVO, int cateno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+  public String list_cate_search_paging(HttpSession session, Model model, int cateno, 
+                                               @RequestParam(name="word", defaultValue="") String word,
+                                               @RequestParam(name="now_page", defaultValue="1") int now_page) {
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
-
+    
+    int list_cnt = this.contentsProc.list_cate_count(cateno);
+    System.out.println("->list_cnt: " + list_cnt);
+    
     CateVO cateVO = this.cateProc.read(cateno);
-    model.addAttribute("cateVO", cateVO);
-
-    ArrayList<ContentsVO> list = this.contentsProc.list_cate(cateno);
+    model.addAttribute("cateVO",cateVO);
+    
+    
+    
+    word = Tool.checkNull(word).trim();
+    
+    HashMap <String, Object> map = new HashMap<String, Object>();
+    map.put("word", word);
+    map.put("cateno", cateno);
+    map.put("now_page", now_page);
+    
+    ArrayList<ContentsVO> list = this.contentsProc.list_cate_search_paging(map);
     model.addAttribute("list", list);
-
-    return "contents/list_cate";
+    
+    model.addAttribute("word", word);
+    
+    int search_count = this.contentsProc.list_cate_search_count(map);
+    String paging = this.contentsProc.pagingBox(cateno, now_page, 
+        word, "/contents/list_cate", search_count, Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    model.addAttribute("search_count", search_count);
+    
+    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+    model.addAttribute("no", no);
+    
+    return "contents/list_cate_search_paging";
 
   }
+  
+  
+
+//  /**
+//   * 카테고리 별 게시글 목록
+//   * 
+//   * @return
+//   */
+//  @GetMapping(value = "/list_cate")
+//  public String list_cate(HttpSession session, Model model, ContentsVO contentsVO, int cateno) {
+//    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+//    model.addAttribute("menu1", menu1);
+//    
+//    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
+//    model.addAttribute("menu", menu);
+//
+//    CateVO cateVO = this.cateProc.read(cateno);
+//    model.addAttribute("cateVO", cateVO);
+//
+//    ArrayList<ContentsVO> list = this.contentsProc.list_cate(cateno);
+//    model.addAttribute("list", list);
+//
+//    return "contents/list_cate";
+//
+//  }
  
 
   /**
@@ -259,7 +376,10 @@ public class ContentsCont {
    */
   @GetMapping(value = "/read")
   public String read(Model model, int contentsno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     ContentsVO contentsVO = this.contentsProc.read(contentsno);
@@ -327,7 +447,10 @@ public class ContentsCont {
    */
   @GetMapping(value = "/youtube")
   public String youtube(Model model, int contentsno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     ContentsVO contentsVO = this.contentsProc.read(contentsno); // map 정보 읽어 오기
@@ -375,7 +498,10 @@ public class ContentsCont {
   @GetMapping(value = "/update_text")
   public String update_text(HttpSession session, Model model, int contentsno, RedirectAttributes ra) {
 
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
 //    if (this.memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
@@ -443,7 +569,10 @@ public class ContentsCont {
    */
   @GetMapping(value = "/update_file")
   public String update_file(HttpSession session, Model model, int contentsno) {
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
 //    model.addAttribute("word", word);
@@ -547,7 +676,10 @@ public class ContentsCont {
   @GetMapping(value = "/delete")
   public String delete(HttpSession session, Model model, RedirectAttributes ra, int contentsno, int cateno) {
 
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     model.addAttribute("cateno", cateno);
@@ -615,7 +747,7 @@ public class ContentsCont {
 //    }
     // -------------------------------------------------------------------------------------
     CateVO cateVO = this.cateProc.read(cateno);
-    if(cateVO.getCateno()>0) {
+    if(cateVO.getCnt() > 0) {
       this.cateProc.cate_count_decrease(cateno);
     } 
     ra.addAttribute("cateno", cateno);
