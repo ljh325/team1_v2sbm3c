@@ -18,5 +18,5 @@ public interface FoodCateProcInter {
    */
   public ArrayList<FoodCateVO> list_all();
   
-  
+  public int delete(int foodcateno);
 }

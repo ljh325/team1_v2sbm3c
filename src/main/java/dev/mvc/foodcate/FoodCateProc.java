@@ -28,6 +28,10 @@ public class FoodCateProc implements FoodCateProcInter {
     ArrayList<FoodCateVO> list = this.foodCateDAO.list_all();
     return list;
   }
-  
+  @Override
+  public int delete(int foodcateno) {
+    int cnt = this.foodCateDAO.delete(foodcateno);
+    return cnt;
+  }
 
 }

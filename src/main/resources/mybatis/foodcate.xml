@@ -19,5 +19,13 @@
   </select>
   
   
+
+  <!-- 운동 목표 삭제 -->
+  <delete id = 'delete' parameterType="int">
+    DELETE FROM foodcate
+    WHERE foodcateno = #{foodcateno}
+  </delete>
+  
+  
   
 </mapper>

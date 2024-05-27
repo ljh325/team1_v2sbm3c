@@ -3,6 +3,8 @@ package dev.mvc.foodcate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.cate.CateVO;
+
 public interface FoodCateDAOInter {
 
   
@@ -20,5 +22,7 @@ public interface FoodCateDAOInter {
    * @return 식단 카테고리 리스트
    */
   public ArrayList<FoodCateVO> list_all();
+  
+  public int delete(int foodcateno);
   
 }

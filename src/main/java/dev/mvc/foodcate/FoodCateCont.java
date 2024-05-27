@@ -170,6 +170,18 @@ public class FoodCateCont {
 
 //      return "redirect:/member/login_form_need";
   }
+
+  @PostMapping(value = "/delete")
+  public String list_all(HttpSession session,Model model,@RequestParam("foodcateno") int foodcateno) {
+    
+    int cnt = this.foodCateProc.delete(foodcateno);
+    ArrayList<FoodCateVO> list = this.foodCateProc.list_all();
+    FoodCateVO foodCateVO = new FoodCateVO();
+    model.addAttribute("list", list);
+    model.addAttribute("foodCateVO", foodCateVO);
+
+    return "redirect:/foodcate/list_all";
+  }
   
   }
   
