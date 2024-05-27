@@ -25,7 +25,7 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
 <mapper namespace="dev.mvc.review.ReviewDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <!-- 리뷰 등록 -->
-  <insert id = "review_insert" parameterType="dev.mvc.review.ReviewDAOInter">
+  <insert id = "review_insert" parameterType="dev.mvc.review.ReviewVO">
     INSERT INTO review(reviewno, star, contents, rdate)
     VALUES (review_seq.nextval, #{star}, #{contents}, sysdate)
   </insert>
