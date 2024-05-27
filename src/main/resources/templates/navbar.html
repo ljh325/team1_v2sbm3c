@@ -24,7 +24,7 @@
               <a class="nav-link" href="/member/update_form">회원 수정</a>
             </li>
             <li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link"href="{/mh/list_all}">회원 건강 정보</a>
+                <a class="nav-link" href="/mh/list_all">회원 건강 정보</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
             <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
@@ -50,6 +50,7 @@
 
               <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/list">관리자 목록</a></li>
               <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/alogin/list">관리자 로그인 내역</a></li>
+              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/foodcate/list_all">식단 추가</a></li>
 <!-- 관리자 비밀번호, 아이디 찾기, 비밀번호 찾기는 데이터베이스에서 추가 함
               <li class="nav-item" th:if="${session.adminsno != null}">
                   <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>

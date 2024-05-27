@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    운동 추천 정보 > 
+    운동 추천 삭제
+  </div>
+  
+  <aside class="aside_right">
+    <a href="/healthrecom/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/healthrecom/update?healthrecomno=${healthrecomVO.healthrecomno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a href="/healthrecom/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  
+  <div id='panel_delete' style='padding: 10px 0px 10px 0px; background-color: #F9F9F9; width: 100%; text-align: center;'>
+
+    <form name="frm" th:object="${healthrecomVO}" method="post" action="/healthrecom/delete">
+      <input type="hidden" name="healthrecomno" th:value="${healthrecomVO.healthrecomno}">
+
+      <input type="hidden" name="now_page" th:value="${now_page}">
+  
+      <div class="msg_warning">운동 추천을 삭제하면 복구 할 수 없습니다.</div>
+   
+       <div>
+          <label>생성 날짜:</label>: <span th:text="${healthrecomVO.rdate}"></span>
+       </div>
+      
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+        <button type="button" th:attr="onclick=|location.href='/healthrecom/list_all'|" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+    </form>  
+ 
+  </div>  
+
+  <!-- /templates/healthrecom/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{healthrecom/list_all_component::list_all_fragment}"></div>
+    
+</div>
+</html>
+

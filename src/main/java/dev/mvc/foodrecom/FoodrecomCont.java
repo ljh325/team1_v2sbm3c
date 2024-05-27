@@ -53,7 +53,6 @@ public class FoodrecomCont {
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
   public int page_per_block = 10;
 
-  private Object foodrecomVO;
   
   public FoodrecomCont() {
     System.out.println("-> Foodrecom created.");  

@@ -103,7 +103,7 @@ public class AdminProc implements AdminProcInter {
   }
 
 //  @Override
-//  public int update(AdminVO adminVO) {
+//  public int update(FoodCateVO adminVO) {
 //    String passwd = adminVO.getPasswd();
 //    // Security security = new Security();
 //    String passwd_encoded = this.security.aesEncode(passwd);
