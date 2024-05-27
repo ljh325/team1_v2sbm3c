@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">
+    운동 카테고리 검색
+    <span th:if="${word!=null and word!=''}" th:text="|${word} ${no} 건|">
+  </div>
+  <aside class="aside_right">
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  
+  <!-- /htc/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{htc/list_search_component::list_search_fragment}"></div>
+  
+  <div class="menu_line"></div>
+
+  <div style="display: flex; justify-content: center;">
+    <form name="frm" th:object="${htcVO}" method="post" action="/htc/create">
+      <div style="margin-right: 5px; width: 30%; float: left;">
+        <input type="text" name="name" value="" autofocus="autofocus"
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{name}" placeholder="중분류">
+        <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('name'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div style="margin-right: 5px; width: 30%; float: left;">
+        <input type="text" name="namesub" value="" 
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{namesub}" placeholder="소분류, '-' 중분류로 등록">
+        <div th:if="${#fields.hasErrors('namesub')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('namesub'))}" th:text="${err}"></div>
+        </div>             
+      </div>
+      <div style="margin-right: 5px; width: 25%; float: left;">
+        <input type="text" name="seqno" value="" 
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{seqno}" placeholder="출력순서">
+        <div th:if="${#fields.hasErrors('seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('seqno'))}" th:text="${err}"></div>
+        </div>             
+      </div>
+      <div style="margin-top: 3px; width: 12%; float: left;">
+        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+        <button type="button" onclick="location.href='/htc/list_search'" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+    </form>  
+  </div>
+    
+  <!-- /htc/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{htc/list_all_component::list_all_fragment}"></div>
+  
+</div>
+</html>
+
+
+
+
+
+
+

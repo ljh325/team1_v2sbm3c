@@ -31,7 +31,7 @@ public class MloginCont {
 
   
   public MloginCont() {
-    System.out.println("-> MloginCont created.");  
+    System.out.println("-> AloginCont created.");  
   }
   
   /***************************************************************************************/

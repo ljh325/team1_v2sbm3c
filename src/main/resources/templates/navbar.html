@@ -163,7 +163,7 @@
               <a class="nav-link" href="/member/update_form">회원 수정</a>
             </li>
             <li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link"href="{/mh/list_all}">회원 건강 정보</a>
+                <a class="nav-link" href="/mh/list_all">회원 건강 정보</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
             <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
@@ -175,7 +175,7 @@
         </div>
           
  <!-- 관리자 정보 탑 메뉴-->
-        <div class="nav-item dropdown">
+        <div class="nav-item dropdown" style="margin-left: 10px;">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" 
                  role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
             </a>
@@ -187,8 +187,9 @@
               <li class="nav-item" th:if="${session.adminsno == null}"><a class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a></li>
               <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/logout" th:text="@{|${session.aname}로그아웃|}"></a></li>      
 
-              <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/admins_list">관리자 목록</a></li>
-              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="#">관리자 로그인 내역</a></li>
+              <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/list">관리자 목록</a></li>
+              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/alogin/list">관리자 로그인 내역</a></li>
+              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/foodcate/list_all">식단 추가</a></li>
 <!-- 관리자 비밀번호, 아이디 찾기, 비밀번호 찾기는 데이터베이스에서 추가 함
               <li class="nav-item" th:if="${session.adminsno != null}">
                   <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
@@ -211,26 +212,39 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <!-- 메뉴 시작 -->
+            <!-- 메뉴 시작-->
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown" th:each="cateVOMenu:${menu}">
+                 <!-- 기본 카테 메뉴 시작 -->
+                    <li class="nav-item dropdown" th:each="cateVOMenu:${menu1}">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li th:each="cateVO:${cateVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a></li>
                         </ul>
+
+                    </li>
+                  <!-- 운동 카테 메뉴 시작 -->
+                    <li class="nav-item dropdown" th:each="htcVOMenu:${menu}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_htc?htcno=${htcVO.htcno}|}" th:text="${htcVO.namesub}"></a></li>
+                        </ul>
                     </li>
 
                     
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${session.adminsno == null}">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자등록">                                                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                           <li class="nav-item"><a class="nav-link" href="/cate/list_search">카테고리 전체 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/member/list">회원 목록</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/htc/list_search">운동 카테 목록</a></li>
+                          
                           <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/contents/create?cateno=6">글작성테스트</a></li>
                         </ul>

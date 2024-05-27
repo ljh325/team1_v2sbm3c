@@ -44,9 +44,7 @@ public interface MhProcInter {
   public int delete(int mhno);
 
   
-  /** 메뉴 */
-  public ArrayList<MhVOMenu> menu();
-  
+
   /**
    * 관리자용 검색 목록
    * select id="list_search" resultType="dev.mvc.mh.MhVO" parameterType="String"

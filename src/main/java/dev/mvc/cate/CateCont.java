@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import dev.mvc.admin.AdminProcInter;
 import dev.mvc.admin.AdminVO;
+import dev.mvc.htc.HtcProcInter;
+import dev.mvc.htc.HtcVOMenu;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +37,10 @@ public class CateCont {
   @Autowired
   @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProcInter adminProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.htc.HtcProc")
+  private HtcProcInter htcProc;
 
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
@@ -43,13 +49,13 @@ public class CateCont {
   public int page_per_block = 10;
 
   public CateCont() {
-    System.out.println("-> CateCont created.");
+    System.out.println("-> HtcateCont created.");
   }
 
 //  @GetMapping(value = "/create") // http://localhost:9091/cate/create
 //  public String create(Model model) {
 //
-//    ArrayList<CateVO> list = this.cateProc.list_all();
+//    ArrayList<HtcateVO> list = this.cateProc.list_all();
 //    model.addAttribute("list", list);
 //
 //    return "cate/create"; // /templates/cate/create.html
@@ -82,11 +88,15 @@ public class CateCont {
   @GetMapping(value = "/list_search")
   public String list_all(HttpSession session, Model model, CateVO cateVO) {
 
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     ArrayList<CateVO> list = this.cateProc.list_all();
     model.addAttribute("list", list);
+    
 
 //    
 
@@ -104,7 +114,10 @@ public class CateCont {
   @GetMapping(value = "/read")
   public String read(HttpSession session, Model model, int cateno) {
     
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     CateVO cateVO = this.cateProc.read(cateno);
@@ -126,18 +139,19 @@ public class CateCont {
    */
   @GetMapping(value = "/update")
   public String update(HttpSession session, Model model, int cateno) {
-    if (this.memberProc.isMemberAdmin(session)) {
-      ArrayList<CateVOMenu> menu = this.cateProc.menu();
-      model.addAttribute("menu", menu);
+    
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
+    model.addAttribute("menu", menu);
 
       CateVO cateVO = this.cateProc.read(cateno);
       model.addAttribute("cateVO", cateVO);
 
       return "cate/update"; // /templates/cate/update.html
 
-    } else {
-      return "contents/msg";
-    }
+    
   }
 
   /**
@@ -182,7 +196,10 @@ public class CateCont {
   @GetMapping(value = "/delete")
   public String delete(Model model, int cateno) {
 
-    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+    model.addAttribute("menu1", menu1);
+    
+    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     CateVO cateVO = this.cateProc.read(cateno);
@@ -276,7 +293,7 @@ public class CateCont {
   }
 
   /**
-   * 카테고리 공개 설정
+   * 관리자 카테고리 설정
    * 
    * @param model
    * @param cateno 조회할 카테고리 번호
@@ -291,7 +308,7 @@ public class CateCont {
   }
 
   /**
-   * 카테고리 비공개 설정
+   * 관리자 카테고리 설정 해제
    * 
    * @param model
    * @param cateno 조회할 카테고리 번호

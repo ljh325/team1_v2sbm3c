@@ -13,32 +13,32 @@ import lombok.Setter;
 
 @Setter @Getter
 public class MhVO {
-  /** 오버렌딩 카테고리 번호 */
+  /** 회원 건강 정보 */
   private int mhno=0;
   
-  /** 중분류명 */
-  @NotEmpty(message="체중은 필수 입력 항목입니다.")
+  /**체중 */
+  @NotNull(message="체중은 필수 입력 항목입니다.")
   @Pattern(regexp = "\\d+", message = "숫자만 입력 가능합니다.")
   @Size(min=2, max=10, message="입력 글자 수는 1~10 입니다.")
-  private String kg;
+  private int kg;
 
   /** 신장 */
-  @NotEmpty(message="신장은 필수 입력 항목입니다.")
+  @NotNull(message="신장은 필수 입력 항목입니다.")
   @Pattern(regexp = "\\d+", message = "숫자만 입력 가능합니다.")
   @Size(min=1, max=10, message="입력 글자 수는 1~10 입니다.")
-  private String cm="";
+  private int cm;
   
-  /** 신장 */
-  @NotEmpty(message="체지방은 필수 입력 항목입니다.")
+  /**체지방 */
+  @NotNull(message="체지방은 필수 입력 항목입니다.")
   @Pattern(regexp = "\\d+", message = "숫자만 입력 가능합니다.")
   @Size(min=1, max=10, message="입력 글자 수는 1~10 입니다.")
-  private String ckg="";
+  private int ckg;
   
-  /** 신장 */
-  @NotEmpty(message="골격근량은 필수 입력 항목입니다.")
+  /** 골격근량 */
+  @NotNull(message="골격근량은 필수 입력 항목입니다.")
   @Pattern(regexp = "\\d+", message = "숫자만 입력 가능합니다.")
   @Size(min=1, max=10, message="입력 글자 수는 1~10 입니다.")
-  private String muscle="";
+  private int muscle;
   
   /** 회원 번호 */
   @NotNull

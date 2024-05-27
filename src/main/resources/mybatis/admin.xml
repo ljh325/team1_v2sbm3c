@@ -19,7 +19,7 @@
   </insert>
 
   <!-- (o) 회원 전체 목록 || profile (X) -->
-  <select id="admins_list" resultType="dev.mvc.admin.AdminVO">
+  <select id="list" resultType="dev.mvc.admin.AdminVO">
     SELECT adminsno, id, passwd, aname, adate, grade
     FROM admins
     ORDER BY grade ASC, id ASC
@@ -36,6 +36,7 @@
     FROM admins
     WHERE id = #{id}
   </select>
+
   
     <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0 || 탈퇴회원:3 이 아닌 회원 로그인-->
   <select id="login" resultType="int" parameterType="HashMap">

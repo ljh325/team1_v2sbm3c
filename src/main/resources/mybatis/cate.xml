@@ -35,7 +35,28 @@
   <delete id="delete" parameterType="Integer">
     DELETE FROM cate WHERE cateno=#{cateno}
   </delete>
-
+  
+  <!-- 카테고리 자료수 증가 -->
+  <update id = "cate_count_increase" parameterType="int">
+    UPDATE cate
+    SET cnt = cnt + 1
+    WHERE cateno = #{cateno}
+  </update>
+  
+  <!-- 카테고리 자료수 감소 -->
+  <update id = "cate_count_decrease" parameterType="int">
+    UPDATE cate
+    SET cnt = cnt - 1
+    WHERE cateno = #{cateno}
+  </update>
+  
+  <!-- 카테고리 전체 자료수 -->
+  <select id = "cate_count_read" resultType="int" parameterType="String">
+    SELECT SUM(cnt)
+    FROM cate
+    WHERE name = #{name}
+  </select>
+  
   <!-- 출력 순서 높임 -->
   <update id="update_seqno_forward" parameterType="Integer">
     UPDATE cate

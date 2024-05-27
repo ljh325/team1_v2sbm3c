@@ -39,9 +39,9 @@ public class AdminProc implements AdminProcInter {
   }
 
   @Override
-  public ArrayList<AdminVO> admins_list() {
-    ArrayList<AdminVO> admins_list = this.adminDAO.admins_list();
-    return admins_list;
+  public ArrayList<AdminVO> list() {
+    ArrayList<AdminVO> list = this.adminDAO.list();
+    return list;
   }
 
   @Override
@@ -61,6 +61,12 @@ public class AdminProc implements AdminProcInter {
     int cnt = this.adminDAO.login(map);
     return cnt;
   }
+  
+
+
+  
+
+
 
   @Override
   public boolean isAdmin(HttpSession session) {
@@ -97,7 +103,7 @@ public class AdminProc implements AdminProcInter {
   }
 
 //  @Override
-//  public int update(AdminVO adminVO) {
+//  public int update(FoodCateVO adminVO) {
 //    String passwd = adminVO.getPasswd();
 //    // Security security = new Security();
 //    String passwd_encoded = this.security.aesEncode(passwd);

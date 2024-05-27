@@ -62,6 +62,10 @@ SELECT cateno, name, namesub, cnt, rdate, seqno, visible, adminsno, admins
 FROM cate
 ORDER BY seqno ASC;
 
+SELECT SUM(cnt)
+FROM cate
+WHERE name = '테스트2';
+
 -- UPDATE
 UPDATE cate
 SET namesub = '업데이트 테스트'
@@ -90,6 +94,14 @@ WHERE cateno = 6 AND admins = 'N';
 UPDATE cate
 SET admins = 'N'
 WHERE cateno = 6 AND admins = 'Y';
+
+UPDATE cate
+SET cnt = cnt + 1
+WHERE cateno = 3;
+
+UPDATE cate
+SET cnt = cnt - 1
+WHERE cateno = 3;
 
 -- DELETE
 DELETE FROM cate

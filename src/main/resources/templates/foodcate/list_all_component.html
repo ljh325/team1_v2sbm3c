@@ -1,0 +1,103 @@
+<div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
+  <script th:inline="javascript">
+    function updateFoodcate(foodcateno) {
+        // 새 form 엘리먼트 생성
+        var form = document.createElement("form");
+        form.method = "GET";
+        form.action ='/foodcate/update';
+        
+        // input 엘리먼트 생성하여 foodcateno 값 추가
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "foodcateno";
+        input.value = foodcateno;
+        
+        // form에 input 엘리먼트 추가 후 form을 body에 추가
+        form.appendChild(input);
+        document.body.appendChild(form);
+        
+        // form submit
+        form.submit();
+    }
+
+    function deleteFoodcate(foodcateno) {
+        // 새 form 엘리먼트 생성
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action ='/foodcate/delete';
+        
+        // input 엘리먼트 생성하여 foodcateno 값 추가
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "foodcateno";
+        input.value = foodcateno;
+        
+        // form에 input 엘리먼트 추가 후 form을 body에 추가
+        form.appendChild(input);
+        document.body.appendChild(form);
+        
+        // form submit
+        form.submit();
+    }
+    
+    function readFoodcate(foodcateno) {
+        // 새 form 엘리먼트 생성
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action ='/foodcate/read';
+        
+        // input 엘리먼트 생성하여 foodcateno 값 추가
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "foodcateno";
+        input.value = foodcateno;
+        
+        // form에 input 엘리먼트 추가 후 form을 body에 추가
+        form.appendChild(input);
+        document.body.appendChild(form);
+        
+        // form submit
+        form.submit();
+    }
+  </script>
+  <div style="display: flex; justify-content: center;">
+    <table class="table table-hover">
+      <colgroup>
+        <col style='width: 20%;'/>
+        <col style='width: 40%;'/>
+        <col style='width: 15%;'/>
+        <col style='width: 15%;'/>
+        <col style='width: 10%;'/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="th_bs">번호</th>
+          
+          <th class="th_bs">등록일</th>
+          <th class="th_bs">식품번호</th>
+          <th class="th_bs">기타</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="foodcateVO, status:${list}">
+          <td class="td_bs" th:text="${status.index + 1}"></td>
+          
+          <!-- 이미지 URL 설정 -->
+         
+          
+          <td class="td_bs" th:text="${foodcateVO.fdate.substring(5, 10)}"></td>
+          <td class="td_bs" th:text="${foodcateVO.foodcode}"></td>
+  
+          <td class="td_bs">
+            <img src="/images/read.png" class="icon" th:onclick="'javascript:readFoodcate(' + ${foodcateVO.foodcateno} + ')'">    
+            <img src="/images/delete.png" class="icon" th:onclick="'javascript:deleteFoodcate(' + ${foodcateVO.foodcateno} + ')'">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- 페이지 버튼 목록 출력 시작 -->
+    <div class="Bottom_menu" th:utext="${paging}"></div>
+    <!-- 페이지 버튼 목록 출력 종료 --> 
+  </div>
+</div>

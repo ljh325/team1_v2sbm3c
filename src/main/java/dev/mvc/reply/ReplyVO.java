@@ -38,5 +38,18 @@ public class ReplyVO {
   
   /** 대댓글 작성 댓글 번호*/
   private int commentsno;
+  
+  @Override
+  public String toString() {
+      return "ReplyVO{" +
+          "replyno=" + this.replyno +
+          ", contents='" + this.contents + '\'' +
+          ", rdate='" + this.rdate + '\'' +
+          ", id='" + this.id + '\'' +
+          ", memberno='" + this.memberno + '\'' +
+          ", contentsno='" + this.contentsno + '\'' +
+          ", commentsno='" + this.commentsno + '\'' +
+          '}';
+  }
 
 }

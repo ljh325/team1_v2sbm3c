@@ -40,6 +40,9 @@ public class CommentsCont {
   public CommentsCont() {
     System.out.println("-> CommentsCont Created");
   }
+  
+  
+  
 
   /**
    * 댓글 생성
@@ -53,12 +56,14 @@ public class CommentsCont {
   public String create(HttpSession session, Model model, CommentsVO commentsVO, int contentsno, RedirectAttributes ra) {
     int memberno = (int) session.getAttribute("memberno"); // adminno FK
     commentsVO.setMemberno(memberno);
+    
 
     MemberVO memberVO = this.memberProc.read(memberno);
+    
     commentsVO.setId(memberVO.getId());
 
     this.commentsProc.create(commentsVO);
-
+    
     ra.addAttribute("contentsno", contentsno);
 
     return "redirect:/contents/read";
@@ -115,7 +120,7 @@ public class CommentsCont {
     
    
     int cnt = this.commentsProc.update(commentsVO); // 글수정
-
+    
     ra.addAttribute("contentsno", contentsno);
 
     return "redirect:/contents/read"; // 페이지 자동 이동

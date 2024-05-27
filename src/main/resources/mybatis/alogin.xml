@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.alogin.AloginDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- (o)  로그인 내역 등록  -->
+  <insert id="alogin_insert" parameterType="dev.mvc.alogin.AloginVO">
+    INSERT INTO alogin(aloginno, adminsno, ip, logindate)
+    VALUES (alogin_seq.nextval, #{adminsno}, #{ip}, sysdate)
+  </insert>
+  
+  <!-- (o)  로그인 내역 조회 -->
+  <select id="alogin_read" resultType="dev.mvc.alogin.AloginVO" parameterType="int">
+    SELECT aloginno, adminsno, ip, TO_CHAR(sysdate, 'YYYY-MM-DD HH24:MI:SS') as logindate
+    FROM alogin
+    WHERE adminsno = #{adminsno}
+  </select>  
+
+</mapper>

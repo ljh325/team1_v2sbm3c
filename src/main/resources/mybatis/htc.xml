@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.htc.HtcDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <insert id="create" parameterType="dev.mvc.htc.HtcVO"> <!-- public int create(htcVO htcVO) {...-->
+    INSERT INTO htc(htcno, name, namesub, rdate, seqno, visible, adminsno)
+    VALUES(htc_SEQ.nextval, #{name}, #{namesub}, sysdate, #{seqno}, 'Y', #{adminsno})
+  </insert>
+
+  
+  <!-- SQL -> htcVO -> ArrayList<htcVO> return -->
+  <select id="list_all" resultType="dev.mvc.htc.HtcVO">
+    SELECT htcno, name, namesub, rdate, seqno, visible, adminsno
+    FROM htc
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- SQL -> HtcVO return -->
+  <select id="read" resultType="dev.mvc.htc.HtcVO" parameterType="Integer">
+    SELECT htcno, name, namesub, rdate, seqno, visible, adminsno
+    FROM htc
+    WHERE htcno=#{htcno}
+  </select>
+  
+  <!-- 수정, return: 수정한 레코드 갯수, parameterType: 수정할 레코드 정보 -->
+  <update id="update" parameterType="dev.mvc.htc.HtcVO">
+    UPDATE htc
+    SET name=#{name}, namesub=#{namesub}, rdate=sysdate, seqno=#{seqno}, visible=#{visible}, adminsno=#{adminsno}
+    WHERE htcno=#{htcno}
+  </update>
+
+  
+  <delete id="delete" parameterType="Integer">
+    DELETE FROM htc WHERE htcno=#{htcno}
+  </delete>
+
+  <!-- 우선 순위 높임, 10 등 -> 1 등 -->
+  <update id="update_seqno_forward" parameterType="Integer">
+    UPDATE htc
+    SET seqno= seqno -1
+    WHERE htcno = #{htcno}
+  </update>
+
+  <!-- 우선 순위 낮춤, 1 등 -> 10 등 -->
+  <update id="update_seqno_backward" parameterType="Integer">
+    UPDATE htc
+    SET seqno= seqno +1
+    WHERE htcno = #{htcno}
+  </update>
+
+  <!-- 카테고리 공개 설정 -->
+  <update id="update_visible_y" parameterType="Integer">
+    UPDATE htc SET visible='Y' WHERE htcno=#{htcno}
+  </update>
+  
+  <!-- 카테고리 비공개 설정 -->
+  <update id="update_visible_n" parameterType="Integer">
+    UPDATE htc SET visible='N' WHERE htcno=#{htcno}
+  </update>
+
+  <!-- 회원/비회원에게 공개할 중분류 목록 -->
+  <!-- SQL -> htcVO -> ArrayList<htcVO> return -->
+  <select id="list_all_name_y" resultType="dev.mvc.htc.HtcVO">
+    SELECT htcno, name, seqno, visible,  adminsno
+    FROM htc 
+    WHERE name IN (
+        SELECT DISTINCT name
+        FROM htc
+    ) AND namesub = '-' AND visible='Y'
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 회원/비회원에게 공개할 소분류 목록 -->
+  <!-- SQL -> htcVO -> ArrayList<htcVO> return -->
+  <select id="list_all_namesub_y" resultType="dev.mvc.htc.HtcVO" parameterType="String">
+    SELECT htcno, name, namesub, rdate, seqno, visible,  adminsno
+    FROM htc
+    WHERE name=#{name} AND namesub != '-' AND visible='Y'
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+  <!-- SQL -> htcVO -> ArrayList<htcVO> return -->
+  <select id="list_search" resultType="dev.mvc.htc.HtcVO" parameterType="String">
+    SELECT htcno, name, namesub, rdate, seqno, visible,  adminsno
+    FROM htc
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'  
+    </if>
+        
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+  <!-- SQL -> htcVO -> ArrayList<htcVO> return -->
+  <select id="list_search_paging" resultType="dev.mvc.htc.HtcVO" parameterType="Map">
+    SELECT htcno, name, namesub, rdate, seqno, visible, adminsno, r
+    FROM (
+        SELECT htcno, name, namesub, rdate, seqno, visible, adminsno, rownum as r
+        FROM (
+            SELECT htcno, name, namesub, rdate, seqno, visible, adminsno
+            FROM htc
+            
+            <if test="word != null and word != ''">
+              WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'
+            </if>
+         
+            ORDER BY seqno ASC
+        )
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num} <!-- WHERE r >= 1 AND r <= 3 -->
+  </select>
+
+  <!-- 검색된 레코드 수 -->
+  <select id="list_search_count" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM htc
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%' OR UPPER(namesub) LIKE '%' || UPPER(#{word}) || '%'  
+    </if>
+        
+    ORDER BY seqno ASC
+  </select>
+                
+</mapper>
+
+
+
+
+
+
+
+
+
+

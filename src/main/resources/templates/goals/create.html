@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">운동 목표 등록</div>
+  <form kg="frm" th:object="${goalsVO}" method="post" action="/goals/create">
+  
+    <div>
+      <label>체중</label>
+      <input type="text" name="kg" value="" autofocus="autofocus"
+             class="form-control fom-control-sm" style="width: 50%;" th:field="*{kg}">
+      <div th:if="${#fields.hasErrors('kg')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('kg'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+      <div>
+      <label>체지방</label>
+      <input type="text" name="ckg" value="" autofocus=""
+             class="form-control fom-control-sm" style="width: 50%;" th:field="*{ckg}">
+      <div th:if="${#fields.hasErrors('ckg')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('ckg'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+    <div>
+      <label>신장</label>
+      <input type="text" name="cm" value="" 
+             class="form-control fom-control-sm" style="width: 50%;" th:field="*{cm}">
+      <div th:if="${#fields.hasErrors('cm')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cm'))}" th:text="${err}"></div>
+      </div>             
+      
+      
+      
+      
+    </div>
+      <div>
+      <label>골격근량</label>
+      <input type="text" name="muscle" value="" autofocus=""
+             class="form-control fom-control-sm" style="width: 50%;" th:field="*{muscle}">
+      <div th:if="${#fields.hasErrors('muscle')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('kg'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+   
+  
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+    
+  </form>  
+  
+    <!-- /goals/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
+  
+</div>
+</html>
