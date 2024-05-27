@@ -3,10 +3,7 @@ package dev.mvc.review;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import dev.mvc.contents.ContentsVO;
-import dev.mvc.member.MemberVO;
-
-public interface ReviewDAOInter {
+public interface ReviewProcInter {
 
   
   /**
@@ -78,9 +75,4 @@ public interface ReviewDAOInter {
    * @return
    */
   public ReviewVO old_review();
-  
-
-  
-  
-  
 }

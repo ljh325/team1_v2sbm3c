@@ -27,7 +27,8 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.mh",
                                          "dev.mvc.mlogin",
                                          "dev.mvc.comments",
-                                         "dev.mvc.reply"
+                                         "dev.mvc.reply",
+                                         "dev.mvc.history"
                                          }) // 개발 package(테이블)
 public class DatabaseConfiguration {
     

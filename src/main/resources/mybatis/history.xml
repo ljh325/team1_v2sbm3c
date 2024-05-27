@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+//======================= 주찬 ========================//
+                /* Table Name: 운동기록 */
+
+//  CREATE TABLE HISTORY(
+//      HISTORYNO   NUMBER(10)   NOT NULL  PRIMARY KEY,  //운동기록
+//      START_TIME  DATE         NULL,                   //운동기록번호
+//      LAST_TIME   DATE         NULL,                   //운동시작시간
+//      MEMBERNO    NUMBER(10)   NOT NULL                //회원 번호
+//  );
+-->
+<mapper namespace="dev.mvc.history.HistoryDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- (o)  운동 시작 체크   -->
+  <insert id="history_start" parameterType="dev.mvc.history.HistoryVO">
+    INSERT INTO history(historyno, startt, endt, memberno)
+    VALUES (history_seq.nextval, sysdate, null, #{memberno})
+  </insert>
+  
+  
+  <!-- 운동 종료 체크 (단)) 기준시간 10시간 이후에는 자동으로 운동 종료: 운동 종료를 안눌렀을때 )-->
+  <update id="history_end" parameterType="int">
+    UPDATE history
+    SET endt = SYSDATE
+    WHERE memberno = #{memberno}
+    AND historyno = (SELECT MAX(historyno) FROM history WHERE memberno = #{memberno})
+  </update>  
+  
+  
+  <!-- (o)  운동 내역 조회 -->
+  <select id="history_read" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT historyno, startt, endt, memberno,
+    round((endt - startt) * 24 * 60, 0) AS totalt
+    FROM history
+    WHERE memberno = #{memberno};
+  </select>  
+
+</mapper>

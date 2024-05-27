@@ -1,37 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-<<<<<<< HEAD
-            	
-    
-    
-    <wb-module deploy-name="team1_v2sbm3c">
-                        		
-        
-        
-        <property name="context-root" value="team1_v2sbm3c"/>
-                        		
-        
-        
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
-                        		
-        
-        
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
-                        		
-        
-        
-        <wb-resource deploy-path="/" source-path="src/main/webapp"/>
-                
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/bin/generated-sources/annotations"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/bin/generated-test-sources/annotations"/>
-                        	
-    
-    
-    </wb-module>
-            
-
-
-=======
     	
     <wb-module deploy-name="team1_v2sbm3c">
         		
@@ -47,5 +14,4 @@
         	
     </wb-module>
     
->>>>>>> 3171f4a0703e06d0e04b10b83cdd6ecc5c604017
 </project-modules>

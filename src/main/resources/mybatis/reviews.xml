@@ -24,6 +24,12 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
 -->
 <mapper namespace="dev.mvc.review.ReviewDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
+  <!-- 리뷰 등록 -->
+  <insert id = "review_insert" parameterType="dev.mvc.review.ReviewDAOInter">
+    INSERT INTO review(reviewno, star, contents, rdate)
+    VALUES (review_seq.nextval, #{star}, #{contents}, sysdate)
+  </insert>
+  
   <!-- 리뷰 전체 조회 -->
   <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
     SELECT reviewno, star, contents, rdate
@@ -72,15 +78,22 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
   </delete>
   
   
-  <!-- 별점에 따른 리뷰 조회(별점 높은 순 , 낮은 순) -->
-  <select id="list_star" resultType="dev.mvc.review.ReviewVO" parameterType="int">
+  <!-- 별점에 따른 리뷰 조회(별점 높은 순) -->
+  <select id="list_star_high" resultType="dev.mvc.review.ReviewVO" parameterType="int">
+    SELECT reviewno, star, contents, rdate, udate
+    FROM review
+    WHERE star = #{star}
+    ORDER BY DESC
+  </select>
+  
+    <!-- 별점에 따른 리뷰 조회(별점 낮은 순) -->
+  <select id="list_star_low" resultType="dev.mvc.review.ReviewVO" parameterType="int">
     SELECT reviewno, star, contents, rdate, udate
     FROM review
     WHERE star = #{star}
   </select>
-  
   <!-- 최근 작성순 -->
-  <select id="recent_review" parameterType="dev.mvc.review.ReviewVO">
+  <select id="recent_review" resultType="dev.mvc.review.ReviewVO">
     SELECT reviewno, star, contents, rdate, udate
     FROM review
     ORDER BY COALESCE(udate, rdate) DESC
@@ -89,7 +102,7 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
   </select>
   
   <!-- 오래된 작성순 -->
-  <select id="old_review" parameterType="dev.mvc.review.ReviewVO">
+  <select id="old_review" resultType="dev.mvc.review.ReviewVO">
     SELECT reviewno, star, contents, rdate, udate
     FROM review
     ORDER BY COALESCE(udate, rdate) asc
