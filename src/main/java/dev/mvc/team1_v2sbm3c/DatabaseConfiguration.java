@@ -30,13 +30,11 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.mlogin",
                                          "dev.mvc.comments",
                                          "dev.mvc.reply",
-<<<<<<< HEAD
-                                         "dev.mvc.history"
-=======
+                                         "dev.mvc.history",
                                          "dev.mvc.healthrecom",
                                          "dev.mvc.foodrecom",
                                          "dev.mvc.foodcate"
->>>>>>> 7adacb0e4ea43209af72925e1f49db5d52685c6d
+
                                          }) // 개발 package(테이블)
 public class DatabaseConfiguration {
     
