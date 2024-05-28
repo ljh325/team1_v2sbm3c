@@ -91,12 +91,12 @@
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_htc?htcno=${htcVO.htcno}|}" th:text="${htcVO.namesub}"></a></li>
+                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}&now_page=1|}" th:text="${htcVO.namesub}"></a></li>
                         </ul>
                     </li>
 
                     
-                    <li class="nav-item dropdown" th:if="${session.adminsno == null}">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자등록">                                                            
                         </a>
@@ -104,6 +104,7 @@
                           <li class="nav-item"><a class="nav-link" href="/cate/list_search">카테고리 전체 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/member/list">회원 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/htc/list_search">운동 카테 목록</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/health/list_all?now_page=1">운동 전체 목록</a></li>
                           
                           <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/contents/create?cateno=6">글작성테스트</a></li>

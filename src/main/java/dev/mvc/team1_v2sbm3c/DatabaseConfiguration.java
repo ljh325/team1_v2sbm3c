@@ -27,6 +27,7 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.goals",
                                          "dev.mvc.mh",
                                          "dev.mvc.htc",
+                                         "dev.mvc.health",
                                          "dev.mvc.mlogin",
                                          "dev.mvc.comments",
                                          "dev.mvc.reply",

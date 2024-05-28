@@ -66,7 +66,7 @@ public class ContentsCont {
   Security security;
 
   public ContentsCont() {
-    System.out.println("-> ContentsCont created.");
+    System.out.println("-> HealthCont created.");
   }
 
   @GetMapping(value = "/msg")
@@ -739,7 +739,7 @@ public class ContentsCont {
 //    hashMap.put("cateno", cateno);
 //    hashMap.put("word", word);
 
-//    if (contentsProc.list_by_cateno_search_count(hashMap) % Contents.RECORD_PER_PAGE == 0) {
+//    if (contentsProc.list_by_cateno_search_count(hashMap) % Health.RECORD_PER_PAGE == 0) {
 //      now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
 //      if (now_page < 1) {
 //        now_page = 1; // 시작 페이지
