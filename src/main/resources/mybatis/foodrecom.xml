@@ -6,15 +6,15 @@
 
   <!-- 운동 목표 생성 -->
   <insert id = "create" parameterType="dev.mvc.foodrecom.FoodrecomVO">
-    INSERT INTO foodthrecom(foodthrecomno,hrecom, goalsno, mhno,rdate)
-    VALUES (foodthrecom_seq.nextval,#{foodthrecomno}, #{recom}, #{goalsno},#{mhno},sysdate)
+    INSERT INTO foodrecom(foodrecomno,hrecom, goalsno, mhno,rdate)
+    VALUES (foodrecom_seq.nextval,#{foodrecomno}, #{recom}, #{goalsno},#{mhno},sysdate)
   </insert>
   
   <!-- 운동 목표 조회 -->
   <select id = 'read' resultType="dev.mvc.foodrecom.FoodrecomVO" parameterType="Integer">
-    SELECT foodthrecomno,hrecom, goalsno, mhno,rdate
-    FROM foodthrecom
-    WHERE foodthrecomno = #{foodthrecomno}
+    SELECT foodrecomno,hrecom, goalsno, mhno,rdate
+    FROM foodrecom
+    WHERE foodrecomno = #{foodrecomno}
   </select>
   
 
@@ -30,17 +30,17 @@
      
   <!-- 운동 목표 삭제 -->
   <delete id = 'delete' parameterType="int">
-   DELETE FROM foodthrecom
-   WHERE foodthrecomno = #{foodthrecomno}
+   DELETE FROM foodrecom
+   WHERE foodrecomno = #{foodrecomno}
   </delete>
   
   <delete id = 'delete_m' parameterType="int">
-   DELETE FROM foodthrecom
+   DELETE FROM foodrecom
    WHERE mhno = #{mhno}
   </delete>
   
   <delete id = 'delete_g' parameterType="int">
-   DELETE FROM foodthrecom
+   DELETE FROM foodrecom
    WHERE goalsno = #{goalsno}
   </delete>
   
