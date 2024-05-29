@@ -34,8 +34,14 @@ public class AdcontentsVO {
   /** 카테고리 번호 */
   private int cateno;
   
+  /** 관리자 번호 */
+  private int adminsno;
+  
   /** 글 제목 */
   private String title;
+  
+  /** 글 내용 */
+  private String content;
   
   /** 추천 수 */
   private int recom;

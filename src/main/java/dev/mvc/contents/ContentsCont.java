@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.adcontents.AdcontentsProcInter;
+import dev.mvc.adcontents.AdcontentsVO;
 import dev.mvc.cate.CateProcInter;
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
@@ -61,6 +63,10 @@ public class ContentsCont {
   @Autowired
   @Qualifier("dev.mvc.htc.HtcProc")
   private HtcProcInter htcProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.adcontents.AdcontentsProc")
+  private AdcontentsProcInter AdcontentsProc;
 
   @Autowired
   Security security;
@@ -310,6 +316,14 @@ public class ContentsCont {
 
     int list_cnt = this.contentsProc.list_cate_count(cateno);
     System.out.println("->list_cnt: " + list_cnt);
+    
+    int ad_cateno = 10;
+    HashMap<String, Object> ad_map = new HashMap<String, Object>();
+    ad_map.put("cateno", ad_cateno);
+    ad_map.put("now_page", now_page);
+    
+    ArrayList<AdcontentsVO> ad_list = this.AdcontentsProc.list_cate_paging(ad_map);
+    model.addAttribute("ad_list",ad_list);
 
     CateVO cateVO = this.cateProc.read(cateno);
     model.addAttribute("cateVO", cateVO);

@@ -166,7 +166,7 @@
               FROM (
                         SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
                                   commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-                        FROM contents
+                        FROM adcontents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
                             WHERE cateno=#{cateno}
@@ -177,6 +177,30 @@
                                                               OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
+                        ORDER BY adcontentsno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
+  <!-- 카테고리별 페이징 목록 -->
+  <select id="list_cate_paging" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="HashMap">
+   SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
+   FROM (
+              SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
+                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
+              FROM (
+                        SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
+                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
+                        FROM adcontents
+                        
+                        WHERE cateno=#{cateno}
+                          
                         ORDER BY adcontentsno DESC
                )
     )

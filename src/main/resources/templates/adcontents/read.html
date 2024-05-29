@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <script>
+    
+    function checkID() {
+      
+        let url = './check_login'
+        fetch(url, {
+            method: 'GET',
+            // headers: {
+            //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+            // },
+            // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
+        })
+        .then(response => response.json())
+        .then(rdata => {
+          if (rdata.check == 0) { // 로그인 X
+            alert("로그인 후 추천 가능합니다.")              
+          } 
+        })
+        .catch(error => { // 서버 다운등 통신 에러
+            console.error('Error:', error);
+        });                  
+
+       // ---------------------------------------------------------------------------------------
+       // fetch 관련 종료
+       // ---------------------------------------------------------------------------------------
+        
+      }
+      
+      
+      
+     
+   
+   
+  </script>
+  <div class='title_line'>
+    <span th:text="${cateVO.name }" class="title_line_text"></span > 
+    > <span th:text="${cateVO.namesub}" class="title_line_text"></span > 
+    > 글 조회
+  </div> 
+ <aside class="aside_right" >
+      <a th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">목록</a>
+      <span class='menu_divide' >│</span>
+      <span th:if="${session.grade == 'admin'}">
+        <a th:href="@{|/adcontents/create?cateno=${cateVO.cateno}|}">등록</a>
+        <span class='menu_divide' >│</span>
+        <a th:href="@{|/adcontents/youtube?cateno=${cateVO.cateno }&adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
+        <span class='menu_divide' >│</span>
+        <a th:href="@{|/adcontents/update_text?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">글 수정</a>
+        <span class='menu_divide' >│</span>
+        <a th:href="@{|/adcontents/update_file?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+        <span class='menu_divide' >│</span>
+        <a th:href="@{|/adcontents/delete?adcontentsno=${adcontentsVO.adcontentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>  
+        <span class='menu_divide' >│</span>
+      </span>
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class='menu_divide' >│</span>    
+ </aside>
+ <!-- 
+  <aside class="aside_right" th:if="${session.grade != 'admin'}">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|/contents/list_by_cateno?cateno=${cateVO.cateno }&word=${word }&now_page=${now_page}|}">목록형</a>    
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/contents/list_by_cateno_grid?cateno=${cateVO.cateno }&now_page=${now_page}&word=${word }|}">갤러리형</a>
+  </aside> -->
+  
+
+  
+  
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+          
+          <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
+          <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+        </div>
+             
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${adcontentsVO.title}"></span>
+          <span style="font-size: 1em;" th:text="${adcontentsVO.rdate}"></span><br><br>         
+          <div style="white-space: pre-wrap;"><span th:text="${adcontentsVO.content}"></span></div>
+        </div>
+      </li>     
+      
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;" th:if="${adcontentsVO.youtube.length() > 0}">
+        <div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${adcontentsVO.youtube}">
+        </div>
+
+      </li>
+      
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
+        <span th:if="${session.memberno != null}">
+          <button id = "recom" type="button" th:attr="onclick=|location.href='/adcontents/recom?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">추천</button>
+        </span>
+        
+        <span th:unless="${session.memberno != null}">
+          <button id = "recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
+        </span>
+      </li>
+      
+      <li class="li_none" style="clear: both;" th:text="|태그(키워드): ${adcontentsVO.tag}|">
+      </li>
+      
+      <li class="li_none" th:if="${adcontentsVO.size1 > 0}">
+        <div>
+         <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
+            첨부 파일: <a th:href='@{|/download?dir=/adcontents/storage&filename=${adcontentsVO.file1saved}&downname=${adcontentsVO.file1}|}'
+                              th:text="|${adcontentsVO.file1}|"></a> <span th:text="|(${adcontentsVO.size1_label})|"></span>  
+        </div>
+      </li>   
+    </ul>
+  </fieldset>
+  <div class='title_line'>
+    
+  </div>
+  <!--<div th:replace="~{comments/comm::comments_fragment}"></div>-->
+  </div>
+</div>
+
+</body>
+ 
+</html>

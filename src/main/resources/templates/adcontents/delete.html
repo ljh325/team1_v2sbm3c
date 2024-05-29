@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  
+  <div class='title_line'>
+    <span th:text="${cateVO.name }" class="title_line_text"></span > 
+    > <span th:text="${cateVO.namesub}" class="title_line_text"></span > 
+    > 삭제
+  </div>
+  
+  <aside class="aside_right">
+    <a th:href="@{|./create?cateno=${cateVO.cateno}|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span> 
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        
+        <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}"
+               style="text-align: center; width: 50%; float: left;">
+          <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}" style="width: 90%;">
+        </div>
+        
+        <div th:if="${!(adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png')  or adcontentsVO.file1.endsWith('gif')) and (adcontentsVO.size1 > 0)}"
+               style="float: left;" class="display_table">
+               <div class="display_table_cell">
+          <span th:text="${adcontentsVO.file1}"></span>
+               </div>
+        </div>
+        
+        <div th:if="${adcontentsVO.size1 == 0}" style="text-align: center; width: 50%; float: left;">
+          <img src="/adcontents/images/post.png" style="width: 90%;">
+        </div>
+
+        <div style='text-align: left; width: 47%; float: left;'>
+          <span style='font-size: 1.5em;' th:text="${adcontentsVO.title}"></span>
+          <br>
+          
+          <form name='frm' method='POST' action='./delete'>
+            <input type="hidden" name="cateno" th:value="${cateVO.cateno}">
+            <input type="hidden" name="adcontentsno" th:value="${adcontentsVO.adcontentsno}">
+            <input type="hidden" name="word" th:value="${word}">
+            <input type="hidden" name="now_page" th:value="${now_page}">
+                
+            <br> 
+            
+            <div style='margin-top: 20px; clear: both;'>  
+              <span style="color: #FF0000; font-weight: bold;">삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span><br><br>
+               
+              <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+              <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+            </div>  
+          </form>
+        </div>
+      </li>
+    </ul>
+  </fieldset>
+    
+    
+
+</div>
+
+</html>
+
+  

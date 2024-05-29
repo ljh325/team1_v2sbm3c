@@ -40,9 +40,9 @@
 
   <span th:text="|${commentsVO.id} ${commentsVO.commentsno}|" style="font-weight: bold;"></span>
   <span th:text="${commentsVO.rdate}"></span>
-  <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}"
+  <a th:href="@{|/comments/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&word=${word}&now_page=${now_page}|}"
     style="margin-left: 10px;">수정</a>
-  <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}"
+  <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&word=${word}&now_page=${now_page}|}"
     style="margin-left: 10px;">삭제</a>
     <a th:href="@{|/reply/delete_all?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&memberno=${commentsVO.memberno}&word=${word}&now_page=${now_page}|}"
     style="margin-left: 10px;">대댓글 전체 삭제</a>

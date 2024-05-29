@@ -221,7 +221,14 @@
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="cateVO:${cateVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a></li>
+                            <li th:each="cateVO:${cateVOMenu.list_namesub}">
+                              <span th:if="${cateVO.admins == 'N'}">
+                                <a class="dropdown-item" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
+                              </span>
+                              <span th:if="${cateVO.admins == 'Y'}">
+                                <a class="dropdown-item" th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
+                              </span>
+                              </li>
                         </ul>
 
                     </li>
@@ -247,7 +254,7 @@
                           <li class="nav-item"><a class="nav-link" href="/health/list_all?now_page=1">운동 전체 목록</a></li>
                           
                           <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
-                          <li class="nav-item"><a class="nav-link" href="/contents/create?cateno=6">글작성테스트</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/adcontents/create?cateno=10">글작성테스트</a></li>
                         </ul>
                     </li>
 

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class='title_line'><span th:text="${cateVO.name}" class="title_line_text"></span>
+  > <span th:text="${cateVO.namesub}" class="title_line_text"></span>
+  <span th:if="${word != ''}" th:text="|> ${word} ${search_count}건|" class="title_line_text"></span>
+
+  </div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <span th:if="${session.grade == 'admin'}">
+      <a th:href="@{|/adcontents/create?cateno=${cateVO.cateno}|}">등록</a>
+      
+    </span>
+  </aside> 
+  
+  <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{adcontents/list_search_component::list_search_fragment}"></div>
+   
+  <div class='menu_line'></div>
+       
+<table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 65%;'/>
+      <col style='width: 5%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 5%;'/>
+      <col style='width: 5%;'/>
+    </colgroup>
+    <tr>
+      <th class='th_bs'>파일</th>
+      <th class='th_bs'>제목</th>
+      <th class='th_bs'>글쓴이</th>
+      <th class='th_bs'>등록일</th>
+      <th class='th_bs'>조회</th>
+      <th class='th_bs'>추천</th>
+    </tr>
+   
+    <tr th:each="adcontentsVO, status:${list}" th:attr="onclick=|location.href='/adcontents/read?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}'|"
+         style="cursor:pointer; height: 90px;">
+      <td class='td_basic' style="vertical-align: middle; text-align: center;">
+        
+        <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
+          <img th:src="@{|/adcontents/storage/${adcontentsVO.thumb1}|}" style="width: 120px; height: 90px;">
+        </div>
+        
+        <div th:if="${!(adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png')  or adcontentsVO.file1.endsWith('gif')) and (adcontentsVO.size1 > 0)}">
+          <span th:text="${adcontentsVO.file1}"></span>
+        </div>
+        
+        <div th:if="${adcontentsVO.size1 == 0}">
+          <img src="/adcontents/images/post.png" style="width: 120px; height: 90px;">
+        </div>
+        
+        
+
+      </td>
+      <td class='td_left'>
+       <span th:text="${adcontentsVO.title}" style="font-weight: bold;"></span><br>
+       <span th:if="${adcontentsVO.content.length() > 160}"
+                th:text="|${adcontentsVO.content.substring(0,160) }...|"></span>
+       <span th:if="${adcontentsVO.content.length() <= 160}"
+                th:text="|${adcontentsVO.content}|"></span>
+         
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${adcontentsVO.id}"></span>
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${adcontentsVO.rdate}"></span>
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${adcontentsVO.viewcnt}"></span>
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${adcontentsVO.recom}"></span>
+       </td>
+    </tr>
+    
+    <tr th:if="${list.size() == 0}">
+      <td colspan="2" style="text-align: center;">관련 글이 등록되지 않았습니다.</td>
+    </tr>
+    
+  </table>
+  
+  
+    <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+
+</div>
+</html>
+

@@ -94,6 +94,13 @@ public interface AdcontentsProcInter {
   public ArrayList<AdcontentsVO> list_cate_search_paging(HashMap<String, Object> hashmap);
   
   /**
+   * 카테고리별 페이징 목록
+   * @param hashmap
+   * @return
+   */
+  public ArrayList<AdcontentsVO> list_cate_paging(HashMap<String, Object> hashmap);
+  
+  /**
    * 패스워드 검사
    * @param hashmap
    * @return
