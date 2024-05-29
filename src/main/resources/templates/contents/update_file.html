@@ -43,8 +43,9 @@
           <br>
           
           <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
-            <input type="hidden" name="cateno" th:value="${cateVO.cateno}">
             <input type="hidden" name="contentsno" th:value="${contentsVO.contentsno}">
+            <input type="hidden" name="word" th:value="${word}">
+            <input type="hidden" name="now_page" th:value="${now_page}">
                 
             <br><br> 
             변경 이미지 선택<br>  

@@ -1,86 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dev.mvc.contents.ContentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+ 
+<mapper namespace="dev.mvc.adcontents.AdcontentsDAOInter">
   <!-- 이재호 xml -->
-  <!-- CREATE TABLE CONTENTS(
-    CONTENTSNO                        NUMBER(10)     NOT NULL,
-    CATENO                            NUMBER(10)     NOT NULL,
-    TITLE                             VARCHAR2(100)    NOT NULL,
-    CONTENT                           CLOB     NOT NULL,
-    RECOM                             NUMBER(7)    DEFAULT 0     NOT NULL,
-    VIEWCNT                           NUMBER(7)    DEFAULT 0     NOT NULL,
-    COMMENTCNT                        NUMBER(7)    DEFAULT 0     NOT NULL,
-    PASSWD                            VARCHAR2(15)     NOT NULL,
-    TAG                               VARCHAR2(100)    NULL ,
-    RDATE                             DATE     NOT NULL,
-    FILE1                             VARCHAR2(1000)     NULL ,
-    FILE1SAVED                        VARCHAR2(1000)     NULL ,
-    THUMB1                            VARCHAR2(1000)     NULL ,
-    SIZE1                             NUMBER(10)     NULL ,
-    YOUTUBE                           VARCHAR2(1000)     NULL ,
-    MEMBERNO                          NUMBER(10)     NULL,
-    FOREIGN KEY (cateno) REFERENCES cate(cateno),
-    FOREIGN KEY (memberno) REFERENCES member(memberno)
-); -->
-  <!-- 게시글 등록 -->
-  <insert id = "create" parameterType="dev.mvc.contents.ContentsVO">
-    INSERT INTO contents(contentsno, memberno, cateno, title, content, recom, viewcnt, 
-                                  commentcnt, passwd, tag, rdate, file1,file1saved, thumb1, size1,id)
-    VALUES (contents_seq.nextval, #{memberno}, #{cateno}, #{title}, #{content}, #{recom}, #{viewcnt}, 
-                #{commentcnt}, #{passwd}, #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1}, #{id})
+  
+  <!-- 관리자 카테고리 게시글 생성 -->
+  <insert id = "create" parameterType="dev.mvc.adcontents.AdcontentsVO">
+    INSERT INTO adcontents(adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+                                      file1saved, thumb1, size1, id)
+    VALUES (adcontents_seq.nextval, #{adminsno}, #{cateno}, #{title}, #{content}, #{recom}, #{viewcnt}, #{commentcnt}, #{passwd}, 
+                #{tag}, sysdate, #{file1}, #{file1saved}, #{thumb1}, #{size1}, #{id})
   </insert>
   
-  <!-- 모든 등록된 게시글 목록 -->
-  <select id = "list_all" resultType="dev.mvc.contents.ContentsVO">
-    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, id
-    FROM contents
-    ORDER BY contentsno DESC
+  <!-- 모든 관리자 카테고리 게시글 목록 -->
+  <select id = "list_all" resultType = "dev.mvc.adcontents.AdcontentsVO">
+    SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+              file1saved, thumb1, size1, id
+    FROM adcontents
+    ORDER BY adcontentsno DESC
   </select>
   
-  <!-- 특정 카테고리 게시글 목록  -->
-  <select id = "list_cate" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, id
-    FROM contents
-    WHERE cateno = #{cateno}
-    ORDER BY contentsno DESC
+  <!-- 특정 관리자 카테고리 게시글 목록 -->
+  <select id = "list_cate" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="int">
+    SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+              file1saved, thumb1, size1, youtube, id
+    FROM adcontents
+    WHERE adcontentsno = #{adcontentsno}
   </select>
   
-  <!-- 특정 카테고리 등록된 게시글 갯수 -->
+  <!-- 특정 관리자 카테고리 등록된 게시글 갯수 -->
   <select id = "list_cate_count" resultType="int" parameterType="int">
-    SELECT COUNT(contentsno)
-    FROM contents
+    SELECT COUNT(adcontentsno)
+    FROM adcontents
     WHERE cateno= #{cateno}
   </select>
   
-  <!-- 특정 카테고리 등록된 게시글 갯수 -->
+  <!-- 전체 관리자 카테고리 등록된 게시글 갯수 -->
   <select id = "list_all_count" resultType="int">
-    SELECT COUNT(contentsno)
-    FROM contents
+    SELECT COUNT(adcontentsno)
+    FROM adcontents
   </select>
   
   <!-- 게시글 조회 -->
-  <select id = "read" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
+  <select id = "read" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="int">
+    SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-    FROM contents
-    WHERE contentsno = #{contentsno}
+    FROM adcontents
+    WHERE adcontentsno = #{adcontentsno}
   </select>
   
   <!-- Youtube 등록, 수정, 삭제  -->
   <update id="youtube" parameterType="HashMap">
-    UPDATE contents 
+    UPDATE adcontents 
     SET youtube=#{youtube} 
-    WHERE contentsno=#{contentsno}
+    WHERE adcontentsno=#{adcontentsno}
   </update>
   
   <!-- 모든 등록된 게시글 검색 목록 -->
-  <select id="list_all_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+  <select id="list_all_search" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="HashMap">
+    SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-    FROM contents
+    FROM adcontents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
         
@@ -91,13 +72,13 @@
                                                   OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
-    ORDER BY contentsno DESC   
+    ORDER BY adcontentsno DESC   
   </select>
   
   <!-- 전체 게시글 검색 결과수 -->
   <select id="list_all_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
-    FROM contents
+    FROM adcontents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
         
@@ -110,17 +91,17 @@
     </choose>
   </select>   
   
-  <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="list_all_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-   SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+  <!-- 전체 검색 + 페이징 목록 -->
+  <select id="list_all_search_paging" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="HashMap">
+   SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
    FROM (
-              SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+              SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
                         commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
               FROM (
-                        SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+                        SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
                                   commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-                        FROM contents
+                        FROM adcontents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
                             
@@ -131,7 +112,7 @@
                                                               OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY contentsno DESC
+                        ORDER BY adcontentsno DESC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
@@ -142,10 +123,10 @@
   </select>
   
   <!-- 카테고리별 검색 목록 -->
-  <select id="list_cate_search" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+  <select id="list_cate_search" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="HashMap">
+    SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-    FROM contents
+    FROM adcontents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
         WHERE cateno=#{cateno}
@@ -156,13 +137,13 @@
                                                   OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
-    ORDER BY contentsno DESC   
+    ORDER BY adcontentsno DESC   
   </select>
    
   <!-- 카테고리별 검색 결과수 -->
   <select id="list_cate_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
-    FROM contents
+    FROM adcontents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
         WHERE cateno=#{cateno}
@@ -176,14 +157,14 @@
   </select>   
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
-   SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+  <select id="list_cate_search_paging" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="HashMap">
+   SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
               commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
    FROM (
-              SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+              SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
                         commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
               FROM (
-                        SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
+                        SELECT adcontentsno, adminsno, cateno,  title, content, recom, viewcnt, 
                                   commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
                         FROM contents
                         <choose>
@@ -196,7 +177,7 @@
                                                               OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY contentsno DESC
+                        ORDER BY adcontentsno DESC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
@@ -209,65 +190,50 @@
   <!-- 패스워드 검사 -->
   <select id="password_check" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt 
-    FROM contents
-    WHERE contentsno = #{contentsno} AND passwd=#{passwd}
+    FROM adcontents
+    WHERE adcontentsno = #{adcontentsno} AND passwd=#{passwd}
   </select>
   
   <!-- 글 수정 -->
-  <update id="update_text" parameterType="dev.mvc.contents.ContentsVO">
-    UPDATE contents
+  <update id="update_text" parameterType="dev.mvc.adcontents.AdcontentsVO">
+    UPDATE adcontents
     SET title = #{title}, content = #{content},  tag = #{tag}
-    WHERE contentsno = #{contentsno}
+    WHERE adcontentsno = #{adcontentsno}
   </update>
 
 
   <!-- 파일 수정 -->
-  <update id="update_file" parameterType="dev.mvc.contents.ContentsVO">
-    UPDATE contents
+  <update id="update_file" parameterType="dev.mvc.adcontents.AdcontentsVO">
+    UPDATE adcontents
     SET file1 = #{file1}, file1saved = #{file1saved}, thumb1 = #{thumb1}, size1 = #{size1}
-    WHERE contentsno = #{contentsno}
+    WHERE adcontentsno = #{adcontentsno}
   </update>  
 
   <!-- 글 삭제 -->
   <delete id="delete" parameterType="int">
-    DELETE FROM contents
-    WHERE contentsno=#{contentsno}
+    DELETE FROM adcontents
+    WHERE adcontentsno=#{adcontentsno}
   </delete>
   
   
   <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
   <delete id="delete_by_cate" parameterType="int">
-    DELETE FROM contents
+    DELETE FROM adcontents
     WHERE cateno=#{cateno}
-  </delete>
-
-  <!-- 회원이 작성한 게시글 갯수를 리턴 -->
-  <select id="count_by_member" resultType="int" parameterType="int">
-    SELECT COUNT(*) as cnt 
-    FROM contents 
-    WHERE memberno=#{memberno}
-  </select>
-  
-  <!-- 회원이 작성한 모든 게시글 삭제 -->
-  <delete id="delete_by_member" parameterType="int">
-    DELETE FROM contents
-    WHERE memberno=#{memberno}
   </delete>
   
   <!-- 조회수 -->
   <update id="view" parameterType="int">
-    UPDATE contents
+    UPDATE adcontents
     SET viewcnt = viewcnt + 1
-    WHERE contentsno = #{contentsno}
+    WHERE adcontentsno = #{adcontentsno}
   </update>
   
   <!-- 추천수 -->
   <update id="recom" parameterType="int">
-    UPDATE contents
+    UPDATE adcontents
     SET recom = recom + 1
-    WHERE contentsno = #{contentsno}
+    WHERE adcontentsno = #{adcontentsno}
   </update>
-  
-  
   
 </mapper>

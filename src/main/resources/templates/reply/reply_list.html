@@ -14,8 +14,8 @@
       <td class='td_left'>
         <span th:text="|${replyVO.id} |" style="font-weight: bold;"></span>
         <span th:text="${replyVO.rdate}"></span>
-        <a th:href="@{|/reply/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}|}" style="margin-left: 10px;">수정</a>
-        <a th:href="@{|/reply/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}&memberno=${commentsVO.memberno}|}" style="margin-left: 10px;">삭제</a><br> 
+        <a th:href="@{|/reply/update?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}&word=${word}&now_page=${now_page}|}" style="margin-left: 10px;">수정</a>
+        <a th:href="@{|/reply/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&replyno=${replyVO.replyno}&memberno=${commentsVO.memberno}&word=${word}&now_page=${now_page}|}" style="margin-left: 10px;">삭제</a><br> 
         <span th:text="${replyVO.contents}"></span><br><br><br>
       </td>
     </tr>

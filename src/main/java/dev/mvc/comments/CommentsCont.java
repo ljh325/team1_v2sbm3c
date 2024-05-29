@@ -53,7 +53,8 @@ public class CommentsCont {
    * @return
    */
   @PostMapping(value = "/create")
-  public String create(HttpSession session, Model model, CommentsVO commentsVO, int contentsno, RedirectAttributes ra) {
+  public String create(HttpSession session, Model model, CommentsVO commentsVO, int contentsno, RedirectAttributes ra,
+                            int now_page, String word ) {
     int memberno = (int) session.getAttribute("memberno"); // adminno FK
     commentsVO.setMemberno(memberno);
     
@@ -65,6 +66,8 @@ public class CommentsCont {
     this.commentsProc.create(commentsVO);
     
     ra.addAttribute("contentsno", contentsno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/contents/read";
 
@@ -97,11 +100,13 @@ public class CommentsCont {
    * @return
    */
   @GetMapping(value = "/update")
-  public String update(HttpSession session, Model model, int commentsno, int contentsno) {
+  public String update(HttpSession session, Model model, int commentsno, int contentsno, int now_page, String word) {
 
     CommentsVO commentsVO = this.commentsProc.read(commentsno);
     model.addAttribute("commentsVO", commentsVO);
-
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    
     return "comments/update";
   }
 
@@ -116,12 +121,14 @@ public class CommentsCont {
    */
   @PostMapping(value = "/update")
   public String update(HttpSession session, Model model, RedirectAttributes ra, CommentsVO commentsVO,
-                              int contentsno) {
+                              int contentsno, int now_page, String word) {
     
    
     int cnt = this.commentsProc.update(commentsVO); // 글수정
     
     ra.addAttribute("contentsno", contentsno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/contents/read"; // 페이지 자동 이동
 
@@ -133,13 +140,15 @@ public class CommentsCont {
    * @return
    */
   @GetMapping(value = "/delete")
-  public String delete(RedirectAttributes ra, Model model , int commentsno, int contentsno) {
+  public String delete(RedirectAttributes ra, Model model , int commentsno, int contentsno, int now_page, String word) {
     
    
     System.out.println("---->> commentsno: " + commentsno);
     int cnt = this.commentsProc.delete(commentsno);
 
     ra.addAttribute("contentsno", contentsno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/contents/read";
 

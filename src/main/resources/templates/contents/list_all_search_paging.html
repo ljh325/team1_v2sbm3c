@@ -39,7 +39,7 @@
       <th class='th_bs'>추천</th>
     </tr>
    
-    <tr th:each="contentsVO, status:${list}" th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}'|"
+    <tr th:each="contentsVO, status:${list}" th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}'|"
          style="cursor:pointer; height: 90px;">
       <td class='td_basic' style="vertical-align: middle; text-align: center;">
         

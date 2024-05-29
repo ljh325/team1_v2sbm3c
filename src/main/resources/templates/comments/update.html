@@ -9,6 +9,8 @@
   <form name='frm' method='post' th:object="${commentsVO}" action='./update'>
     <input type="hidden" name="commentsno" th:value="${commentsVO.commentsno}">
     <input type="hidden" name="contentsno" th:value="${commentsVO.contentsno}">
+    <input type="hidden" name="word" th:value="${word}">
+    <input type="hidden" name="now_page" th:value="${now_page}">
     
     <div>
        <label>내용</label>

@@ -44,9 +44,9 @@
     style="margin-left: 10px;">수정</a>
   <a th:href="@{|/comments/delete?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}|}"
     style="margin-left: 10px;">삭제</a>
-    <a th:href="@{|/reply/delete_all?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&memberno=${commentsVO.memberno}|}"
+    <a th:href="@{|/reply/delete_all?contentsno=${contentsVO.contentsno}&commentsno=${commentsVO.commentsno}&memberno=${commentsVO.memberno}&word=${word}&now_page=${now_page}|}"
     style="margin-left: 10px;">대댓글 전체 삭제</a>
-  <a th:href="@{|/contents/read?contentsno=${contentsVO.contentsno}|}"
+  <a th:href="@{|/contents/read?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}"
     style="margin-left:10px;">돌아가기</a><br><br>
   <span th:text="${commentsVO.contents}"></span><br>
   <div class='title_line'></div>
@@ -55,6 +55,8 @@
     <input type="hidden" name="contentsno" th:value="${contentsVO.contentsno}">
     <input type="hidden" name="comment_memberno" th:value="${commentsVO.memberno}">
     <input type="hidden" name="commentsno" th:value="${commentsVO.commentsno}">
+    <input type="hidden" name="word" th:value="${word}">
+    <input type="hidden" name="now_page" th:value="${now_page}">
     
     <div class="comment-section">
       <h4>대댓글 쓰기</h4>

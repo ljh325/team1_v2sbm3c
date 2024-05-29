@@ -54,7 +54,7 @@ public class ReplyCont {
    * @return
    */
   @GetMapping(value = "/create")
-  public String create(HttpSession session, Model model, int memberno, int commentsno, int contentsno) {
+  public String create(HttpSession session, Model model, int memberno, int commentsno, int contentsno, String word, int now_page) {
     
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
@@ -67,6 +67,9 @@ public class ReplyCont {
     
     ArrayList<ReplyVO> list = this.replyProc.reply_list(commentsno);
     model.addAttribute("list",list);
+    
+    model.addAttribute("word",word);
+    model.addAttribute("now_page", now_page);
     
     return "reply/create";
   }
@@ -81,7 +84,8 @@ public class ReplyCont {
    */
   @PostMapping(value = "/create")
   public String create(HttpSession session, Model model, ReplyVO replyVO,   
-                             RedirectAttributes ra, HttpServletRequest request, int contentsno, int commentsno, int comment_memberno) {
+                             RedirectAttributes ra, HttpServletRequest request, int contentsno, int commentsno, int comment_memberno,
+                             String word, int now_page) {
    
     
     int memberno = (int) session.getAttribute("memberno");
@@ -96,6 +100,8 @@ public class ReplyCont {
     ra.addAttribute("contentsno", contentsno);
     ra.addAttribute("commentsno", commentsno);
     ra.addAttribute("memberno", comment_memberno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/reply/create";
 
@@ -113,14 +119,17 @@ public class ReplyCont {
    * @return
    */
   @GetMapping(value = "/update")
-  public String update(HttpSession session, Model model, int commentsno, int contentsno, int replyno) {
+  public String update(HttpSession session, Model model, int commentsno, int contentsno, int replyno, int now_page, String word) {
 
     CommentsVO commentsVO = this.commentsProc.read(commentsno);
     model.addAttribute("commentsVO", commentsVO);
     
     ReplyVO replyVO = this.replyProc.read(replyno);
     model.addAttribute("replyVO", replyVO);
-
+    
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    
     return "reply/update";
   }
 
@@ -135,7 +144,7 @@ public class ReplyCont {
    */
   @PostMapping(value = "/update")
   public String update(HttpSession session, Model model, RedirectAttributes ra, ReplyVO replyVO,
-                              int contentsno, int commentsno, int memberno) {
+                              int contentsno, int commentsno, int memberno, int now_page, String word) {
     
     
     this.replyProc.update(replyVO); // 글수정
@@ -143,6 +152,8 @@ public class ReplyCont {
     ra.addAttribute("contentsno", contentsno);
     ra.addAttribute("commentsno", commentsno);
     ra.addAttribute("memberno", memberno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/reply/create";
 
@@ -154,7 +165,7 @@ public class ReplyCont {
    * @return
    */
   @GetMapping(value = "/delete")
-  public String delete(RedirectAttributes ra, Model model , int replyno, int contentsno, int commentsno, int memberno) {
+  public String delete(RedirectAttributes ra, Model model , int replyno, int contentsno, int commentsno, int memberno, int now_page, String word) {
     
    
     this.replyProc.delete(replyno);
@@ -162,6 +173,8 @@ public class ReplyCont {
     ra.addAttribute("contentsno", contentsno);
     ra.addAttribute("commentsno", commentsno);
     ra.addAttribute("memberno", memberno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/reply/create";
 
@@ -173,7 +186,7 @@ public class ReplyCont {
    * @return
    */
   @GetMapping(value = "/delete_all")
-  public String delete_all(RedirectAttributes ra, Model model , int contentsno, int commentsno, int memberno) {
+  public String delete_all(RedirectAttributes ra, Model model , int contentsno, int commentsno, int memberno,int now_page, String word) {
     
    
     this.replyProc.delete_all(commentsno);
@@ -181,6 +194,8 @@ public class ReplyCont {
     ra.addAttribute("contentsno", contentsno);
     ra.addAttribute("commentsno", commentsno);
     ra.addAttribute("memberno", memberno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/reply/create";
 

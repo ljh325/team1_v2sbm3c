@@ -49,15 +49,15 @@ public class ContentsCont {
   @Autowired
   @Qualifier("dev.mvc.contents.ContentsProc") // @Component("dev.mvc.contents.ContentsProc")
   private ContentsProcInter contentsProc;
-  
+
   @Autowired
   @Qualifier("dev.mvc.comments.CommentsProc")
   private CommentsProcInter commentsProc;
-  
+
   @Autowired
   @Qualifier("dev.mvc.reply.ReplyProc")
   private ReplyProcInter replyProc;
-  
+
   @Autowired
   @Qualifier("dev.mvc.htc.HtcProc")
   private HtcProcInter htcProc;
@@ -87,7 +87,7 @@ public class ContentsCont {
   public String create(Model model, ContentsVO contentsVO, int cateno) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
@@ -206,50 +206,50 @@ public class ContentsCont {
 
 //      return "redirect:/member/login_form_need";
   }
-  
+
   /**
    * 카테고리 별 목록 + 검색 + 페이징
    * http://www.localhost:9091/contents/list_by_cateno?cateno=5
    * http://www.localhost:9091/contents/list_by_cateno?cateno=6
+   * 
    * @return
    */
   @GetMapping(value = "/list_all")
-  public String list_all_search_paging(HttpSession session, Model model, 
-                                               @RequestParam(name="word", defaultValue="") String word,
-                                               @RequestParam(name="now_page", defaultValue="1") int now_page) {
+  public String list_all_search_paging(HttpSession session, Model model,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
-    
+
     int list_cnt = this.contentsProc.list_all_count();
     System.out.println("->list_cnt: " + list_cnt);
 
-    
     word = Tool.checkNull(word).trim();
-    
-    HashMap <String, Object> map = new HashMap<String, Object>();
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("word", word);
     map.put("now_page", now_page);
-    
+
     ArrayList<ContentsVO> list = this.contentsProc.list_all_search_paging(map);
     model.addAttribute("list", list);
-    
+
     model.addAttribute("word", word);
-    
+
     int search_count = this.contentsProc.list_all_search_count(map);
-    String paging = this.contentsProc.pagingBox_all(now_page, 
-        word, "/contents/list_all", search_count, Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+    String paging = this.contentsProc.pagingBox_all(now_page, word, "/contents/list_all", search_count,
+        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
-    
+
     model.addAttribute("search_count", search_count);
-    
+
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
     int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
     model.addAttribute("no", no);
-    
+
     return "contents/list_all_search_paging";
 
   }
@@ -290,60 +290,57 @@ public class ContentsCont {
 ////    }
 //
 //  }
-  
+
   /**
    * 카테고리 별 목록 + 검색 + 페이징
    * http://www.localhost:9091/contents/list_by_cateno?cateno=5
    * http://www.localhost:9091/contents/list_by_cateno?cateno=6
+   * 
    * @return
    */
   @GetMapping(value = "/list_cate")
-  public String list_cate_search_paging(HttpSession session, Model model, int cateno, 
-                                               @RequestParam(name="word", defaultValue="") String word,
-                                               @RequestParam(name="now_page", defaultValue="1") int now_page) {
+  public String list_cate_search_paging(HttpSession session, Model model, int cateno,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
-    
+
     int list_cnt = this.contentsProc.list_cate_count(cateno);
     System.out.println("->list_cnt: " + list_cnt);
-    
+
     CateVO cateVO = this.cateProc.read(cateno);
-    model.addAttribute("cateVO",cateVO);
-    
-    
-    
+    model.addAttribute("cateVO", cateVO);
+
     word = Tool.checkNull(word).trim();
-    
-    HashMap <String, Object> map = new HashMap<String, Object>();
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("word", word);
     map.put("cateno", cateno);
     map.put("now_page", now_page);
-    
+
     ArrayList<ContentsVO> list = this.contentsProc.list_cate_search_paging(map);
     model.addAttribute("list", list);
-    
+
     model.addAttribute("word", word);
-    
+
     int search_count = this.contentsProc.list_cate_search_count(map);
-    String paging = this.contentsProc.pagingBox(cateno, now_page, 
-        word, "/contents/list_cate", search_count, Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+    String paging = this.contentsProc.pagingBox(cateno, now_page, word, "/contents/list_cate", search_count,
+        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
-    
+
     model.addAttribute("search_count", search_count);
-    
+
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
     int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
     model.addAttribute("no", no);
-    
+
     return "contents/list_cate_search_paging";
 
   }
-  
-  
 
 //  /**
 //   * 카테고리 별 게시글 목록
@@ -367,7 +364,6 @@ public class ContentsCont {
 //    return "contents/list_cate";
 //
 //  }
- 
 
   /**
    * 게시글 조회 http://localhost:9091/contents/read?contentsno=17
@@ -375,10 +371,10 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/read")
-  public String read(Model model, int contentsno) {
+  public String read(Model model, int contentsno, String word, int now_page) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
@@ -390,18 +386,17 @@ public class ContentsCont {
     model.addAttribute("contentsVO", contentsVO);
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
     model.addAttribute("cateVO", cateVO);
-    
+
     ArrayList<CommentsVO> list = this.commentsProc.comment_list(contentsno);
     model.addAttribute("list", list);
-   
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
 
     this.contentsProc.view(contentsno);
 
-
     return "contents/read";
   }
-  
-
 
   /**
    * 로그인 확인
@@ -411,7 +406,7 @@ public class ContentsCont {
    */
   @GetMapping(value = "/check_login")
   @ResponseBody
-  public String checkID(HttpSession session) {
+  public String checkLogin(HttpSession session) {
     int check = 0;
     if (session.getAttribute("memberno") != null) {
       check = 1;
@@ -432,8 +427,11 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/recom")
-  public String recom(HttpSession session, Model model, int contentsno, RedirectAttributes ra) {
+  public String recom(HttpSession session, Model model, int contentsno, RedirectAttributes ra, String word,
+      int now_page) {
     this.contentsProc.recom(contentsno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
     ra.addAttribute("contentsno", contentsno);
 
     return "redirect:/contents/read";
@@ -446,10 +444,10 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/youtube")
-  public String youtube(Model model, int contentsno) {
+  public String youtube(Model model, int contentsno, String word, int now_page) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
@@ -458,6 +456,9 @@ public class ContentsCont {
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno()); // 그룹 정보 읽기
     model.addAttribute("cateVO", cateVO);
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
 
     return "contents/youtube";
   }
@@ -469,7 +470,8 @@ public class ContentsCont {
    * @return
    */
   @PostMapping(value = "/youtube")
-  public String youtube_update(Model model, RedirectAttributes ra, int contentsno, String youtube) {
+  public String youtube_update(Model model, RedirectAttributes ra, int contentsno, String youtube, String word,
+      int now_page) {
 
     if (youtube.trim().length() > 0) { // 삭제 중인지 확인, 삭제가 아니면 youtube 크기 변경
       youtube = Tool.youtubeResize(youtube, 640); // youtube 영상의 크기를 width 기준 640 px로 변경
@@ -482,8 +484,8 @@ public class ContentsCont {
     this.contentsProc.youtube(hashMap);
 
     ra.addAttribute("contentsno", contentsno);
-//    ra.addAttribute("word", word);
-//    ra.addAttribute("now_page", now_page);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
 //    return "redirect:/contents/read?contentsno=" + contentsno; 
     return "redirect:/contents/read";
@@ -496,11 +498,12 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/update_text")
-  public String update_text(HttpSession session, Model model, int contentsno, RedirectAttributes ra) {
+  public String update_text(HttpSession session, Model model, int contentsno, RedirectAttributes ra, String word,
+      int now_page) {
 
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
@@ -510,6 +513,9 @@ public class ContentsCont {
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
     model.addAttribute("cateVO", cateVO);
+
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
 
     return "contents/update_text";
 
@@ -529,7 +535,8 @@ public class ContentsCont {
    * @return
    */
   @PostMapping(value = "/update_text")
-  public String update_text(HttpSession session, Model model, RedirectAttributes ra, ContentsVO contentsVO) {
+  public String update_text(HttpSession session, Model model, RedirectAttributes ra, ContentsVO contentsVO, String word,
+      int now_page) {
 
 //    if (this.memberProc.isMemberAdmin(session)) { // 관리자 로그인 확인
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -540,9 +547,9 @@ public class ContentsCont {
       this.contentsProc.update_text(contentsVO); // 글수정
 
       ra.addAttribute("contentsno", contentsVO.getContentsno());
-      
-//        ra.addAttribute("now_page", now_page);
-//        ra.addAttribute("word", search_word);
+
+      ra.addAttribute("word", word);
+      ra.addAttribute("now_page", now_page);
 
       return "redirect:/contents/read"; // 페이지 자동 이동
 
@@ -568,15 +575,15 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/update_file")
-  public String update_file(HttpSession session, Model model, int contentsno) {
+  public String update_file(HttpSession session, Model model, int contentsno, String word, int now_page) {
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
-//    model.addAttribute("word", word);
-//    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
 
     ContentsVO contentsVO = this.contentsProc.read(contentsno);
     model.addAttribute("contentsVO", contentsVO);
@@ -593,7 +600,8 @@ public class ContentsCont {
    * @return
    */
   @PostMapping(value = "/update_file")
-  public String update_file(HttpSession session, Model model, RedirectAttributes ra, ContentsVO contentsVO) {
+  public String update_file(HttpSession session, Model model, RedirectAttributes ra, ContentsVO contentsVO, String word,
+      int now_page) {
 
 //    if (this.memberProc.isMemberAdmin(session)) {
     // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
@@ -654,9 +662,8 @@ public class ContentsCont {
     this.contentsProc.update_file(contentsVO); // Oracle 처리
 
     ra.addAttribute("contentsno", contentsVO.getContentsno());
-    ra.addAttribute("cateno", contentsVO.getCateno());
-//      ra.addAttribute("word", word);
-//      ra.addAttribute("now_page", now_page);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/contents/read"; // request -> param으로 접근 전환
 
@@ -674,17 +681,18 @@ public class ContentsCont {
    * @return
    */
   @GetMapping(value = "/delete")
-  public String delete(HttpSession session, Model model, RedirectAttributes ra, int contentsno, int cateno) {
+  public String delete(HttpSession session, Model model, RedirectAttributes ra, int contentsno, int cateno, String word,
+      int now_page) {
 
     ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
     model.addAttribute("menu1", menu1);
-    
+
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
     model.addAttribute("cateno", cateno);
-//    model.addAttribute("word", word);
-//    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
 
 //    if (memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
     ContentsVO contentsVO = this.contentsProc.read(contentsno);
@@ -708,8 +716,8 @@ public class ContentsCont {
    * @return
    */
   @PostMapping(value = "/delete")
-  public String delete(RedirectAttributes ra, Model model, int contentsno, int cateno) {
-    
+  public String delete(RedirectAttributes ra, Model model, int contentsno, int cateno, String word, int now_page) {
+
     // -------------------------------------------------------------------
     // 파일 삭제 시작
     // -------------------------------------------------------------------
@@ -735,24 +743,24 @@ public class ContentsCont {
     // 하나의 페이지가 3개의 레코드로 구성되는 경우 현재 9개의 레코드가 남아 있으면
     // 페이지수를 4 -> 3으로 감소 시켜야함, 마지막 페이지의 마지막 레코드 삭제시 나머지는 0 발생
 
-//    HashMap<String, Object> hashMap = new HashMap<String, Object>();
-//    hashMap.put("cateno", cateno);
-//    hashMap.put("word", word);
+    HashMap<String, Object> hashMap = new HashMap<String, Object>();
+    hashMap.put("cateno", cateno);
+    hashMap.put("word", word);
 
-//    if (contentsProc.list_by_cateno_search_count(hashMap) % Contents.RECORD_PER_PAGE == 0) {
-//      now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
-//      if (now_page < 1) {
-//        now_page = 1; // 시작 페이지
-//      }
-//    }
+    if (contentsProc.list_cate_search_count(hashMap) % Contents.RECORD_PER_PAGE == 0) {
+      now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
+      if (now_page < 1) {
+        now_page = 1; // 시작 페이지
+      }
+    }
     // -------------------------------------------------------------------------------------
     CateVO cateVO = this.cateProc.read(cateno);
-    if(cateVO.getCnt() > 0) {
+    if (cateVO.getCnt() > 0) {
       this.cateProc.cate_count_decrease(cateno);
-    } 
+    }
     ra.addAttribute("cateno", cateno);
-//    ra.addAttribute("word", word);
-//    ra.addAttribute("now_page", now_page);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
 
     return "redirect:/contents/list_cate";
 
