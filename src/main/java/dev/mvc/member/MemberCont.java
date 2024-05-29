@@ -65,7 +65,7 @@ public class MemberCont {
     // return "{\"cnt\": " + cnt + "}";    // {"cnt": 1} JSON
     
     JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
+    obj.put("cnts", cnt);
     
     return obj.toString();
   }

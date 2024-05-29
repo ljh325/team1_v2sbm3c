@@ -60,7 +60,7 @@
               <span>프로필</span>
               <div th:Object="${memberVO}">
                   <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
-                    <img th:src="@{|/contents/storage/${memberVO.thumbs}|}" style="width: 50px; height: 40;">
+                    <img th:src="@{|/contents/storage/${memberVO.thumbs}|}" style="width: 50; height: 40;">
                   </div>
             
                   <div th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
@@ -68,7 +68,7 @@
                   </div>
             
                   <div th:if="${memberVO.sizes == 0}">
-                    <img src="/images/none.jpg" style="width: 50px; height: 40;">
+                    <img src="/images/none.jpg" style="width: 50; height: 40;">
                   </div>
               </div>
           </div>

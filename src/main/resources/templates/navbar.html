@@ -2,8 +2,147 @@
 <div th:fragment="navbarFragment">
 
   <div  style="display: flex; justify-content: right;">
+    <!-- 운동 시작 폼 -->
+  <div th:if="${session.memberno != null}">
+    <form name="starts" id="starts" method="post" action="/history/history_start">
+      <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
+      <div class="content_body_bottom">
+        <button type="button" id="start_send" class="btn btn-secondary btn-sm" onclick="start_submitForm()"
+          style="display: block;">운동 시작</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- 운동 종료 폼 -->
+  <div th:if="${session.memberno != null}">
+    <form name="ends" id="ends" method="post" action="/history/history_end">
+      <input type="hidden" name="memberno" th:value="${session.memberno}">
+      <div class="content_body_bottom">
+        <button type="button" id="end_send" class="btn btn-secondary btn-sm" onclick="end_submitForm()"
+          style="display: none;">운동 종료</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- 스톱워치 -->
+  <div style="margin:20px">
+    <h3 id="stopwatch">
+      00:00:00
+    </h3>
+  </div>
+<script>
+      // 운동시작시간 등록
+      function start_submitForm() {  
+        let id = document.getElementById('memberno').value;
+        let start_send = document.getElementById('start_send');
+        let end_send = document.getElementById('end_send');
+        let url = './history/history_start?memberno=' + id;
+
+        fetch(url, {
+          method: 'GET',
+        })
+          .then(response => response.json())
+          .then(rdata => {
+            if (rdata.cnt == 1) { // 성공 시
+              alert('운동 시작');
+              startClock() // 스톱워치 시작
+              
+              start_send.style.display = 'none'; // 버튼 숨기기
+              end_send.style.display = 'block'; // 버튼 숨기기
+            } else { // 실패 시
+              alert('다시 시작해주세요.');
+            }
+          })
+          .catch(error => { // 서버 다운 등 통신 에러
+            console.error('Error:', error);
+          });
+      }
+
+
+
+      // 운동종시간 등록
+      function end_submitForm() {  
+        let id = document.getElementById('memberno').value;
+        let end_send = document.getElementById('end_send');
+        let start_send = document.getElementById('start_send');
+        let url = './history/history_end?memberno=' + id;
+
+        fetch(url, {
+          method: 'GET',
+        })
+          .then(response => response.json())
+          .then(rdata => {
+            if (rdata.cnt == 1) { // 성공 시
+              alert('운동 끝');
+              end_send.style.display = 'none'; // 버튼 숨기기
+              start_send.style.display = 'block'; // 버튼 보이기
+              stopClock() // 스톱워치 중지
+              setTimeout(() => {
+                resetClock()
+                console.log('1초 후에 스톱워치 초기화');
+              }, 1000); // 1초 후에 스톱워치 초기화
+            } else { // 실패 시
+              alert('다시 눌러주세요.');
+            }
+          })
+          .catch(error => { // 서버 다운 등 통신 에러
+            console.error('Error:', error);
+          });
+      }
+      
+      
+      
+//============================================= 스톱워치 =====================================================//
+      let timerId;
+      let time = 0;
+      const stopwatch = document.getElementById("stopwatch");
+      let  hour, min, sec;
+      
+      
+      function printTime() {
+          time++;
+          stopwatch.innerText = getTimeFormatString();
+      }
+      
+      //시계 시작 - 재귀호출로 반복실행
+      function startClock() {
+          printTime();
+          stopClock();
+          timerId = setTimeout(startClock, 1000);
+      }
+      
+      //시계 중지
+      function stopClock() {
+          if (timerId != null) {
+              clearTimeout(timerId);
+          }
+      }
+      
+      // 시계 초기화
+      function resetClock() {
+          stopClock()
+          stopwatch.innerText = "00:00:00";
+          time = 0;
+      }
+      
+      // 시간(int)을 시, 분, 초 문자열로 변환
+      function getTimeFormatString() {
+          hour = parseInt(String(time / (60 * 60)));
+          min = parseInt(String((time - (hour * 60 * 60)) / 60));
+          sec = time % 60;
+      
+          return String(hour).padStart(2, '0') + ":" + String(min).padStart(2, '0') + ":" + String(sec).padStart(2, '0');
+      }
+//============================================= 스톱워치 끝 =====================================================//
+
+
+    </script>
+
+    
   <!-- 회원 정보 탑 메뉴-->
         <div class="nav-item dropdown">
+
+
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
           </a>
@@ -24,7 +163,7 @@
               <a class="nav-link" href="/member/update_form">회원 수정</a>
             </li>
             <li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link"href="{/mh/list_all}">회원 건강 정보</a>
+                <a class="nav-link" href="/mh/list_all">회원 건강 정보</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
             <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
@@ -50,6 +189,7 @@
 
               <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/list">관리자 목록</a></li>
               <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/alogin/list">관리자 로그인 내역</a></li>
+              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/foodcate/list_all">식단 추가</a></li>
 <!-- 관리자 비밀번호, 아이디 찾기, 비밀번호 찾기는 데이터베이스에서 추가 함
               <li class="nav-item" th:if="${session.adminsno != null}">
                   <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
@@ -91,12 +231,12 @@
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_htc?htcno=${htcVO.htcno}|}" th:text="${htcVO.namesub}"></a></li>
+                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}&now_page=1|}" th:text="${htcVO.namesub}"></a></li>
                         </ul>
                     </li>
 
                     
-                    <li class="nav-item dropdown" th:if="${session.adminsno == null}">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                              role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자등록">                                                            
                         </a>
@@ -104,6 +244,7 @@
                           <li class="nav-item"><a class="nav-link" href="/cate/list_search">카테고리 전체 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/member/list">회원 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/htc/list_search">운동 카테 목록</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/health/list_all?now_page=1">운동 전체 목록</a></li>
                           
                           <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
                           <li class="nav-item"><a class="nav-link" href="/contents/create?cateno=6">글작성테스트</a></li>
@@ -113,8 +254,11 @@
                 </ul>
             </div>
             <!-- 메뉴 종료 -->
+            
               
         </div>
     </nav>
   
   </div>
+  
+  

@@ -32,3 +32,13 @@ COMMENT ON COLUMN MEMBER.MDATE is '가입일';
 COMMENT ON COLUMN MEMBER.GRADE is '등급';
 COMMENT ON COLUMN MEMBER.PROFILE is '회원 프로필 이미지';
 COMMENT ON COLUMN MEMBER.POINT is '포인트';
+
+
+
+CREATE SEQUENCE member_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+  CACHE 2                       -- 2번은 메모리에서만 계산
+  NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+ 

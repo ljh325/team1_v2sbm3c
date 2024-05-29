@@ -66,7 +66,7 @@ public class ContentsCont {
   Security security;
 
   public ContentsCont() {
-    System.out.println("-> ContentsCont created.");
+    System.out.println("-> HealthCont created.");
   }
 
   @GetMapping(value = "/msg")
