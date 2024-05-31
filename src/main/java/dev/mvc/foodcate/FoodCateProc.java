@@ -33,5 +33,11 @@ public class FoodCateProc implements FoodCateProcInter {
     int cnt = this.foodCateDAO.delete(foodcateno);
     return cnt;
   }
+  
+  @Override
+  public FoodCateVO read(int foodcateno) {
+    FoodCateVO foodCateVO = this.foodCateDAO.read(foodcateno);
+    return foodCateVO;
+  }
 
 }

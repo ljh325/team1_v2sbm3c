@@ -25,7 +25,7 @@ public interface HealthrecomDAOInter {
    * @param healthno
    * @return
    */
-  public HealthrecomVO read(int healthno);
+  public HealthrecomVO read(int healthrecomno);
   
 
   
@@ -35,9 +35,12 @@ public interface HealthrecomDAOInter {
    * @param healthno
    * @return
    */
-  public int delete(int healthno);
+  public int delete(int healthrecomno);
 
   
+  public int delete_g(int goalsno);
+  
+  public int delete_m(int mhno);
 }
 
 

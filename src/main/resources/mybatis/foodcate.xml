@@ -4,7 +4,7 @@
 
 <mapper namespace="dev.mvc.foodcate.FoodCateDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-  <!-- 운동 목표 생성 -->
+
   <insert id = "create" parameterType="dev.mvc.foodcate.FoodCateVO">
      INSERT INTO FOODCATE (foodcateno, fdate, adminsno, foodcode,fname,fupname,thumb,fsize)
      VALUES (FOODCATE_seq.nextval,sysdate, #{adminsno},#{foodcode},#{fname},#{fupname},#{thumb},#{fsize})
@@ -12,15 +12,27 @@
    
   </insert>
   
-  <!-- 운동 목표 조회 -->
+ 
   <select id = 'list_all' resultType="dev.mvc.foodcate.FoodCateVO" parameterType="Integer">
       SELECT foodcateno, fdate, adminsno, foodcode,fname,fupname,thumb,fsize
       FROM FOODCATE
   </select>
   
+  <!-- 해당하는 식품코드의 이미지를 가져오는 코드  -->
+   <select id = 'read_c' resultType="dev.mvc.foodcate.FoodCateVO" parameterType="Integer">
+      SELECT foodcateno, fdate, adminsno, foodcode,fname,fupname,thumb,fsize
+      FROM FOODCATE
+      WHERE foodcode = #{foodcode}
+  </select>
+  
+  
+   <select id = 'read' resultType="dev.mvc.foodcate.FoodCateVO" parameterType="Integer">
+      SELECT foodcateno, fdate, adminsno, foodcode,fname,fupname,thumb,fsize
+      FROM FOODCATE
+      WHERE foodcateno = #{foodcateno}
+  </select>
   
 
-  <!-- 운동 목표 삭제 -->
   <delete id = 'delete' parameterType="int">
     DELETE FROM foodcate
     WHERE foodcateno = #{foodcateno}

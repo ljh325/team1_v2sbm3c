@@ -39,6 +39,10 @@ public interface HealthrecomProcInter {
    */
   public int delete(int healthrecomno);
   
+  public int delete_g(int goalsno);
+  
+  public int delete_m(int mhno);
+  
 
 
 

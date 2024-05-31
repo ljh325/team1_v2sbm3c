@@ -34,7 +34,11 @@ public interface FoodrecomDAOInter {
    * @param healthno
    * @return
    */
-  public int delete(int healthno);
+  public int delete(int goalsno);
+  
+  public int delete_g(int goalsno);
+  
+  public int delete_m(int memberno);
 
   
 }
