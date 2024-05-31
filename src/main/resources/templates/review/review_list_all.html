@@ -1,0 +1,24 @@
+<div th:fragment="reply_list_fragment"> <!-- <div th:replace=... -->
+
+
+  <table class="table table-striped" style='width: 100%; margin-left:15px;'>   
+    <tr th:each="reviewVO, status:${reviewVO}" 
+         style="cursor:pointer; height: 90px;">
+
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${reviewVO.memberno}"></span>
+       </td>
+
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${reviewVO.rdate}"></span>
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${reviewVO.star}"></span>
+       </td>
+       
+       <td class="td_left" style="text-align: center;">
+         <span th:text="${reviewVO.contents}"></span>
+       </td>       
+    </tr>  
+  </table>

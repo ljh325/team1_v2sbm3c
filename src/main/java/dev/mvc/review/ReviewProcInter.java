@@ -17,7 +17,7 @@ public interface ReviewProcInter {
    * 리뷰 전체 목록
    * @return
    */
-  public ArrayList<ReviewVO> review_list_all(String reviewno);
+  public ArrayList<ReviewVO> review_list_all(int foodcateno);
   
   /**
    * 리뷰 페이징 목록

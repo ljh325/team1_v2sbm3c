@@ -216,6 +216,42 @@ public class MemberCont {
   @GetMapping(value="/login") // http://localhost:9093/member/login
   public String login_form(Model model, HttpServletRequest request) {
   
+
+    // Cookie 관련 코드---------------------------------------------------------
+    Cookie[] cookies = request.getCookies();
+    Cookie cookie = null;
+  
+    String ck_id = ""; // id 저장
+    String ck_id_save = ""; // id 저장 여부를 체크
+    String ck_passwd = ""; // passwd 저장
+    String ck_passwd_save = ""; // passwd 저장 여부를 체크
+  
+    if (cookies != null) { // 쿠키가 존재한다면
+      for (int i=0; i < cookies.length; i++){
+        cookie = cookies[i]; // 쿠키 객체 추출
+      
+        if (cookie.getName().equals("ck_id")){
+          ck_id = cookie.getValue();  // email
+        }else if(cookie.getName().equals("ck_id_save")){
+          ck_id_save = cookie.getValue();  // Y, N
+        }else if (cookie.getName().equals("ck_passwd")){
+          ck_passwd = cookie.getValue();         // 1234
+        }else if(cookie.getName().equals("ck_passwd_save")){
+          ck_passwd_save = cookie.getValue();  // Y, N
+        }
+      }
+    }
+    model.addAttribute("ck_id", ck_id);
+    
+    //    <input type='checkbox' name='id_save' value='Y' 
+    //            th:checked="${ck_id_save == 'Y'}"> 저장
+    model.addAttribute("ck_id_save", ck_id_save);
+  
+    model.addAttribute("ck_passwd", ck_passwd);
+    model.addAttribute("ck_passwd_save", ck_passwd_save);
+    // Cookie 관련 코드 끝----------------------------------------------------------------------------
+    
+    
     
     return "member/login";  // templates/member/login.html
   }
@@ -245,6 +281,12 @@ public class MemberCont {
     
     String ip = request.getRemoteAddr(); // ip 조회
     System.out.println("-> 접속 IP: " + ip);
+    
+
+    
+    
+    
+    
     
     
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -279,6 +321,59 @@ public class MemberCont {
       } else if (memberVO.getGrade() == 3) {
         session.setAttribute("grade", "exit");
       }
+      
+      
+      
+      // Cookie 관련 코드---------------------------------------------------------
+      // -------------------------------------------------------------------
+      // id 관련 쿠기 저장
+      // -------------------------------------------------------------------
+      if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
+        Cookie ck_id = new Cookie("ck_id", id);
+        ck_id.setPath("/");  // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능
+        ck_id.setMaxAge(60 * 60 * 24 * 30); // 30 day, 초단위
+        response.addCookie(ck_id); // id 저장
+      } else { // N, id를 저장하지 않는 경우, Checkbox를 체크 해제한 경우
+        Cookie ck_id = new Cookie("ck_id", "");
+        ck_id.setPath("/");
+        ck_id.setMaxAge(0);
+        response.addCookie(ck_id); // id 저장
+      }
+      
+      // id를 저장할지 선택하는  CheckBox 체크 여부
+      Cookie ck_id_save = new Cookie("ck_id_save", id_save);
+      ck_id_save.setPath("/");
+      ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
+      response.addCookie(ck_id_save);
+      // -------------------------------------------------------------------
+  
+      // -------------------------------------------------------------------
+      // Password 관련 쿠기 저장
+      // -------------------------------------------------------------------
+      if (passwd_save.equals("Y")) { // 패스워드 저장할 경우
+        Cookie ck_passwd = new Cookie("ck_passwd", passwd);
+        ck_passwd.setPath("/");
+        ck_passwd.setMaxAge(60 * 60 * 24 * 30); // 30 day
+        response.addCookie(ck_passwd);
+      } else { // N, 패스워드를 저장하지 않을 경우
+        Cookie ck_passwd = new Cookie("ck_passwd", "");
+        ck_passwd.setPath("/");
+        ck_passwd.setMaxAge(0);
+        response.addCookie(ck_passwd);
+      }
+      // passwd를 저장할지 선택하는  CheckBox 체크 여부
+      Cookie ck_passwd_save = new Cookie("ck_passwd_save", passwd_save);
+      ck_passwd_save.setPath("/");
+      ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
+      response.addCookie(ck_passwd_save);
+      // -------------------------------------------------------------------
+      // ----------------------------------------------------------------------------     
+  
+      
+      System.out.println("id_save -->" + id_save );
+      System.out.println("ck_id_save -->" + ck_id_save );
+      System.out.println("passwd_save -->" + passwd_save );
+      System.out.println("ck_passwd_save -->" + ck_passwd_save );
       return "redirect:/";  // 로그인이 성공하면 Home으로 리다이렉트
     } else { //   { 로그인 실패 0 }
       model.addAttribute("code", "login_fail"); // 로그인 실패시 실패코드

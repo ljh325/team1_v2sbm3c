@@ -6,8 +6,6 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import dev.mvc.member.MemberDAOInter;
-
 @Component("dev.mvc.review.ReviewProc")
 public class ReviewProc implements ReviewProcInter {
   
@@ -22,57 +20,59 @@ public class ReviewProc implements ReviewProcInter {
   }
 
   @Override
-  public ArrayList<ReviewVO> review_list_all(String reviewno) {
-    // TODO Auto-generated method stub
-    return null;
+  public ArrayList<ReviewVO> review_list_all(int foodcateno) {
+    ArrayList<ReviewVO> list = this.reviewDAO.review_list_all(foodcateno);
+    return list;
   }
 
   @Override
   public ArrayList<ReviewVO> list_by_review_paging(HashMap<String, Object> hashmap) {
-    // TODO Auto-generated method stub
-    return null;
+    ArrayList<ReviewVO> list = this.reviewDAO.list_by_review_paging(hashmap); 
+    return list;
   }
 
   @Override
   public int review_cnt() {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.reviewDAO.review_cnt();
+    return cnt;
   }
 
   @Override
   public int review_update(ReviewVO reviewVO) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.reviewDAO.review_update(reviewVO);
+    return cnt;
   }
 
   @Override
   public int delete(int reviewno) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.reviewDAO.delete(reviewno);
+    return cnt;
   }
 
   @Override
   public ReviewVO list_star_high(int star) {
-    // TODO Auto-generated method stub
-    return null;
+    ReviewVO high = this.reviewDAO.list_star_high(star);
+    return high;
   }
 
   @Override
   public ReviewVO list_star_low(int star) {
-    // TODO Auto-generated method stub
-    return null;
+    ReviewVO low = this.reviewDAO.list_star_low(star);
+    return low;
   }
 
   @Override
   public ReviewVO recent_review() {
-    // TODO Auto-generated method stub
-    return null;
+    ReviewVO recent = this.reviewDAO.recent_review();
+    return recent;
   }
 
   @Override
   public ReviewVO old_review() {
-    // TODO Auto-generated method stub
-    return null;
+    ReviewVO old = this.reviewDAO.old_review();
+    return old;
   }
 
 }
+
+

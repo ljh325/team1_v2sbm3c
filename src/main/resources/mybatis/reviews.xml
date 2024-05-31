@@ -5,13 +5,12 @@
 <!--
 
 REVIEWNO    NUMBER(10)    NOT NULL, (리뷰번호)
-STAR        NUMBER(10)    NOT NULL, (별점)o
-CONTENTS    VARCHAR2(10)  NOT NULL, (내용)o
+STAR        NUMBER(5 )    NOT NULL, (별점)o
+CONTENTS    VARCHAR2(1000)  NOT NULL, (내용)o
 RDATE       DATE          NOT NULL, (등록일)o
 UDATE       DATE              NULL, (수정일)o
-CNT         NUMBER(10)    NOT NULL, (리뷰수)
-MEMBERNO    NUMBER(10)    NOT NULL, (회원 번호) (FK)
-EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
+MEMBERNO    NUMBER(10)    NOT NULL, (회원 번호)      (FK)
+FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
 리뷰
 1. 리뷰 작성ㅇ
 2. 수정, 삭제, 조회ㅇ
@@ -26,15 +25,22 @@ EATNO       NUMBER(10)    NOT NULL, (식품 번호) (FK)
 
   <!-- 리뷰 등록 -->
   <insert id = "review_insert" parameterType="dev.mvc.review.ReviewVO">
-    INSERT INTO review(reviewno, star, contents, rdate)
-    VALUES (review_seq.nextval, #{star}, #{contents}, sysdate)
+    INSERT INTO review(reviewno, star, contents, rdate, udate, memberno, foodcateno)
+    VALUES (review_seq.nextval, #{star}, #{contents}, sysdate, null, #{memberno}, #{foodcateno})    
+    <!--INSERT INTO REVIEW(REVIEWNO, STAR, CONTENTS, RDATE, UDATE, MEMBERNO, FOODCATENO)
+    VALUES (REVIEW_seq.nextval, 2,'예시3',sysdate, null, 40, 3); 푸드카테고리번호 연결필수-->
   </insert>
+  
   
   <!-- 리뷰 전체 조회 -->
   <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT reviewno, star, contents, rdate
-    FROM review
-    WHERE reviewno = #{reviewno}
+    SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
+    FROM MEMBER m, REVIEW r, FOODCATE f
+    WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno 
+    AND r.foodcateno = #{foodcateno}
+    <!--SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
+    FROM MEMBER m, REVIEW r, FOODCATE f
+    WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno AND r.foodcateno = 3;-->
   </select>
   
   
