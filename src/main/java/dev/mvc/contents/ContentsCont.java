@@ -22,6 +22,7 @@ import dev.mvc.adcontents.AdcontentsVO;
 import dev.mvc.cate.CateProcInter;
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
+import dev.mvc.comments.CommentsMemberVO;
 import dev.mvc.comments.CommentsProcInter;
 import dev.mvc.comments.CommentsVO;
 import dev.mvc.htc.HtcProcInter;
@@ -401,8 +402,8 @@ public class ContentsCont {
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
     model.addAttribute("cateVO", cateVO);
 
-    ArrayList<CommentsVO> list = this.commentsProc.comment_list(contentsno);
-    model.addAttribute("list", list);
+//    ArrayList<CommentsMemberVO> list = this.commentsProc.comment_list(contentsno);
+//    model.addAttribute("list", list);
 
     model.addAttribute("word", word);
     model.addAttribute("now_page", now_page);

@@ -8,7 +8,6 @@ CREATE TABLE REPLY(
 		REPLYNO                       		NUMBER(10)		 NOT NULL   PRIMARY KEY,
 		CONTENTS                		    VARCHAR2(1000)	 NOT NULL,
 		RDATE                   		    DATE		     NOT NULL,
-        ID                                  VARCHAR2(30)     NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
 		CONTENTSNO                    		NUMBER(10)		 NOT NULL,
 		COMMENTSNO                     		NUMBER(10)		 NOT NULL,
@@ -21,7 +20,6 @@ COMMENT ON TABLE REPLY is '대댓글';
 COMMENT ON COLUMN REPLY.REPLYNO is '대댓글번호';
 COMMENT ON COLUMN REPLY.CONTENTS is '대댓글내용';
 COMMENT ON COLUMN REPLY.RDATE is '등록일';
-COMMENT ON COLUMN REPLY.ID is '작성자 ID';
 COMMENT ON COLUMN REPLY.MEMBERNO is '회원 번호';
 COMMENT ON COLUMN REPLY.CONTENTSNO is '컨텐츠 번호';
 COMMENT ON COLUMN REPLY.COMMENTSNO is '댓글번호';
@@ -36,40 +34,43 @@ CREATE SEQUENCE reply_seq
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
   
 -- CREATE
-INSERT INTO reply(replyno, contents, rdate, id, memberno, contentsno, commentsno)
-VALUES (reply_seq.nextval, '안녕하세요, 반갑습니다.', sysdate, 'user1@gmail.com', 37, 30, 10);
+INSERT INTO reply(replyno, contents, rdate, memberno, contentsno, commentsno)
+VALUES (reply_seq.nextval, '테스트.', sysdate, 35, 32, 4);
 
 -- READ
-SELECT replyno, contents, rdate, id, memberno, contentsno, commentsno
-FROM reply
+
+-- 전체 대댓글 조회
+SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+FROM reply r, member m
+WHERE m.memberno = r.memberno
 ORDER BY replyno ASC;
 
-SELECT replyno, contents, rdate, id, memberno, contentsno, commentsno
-FROM reply
-WHERE replyno = 2;
+-- 대댓글 정보 조회
+SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+FROM reply r, member m
+WHERE m.memberno = r.memberno AND r.replyno = 1;
 
-
-SELECT replyno, contents, rdate, id, memberno, contentsno, commentsno
-FROM reply
-WHERE commentsno = 10
+-- 댓글에 등록된 대댓글 목록 조회
+SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+FROM reply r, member m
+WHERE m.memberno = r.memberno AND commentsno = 3
 ORDER BY replyno ASC;
 
-SELECT replyno, contents, rdate, id, memberno, contentsno, commentsno
-FROM reply
-WHERE memberno = 37
+-- 회원이 등록한 대댓글 목록 조회
+SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+FROM reply r, member m
+WHERE m.memberno = r.memberno AND r.memberno = 35
 ORDER BY replyno ASC;
 
+-- 댓글에 등록된 대댓글 갯수 조회
 SELECT COUNT(*)
 FROM reply
-WHERE commentsno = 10;
+WHERE commentsno = 3;
 
+-- 회원이 등록한 대댓글 갯수 조회
 SELECT COUNT(*)
 FROM reply
-WHERE contentsno = 30;
-
-SELECT COUNT(*)
-FROM reply
-WHERE memberno = 37;
+WHERE memberno = 35;
 
 -- UPDATE
 UPDATE reply

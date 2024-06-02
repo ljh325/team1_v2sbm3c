@@ -6,22 +6,22 @@
   
   <!-- 댓글 생성 -->
   <insert id='create' parameterType="dev.mvc.comments.CommentsVO">
-    INSERT INTO comments(commentsno, contents, id, rdate, memberno, contentsno)
-    VALUES(comments_seq.nextval, #{contents}, #{id}, sysdate, #{memberno}, #{contentsno})  
+    INSERT INTO comments(commentsno, contents, rdate, memberno, contentsno)
+    VALUES(comments_seq.nextval, #{contents}, sysdate, #{memberno}, #{contentsno})  
   </insert>
   
   <!-- 댓글 정보 조회 -->
-  <select id="read" resultType="dev.mvc.comments.CommentsVO" parameterType="int">
-    SELECT commentsno, contents, rdate, memberno, contentsno, id
-    FROM comments
-    WHERE commentsno = #{commentsno}
+  <select id="read" resultType="dev.mvc.comments.CommentsMemberVO" parameterType="int">
+    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade
+    FROM comments c, member m
+    WHERE (c.memberno = m.memberno) AND commentsno = #{commentsno}
   </select>
   
   <!-- 게시글 댓글 조회 -->
-  <select id='comment_list' resultType="dev.mvc.comments.CommentsVO" parameterType="int">
-    SELECT commentsno, contents, rdate, memberno, contentsno, id
-    FROM comments
-    WHERE contentsno = #{contentsno}
+  <select id='comment_list' resultType="dev.mvc.comments.CommentsMemberVO" parameterType="int">
+    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade
+    FROM comments c, member m
+    WHERE (c.memberno = m.memberno) AND contentsno = #{contentsno}
     ORDER BY commentsno ASC
   </select>
   
@@ -44,5 +44,19 @@
     DELETE FROM comments
     WHERE commentsno = #{commentsno}
   </delete>
+  
+  <!-- 대댓글 수 증가 -->
+  <update id = "increase_replycnt" parameterType="int">
+    UPDATE comments
+    SET replycnt = replycnt + 1
+    WHERE commentsno = #{commentsno}
+  </update>
+  
+  <!-- 대댓글 수 감소 -->
+  <update id = "decrease_replycnt" parameterType="int">
+    UPDATE comments
+    SET replycnt = replycnt - 1
+    WHERE commentsno = #{commentsno}
+  </update>
   
 </mapper>

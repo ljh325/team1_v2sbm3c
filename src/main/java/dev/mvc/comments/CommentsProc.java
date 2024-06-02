@@ -18,16 +18,16 @@ public class CommentsProc implements CommentsProcInter {
   }
 
   @Override
-  public ArrayList<CommentsVO> comment_list(int contentsno) {
-    ArrayList<CommentsVO> list = this.commentsDAO.comment_list(contentsno);
+  public ArrayList<CommentsMemberVO> comment_list(int contentsno) {
+    ArrayList<CommentsMemberVO> list = this.commentsDAO.comment_list(contentsno);
     return list;
   }
 
   
   @Override
-  public CommentsVO read(int commentsno) {
-    CommentsVO commentsVO = this.commentsDAO.read(commentsno);
-    return commentsVO;
+  public CommentsMemberVO read(int commentsno) {
+    CommentsMemberVO commentsMemberVO = this.commentsDAO.read(commentsno);
+    return commentsMemberVO;
   }
 
   @Override
@@ -47,5 +47,19 @@ public class CommentsProc implements CommentsProcInter {
     int cnt = this.commentsDAO.delete(commentsno);
     return cnt;
   }
+
+  @Override
+  public int increase_replycnt(int commentsno) {
+    int cnt = this.commentsDAO.increase_replycnt(commentsno);
+    return cnt;
+  }
+
+  @Override
+  public int decrease_replycnt(int commentsno) {
+    int cnt = this.commentsDAO.decrease_replycnt(commentsno);
+    return cnt;
+  }
+  
+  
 
 }

@@ -21,6 +21,7 @@ import dev.mvc.admin.AdminVO;
 import dev.mvc.cate.CateProcInter;
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
+import dev.mvc.comments.CommentsMemberVO;
 import dev.mvc.comments.CommentsProcInter;
 import dev.mvc.comments.CommentsVO;
 import dev.mvc.contents.Contents;
@@ -275,7 +276,7 @@ public class AdcontentsCont {
     CateVO cateVO = this.cateProc.read(adcontentsVO.getCateno());
     model.addAttribute("cateVO", cateVO);
 
-    ArrayList<CommentsVO> list = this.commentsProc.comment_list(adcontentsno);
+    ArrayList<CommentsMemberVO> list = this.commentsProc.comment_list(adcontentsno);
     model.addAttribute("list", list);
 
     model.addAttribute("word", word);
