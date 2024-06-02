@@ -20,12 +20,12 @@ public interface ReviewDAOInter {
    * 리뷰 전체 목록
    * @return
    */
-  public ArrayList<ReviewVO> review_list_all(int foodcateno);
+  public ArrayList<ReviewVO> review_list_all();
   
   /**
    * 리뷰 페이징 목록
-   * @param memberVO
-   * @return 추가한 레코드 갯수
+   * @param hashmap
+   * @return
    */
   public ArrayList<ReviewVO> list_by_review_paging(HashMap<String, Object> hashmap);
 
@@ -34,6 +34,13 @@ public interface ReviewDAOInter {
    * @return
    */
   public int review_cnt();
+  
+  /**
+   * 회원 리뷰 조회
+   * @param hashmap
+   * @return
+   */
+  public ReviewVO review_read(HashMap<String, Object> hashmap);
 
   /**
    * 리뷰 수정
@@ -47,37 +54,35 @@ public interface ReviewDAOInter {
    * @param reviewno
    * @return
    */
-  public int delete(int reviewno);
+  public int review_delete(int reviewno);
 
 
   
   /**
    * 별점에 따른 리뷰 조회(별점 높은 순)
    * ReviewVO
-   * @param star
    * @return
    */
-  public ReviewVO list_star_high(int star);
+  public ArrayList<ReviewVO> list_star_high();
  
   /**
    * 별점에 따른 리뷰 조회(별점 낮은 순)
    * ReviewVO
-   * @param star
    * @return
    */
-  public ReviewVO list_star_low(int star);
+  public ArrayList<ReviewVO> list_star_low();
   
   /**
    * 최근 작성순
    * @return
    */
-  public ReviewVO recent_review();
+  public ArrayList<ReviewVO> recent_review();
   
   /**
    * 오래된 작성순
    * @return
    */
-  public ReviewVO old_review();
+  public ArrayList<ReviewVO> old_review();
   
 
   

@@ -20,8 +20,8 @@ public class ReviewProc implements ReviewProcInter {
   }
 
   @Override
-  public ArrayList<ReviewVO> review_list_all(int foodcateno) {
-    ArrayList<ReviewVO> list = this.reviewDAO.review_list_all(foodcateno);
+  public ArrayList<ReviewVO> review_list_all() {
+    ArrayList<ReviewVO> list = this.reviewDAO.review_list_all();
     return list;
   }
 
@@ -44,33 +44,39 @@ public class ReviewProc implements ReviewProcInter {
   }
 
   @Override
-  public int delete(int reviewno) {
-    int cnt = this.reviewDAO.delete(reviewno);
+  public int review_delete(int reviewno) {
+    int cnt = this.reviewDAO.review_delete(reviewno);
     return cnt;
   }
 
   @Override
-  public ReviewVO list_star_high(int star) {
-    ReviewVO high = this.reviewDAO.list_star_high(star);
+  public ArrayList<ReviewVO> list_star_high() {
+    ArrayList<ReviewVO> high = this.reviewDAO.list_star_high();
     return high;
   }
 
   @Override
-  public ReviewVO list_star_low(int star) {
-    ReviewVO low = this.reviewDAO.list_star_low(star);
+  public ArrayList<ReviewVO> list_star_low() {
+    ArrayList<ReviewVO> low = this.reviewDAO.list_star_low();
     return low;
   }
 
   @Override
-  public ReviewVO recent_review() {
-    ReviewVO recent = this.reviewDAO.recent_review();
+  public ArrayList<ReviewVO> recent_review() {
+    ArrayList<ReviewVO> recent = this.reviewDAO.recent_review();
     return recent;
   }
 
   @Override
-  public ReviewVO old_review() {
-    ReviewVO old = this.reviewDAO.old_review();
+  public ArrayList<ReviewVO> old_review() {
+    ArrayList<ReviewVO> old = this.reviewDAO.old_review();
     return old;
+  }
+
+  @Override
+  public ReviewVO review_read(HashMap<String, Object> hashmap) {
+    ReviewVO reviewVO = this.reviewDAO.review_read(hashmap);
+    return reviewVO;
   }
 
 }

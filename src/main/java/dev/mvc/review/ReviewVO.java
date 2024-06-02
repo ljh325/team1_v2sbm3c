@@ -30,8 +30,10 @@ public class ReviewVO {
   private String udate = "";
   /** 회원번호 */
   private int memberno;
+  /** 회원 아이디 */
+  private String id;
   /** 음식카테고리번호 */
-  private int foodcateno;
+  //private int foodcateno;
 
   
   

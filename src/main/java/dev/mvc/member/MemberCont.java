@@ -310,17 +310,21 @@ public class MemberCont {
       
       int cnts = this.mloginProc.mlogin_insert(mloginVO);
       model.addAttribute("cnts", cnts);
-      // grade 범위 (1 ~ 3)
+      // grade 범위 (0 ~ 3)
+      // 관리자     0  == admin
       // 일반회원  1  == member
       // 정지회원  2  == black
       // 탈퇴회원  3  == exit
       if (memberVO.getGrade() == 1 ) {
-        session.setAttribute("grade", "member");  
-      } else if (memberVO.getGrade() == 2 ) {
-        session.setAttribute("grade", "black");
-      } else if (memberVO.getGrade() == 3) {
-        session.setAttribute("grade", "exit");
-      }
+          session.setAttribute("grade", "member");  
+        } else if (memberVO.getGrade() == 2 ) {
+          session.setAttribute("grade", "black");
+        } else if (memberVO.getGrade() == 3) {
+          session.setAttribute("grade", "exit");
+        }  else if (memberVO.getGrade() == 0) {
+            session.setAttribute("grade", "admin");
+        }
+
       
       
       

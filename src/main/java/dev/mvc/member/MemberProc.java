@@ -66,10 +66,15 @@ public class MemberProc implements MemberProcInter {
   @Override
   public boolean isMember(HttpSession session){
     boolean sw = false; // 로그인하지 않은 것으로 초기화
-    String grade = (String)session.getAttribute("grade");
+    String grade = (String)session.getAttribute("grade"); // 세션에서 grade를 가져옴
     
-    if (grade != null) {
-      if (grade.equals("admin") || grade.equals("member")) {
+    if (grade != null) {  // grade가 null 값이 아니면 
+      System.out.println(grade);
+      // grade 0 => 관리자 admin
+      // grade 1 => 일반회원 member
+      // grade 2 => 정지회원 black
+      // grade 3 => 탈퇴회원 exit
+      if (grade.equals("member") || grade.equals("black") || grade.equals("exit")) {
         sw = true;  // 로그인 한 경우
       }      
     }
@@ -81,12 +86,16 @@ public class MemberProc implements MemberProcInter {
    * 관리자, 회원인지 검사
    */  
   @Override
-  public boolean isMemberAdmin(HttpSession session){
+  public boolean isMemberAdmin(HttpSession session){ // 세션에서 grade를 가져옴
     boolean sw = false; // 로그인하지 않은 것으로 초기화
     String grade = (String)session.getAttribute("grade");
     
-    if (grade != null) {
-      if (grade.equals("admin")) {
+    if (grade != null) {  // grade가 null 값이 아니면 
+      // grade 0 => 관리자
+      // grade 1 => 일반회원
+      // grade 2 => 정지회원
+      // grade 3 => 탈퇴회원
+      if (grade.equals("admin")) {  // 0과 같으면
         sw = true;  // 로그인 한 경우
       }      
     }

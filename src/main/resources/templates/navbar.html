@@ -171,6 +171,7 @@
               <a class="nav-link" th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원 탈퇴</a>
             </li>
             <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
+            <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰작성</a></li>
           </ul>
         </div>
           

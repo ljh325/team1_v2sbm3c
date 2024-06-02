@@ -1,24 +1,200 @@
-<div th:fragment="reply_list_fragment"> <!-- <div th:replace=... -->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
+  <div th:fragment="reply_list_fragment">
+    <!-- <div th:replace=... -->
 
+    <style>
+      /* 별점 기호 스타일 */
+      .star-rating {
+        display: inline-block;
+        font-size: 1.2rem;
+        /* 별 크기 설정 */
+        color: #f5b301;
+        /* 별 색상 설정 */
+      }
 
-  <table class="table table-striped" style='width: 100%; margin-left:15px;'>   
-    <tr th:each="reviewVO, status:${reviewVO}" 
-         style="cursor:pointer; height: 90px;">
+      .empty-star {
+        color: #ddd;
+        /* 빈 별 색상 */
+      }
 
-       <td class="td_left" style="text-align: center;">
-         <span th:text="${reviewVO.memberno}"></span>
-       </td>
+      /* 리뷰 스타일 */
+      .review-item {
+        text-align: left;
+        /* 텍스트 왼쪽 정렬 */
+        padding: 10px;
+        /* 안쪽 여백 설정 */
+        background-color: #f9f9f9;
+        /* 배경색 설정 */
+        border-radius: 5px;
+        /* 모서리 둥글게 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* 그림자 효과 */
+        margin-bottom: 20px;
+        /* 아래쪽 여백 설정 */
+      }
 
-       <td class="td_left" style="text-align: center;">
-         <span th:text="${reviewVO.rdate}"></span>
-       </td>
-       
-       <td class="td_left" style="text-align: center;">
-         <span th:text="${reviewVO.star}"></span>
-       </td>
-       
-       <td class="td_left" style="text-align: center;">
-         <span th:text="${reviewVO.contents}"></span>
-       </td>       
-    </tr>  
-  </table>
+      .review-header {
+        display: flex;
+        /* Flexbox 사용 */
+        align-items: center;
+        /* 수직 정렬 */
+      }
+
+      .review-id {
+        font-weight: bold;
+        /* 굵은 글꼴 */
+        font-size: 1rem;
+        /* 글자 크기 설정 */
+      }
+
+      .review-date {
+        font-size: 0.9rem;
+        /* 글자 크기 설정 */
+        color: #888;
+        /* 글자 색상 설정 */
+      }
+
+      .review-content {
+        font-size: 1rem;
+        /* 글자 크기 설정 */
+        line-height: 1.5;
+        /* 줄 간격 설정 */
+      }
+
+      .update_delete {
+        display: inline-block;
+        margin-left: 15px;
+        /* 자동 여백을 추가하여 오른쪽 끝으로 이동 */
+      }
+
+      .update_review,
+      .delete_review {
+        margin-left: 8px;
+        /* 수정과 삭제 버튼 사이의 간격 설정 */
+        cursor: pointer;
+        /* 커서 모양 변경 */
+        color: #007bff;
+        /* 기본 링크 색상 */
+        text-decoration: underline;
+        /* 밑줄 추가 */
+      }
+    </style>
+
+    <h2>리뷰 목록</h2>
+    <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
+    <div class="d-flex justify-content-end mb-3">
+      <a href="#" class="btn btn-link" onclick="loadReviews('recent')">최신순 /</a>
+      <a href="#" class="btn btn-link" onclick="loadReviews('old')">오래된순 /</a>
+      <a href="#" class="btn btn-link" onclick="loadReviews('star_high')">별점 높은순 /</a>
+      <a href="#" class="btn btn-link" onclick="loadReviews('star_low')">별점 낮은순 /</a>
+    </div>
+    <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
+    <!-- 리뷰 목록을 표시할 공간 -->
+    <div id="review" class="review">
+      <!-- 리뷰 목록이 여기에 표시됩니다 -->
+    </div>
+
+    <!-- JavaScript 코드 -->
+    <script>
+      // 서버에서 리뷰 목록을 가져와서 표시하는 함수
+      function loadReviews(sort) {
+        let url = 'http://localhost:9093/review/review_list_all?sort=' + sort;
+        fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+          }
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();  // 응답 본문을 JSON으로 변환하여 반환
+          })
+          .then(data => {
+            const reviewList = document.getElementById('review');
+            reviewList.innerHTML = '';  // 기존 리뷰 목록을 초기화
+
+            data.forEach(reviewVO => {
+              const id = reviewVO.id;  // 리뷰 ID
+              const star = reviewVO.star;  // 별점
+              const rdate = reviewVO.rdate;  // 작성일자
+              const contents = reviewVO.contents;  // 리뷰 내용
+              const memberno = document.getElementById("memberno").value;
+              const reviewno = reviewVO.reviewno;
+              // 각 리뷰 항목을 HTML로 생성
+              const reviewItem = `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-id">${id}</span>
+                    </div>
+                    <div>
+                        <div class="star-rating">
+                            ${generateStars(star)}
+                        </div>
+                        <span class="review-date">${rdate}</span>
+                        <div class="update_delete">
+                            <span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>
+                            <span class="delete_review" data-url="/review/review_delete?memberno=${memberno}&reviewno=${reviewno}">삭제</span>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <div class="review-content">${contents}</div>
+                    </div>
+                </div>
+            `;
+              reviewList.innerHTML += reviewItem;
+            });
+            //th:href="@{|/review/review_update_form?memberno=${memberno}?reviewno=${reviewno}|}"
+
+            const updateButtons = document.querySelectorAll('.update_review');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault(); // 기본 동작을 막음
+                    const url = button.getAttribute('data-url');
+                    alert('수정 버튼이 클릭되었습니다.');
+                    window.location.href = url;
+                });
+            });
+    
+            const deleteButtons = document.querySelectorAll('.delete_review');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const url = button.getAttribute('data-url');
+                    alert('삭제 버튼이 클릭되었습니다.');
+                    window.location.href = url;
+                });
+            });
+            
+            
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+      }
+
+      // 별점 HTML을 생성하는 함수
+      function generateStars(star) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= star) {
+            stars += '<span class="star">★</span>';
+          } else {
+            stars += '<span class="star empty-star">★</span>';
+          }
+        }
+        return stars;
+      }
+
+      // 페이지 로드 시 최신순으로 리뷰 목록을 불러오도록 설정
+      window.onload = function () {
+        
+        loadReviews('recent');
+      };
+    </script>
+  </div>
+</div>
+
+</html>

@@ -25,24 +25,12 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
 
   <!-- 리뷰 등록 -->
   <insert id = "review_insert" parameterType="dev.mvc.review.ReviewVO">
-    INSERT INTO review(reviewno, star, contents, rdate, udate, memberno, foodcateno)
-    VALUES (review_seq.nextval, #{star}, #{contents}, sysdate, null, #{memberno}, #{foodcateno})    
+    INSERT INTO review(reviewno, star, contents, rdate, udate, memberno)
+    VALUES (review_seq.nextval, #{star}, #{contents}, sysdate, null, #{memberno})    
     <!--INSERT INTO REVIEW(REVIEWNO, STAR, CONTENTS, RDATE, UDATE, MEMBERNO, FOODCATENO)
     VALUES (REVIEW_seq.nextval, 2,'예시3',sysdate, null, 40, 3); 푸드카테고리번호 연결필수-->
   </insert>
-  
-  
-  <!-- 리뷰 전체 조회 -->
-  <select id="review_list_all" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
-    FROM MEMBER m, REVIEW r, FOODCATE f
-    WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno 
-    AND r.foodcateno = #{foodcateno}
-    <!--SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
-    FROM MEMBER m, REVIEW r, FOODCATE f
-    WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno AND r.foodcateno = 3;-->
-  </select>
-  
+
   
    <!-- 리뷰 페이징 목록 -->
   <select id="list_by_review_paging" resultType="dev.mvc.review.ReviewVO" parameterType="HashMap">
@@ -70,15 +58,22 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
     FROM review
   </select>
   
+  <!-- 회원 리뷰 조회 -->
+  <select id="review_read" resultType="dev.mvc.review.ReviewVO" parameterType="map">
+    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    FROM review r, member m
+    WHERE m.memberno = r.memberno AND r.memberno=#{memberno} AND r.reviewno=#{reviewno}
+  </select>
+  
   <!-- 리뷰 수정 | 수정일 확인 필요 -->
   <update id="review_update" parameterType="dev.mvc.review.ReviewVO">
     UPDATE review
-    SET star=#{star}, contents=#{contents} <!-- , rdate=#{rdate} ??--> 
+    SET star=#{star}, contents=#{contents} , udate=sysdate 
     WHERE reviewno = #{reviewno}
   </update>
   
   <!-- 리뷰 삭제 -->
-  <delete id="delete" parameterType="int">
+  <delete id="review_delete" parameterType="int">
     DELETE FROM review
     WHERE reviewno=#{reviewno}
   </delete>
@@ -86,32 +81,35 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
   <!-- 별점에 따른 리뷰 조회(별점 높은 순) -->
   <select id="list_star_high" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT reviewno, star, contents, rdate, udate
-    FROM review
-    WHERE star = #{star}
-    ORDER BY DESC
+    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    FROM review r, member m
+    WHERE m.memberno = r.memberno
+    ORDER BY r.star DESC
   </select>
   
     <!-- 별점에 따른 리뷰 조회(별점 낮은 순) -->
   <select id="list_star_low" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT reviewno, star, contents, rdate, udate
-    FROM review
-    WHERE star = #{star}
+    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    FROM review r, member m
+    WHERE m.memberno = r.memberno
+    ORDER BY r.star ASC
   </select>
   <!-- 최근 작성순 -->
   <select id="recent_review" resultType="dev.mvc.review.ReviewVO">
-    SELECT reviewno, star, contents, rdate, udate
-    FROM review
-    ORDER BY COALESCE(udate, rdate) DESC
+    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    FROM review r, member m
+    WHERE m.memberno = r.memberno
+    ORDER BY COALESCE(r.udate, r.rdate) DESC
     <!-- COALESCE(A, B) -> update가 null이 아니면 update값 반환
     update가 널값이고 rdate가 값존재하면 rdate반환, 둘다 널이면 널값 반환 -->
   </select>
   
   <!-- 오래된 작성순 -->
   <select id="old_review" resultType="dev.mvc.review.ReviewVO">
-    SELECT reviewno, star, contents, rdate, udate
-    FROM review
-    ORDER BY COALESCE(udate, rdate) asc
+    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    FROM review r, member m
+    WHERE m.memberno = r.memberno
+    ORDER BY COALESCE(r.udate, r.rdate) asc
   </select>
   
   
