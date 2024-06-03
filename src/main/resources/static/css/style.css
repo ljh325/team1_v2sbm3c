@@ -12,15 +12,14 @@
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
      font-size: 14px; 
-     margin: 0px;  /* top right bottom left */
-     padding: 0px;
-     /*color: #555555;*/
+     /*max-width: 900px;
+     margin: 0 auto;
+     /*margin: 0px;  /* top right bottom left */
+     /*padding: 0px;*/
+     background-color: #FFFFFF;
   }  
   
-  .container_main {
-    width: 98%; 
-    margin: 5px auto;
-  }
+
   
   /* 이미지 사용시 경로 지정
   /static/css/images/top_1920_400.jpg
@@ -77,10 +76,7 @@
     margin: 10px auto;
   }
   
-  .content_body {
-    width: 90%;
-    margin: 10px auto;
-  }
+
   
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
@@ -100,8 +96,8 @@
   
   .bottom_menu {
     text-align: center; 
-    margin: 20px auto;
-    clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */
+/*    margin: 20px auto;*/
+    /*clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */
   }
 
   .aside_left {
