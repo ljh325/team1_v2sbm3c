@@ -16,21 +16,21 @@ public interface ReplyProcInter {
    * @param replyno
    * @return 대댓글 정보
    */
-  public ReplyVO read(int replyno);
+  public ReplyMemberVO read(int replyno);
   
   /**
    * 댓글 대댓글 목록 조회
    * @param commentsno
    * @return 대댓글 목록
    */
-  public ArrayList<ReplyVO> reply_list(int commentsno);
+  public ArrayList<ReplyMemberVO> reply_list(int commentsno);
   
   /**
    * 회원이 작성한 대댓글 목록 조회
    * @param memberno
    * @return 대댓글 목록
    */
-  public ArrayList<ReplyVO> reply_member_list(int memberno);
+  public ArrayList<ReplyMemberVO> reply_member_list(int memberno);
   
   /**
    * 댓글에 등록된 대댓글 갯수

@@ -19,20 +19,20 @@ public class ReplyProc implements ReplyProcInter {
   }
 
   @Override
-  public ReplyVO read(int replyno) {
-    ReplyVO replyVO = this.replyDAO.read(replyno);
-    return replyVO;
+  public ReplyMemberVO read(int replyno) {
+    ReplyMemberVO replyMemberVO = this.replyDAO.read(replyno);
+    return replyMemberVO;
   }
 
   @Override
-  public ArrayList<ReplyVO> reply_list(int commentsno) {
-    ArrayList<ReplyVO> list = this.replyDAO.reply_list(commentsno);
+  public ArrayList<ReplyMemberVO> reply_list(int commentsno) {
+    ArrayList<ReplyMemberVO> list = this.replyDAO.reply_list(commentsno);
     return list;
   }
 
   @Override
-  public ArrayList<ReplyVO> reply_member_list(int memberno) {
-    ArrayList<ReplyVO> list = this.replyDAO.reply_member_list(memberno);
+  public ArrayList<ReplyMemberVO> reply_member_list(int memberno) {
+    ArrayList<ReplyMemberVO> list = this.replyDAO.reply_member_list(memberno);
     return list;
   }
 

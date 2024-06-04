@@ -41,7 +41,9 @@ public interface FoodrecomProcInter {
   
 
 
-
+  public int delete_g(int goalsno);
+  
+  public int delete_m(int mhno);
   
 
   

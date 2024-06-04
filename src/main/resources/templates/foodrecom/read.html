@@ -10,14 +10,14 @@
   
   
    <aside class="aside_right">
-    <a href="/healthrecom/list_all">목록</a>
+    <a href="/foodrecom/list_all">목록</a>
     <span class="menu_devide">│</span>
-     <a th:href="@{|/healthrecom/update?healthrecomno=${healthrecomVO.healthrecomno}|}">수정</a>
+     <a th:href="@{|/foodrecom/update?foodrecomno=${foodrecomVO.foodrecomno}|}">수정</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/healthrecom/delete?healthrecomno=${healthrecomVO.healthrecomno}|}">삭제</a>
+    <a th:href="@{|/foodrecom/delete?foodrecomno=${foodrecomVO.foodrecomno}|}">삭제</a>
     <span class="menu_devide">│</span>
    
-    <a href="/healthrecom/create">등록</a>
+    <a href="/foodrecom/create">등록</a>
     <span class="menu_devide">│</span>
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
@@ -26,15 +26,15 @@
   
   <div class="container mt-3" style="width: 50%; margin: 5px auto;">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">번호: <span th:text="${healthrecomVO.healthrecomno}"></span></li>
-      <li class="list-group-item">운동 추천 내용: <span th:text="${healthrecomVO.hrecom}"></span></li>
-      <li class="list-group-item">추천 날짜: <span th:text="${healthrecomVO.rdate}"></span></li>
+      <li class="list-group-item">번호: <span th:text="${foodrecomVO.foodrecomno}"></span></li>
+      <li class="list-group-item">운동 추천 내용: <span th:text="${foodrecomVO.hrecom}"></span></li>
+      <li class="list-group-item">추천 날짜: <span th:text="${foodrecomVO.rdate}"></span></li>
  
     </ul>  
   </div>
 
-  <!-- /templates/healthrecom/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{healthrecom/list_all_component::list_all_fragment}"></div>
+  <!-- /templates/foodrecom/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{foodrecom/list_all_component::list_all_fragment}"></div>
  
 </div>
 </html>

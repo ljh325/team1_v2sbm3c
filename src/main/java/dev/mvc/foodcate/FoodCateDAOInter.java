@@ -25,4 +25,6 @@ public interface FoodCateDAOInter {
   
   public int delete(int foodcateno);
   
+  public FoodCateVO read(int foodcateno);
+  
 }

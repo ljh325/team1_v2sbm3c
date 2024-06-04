@@ -175,8 +175,7 @@ public class HealthrecomCont {
     */
   
   @GetMapping(value="/list_all")
-  public String list_all(HttpSession session,Model model,
-      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+  public String list_all(HttpSession session,Model model) {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);

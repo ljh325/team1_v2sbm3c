@@ -33,20 +33,6 @@
   </update>
 
 
-  <select id="list_search_paging" resultType="dev.mvc.mh.MhVO" parameterType="Map">
-    SELECT mhno, kg, ckg, cm, muscle, memberno,insertdate, r
-    FROM (
-        SELECT mhno, kg, ckg, cm, muscle, memberno,insertdate, rownum as r
-        FROM (
-            SELECT mhno, kg, ckg, cm, muscle, memberno,insertdate
-            FROM mh
-            
- 
-            ORDER BY mhno ASC
-        )
-    )
-    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num} 
-  </select>
 
     <select id="list_search_count" resultType="int" parameterType="String">
     SELECT COUNT(*) as cnt

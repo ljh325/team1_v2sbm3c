@@ -170,6 +170,22 @@ public class FoodCateCont {
 
 //      return "redirect:/member/login_form_need";
   }
+  
+  /**
+   * 
+   * @param session
+   * @param model
+   * @param foodrecomno
+   * @return
+   */
+  @PostMapping(value = "/read")
+  public String read(HttpSession session,Model model,@RequestParam("foodcateno") int foodcateno) {
+    ArrayList<FoodCateVO> list = this.foodCateProc.list_all();
+    FoodCateVO foodCateVO = this.foodCateProc.read(foodcateno);
+    model.addAttribute("foodCateVO", foodCateVO);
+    model.addAttribute("list", list);
+    return "/foodcate/read";
+  }
 
   @PostMapping(value = "/delete")
   public String list_all(HttpSession session,Model model,@RequestParam("foodcateno") int foodcateno) {

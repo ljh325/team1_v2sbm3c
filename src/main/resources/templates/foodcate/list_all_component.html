@@ -1,24 +1,5 @@
 <div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
   <script th:inline="javascript">
-    function updateFoodcate(foodcateno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/foodcate/update';
-        
-        // input 엘리먼트 생성하여 foodcateno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "foodcateno";
-        input.value = foodcateno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
 
     function deleteFoodcate(foodcateno) {
         // 새 form 엘리먼트 생성

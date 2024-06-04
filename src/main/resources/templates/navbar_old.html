@@ -1,0 +1,315 @@
+
+<div th:fragment="navbarFragment">
+
+
+     <div class="head">
+       <div class="slide-open" id="slide-open">
+          <span class="burgur" id="burgur">
+          <span class="top-line"></span>
+          <span class="bot-line"></span>
+       </span>
+       </div>
+      
+       <div class="logo">gym PT</div>
+     </div>
+<style>
+/* 모든 요소의 기본 여백과 패딩을 제거하고, 박스 크기 계산을 보더 포함으로 설정 */
+* {
+  margin: 0; /* 모든 요소의 기본 여백을 제거 */
+  padding: 0; /* 모든 요소의 기본 패딩을 제거 */
+  box-sizing: border-box; /* 박스 크기 계산을 보더 포함으로 설정 */
+}
+
+html, body {
+  width: 100%; /* html과 body 요소의 너비를 100%로 설정 */
+  height: 100%; /* html과 body 요소의 높이를 100%로 설정 */
+}
+
+body {
+  margin: 0 auto; /* 수평 중앙 정렬 */
+  max-width: 600px; /* 최대 너비를 600px로 설정하여 화면의 중앙에 배치 */
+  background-color: #f0f0f0; /* 배경색을 연한 회색으로 설정 */
+  position: relative; /* 자식 요소의 상대 위치 설정을 위한 상대 위치 */
+}
+
+/* 컨테이너 스타일 */
+.container {
+  margin-top: 20px;
+  width: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border: 1px solid blue;
+}
+
+/* 직사각형 스타일 */
+.rectangle {
+  width: 85px; 
+  height: 85px;
+  background-color: lightblue;
+  margin: 20px 19px; /* 상하 10px, 좌우 21px 마진 */
+  border-radius: 20px;
+}
+
+/* .containerss 스타일 */
+.containerss {
+  width: auto;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #e1e1e1;
+  background-color: #ffffff;
+  border: 1px solid red;
+}
+
+/* .head 스타일 */
+.head {
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid #e1e1e1;
+  position: relative;
+}
+
+/* .logo 스타일 */
+.logo {
+  margin-left: 10px;
+  text-align: left;
+  font-size: 32px;
+  font-style: italic;
+  font-weight: 800;
+  padding-top: 8px;
+}
+
+/* .body 스타일 */
+.body {
+  margin-top: 10px;
+  height: 1200px;
+  position: relative;
+  overflow: hidden;
+  background-color: #0B2161;
+}
+
+/* .contents 스타일 */
+.contents {
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0B2161;
+}
+
+/* .slide-open 스타일 */
+.slide-open {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+/* .burgur 스타일 */
+.burgur {
+  right: 15px;
+  top: 23px;
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: #000000;
+}
+
+/* .top-line 스타일 */
+.burgur .top-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  bottom: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition: -webkit-transform .3s;
+  transition: transform .3s;
+}
+
+/* .bot-line 스타일 */
+.burgur .bot-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  top: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition: -webkit-transform .3s;
+  transition: transform .3s;
+}
+
+/* .burgur.on 스타일 */
+.burgur.on {
+  width: 0;
+}
+
+/* .burgur.on .bot-line 스타일 */
+.burgur.on .bot-line {
+  -webkit-transform: translateY(5px) rotate(135deg);
+  transform: translateY(5px) rotate(135deg);
+}
+
+/* .burgur.on .top-line 스타일 */
+.burgur.on .top-line {
+  -webkit-transform: translateY(-5px) rotate(-135deg);
+  transform: translateY(-5px) rotate(-135deg);
+}
+
+/* .slide 스타일 */
+.slide {
+  width: 100%;
+  position: absolute;
+  left: -100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-transition: left .3s;
+  -moz-transition: left .3s;
+  -ms-transition: left .3s;
+  -o-transition: left .3s;
+  transition: left .3s;
+  background-color: #0B173B;
+}
+
+/* .slide-title 스타일 */
+.slide-title {
+  width: 100%;
+  height: 100px;
+  font-size: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+/* .slide.on 스타일 */
+.slide.on {
+  left: 0;
+}
+
+/* .slide ul li 스타일 */
+.slide ul li {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+/* footer 스타일 */
+.navigation {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #999;
+  max-width: inherit; /* 최대 너비를 부모 요소(body)의 너비로 설정 */
+}
+.navigation a {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+}
+.navigation a span {
+  display: block;
+  margin-top: 0px;
+  font-size: 11px;
+}
+.navigation .bi {
+  font-size: 1.2rem;
+}
+.navigation a:hover {
+  color: #007bff;
+}
+
+.settings-container {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .item {
+            margin-bottom: 10px;
+        }
+            .flex-list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function(){
+ 
+  $("#slide-open").click(function()    {
+    if($("#burgur").hasClass('on')){
+      $("#burgur").removeClass('on');
+      $("#slide").removeClass('on');
+     
+    } else{
+      $("#burgur").addClass('on');
+     $("#slide").addClass('on'); 
+    }
+  });
+  
+});
+</script>
+   
+  
+</div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+  

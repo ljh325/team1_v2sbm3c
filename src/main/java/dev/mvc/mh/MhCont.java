@@ -175,6 +175,92 @@ public class MhCont {
    }
   
    
+  /**
+   * create healthrecom 생성 처리
+   * http://localhost:9091/mh/list_search
+   * @param model
+   * @param mhVO
+   * @param bindingResult
+   * @return
+   */
+  @PostMapping(value="/create_h") // http://localhost:9091/mh/create
+  public String create_h(HttpSession session,Model model, @PathVariable("mhno") Integer mhno,@PathVariable("goalsno") Integer goalsno,BindingResult bindingResult) {
+    
+    if (bindingResult.hasErrors())
+    {
+      return "redirect:/mh/choose";
+      
+    }
+    if (this.memberProc.isMember(session)) {
+      
+    MhVO mhVO = this.mhProc.read(mhno);
+    GoalsVO goalsVO =this.goalsProc.read(goalsno); 
+    
+     
+    int cnt = this.healthrecomProc.create(mhVO,goalsVO); /*Proc gpt에게 mhVO,goalsVO 정보를 보내고 새로운 healthrecom을 생성*/
+    
+    System.out.println("-> cnt: " + cnt);
+
+    model.addAttribute("cnt", cnt);
+    if (cnt == 1) {
+      
+      return "healthrecom/list_all";
+      
+    } else {
+      model.addAttribute("code", "create_fail");
+      return "mh/msg"; // /templates/mh/msg.html
+      
+      
+    }
+   }else {
+     return "index";
+    }
+   }
+  
+  
+  /**
+   * create foodrecom 생성 처리
+   * http://localhost:9091/mh/list_search
+   * @param model
+   * @param mhVO
+   * @param bindingResult
+   * @return
+   */
+  @PostMapping(value="/create_f") // http://localhost:9091/mh/create
+  public String create_f(HttpSession session,Model model, @PathVariable("mhno") Integer mhno,@PathVariable("goalsno") Integer goalsno,BindingResult bindingResult) {
+    
+    if (bindingResult.hasErrors())
+    {
+      return "redirect:/mh/choose";
+      
+    }
+    if (this.memberProc.isMember(session)) {
+      
+    MhVO mhVO = this.mhProc.read(mhno);
+    GoalsVO goalsVO =this.goalsProc.read(goalsno); 
+    
+     
+    int cnt = this.foodrecomProc.create(mhVO,goalsVO); /*Proc gpt에게 mhVO,goalsVO 정보를 보내고 새로운 foodrecom을 생성*/
+    
+    System.out.println("-> cnt: " + cnt);
+
+    model.addAttribute("cnt", cnt);
+    if (cnt == 1) {
+      
+      return "healthrecom/list_all";
+      
+    } else {
+      model.addAttribute("code", "create_fail");
+      return "mh/msg"; // /templates/mh/msg.html
+      
+      
+    }
+   }else {
+     return "index";
+    }
+   }
+  
+  
    /**
    * list_all 폼,목록
    * http://localhost:9091/mh/list_all
@@ -350,6 +436,8 @@ public class MhCont {
     
 //    this.healthrecomProc.delete(mhno);
 //    this.mhProc.delete(mhno);
+    this.healthrecomProc.delete_m(mhno);
+    this.foodrecomProc.delete_m(mhno); 
     int cnt = this.mhProc.delete(mhno);
     if (cnt == 1) {
       
