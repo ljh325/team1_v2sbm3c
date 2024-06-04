@@ -13,249 +13,13 @@
     <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
       aria-labelledby="offcanvasDarkNavbarLabel">
       <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Health Care</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Health Care</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-<<<<<<< HEAD
-              <div class="offcanvas-body">
-                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-=======
-    </form>
-  </div>
-  
-  <!-- 운동 종료 폼 -->
-  <div th:if="${session.memberno != null}">
-    <form name="ends" id="ends" method="post" action="/history/history_end">
-      <input type="hidden" name="memberno" th:value="${session.memberno}">
-      <div class="content_body_bottom">
-        <button type="button" id="end_send" class="btn btn-secondary btn-sm" onclick="end_submitForm()"
-          style="display: none;">운동 종료</button>
-      </div>
-    </form>
-  </div>
-  
-  <!-- 스톱워치 -->
-  <div style="margin:20px">
-    <h3 id="stopwatch">
-      00:00:00
-    </h3>
-  </div>
-<script>
-      // 운동시작시간 등록
-      function start_submitForm() {  
-        let id = document.getElementById('memberno').value;
-        let start_send = document.getElementById('start_send');
-        let end_send = document.getElementById('end_send');
-        let url = './history/history_start?memberno=' + id;
-
-        fetch(url, {
-          method: 'GET',
-        })
-          .then(response => response.json())
-          .then(rdata => {
-            if (rdata.cnt == 1) { // 성공 시
-              alert('운동 시작');
-              startClock() // 스톱워치 시작
-              
-              start_send.style.display = 'none'; // 버튼 숨기기
-              end_send.style.display = 'block'; // 버튼 숨기기
-            } else { // 실패 시
-              alert('다시 시작해주세요.');
-            }
-          })
-          .catch(error => { // 서버 다운 등 통신 에러
-            console.error('Error:', error);
-          });
-      }
-
-
-
-      // 운동종시간 등록
-      function end_submitForm() {  
-        let id = document.getElementById('memberno').value;
-        let end_send = document.getElementById('end_send');
-        let start_send = document.getElementById('start_send');
-        let url = './history/history_end?memberno=' + id;
-
-        fetch(url, {
-          method: 'GET',
-        })
-          .then(response => response.json())
-          .then(rdata => {
-            if (rdata.cnt == 1) { // 성공 시
-              alert('운동 끝');
-              end_send.style.display = 'none'; // 버튼 숨기기
-              start_send.style.display = 'block'; // 버튼 보이기
-              stopClock() // 스톱워치 중지
-              setTimeout(() => {
-                resetClock()
-                console.log('1초 후에 스톱워치 초기화');
-              }, 1000); // 1초 후에 스톱워치 초기화
-            } else { // 실패 시
-              alert('다시 눌러주세요.');
-            }
-          })
-          .catch(error => { // 서버 다운 등 통신 에러
-            console.error('Error:', error);
-          });
-      }
-      
-      
-      
-//============================================= 스톱워치 =====================================================//
-      let timerId;
-      let time = 0;
-      const stopwatch = document.getElementById("stopwatch");
-      let  hour, min, sec;
-      
-      
-      function printTime() {
-          time++;
-          stopwatch.innerText = getTimeFormatString();
-      }
-      
-      //시계 시작 - 재귀호출로 반복실행
-      function startClock() {
-          printTime();
-          stopClock();
-          timerId = setTimeout(startClock, 1000);
-      }
-      
-      //시계 중지
-      function stopClock() {
-          if (timerId != null) {
-              clearTimeout(timerId);
-          }
-      }
-      
-      // 시계 초기화
-      function resetClock() {
-          stopClock()
-          stopwatch.innerText = "00:00:00";
-          time = 0;
-      }
-      
-      // 시간(int)을 시, 분, 초 문자열로 변환
-      function getTimeFormatString() {
-          hour = parseInt(String(time / (60 * 60)));
-          min = parseInt(String((time - (hour * 60 * 60)) / 60));
-          sec = time % 60;
-      
-          return String(hour).padStart(2, '0') + ":" + String(min).padStart(2, '0') + ":" + String(sec).padStart(2, '0');
-      }
-//============================================= 스톱워치 끝 =====================================================//
-
-
-    </script>
-
-    
-  <!-- 회원 정보 탑 메뉴-->
-        <div class="nav-item dropdown">
-
-
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-               role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li class="nav-item"><a class="nav-link" href="/member/create">회원 가입</a></li>
-            <li class="nav-item">
-            <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
-            <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
-            </li>
+      <div class="offcanvas-body">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             
-            <li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link" th:href="@{|/member/read?memberno=${session.memberno}|}">회원 정보 조회</a>
-            </li>
-            <!--<li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
-            </li>-->
-            <li class="nav-item" th:if="${session.memberno != null}">
-              <a class="nav-link" href="/member/update_form">회원 수정</a>
-            </li>
-            <li class="nav-item" th:if="${session.memberno != null}">
-                <a class="nav-link" href="/mh/list_all">회원 건강 정보</a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
-            <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
-            <li class="nav-item" th:if="${session.memberno != null}">
-              <a class="nav-link" th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원 탈퇴</a>
-            </li>
-            <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
-            <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰작성</a></li>
-          </ul>
-        </div>
-          
- <!-- 관리자 정보 탑 메뉴-->
-        <div class="nav-item dropdown" style="margin-left: 10px;">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" 
-                 role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-<!-- 관리자 가입은 데이터베이스에서 추가 함(제한)
-              <li class="nav-item"><a class="nav-link" href="/admin/create">관리자 가입</a></li>
--->
-              
-              <li class="nav-item" th:if="${session.adminsno == null}"><a class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a></li>
-              <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/logout" th:text="@{|${session.aname}로그아웃|}"></a></li>      
-
-              <li class="nav-item" th:if="${session.adminsno != null}"><a class="nav-link" href="/admin/list">관리자 목록</a></li>
-              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/alogin/list">관리자 로그인 내역</a></li>
-              <li class="nav-item" th:if="${session.adminsno !=null}"><a class="nav-link" href="/foodcate/list_all">식단 추가</a></li>
-<!-- 관리자 비밀번호, 아이디 찾기, 비밀번호 찾기는 데이터베이스에서 추가 함
-              <li class="nav-item" th:if="${session.adminsno != null}">
-                  <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
-              </li>
-              <li class="nav-item"><a class="nav-link" href="#">관리자 아이디 찾기</a></li>         
-              <li class="nav-item"><a class="nav-link" href="#">관리자 비밀번호 찾기</a></li>
--->
-
-            </ul>
-        </div>
-  </div>
-  <!-- 배너 사진-->
-    <div class="top_menu_img"></div>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">HOME</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <!-- 메뉴 시작-->
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                 <!-- 기본 카테 메뉴 시작 -->
-                    <li class="nav-item dropdown" th:each="cateVOMenu:${menu1}">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="cateVO:${cateVOMenu.list_namesub}">
-                              <span th:if="${cateVO.admins == 'N'}">
-                                <a class="dropdown-item" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
-                              </span>
-                              <span th:if="${cateVO.admins == 'Y'}">
-                                <a class="dropdown-item" th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
-                              </span>
-                              </li>
-                        </ul>
-
-                    </li>
-                  <!-- 운동 카테 메뉴 시작 -->
-                    <li class="nav-item dropdown" th:each="htcVOMenu:${menu}">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="htcVO:${htcVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}&now_page=1|}" th:text="${htcVO.namesub}"></a></li>
-                        </ul>
-                    </li>
-
->>>>>>> 7ea13dd296fe5ef1b08a446c1676371d15e98e70
-                    
-                    <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
+                 <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
                     
                     <!-- 이메일 및 아이디 회원 이름-->
                         <div style="display: flex; justify-content: space-around;">
@@ -301,7 +65,7 @@
                         
           
                     <!-- admin 권한 -->
-                    <span style="background-color: rgb(192, 192, 192); text-align:center;">관리자 등록
+                    <span style="background-color: rgb(192, 192, 192); text-align:center;" th:if="${session.memberno=='admin'}">관리자 등록
                               
 
                     <!-- admin 전체 회원 목록 -->
@@ -331,16 +95,12 @@
         
                     </span>
           
-                           
-                  </ul>
-              </div>
-                  
+                   
+          </ul>
+      </div>
+              
     </div>
   </div>
-<<<<<<< HEAD
            
 </div>
  
-=======
-  
->>>>>>> 7ea13dd296fe5ef1b08a446c1676371d15e98e70
