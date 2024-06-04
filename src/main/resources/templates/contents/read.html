@@ -163,11 +163,16 @@
               }
 
             });
+
             list_by_contentsno_join(); // 목록 출력
 
-          }
+          } //----------------------- window.onload() 종료 -----------------------------
 
-          function list_by_contentsno_join() { // 목록 출력
+
+
+          //------------------------------------------ 댓글 관련 함수 시작---------------------------------------------------
+
+          function list_by_contentsno_join() { // 댓글 목록 출력
             fetch("/comments/list_by_contentsno_join?contentsno=[[${contentsVO.contentsno}]]", {
               "method": "get" // get 방식은 header 와 body 불필요
             })
@@ -180,21 +185,22 @@
                 for (let i = 0; i < data['res'].length; i++) {
                   let row = data['res'][i];
 
-                  msg += "<div id='" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
+                  msg += "<div id='comments" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
                   msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
                   msg += "  " + row.rdate;
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                    msg += " <a href='javascript:reply_update(" + row.commentsno + ")'><img src='/reply/images/update.png'></a>";
-                    msg += " <a href='javascript:reply_delete(" + row.commentsno + ")'><img src='/reply/images/delete.png'></a>";
+                    msg += " <a href='javascript:comments_update_form(" + row.commentsno + ")'>" + "수정" + "</a>";
+                    msg += " <a href='javascript:comments_delete(" + row.commentsno + ")'>" + "삭제" + "</a>";
                   }
                   msg += "  " + "<br>";
                   msg += row.contents + "<br><br>";
 
-                  //대댓글 목록 시작
-                  //      msg += "<button type = 'button' id='reply_list_btn'" + row.commentsno + "' style='border:none;'>" + "답글" + "    ";
+                  //대댓글 관련
                   msg += "<button type = 'button' id='reply_list_btn" + row.commentsno + "' onclick='list_by_commentsno_join(" + row.commentsno + ")' style='border:none;'>" + "답글";
                   msg += row.replycnt + "개" + "</button>";
+                  msg += "<button type = 'button' id='reply_list_cancel_btn" + row.commentsno + "' onclick='reply_list_view(" + row.commentsno + ")' style='border:none; display:none;'>" + "답글숨기기";
+                  msg += "</button>";
                   msg += "<button type = 'button' id='reply_create_form_button" + row.commentsno + "' onclick='reply_create_form(" + row.commentsno + ")' style='border:none; margin-left:20px;'>" + "답글 달기";
                   msg += "</button>";
                   msg += "<div id='reply_create_form" + row.commentsno + "' style='width: 100%; margin: 0px auto; clear:both; text-align: center;'>";
@@ -210,7 +216,125 @@
 
           }
 
+
+          function comments_update_form(no) { // 댓글 수정 폼
+            let comments_tag = document.getElementById('comments' + no);
+            let msg = '';
+            msg += "<hr>";
+            msg += "<form name='frm_reply' id='frm_reply'>";
+            msg += "<input type='hidden' name='memberno' id='memberno' value=''>";
+            msg += "<input type='hidden' name='commentsno' id='commentsno' value=''>";
+            msg += "<textarea name='comments_update_contents" + no + "' id='comments_update_contents" + no + "' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
+            msg += "</textarea>";
+            msg += "<button type='button' id='btn_reply_create' onclick='comments_update(" + no + ")'>";
+            msg += "&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;";
+            msg += "</button>";
+            msg += "<button type='button' id='btn_reply_cancel' onclick='list_by_contentsno_join()' style='margin-left:5px;'>";
+            msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
+            msg += "</button>";
+            msg += "</form>";
+            msg += "<hr>";
+            comments_tag.innerHTML = msg;
+
+            let commentsno_tag = document.getElementById('commentsno');
+            let memberno_tag = document.getElementById('memberno');
+            let comments_contents_tag = document.getElementById('comments_update_contents' + no);
+
+            fetch("/comments/read?commentsno=" + no, {
+              "method": "get",
+              "headers": {"Content-Type": "application/json"},
+              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                commentsno_tag.value = data['res']['commentsno'];
+                memberno_tag.value = data['res']['memberno'];
+                comments_contents_tag.value = data['res']['contents'];
+              });
+
+          }
+
+
+          function comments_update(no) { // 댓글 수정 처리
+            let commentsno_tag = document.getElementById('commentsno');
+            let memberno_tag = document.getElementById('memberno');
+            let comments_contents_tag = document.getElementById('comments_update_contents' + no);
+
+            let contents = comments_contents_tag.value;
+            let memberno = memberno_tag.value;
+            let commentsno = commentsno_tag.value;
+
+            if (contents.length == 0) {
+              alert('내용이 없습니다. 내용을 입력해주세요.');
+            } else {
+              fetch("/comments/update", {
+                "method": "post",
+                "headers": {"Content-Type": "application/json"},
+                body: JSON.stringify({"commentsno": commentsno, "memberno": memberno, "contents": contents})
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data['res'] == 0) {
+                    alert('댓글 수정에 실패 했습니다.)');
+                  } else {
+                    list_by_contentsno_join(); // 목록 출력
+                  }
+                });
+
+            }
+
+          }
+
+          function comments_delete(no) { // 댓글 삭제
+
+            let contents_tag = document.getElementById('contents');
+
+            fetch("/comments/read?commentsno=" + no, {
+              "method": "get",
+              "headers": {"Content-Type": "application/json"},
+              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+                if (sw == true) {
+
+                  fetch("/comments/delete", {
+                    "method": "post",
+                    "headers": {"Content-Type": "application/json"},
+                    body: JSON.stringify({"commentsno": no, "memberno": data['res']['memberno']})
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                      if (data['res'] == 1) {
+                        list_by_contentsno_join(); // 목록 출력
+
+                      } else {
+                        alert('댓글 삭제에 실패했습니다. 다시 시도 해주세요.');
+                      }
+                    });
+
+                } else {
+                  alert('삭제를 취소 했습니다.');
+                }
+              });
+          }
+
+
+
+          //------------------------------------------ 댓글 관련 함수 종료---------------------------------------------------
+
+          //------------------------------------------ 대댓글 관련 함수 시작---------------------------------------------------
+
           function list_by_commentsno_join(no) { // 대댓글 목록 출력
+            let reply_list_tag = document.getElementById('reply_list' + no);
+            let reply_list_btn_tag = document.getElementById('reply_list_btn' + no);
+            let reply_list_cancel_btn_tag = document.getElementById('reply_list_cancel_btn' + no);
+
+            reply_list_btn_tag.style.display = 'none';
+            reply_list_cancel_btn_tag.style.display = '';
+            reply_list_tag.style.display = '';
 
             fetch("/reply/list_by_commentsno_join?commentsno=" + no, {
               "method": "get" // get 방식은 header 와 body 불필요
@@ -225,13 +349,13 @@
                 for (let i = 0; i < data['res_reply'].length; i++) {
                   let row = data['res_reply'][i];
 
-                  msg += "<div id='" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
+                  msg += "<div id='reply" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; background-color: #f5f5dc; margin-bottom: 10px; margin-top: 5px; text-align:left;'>";
                   msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
                   msg += "  " + row.rdate;
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                    msg += " <a href='javascript:reply_update(" + row.replyno + ")'><img src='/reply/images/update.png'></a>";
-                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'><img src='/reply/images/delete.png'></a>";
+                    msg += " <a href='javascript:reply_update_form(" + row.replyno + ")'>" + "수정" + "</a>";
+                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'>" + "삭제" + "</a>";
                   }
                   msg += "  " + "<br>";
                   msg += row.contents + "<br><br>";
@@ -243,46 +367,193 @@
               });
           }
 
+          function reply_list_view(no) { // 대댓글 리스트 접기
+            let reply_list_tag = document.getElementById('reply_list' + no);
+            let reply_list_btn_tag = document.getElementById('reply_list_btn' + no);
+            let reply_list_cancel_btn_tag = document.getElementById('reply_list_cancel_btn' + no);
+
+            reply_list_tag.style.display = 'none';
+            reply_list_btn_tag.style.display = '';
+            reply_list_cancel_btn_tag.style.display = 'none';
+
+          }
+
           function reply_create_form(no) { // 대댓글 작성 폼
-            
-            btn_create_tag.addEventListener('click', () => {
-              let contents = document.getElementById('contents').value;
-
-              if (contents.trim().length == 0) {
-                alert('댓글의 내용이 없습니다. 내용을 입력 해주세요.');
-              } else {
-                //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
-                fetch("/comments/create", {
-                  "method": "post",
-                  "headers": {"Content-Type": "application/json"},
-                  body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "contents": contents}),
-                  credentials: "include"
-                })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    //list_by_contentsno_join(); // 목록 출력
-                    //result_tag.value = data['res'];
-                    //result_animation_tag.innerHTML = '';
-                  });
-
-                //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
-              }
-
-            });
+            let reply_create_form_tag = document.getElementById('reply_create_form' + no);
             let msg = '';
             msg += "<hr>";
             msg += "<form name='frm_reply' id='frm_reply'>";
-            msg += "<textarea name='contents' id='contents' class='form-control' style='width: 100%; height: 60px;' placeholder='댓글 작성, 로그인해야 등록 할 수 있습니다.'>";
+            msg += "<textarea name='reply_contents' id='reply_contents' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
             msg += "</textarea>";
-            msg += "<button type='button' id='btn_reply_create' onclick='javascript:location.reload()'>";
+            msg += "<button type='button' id='btn_reply_create' onclick='reply_create(" + no + ")'>";
             msg += "&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;";
+            msg += "</button>";
+            msg += "<button type='button' id='btn_reply_cancel' onclick='reply_cancel(" + no + ")' style='margin-left:5px;'>";
+            msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
             msg += "</button>";
             msg += "</form>";
             msg += "<hr>";
-
+            if (reply_create_form_tag.style.display == 'none') {
+              reply_create_form_tag.style.display = '';
+            }
             document.getElementById('reply_create_form' + no).innerHTML = msg;
           }
 
+          function reply_create(no) { // 대댓글 작성 처리
+            let reply_contents = document.getElementById('reply_contents').value;
+
+            if (reply_contents.trim().length == 0) {
+              alert('답글의 내용이 없습니다. 내용을 입력 해주세요.');
+            } else {
+              //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
+              fetch("/reply/create", {
+                "method": "post",
+                "headers": {"Content-Type": "application/json"},
+                body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "commentsno": no, "contents": reply_contents}),
+                credentials: "include"
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  list_by_contentsno_join(); // 목록 출력
+                });
+
+            }
+
+          }
+
+          function reply_cancel(no) { // 대댓글 등록 취소
+            let reply_create_form_tag = document.getElementById('reply_create_form' + no);
+            reply_create_form_tag.style.display = 'none';
+          }
+
+          function reply_update_form(no) { // 대댓글 수정 폼
+            let reply_tag = document.getElementById('reply' + no);
+
+            let msg = '';
+
+            fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
+              "method": "get",
+              "headers": {"Content-Type": "application/json"},
+              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                let commentsno = data['res']['commentsno']; // 댓글 번호 추출
+
+                msg += "<hr>";
+                msg += "<form name='frm_reply' id='frm_reply'>";
+                msg += "<input type='hidden' name='memberno' id='memberno' value=''>";
+                msg += "<input type='hidden' name='replyno' id='replyno' value=''>";
+                msg += "<textarea name='reply_update_contents" + no + "' id='reply_update_contents" + no + "' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
+                msg += "</textarea>";
+                msg += "<button type='button' id='btn_reply_create' onclick='reply_update(" + no + ")'>";
+                msg += "&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;";
+                msg += "</button>";
+                msg += "<button type='button' id='btn_reply_cancel' onclick='list_by_commentsno_join(" + commentsno + ")' style='margin-left:5px;'>";
+                msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
+                msg += "</button>";
+                msg += "</form>";
+                msg += "<hr>";
+                reply_tag.innerHTML = msg;
+
+                let replyno_tag = document.getElementById('replyno');
+                let memberno_tag = document.getElementById('memberno');
+                let reply_update_contents_tag = document.getElementById('reply_update_contents' + no);
+
+
+                replyno_tag.value = data['res']['replyno'];
+                memberno_tag.value = data['res']['memberno'];
+                reply_update_contents_tag.value = data['res']['contents'];
+              });
+
+          }
+
+          function reply_update(no) { // 대댓글 수정 처리
+            let replyno_tag = document.getElementById('replyno');
+            let memberno_tag = document.getElementById('memberno');
+            let reply_contents_tag = document.getElementById('reply_update_contents' + no);
+
+            let contents = reply_contents_tag.value;
+            let memberno = memberno_tag.value;
+            let replyno = replyno_tag.value;
+
+            if (contents.length == 0) {
+              alert('내용이 없습니다. 내용을 입력해주세요.');
+            } else {
+              fetch("/reply/update", {
+                "method": "post",
+                "headers": {"Content-Type": "application/json"},
+                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "contents": contents})
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data['res'] == 0) {
+                    alert('답글 수정에 실패 했습니다.)');
+                  } else {
+                    
+                    fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
+                      "method": "get",
+                      "headers": {"Content-Type": "application/json"},
+                      // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        let commentsno = data['res']['commentsno']; // 댓글 번호 추출
+                        list_by_commentsno_join(commentsno); // 대댓글 목록 출력
+                      });
+
+                  }
+                  
+                });
+
+            }
+
+          }
+          
+          function reply_delete(no) { // 댓글 삭제
+
+            let contents_tag = document.getElementById('contents');
+
+            fetch("/reply/read?replyno=" + no, {
+              "method": "get",
+              "headers": {"Content-Type": "application/json"},
+              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                let commentsno = data['res']['commentsno'];
+                let memberno = data['res']['memberno'];
+                let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+                if (sw == true) {
+
+                  fetch("/reply/delete", {
+                    "method": "post",
+                    "headers": {"Content-Type": "application/json"},
+                    body: JSON.stringify({"replyno": no, "memberno": memberno, "commentsno": commentsno})
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                      if (data['res'] == 1) {
+                        list_by_commentsno_join(commentsno); // 목록 출력
+
+                      } else {
+                        alert('댓글 삭제에 실패했습니다. 다시 시도 해주세요.');
+                      }
+                    });
+
+                } else {
+                  alert('삭제를 취소 했습니다.');
+                }
+              });
+          }
+
+
+
+
+
+
+//------------------------------------------ 대댓글 관련 함수 종료---------------------------------------------------
 
 
         </script>
