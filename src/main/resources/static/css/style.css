@@ -1,54 +1,94 @@
-  /* ver 2.3 2024_0322 */
+    /* ver 2.3 2024_0322 */
+  /*폰트 선언*/
   
-  /* 폰트 선언 */
-  @font-face {
+    @font-face {
       font-family: 'TTHakgyoansimMonggeulmonggeulR';
       src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
       font-weight: normal;
       font-style: normal;
   }
-
+  @font-face {
+    font-family: 'WagleWagle';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2301-wagle@1.0/WagleWagle.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+ }
+ @font-face {
+    font-family: 'Ownglyph_meetme-Rg';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/Ownglyph_meetme-Rg.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
   /* 모든 태그에 적용 */
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
-     font-size: 14px; 
+     font-size: 30px; 
      margin: 0px;  /* top right bottom left */
      padding: 0px;
-     /*color: #555555;*/
-  }  
+     color: rgb(0, 0, 0);
+  } 
   
-  .container_main {
+  .container_top {
     width: 98%; 
-    margin: 5px auto;
-  }
+    margin: 1px auto;
+    
+  } 
+     .top_menu {
+      margin-top: 100px;
+    }
+    .top_navigation {
+    
+      position: fixed;
+      top: 0px;
+      padding: 0;
+      width: 98%;
+      background-color: rgb(255, 255, 255);
+      display: flex;
+      justify-content: space-between;
+      padding: 1px 0;
+      box-shadow: 0 4px 3px  rgb(128, 255, 255), 0 6px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      border: 1px solid #999;
+      font-size: 8px; /* 글자 크기 조정 */
+    }
+     
+    .top_navigation a {
+      text-align: center;
+      cursor: pointer; /* 포인터 커서로 변경 */
+    }
+    .top_navigation a span {
+      display: block;
+      margin-top: 0px; /* 아이콘과 글자 사이의 간격 조정 */
+      font-size: 14px; /* 텍스트 크기 변경 */
+    }
+    .top_navigation .bi {
+      font-size: 1.2rem; /* 아이콘 크기 */
+    }
+    .top_navigation a:hover {
+      color: rgb(128, 255, 255); /* 호버 시 색상 변경 */
+    }
+    .top_icon{
+      width: 30px;
+    }
+    .offcanvas_icon{
+    width: 40px;
+    }
+
+
+
   
-  /* 이미지 사용시 경로 지정
-  /static/css/images/top_1920_400.jpg
-  */
-  .top_menu_img {
-    width: 100%;
-    height: 200px;
-    background-image: url('./images/top_1920_300.jpg');
-    margin-bottom: 0px;
-  }
-  
+
   .top_menu_label {
+    font-family: 'WagleWagle';
     position: relative; /* 속해 있는 부모 태그 기준 설정 */
-    top: 80%;
+    top: 1%;
     left: 0.5%;
-    color: #FFFFFF;
-    font-size: 2em;
+    color: rgb(255, 128, 128);
+    padding: 20px;
+    text-align: center;
+    font-size:2em;
   }
   
-  .top_menu {
-    position: relative; /* 부모 태그 기준, 화면 상단 기준*/
-    top: 52%; 
-    background-color: rgba(50, 50, 50, 0.3);  /* 0.1: Alpha, 투명도 */  
-    color: white;
-    padding-top: 2px;
-    padding-left: 10px; 
-    height: 22px;
-  }
+
   
   /* 화면 상단 메뉴 세로 구분선
      <span class='top_menu_sep'>&nbsp;</span> */
@@ -58,14 +98,91 @@
     width:1px;
     margin-left: 5px;
     margin-right: 5px;
+    
   }
   
   .menu_line {
-    width: 100%;
-    border-bottom: dotted 1px #777777;
-    margin: 2px 0px 10px 0px; /* top -> right -> bottom -> left */
+    text-align: left;
+    width: 90%;
+    border-bottom: dotted 1px rgb(255, 0, 0);
+
     clear: both;
-  } 
+    font-size: 10px; /* 폰트 크기 */ 
+    margin-top: -40px;
+    margin: 20px auto;
+    display: flex;
+  }
+  
+
+  .search_nav{
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    color: none; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    margin: 10px 0px 2px 15px; /* top -> right -> bottom -> left */
+    padding: none; /* 내부 여백 */
+    border-radius: none; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 커서 모양 변경 */
+    font-size: 20px; /* 폰트 크기 */
+  }
+  .search_emoticon{
+    margin-right:5px;
+    width: 40px; 
+     
+ }
+
+  .icon{
+    width: 25px;
+  }
+  
+  .main_emoticon{
+     width: 40px;    
+  }
+  .main_line_emoticon{
+     width: 30px;    
+  }
+  .member_emoticon{
+     width: 30px;    
+  }
+  .main_all_emoticon{
+     width: 40px;    
+  }
+  .save_emoticon{
+    width: 40px;
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    color: none; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    
+  }
+   .all_update{
+    width: 25px;
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    color: none; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    
+  }
+  .login_emoticon{
+     width: 50px;
+  }
+  .logout_emoticon{
+     width: 50px;
+  }
+  .delete_emoticon{
+     width: 60px;
+  }
+  
+  .registration{/*등록*/
+     width: 25px;
+  }
+.registration-button {
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    color: none; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    padding: none; /* 내부 여백 */
+    border-radius: none; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 커서 모양 변경 */
+    font-size: 16px; /* 폰트 크기 */
+   
+}
   
   .left_menu {
     width: 15%;
@@ -78,31 +195,62 @@
   }
   
   .content_body {
-    width: 90%;
+    width: 100%;
     margin: 10px auto;
   }
   
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
     clear: both;
-    padding-top: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-    text-align: center;
+    padding-top: 5px;
+    padding-right: 10px auto;
+    padding-bottom: 5px;
+    text-align: left;
     width: 100%;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
   }
   
   .content_bottom {
-    width: 90%;
-    margin: 10px auto;
+    width: 98%;
+    margin: 1px auto;
   }
+      .bottom_menu {
+      margin-top: 100px;
+    }
+    .navigation {
+      position: fixed;
+      bottom: 0px;
+      position: fixed;
+      padding: 0;
+      width: 98%;
+      background-color: rgb(255, 255, 255);
+      display: flex;
+      justify-content: space-around;
+      padding: 1px 0;
+      box-shadow: 0px 2px 4px 7px rgb(128, 255, 255), 0 6px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      border: 1px solid #999;
+      font-size: 9px; /* 글자 크기 조정 */
+    }
+    .navigation a {
+      text-align: center;
+      cursor: pointer; /* 포인터 커서로 변경 */
+    }
+    .navigation a span {
+      display: block;
+      margin-top: -8px; /* 아이콘과 글자 사이의 간격 조정 */
+      font-size: 12px; /* 텍스트 크기 변경 */
+    }
+    .navigation .bi {
+      font-size: 1.2rem; /* 아이콘 크기 */
+    }
+    .navigation a:hover {
+      color: rgb(0, 255, 255); /* 호버 시 색상 변경 */
+    }
+    .bottom_icon{
+      width: 25px;
+    }
   
-  .bottom_menu {
-    text-align: center; 
-    margin: 20px auto;
-    clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */
-  }
+
 
   .aside_left {
     float: left;
@@ -128,18 +276,20 @@
     color: #777777;
     font-size: 0.8em; /* 부모 글자 크기에 비해서 80%로 출력 */
     vertical-align: 10%;  /* 0%는 bottom 기준 */
+    margin-top: 10px;
   }
   
   .copyright {
     margin-top: 10px;
-    border-top: solid 1px #999999;
+    border-top: solid 1px rgb(255, 0, 255);
     text-align: center; 
     clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */    
   }
   
   .li_none {
     list-style: none;
-    margin: 15px 10px;
+    margin: 1px 1px 1px 1px;
+    font-size: 20px;
   }
 
   .li_none_left {
@@ -169,7 +319,7 @@
     
   .fieldset_basic {
     width: 90%; 
-    margin: 10px auto; 
+    margin: 5px auto; 
     border-top: none;
     border-right: none;
     border-bottom: none;
@@ -179,7 +329,7 @@
   
   .legend_basic {
     margin-left: 30px; 
-    border: solid 1px #999999; 
+    border: solid 1px pink; 
     background-color: #A6C2FF; 
     color: #FFFFFF;
   }
@@ -187,7 +337,7 @@
   .input_basic {
     border-top: none;
     border-right: none;
-    border-bottom: solid 1px #999999;
+    border-bottom: solid 1px pink;
     border-left: none;
     padding-left: 2px;
   }
@@ -202,14 +352,48 @@
   
   .title_line {
     text-align: left;
-    border-bottom: solid 3px #555555;
+    border-bottom: solid 3px rgb(128, 0, 0);
+    width: 90%;
+    margin-top: -30px;
+    margin: 0px auto;
+    font-size: 20px;  
+    color: rgb(255, 0, 0);
+    
+    display: flex;
+  }
+    .member_title_line {
+    text-align: left;
     width: 100%;
-    margin: 20px auto;
-    font-size: 20px;    
+    margin-top: -30px;
+    margin: 0px auto;
+    font-size: 20px;  
+    color: rgb(0, 0, 0);
+    
+    display: flex;
+  }
+      .review_title_line {
+    text-align: left;
+    border-bottom: solid 1px rgb(128, 0, 0);
+    width: 100%;
+    margin-top: -30px;
+    margin: 0px auto;
+    font-size: 20px;  
+    color: rgb(0, 0, 0);
+    
+    display: flex;
   }
 
   .title_line_text {
-    font-size: 20px;    
+   font-size: 20px; 
+    color: rgb(0, 0, 0);  
+  }
+  .line_text {
+    font-size: 20px;
+    color: rgb(255, 128, 192);  
+  }
+    .line_text1 {
+    font-size: 20px;
+    color: rgb(128, 0, 255);  
   }
     
   .title_link:link{  /* 방문전 상태 */
@@ -231,6 +415,9 @@
     font-size: 20px;
     text-decoration: none; /* 밑줄 삭제 */
   }
+
+
+
   
   
   .sub_menu {
@@ -251,33 +438,32 @@
   */
   .th_basic {
     font-size: 0.8em;
-    border-bottom: solid 3px #DDDDDD; 
+    border-bottom: solid 3px rgb(255, 255, 255); 
   }
   
   .th_bs {
     text-align: center;
+    font-size: 20px;
+    
   }
   
   .td_basic {
     border-top: none;
     border-right: none;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px rgb(255, 255, 255);
     border-left: none;
     text-align: center;
+    font-size: 20px;
   }
   
   .td_left {
     border-top: none;
     border-right: none;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px rgb(255, 255, 255);
     border-left: none;
     text-align: left;
   }
-  
-  .td_bs {
-    text-align: center;
-    vertical-align: middle;
-  }
+
   
   .td_bs_left {
     text-align: left;
@@ -296,27 +482,28 @@
   
   a:hover{  /* A 태그에 마우스가 올라간 상태 */
     text-decoration: underline; /* 밑줄 출력 */
-    color: #7777FF;
+    color: pink;
   }
+  
   
   a:active{  /* A 태그를 클릭한 상태 */
     text-decoration: underline; /* 밑줄 출력 */
-    color: #7777FF;
+    color: rgb(255, 0, 128);
   }
 
   .menu_link:link{  /* 방문전 상태 */
     text-decoration: none; /* 밑줄 삭제 */
-    color: white;
+    color: rgb(255, 128, 192);
   }
 
   .menu_link:visited{  /* 방문후 상태 */
     text-decoration: none; /* 밑줄 삭제 */
-    color: white;
+    color: rgb(255, 128, 192);
   }
 
   .menu_link:hover{  /* A 태그에 마우스가 올라간 상태 */
     text-decoration: underline; /* 밑줄 출력 */
-    color: white;
+    color: rgb(255, 255, 255);
   }
 
   .menu_link:active{  /* A 태그를 클릭한 상태 */
@@ -326,46 +513,37 @@
   
   .recom_link:link{  /* 방문전 상태 */
     text-decoration: none; /* 밑줄 삭제 */
-    color: #555555;
+    color: rgb(255, 0, 0);
     font-size: 0.8em;
   }
 
   .recom_link:visited{  /* 방문후 상태 */
     text-decoration: none; /* 밑줄 삭제 */
-    color: #555555;
+    color: rgb(255, 128, 192);
     font-size: 0.8em;
   }
 
   .recom_link:hover{  /* A 태그에 마우스가 올라간 상태 */
     text-decoration: none; /* 밑줄 출력 */
-    color: #7777FF;
+    color: pink;
     font-size: 0.8em;
   }
 
   .recom_link:active{  /* A 태그를 클릭한 상태 */
     text-decoration: none; /* 밑줄 출력 */
-    color: #7777FF;
+    color: rgb(0, 0, 64);
     font-size: 0.8em;    
   }
   
   .content_title {
     border-top: none;
     border-right: none;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px #dddddd;
     border-left: none;
     margin-bottom: 20px;
   }   
 
-  .content_bottom {
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    border-left: none;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    text-align: right;
-    font-size: 0.9em;
-  }
+
   
   .li_left_menu_1 { /* 화면 좌측 대분류 */
     list-style: none;
@@ -409,33 +587,39 @@
   
   /* 알림 메시지 */ 
   .span_info {
-    color: #ffffff;
-    background-color: rgba(0, 150, 0, 0.6);
+    font-weight: bold;
+    color: rgb(128, 255, 128);
+    background-color: transparent;
     padding: 2px;
     margin-top: 2px;
+    text-align: center;
+    font-size: 20px;
   }
   
   /* 주의 메시지 */
   .span_alert {
     font-weight: bold;
     color: #ffffff;
-    background-color: rgba(0, 0, 200, 0.6);
+    background-color: rgb(255, 255, 255);
     padding: 2px;
     margin-top: 2px;
   }
   
-  /* 경고 메시지
-      background-color: rgba(255, 0, 0, 0.6); */  
+  /* 경고 메시지 */  
   .span_warning {
     font-weight: bold;
-    color: #FF0000;
+    color: rgb(255, 0, 0);
+    background-color: transparent;
     padding: 2px;
     margin-top: 2px; 
+    text-align: center;
+    font-size: 20px;
   }
   
   .msg_warning {
     font-weight: bold;
-    color: #FF0000;
+    color: rgb(255, 0, 0);
+    background-color: rgb(255, 255, 255);
     padding: 2px;
     margin: 10px auto;
     text-align: center;
@@ -475,10 +659,12 @@
     float: left; 
     font-size: 1.5em;
   }
-  
-  .icon{
-    width: 16px;
+  .contents_text {
+
+    font-size:16px;
   }
+  
+
   
   .form_input {
     margin-top: 5px;
@@ -490,25 +676,67 @@
     margin-bottom: 5px;
     text-align: center;
   }
+    .nav-top {
+    margin-top: 3px;
+    margin-bottom: 5px;
+    margin-right: 7px;
+    text-align: right;
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    font-size: 0.1em; /* 부모 글자 크기에 비해서 80%로 출력 */
+  }
   
-  .display_table {
-      color: #FFFFFF; 
-      background-color: #FFFFFF; 
-      width: 50%;
-      height: 200px; 
-      margin: 20px auto; 
-      text-align: center;
-      padding: 2px; 
-      display: table;
-    }
-    
-    .display_table_cell {
-      color: #000000; 
-      background-color: #FFFFFF; 
-      display: table-cell; 
-      vertical-align: middle;
-    }
   
+/* 작은 화면에서는 테이블의 가로 스크롤이 생기도록 설정 */
+@media screen and (max-width: 358px) {
+  table {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+}
+
+/* 테이블의 셀들을 세로로 배치 */
+@media screen and (max-width: 200px) {
+  table thead, table tbody, table th, table td, table tr {
+    display: block;
+  }
+  table tbody tr {
+    margin-bottom: 10px;
+  }
+  table th, table td {
+    /* 셀 사이의 간격을 조절 */
+    border: none;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    width: 100%;
+  }
+  table th:before, table td:before {
+    /* 각 셀의 라벨을 표시 */
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    content: attr(data-label);
+    font-weight: bold;
+  }
+}
+
+/* 글자 크기 조절 */
+@media screen and (max-width: 500px) {
+  table th, table td, table td_bs{
+    font-size: 12px;
+  }
+  
+  
+}
+
+
+
+
   
   
   

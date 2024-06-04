@@ -146,7 +146,7 @@ public class ReviewCont {
           case "old":
           default:
               // 모든 리뷰 목록 가져오기
-              ArrayList<ReviewVO> allList = reviewProc.review_list_all();
+              ArrayList<ReviewVO> allList = reviewProc.old_review();
               // JSON 객체로 변환하여 JSONArray에 추가
               for (ReviewVO review : allList) {
                   JSONObject reviewJson = new JSONObject();
