@@ -82,7 +82,7 @@
       }
     </style>
 
-    <h2>리뷰 목록</h2>
+    <h2>리뷰 목록</h2><span th:text="|총 ${review_cnt} 건|"></span>
     <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
     <div class="d-flex justify-content-end mb-3">
       <a href="#" class="btn btn-link" onclick="loadReviews('recent')">최신순 /</a>
@@ -91,13 +91,39 @@
       <a href="#" class="btn btn-link" onclick="loadReviews('star_low')">별점 낮은순 /</a>
     </div>
     <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
+    <input type="hidden" id="id" name="id" th:value="${session.id}">
     <!-- 리뷰 목록을 표시할 공간 -->
     <div id="review" class="review">
       <!-- 리뷰 목록이 여기에 표시됩니다 -->
     </div>
-
+    
+    
+    <!-- 삭제 확인 모달 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            리뷰를 삭제하시겠습니까?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    
     <!-- JavaScript 코드 -->
     <script>
+      let deleteReviewNo = null;  // 삭제할 리뷰 번호를 저장할 변수
+      
       // 서버에서 리뷰 목록을 가져와서 표시하는 함수
       function loadReviews(sort) {
         let url = 'http://localhost:9093/review/review_list_all?sort=' + sort;
@@ -117,12 +143,14 @@
             const reviewList = document.getElementById('review');
             reviewList.innerHTML = '';  // 기존 리뷰 목록을 초기화
 
+            const memberno = document.getElementById("memberno").value;
+            const sessionId = document.getElementById("id").value;
+            
             data.forEach(reviewVO => {
               const id = reviewVO.id;  // 리뷰 ID
               const star = reviewVO.star;  // 별점
               const rdate = reviewVO.rdate;  // 작성일자
               const contents = reviewVO.contents;  // 리뷰 내용
-              const memberno = document.getElementById("memberno").value;
               const reviewno = reviewVO.reviewno;
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
@@ -136,8 +164,8 @@
                         </div>
                         <span class="review-date">${rdate}</span>
                         <div class="update_delete">
-                            <span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>
-                            <span class="delete_review" data-url="/review/review_delete?memberno=${memberno}&reviewno=${reviewno}">삭제</span>
+                            ${sessionId === id ? `<span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>` : ''}
+                            ${sessionId === id ? `<span class="delete_review" data-reviewno="${reviewno}">삭제</span>` : ''}
                         </div>
                     </div>
                     <div class="contents">
@@ -159,13 +187,15 @@
                 });
             });
     
+    
             const deleteButtons = document.querySelectorAll('.delete_review');
             deleteButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const url = button.getAttribute('data-url');
-                    alert('삭제 버튼이 클릭되었습니다.');
-                    window.location.href = url;
-                });
+              button.addEventListener('click', (event) => {
+                event.preventDefault(); // 기본 동작을 막음
+                deleteReviewNo = button.getAttribute('data-reviewno');
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+              });
             });
             
             
@@ -174,6 +204,37 @@
             console.error('There was a problem with the fetch operation:', error);
           });
       }
+      
+       // 삭제 확인 버튼 클릭 시 실행될 함수
+      document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        alert("1");
+        if (deleteReviewNo) {
+          fetch('http://localhost:9093/review/review_delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reviewno: deleteReviewNo })
+          })
+          .then(response => {
+            alert(deleteReviewNo);
+            if (!response.ok) {
+              throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert(3);
+            alert('리뷰가 삭제되었습니다.');
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+            deleteModal.hide();
+            loadReviews('recent'); // 삭제 후 리뷰 목록을 다시 로드
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+        }
+      });
 
       // 별점 HTML을 생성하는 함수
       function generateStars(star) {

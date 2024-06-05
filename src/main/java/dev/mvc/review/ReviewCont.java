@@ -2,16 +2,19 @@ package dev.mvc.review;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -241,15 +244,34 @@ public class ReviewCont {
    * @param model
    * @return
    */
-  @PostMapping(value="review_delete") 
-  public String review_delete(Model model, int reviewno) {
-    
-    int cnt = this.reviewProc.review_delete(reviewno);
-    model.addAttribute("cnt", cnt);
-    
-    return "review/review_list_form"; //  /templates/review/review_list_form.html
-  }
+//  @PostMapping(value="review_delete", consumes = "application/json") 
+//  public String review_delete(Model model, int reviewno) {
+//    
+//    int cnt = this.reviewProc.review_delete(reviewno);
+//    model.addAttribute("cnt", cnt);
+//    
+//    return "review/review_list_form"; //  /templates/review/review_list_form.html
+//  }
   
+  
+  @PostMapping(value="review_delete", consumes = "application/json")
+  public ResponseEntity<Map<String, Object>> review_delete(@RequestBody Map<String, Object> payload) {
+    String reviewnoStr = (String) payload.get("reviewno");
+    
+    if (reviewnoStr == null) {
+        return ResponseEntity.badRequest().body(Map.of("error", "Review number is missing"));
+    }
+
+    try {
+        int reviewno = Integer.parseInt(reviewnoStr);
+        int cnt = this.reviewProc.review_delete(reviewno);
+        Map<String, Object> response = new HashMap<>();
+        response.put("cnt", cnt);
+        return ResponseEntity.ok(response);
+    } catch (NumberFormatException e) {
+        return ResponseEntity.badRequest().body(Map.of("error", "Invalid review number format"));
+    }
+  }
 }
 
 
