@@ -2,6 +2,7 @@ package dev.mvc.comments;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 //CREATE TABLE COMMENTS(
 //COMMENTSNO                        NUMBER(10)     NOT NULL   PRIMARY KEY,
@@ -13,7 +14,7 @@ import lombok.Setter;
 //FOREIGN KEY(MEMBERNO) REFERENCES MEMBER(MEMBERNO),
 //FOREIGN KEY (CONTENTSNO) REFERENCES CONTENTS(CONTENTSNO)
 //);
-@Getter @Setter
+@Getter @Setter @ToString
 public class CommentsVO {
   /** 댓글 번호 */
   private int commentsno;

@@ -216,7 +216,7 @@ public class ContentsCont {
 
   /**
    * 카테고리 별 목록 + 검색 + 페이징
-   * http://www.localhost:9091/contents/list_by_cateno?cateno=5
+   * http://www.localhost:9093/contents/list_by_cateno?cateno=2
    * http://www.localhost:9091/contents/list_by_cateno?cateno=6
    * 
    * @return
