@@ -83,6 +83,24 @@
     </style>
 
     <h2>리뷰 목록</h2>
+
+    <!-- 모달창 -->
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel">경고</h5>
+          </div>
+          <div class="modal-body" id="modalBody">
+            <!-- 경고 메시지가 여기에 표시됩니다 -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
     <div class="d-flex justify-content-end mb-3">
       <a href="#" class="btn btn-link" onclick="loadReviews('recent')">최신순 /</a>
@@ -91,10 +109,34 @@
       <a href="#" class="btn btn-link" onclick="loadReviews('star_low')">별점 낮은순 /</a>
     </div>
     <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
+    <input type="hidden" id="id" name="id" th:value="${session.id}">
     <!-- 리뷰 목록을 표시할 공간 -->
     <div id="review" class="review">
       <!-- 리뷰 목록이 여기에 표시됩니다 -->
     </div>
+
+
+<!-- 삭제 확인 모달 -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        리뷰를 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
     <!-- JavaScript 코드 -->
     <script>
@@ -123,6 +165,7 @@
               const rdate = reviewVO.rdate;  // 작성일자
               const contents = reviewVO.contents;  // 리뷰 내용
               const memberno = document.getElementById("memberno").value;
+              const sessionId = document.getElementById("id").value;
               const reviewno = reviewVO.reviewno;
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
@@ -136,8 +179,8 @@
                         </div>
                         <span class="review-date">${rdate}</span>
                         <div class="update_delete">
-                            <span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>
-                            <span class="delete_review" data-url="/review/review_delete?memberno=${memberno}&reviewno=${reviewno}">삭제</span>
+                             ${sessionId === id ? `<span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>` : ''}
+                            ${sessionId === id ? `<span class="delete_review" data-url="/review/review_delete?memberno=${memberno}&reviewno=${reviewno}">삭제</span>` : ''}
                         </div>
                     </div>
                     <div class="contents">

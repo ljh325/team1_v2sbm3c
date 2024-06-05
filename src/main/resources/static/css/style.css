@@ -9,17 +9,20 @@
   }
 
   /* 모든 태그에 적용 */
+  /*주찬 수정 - 원상복구*/
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
      font-size: 14px; 
-     /*max-width: 900px;
-     margin: 0 auto;
-     /*margin: 0px;  /* top right bottom left */
-     /*padding: 0px;*/
-     background-color: #FFFFFF;
+     margin: 0px;  /* top right bottom left */
+     padding: 0px;
+     color: #555555;
   }  
   
-
+  /*주찬 수정 - 원상복구*/
+  .container_main {
+    width: 98%; 
+    margin: 5px auto;
+  }
   
   /* 이미지 사용시 경로 지정
   /static/css/images/top_1920_400.jpg
@@ -70,13 +73,17 @@
     width: 15%;
     float: left;
   }
-  
+  /*주찬 수정 - 원상복구*/
   .content {
     width: 90%;
     margin: 10px auto;
   }
+  /*주찬 수정 - 원상복구*/
+  .content_body {
+    width: 90%;
+    margin: 10px auto;
+  }
   
-
   
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
@@ -89,6 +96,7 @@
     background-color: white;
   }
   
+  /*주찬 수정 - 원상복구*/
   .content_bottom {
     width: 90%;
     margin: 10px auto;
