@@ -105,12 +105,13 @@
     </style>
 
     <form name='frm' method='post' action='/review/review_insert' th:action="@{/review/review_insert}"
-      onsubmit="return validateForm()">
+      onsubmit='return validateForm()'>
 
 
 
       <div class="comment-section">
         <input type="hidden" name="memberno" th:value="${session.memberno}">
+        
         <h4>리뷰 쓰기</h4> <span th:text="|${memberVO.mname}  님|"></span>
         <!-- Star Rating Section -->
         <div class="star-rating">
@@ -123,7 +124,7 @@
 
         <textarea id="comments" name="contents" class="comments-input" rows="4"
           placeholder="여기에 리뷰를 입력하세요..."></textarea>
-        <button type="submit" class="submit-button">리뷰 작성</button>
+        <button id="button_tag" type="submit" class="submit-button">리뷰 작성</button>
       </div>
     </form>
 
@@ -165,9 +166,32 @@
           showModal("리뷰를 남겨주세요."); // 경고 모달창 표시
           return false; // 폼 제출 중단
         }
+        
+        
 
-        return true; // 폼 제출 허용
+
+        fetch("http://127.0.0.1:5000/emotion", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comments })
+        })
+        .then(response => response.json())
+        .then(data => {
+        alert(data['res']);
+        var temperature = data['res'];
+        
+        })
+        .catch(error => {
+        // 에러 발생 시 경고 모달창 표시
+        showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+        console.error("Error:", error);
+      });
+        
+
+        return true; // Fetch 요청 후 폼 제출을 대기
       }
+        
+
 
       // 경고 모달창 표시 함수
       function showModal(message) {

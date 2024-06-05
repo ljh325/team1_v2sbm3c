@@ -76,6 +76,9 @@ public class ReviewCont {
     int cnt = this.reviewProc.review_insert(reviewVO);
     model.addAttribute("cnt", cnt);
     
+    model.addAttribute(reviewVO.getReviewno());
+    System.out.println("reviewVO.getReviewno() -> " + reviewVO.getReviewno());
+    
 
     return "redirect:/review/review_list_form"; // /templates/index.html 일단 메인화면
   }

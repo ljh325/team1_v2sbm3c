@@ -19,6 +19,8 @@ CREATE TABLE REVIEW(
 		REVIEWNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		STAR                          		NUMBER(5)		 NOT NULL,
 		CONTENTS                      		VARCHAR2(1000)	 NOT NULL,
+        POSITIVE                            NUMBER(5) default 0,
+        NAGATIVE                            NUMBER(5) default 0,
 		RDATE                         		DATE		     NOT NULL,
         UDATE                         		DATE		     NULL,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
@@ -29,12 +31,15 @@ COMMENT ON TABLE REVIEW is '리뷰';
 COMMENT ON COLUMN REVIEW.REVIEWNO is '리뷰번호';
 COMMENT ON COLUMN REVIEW.STAR is '별점';
 COMMENT ON COLUMN REVIEW.CONTENTS is '내용';
+COMMENT ON COLUMN REVIEW.POSITIVE is '긍정';
+COMMENT ON COLUMN REVIEW.NAGATIVE is '부정';
 COMMENT ON COLUMN REVIEW.RDATE is '등록일';
 COMMENT ON COLUMN REVIEW.UDATE is '등록일';
 COMMENT ON COLUMN REVIEW.MEMBERNO is '회원 번호';
 --COMMENT ON COLUMN REVIEW.FOODCATENO is '식단 번호';
 commit;
-
+select  * from  review;
+update review set positive= 0 where reviewno=1;
 -- CREATE
 INSERT INTO REVIEW(REVIEWNO, STAR, CONTENTS, RDATE, UDATE, MEMBERNO, FOODCATENO)
 VALUES (REVIEW_seq.nextval, 5,'예시1',sysdate, null, 40, 3);
@@ -44,10 +49,10 @@ VALUES (REVIEW_seq.nextval, 3,'예시2',sysdate, null, 40, 3);
 
 INSERT INTO REVIEW(REVIEWNO, STAR, CONTENTS, RDATE, UDATE, MEMBERNO, FOODCATENO)
 VALUES (REVIEW_seq.nextval, 2,'예시3',sysdate, null, 40, 3);
-
+commit;
 
 -- READ
-SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
+SELECT r.REVIEWNO, r.STAR, r.CONTENTS,  r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
 FROM MEMBER m, REVIEW r, FOODCATE f
 WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno;
 
