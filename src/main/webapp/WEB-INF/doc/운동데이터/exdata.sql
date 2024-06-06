@@ -252,9 +252,761 @@ INSERT INTO exdata(exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet
 VALUES (exdata_seq.nextval, '유산소', '로잉 머신', '전신', '', 2, 6.0, 7.5, 10.0, 60, 80, 95, 20, 40, 60);
 
 -- 운동 데이터 조회
-SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, ((lowmet * 63 * 0.0167) * 50 + lowact*0- lowrisk*5) as effect 
+-- 전체 데이터
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
 FROM exdata
-ORDER BY effect DESC;
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+ORDER BY highrisk DESC;
+--------------------------가슴 운동 데이터--------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '가슴'
+ORDER BY highrisk DESC;
+------------------------등 운동 데이터-------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '등'
+ORDER BY highrisk DESC;
+
+-----------------------------어깨운동 데이터------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '어깨'
+ORDER BY highrisk DESC;
+
+-----------------------------하체 운동 데이터--------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '하체'
+ORDER BY highrisk DESC;
+-------------------------------팔 운동 데이터-------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '팔'
+ORDER BY highrisk DESC;
+----------------------------복근 운동 데이터-----------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '복근'
+ORDER BY highrisk DESC;
+---------------------------유산소 운동 데이터--------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY exdatano ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midmet DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highmet ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highmet DESC;
+
+------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midact DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highact ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highact DESC;
+-----------------------------------------------------
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY lowrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY midrisk DESC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highrisk ASC;
+
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+FROM exdata
+WHERE exgroup = '유산소'
+ORDER BY highrisk DESC;
+
+
+
+
 
 commit;
 delete from exdata;

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.exdata.ExdataDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 운동 데이터 생성 --> 
+  <insert id='create' parameterType="dev.mvc.exdata.ExdataVO">
+    INSERT INTO exdata(exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk)
+    VALUES (exdata_seq.nextval, #{exgroup}, #{exname}, #{muscle}, #{musclesub}, #{exlevel}, #{lowmet}, #{midmet}, #{highmet}, #{lowact}, #{midact}, #{highact}, #{lowrisk}, #{midrisk}, #{highrisk})
+  </insert>
+  
+  <!-- 전체 운동 데이터 목록 -->
+  <select id='list_all' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY exdatano ASC
+  </select>
+  
+  <!-- 낮은강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_all_lowmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowmet ASC
+  </select>
+  
+  <!-- 낮은강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_all_lowmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowmet DESC
+  </select>
+  
+  <!-- 중간강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_all_midmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midmet ASC
+  </select>
+  
+  <!-- 중간강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_all_midmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midmet DESC
+  </select>
+  
+  <!-- 높은강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_all_highmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highmet ASC
+  </select>
+  
+  <!-- 높은강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_all_highmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highmet DESC
+  </select>
+  
+  <!-- 낮은강도 근육활성도 오름차순 정렬 -->
+  <select id='list_all_lowact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowact ASC
+  </select>
+  <!-- 낮은강도 근육 활성도 내림차순 정렬 -->
+  <select id='list_all_lowact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowact DESC
+  </select>
+  
+  <!-- 중간강도 근육활성도 오름차순 정렬 -->
+  <select id='list_all_midact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midact ASC
+  </select>
+  
+  <!-- 중간강도 근육활성도 내림차순 정렬 -->
+  <select id='list_all_midact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midact DESC
+  </select>
+  
+  <!-- 높은강도 근육활성도 오름차순 정렬 -->
+  <select id='list_all_highact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highact ASC
+  </select>
+  
+  <!-- 높은강도 근육활성도 내림차순 정렬 -->
+  <select id='list_all_highact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highact DESC
+  </select>
+  
+  <!-- 낮은강도 부상위험도 오름차순 정렬 -->
+  <select id='list_all_lowrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowrisk ASC
+  </select>
+  
+  <!-- 낮은강도 부상위험도 내림차순 정렬 -->
+  <select id='list_all_lowrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY lowrisk DESC
+  </select>
+  
+  <!-- 중간강도 부상위험도 오름차순 정렬 -->
+  <select id='list_all_midrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midrisk ASC
+  </select>
+  
+  <!-- 중간강도 부상위험도 내림차순 정렬 -->
+  <select id='list_all_midrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY midrisk DESC
+  </select>
+  
+  <!-- 높은강도 부상위험도 오름차순 정렬 -->
+  <select id='list_all_highrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highrisk ASC
+  </select>
+  
+  <!-- 높은강도 부상위험도 내림차순 정렬 -->
+  <select id='list_all_highrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highrisk DESC
+  </select>
+  
+  <!-- 부위별 정렬 -->
+  
+  <!-- 부위별 운동 데이터 목록 -->
+  <select id='list_part' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY exdatano ASC
+  </select>
+  
+  <!-- 낮은강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_part_lowmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowmet ASC
+  </select>
+  
+  <!-- 낮은강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_part_lowmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowmet DESC
+  </select>
+  
+  <!-- 중간강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_part_midmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midmet ASC
+  </select>
+  
+  <!-- 중간강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_part_midmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midmet DESC
+  </select>
+  
+  <!-- 높은강도 소모칼로리 오름차순 정렬 -->
+  <select id='list_part_highmet_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  ORDER BY highmet ASC
+  </select>
+  
+  <!-- 높은강도 소모칼로리 내림차순 정렬 -->
+  <select id='list_part_highmet_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY highmet DESC
+  </select>
+  
+  <!-- 낮은강도 근육활성도 오름차순 정렬 -->
+  <select id='list_part_lowact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowact ASC
+  </select>
+  <!-- 낮은강도 근육 활성도 내림차순 정렬 -->
+  <select id='list_part_lowact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowact DESC
+  </select>
+  
+  <!-- 중간강도 근육활성도 오름차순 정렬 -->
+  <select id='list_part_midact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midact ASC
+  </select>
+  
+  <!-- 중간강도 근육활성도 내림차순 정렬 -->
+  <select id='list_part_midact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midact DESC
+  </select>
+  
+  <!-- 높은강도 근육활성도 오름차순 정렬 -->
+  <select id='list_part_highact_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY highact ASC
+  </select>
+  
+  <!-- 높은강도 근육활성도 내림차순 정렬 -->
+  <select id='list_part_highact_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY highact DESC
+  </select>
+  
+  <!-- 낮은강도 부상위험도 오름차순 정렬 -->
+  <select id='list_part_lowrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowrisk ASC
+  </select>
+  
+  <!-- 낮은강도 부상위험도 내림차순 정렬 -->
+  <select id='list_part_lowrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY lowrisk DESC
+  </select>
+  
+  <!-- 중간강도 부상위험도 오름차순 정렬 -->
+  <select id='list_part_midrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midrisk ASC
+  </select>
+  
+  <!-- 중간강도 부상위험도 내림차순 정렬 -->
+  <select id='list_part_midrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY midrisk DESC
+  </select>
+  
+  <!-- 높은강도 부상위험도 오름차순 정렬 -->
+  <select id='list_part_highrisk_asc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY highrisk ASC
+  </select>
+  
+  <!-- 높은강도 부상위험도 내림차순 정렬 -->
+  <select id='list_part_highrisk_desc' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
+  FROM exdata
+  WHERE exgroup = #{exgroup}
+  ORDER BY highrisk DESC
+  </select>
+  
+</mapper>
