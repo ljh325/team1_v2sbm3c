@@ -1,25 +1,53 @@
 <!DOCTYPE html>
-
-
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+    <title>운동 추천</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
 <div layout:fragment="content">
-  <div class="title_line">운동 추천</div>
-  <form kg="frm" th:object="${healthVO}" method="post" action="/goals/create">
-    
-    
- 
- 
-   
-  
-    <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
-    </div>
-    
-  </form>  
-  
+    <div class="title_line">운동 추천</div>
+    <form id="healthForm" method="post">
+        <!-- 폼 입력 필드들 (예시로 텍스트 필드 추가) -->
+        <input type="text" id="healthInput" name="healthInput" placeholder="운동 이름" required />
+        <div class="content_body_bottom">
+            <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+            <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+        </div>
+    </form>
+
     <!-- /goals/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
-  
+    <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#healthForm').on('submit', function(e) {
+        e.preventDefault(); // 폼의 기본 제출 동작 방지
+
+        let mh_kg = document.getElementById('mh_kg');
+        let mh_ckg = document.getElementById('mh_ckg');
+        let mh_cm = document.getElementById('mh_cm');
+        let mh_muscle = document.getElementById('mh_muscle');
+      
+
+        var healthInput = $('#healthInput').val(); // 폼 데이터 가져오기
+
+        // Flask 서버에 AJAX 요청 보내기
+        $.ajax({
+            url: 'http://localhost:5000/foodrecom/create', // Flask 서버 URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ input: healthInput }),
+            success: function(response) {
+                alert('Flask 서버 응답: ' + response.response);
+            },
+            error: function(error) {
+                alert('Flask 서버 호출 중 오류 발생');
+            }
+        });
+    });
+});
+</script>
+</body>
 </html>

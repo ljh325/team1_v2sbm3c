@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    .button-style {
+      border: none;
+    }
+
+    .button-style:hover {
+      color: dimgrey;
+    }
+  </style>
+  <div class='title_line'>
+    <span th:text="|추천 운동 데이터&nbsp;&nbsp;|" class="title_line_text"></span>
+    > &nbsp;<span th:text="|${memberVO.id} 님|" class="title_line_text"></span>
+
+  </div>
+
+  <div class='menu_line'></div>
+
+  <script>
+    window.onload = () => {
+      list_all_form();
+      list_all_sort();
+       
+      document.getElementById('ex_intensity').addEventListener("change", () => {
+        list_all_form();
+      })
+    }
+    //---------------------------- window 함수 종료 -----------------------------------
+    function list_all_form() {
+      let list_exdata_tag = document.getElementById('list_exdata');
+      let intensity_tag = document.getElementById('ex_intensity')
+      let intensity = intensity_tag.value
+      
+     
+      
+      fetch("/exdata/list_all_exdata", {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          //alert(data['res'][1].exname);
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
+
+            msg += "<tr id='exdata" + row.exdatano + "'>";
+            msg += "<td>" + row.exgroup + "</td>";
+            msg += "<td>" + row.exname + "</td>";
+            msg += "<td>" + row.muscle + "</td>";
+            msg += "<td>" + row.musclesub + "</td>";
+            msg += "<td>" + row.exlevel + "</td>";
+            if (intensity == 1) {
+              msg += "<td>" + row.lowmet + "</td>";
+              msg += "<td>" + row.lowact + "</td>";
+              msg += "<td>" + row.lowrisk + "</td>";
+              console.log(intensity);
+            } else if (intensity == 2) {
+
+              msg += "<td>" + row.midmet + "</td>";
+              msg += "<td>" + row.midact + "</td>";
+              msg += "<td>" + row.midrisk + "</td>";
+              console.log(intensity);
+            }
+
+            else if (intensity == 3) {
+              msg += "<td>" + row.highmet + "</td>";
+              msg += "<td>" + row.highact + "</td>";
+              msg += "<td>" + row.highrisk + "</td>";
+              console.log(intensity);
+            }
+
+          }
+          list_exdata_tag.innerHTML = msg;
+
+        });
+    }
+
+    function list_all_sort() {
+      let cal_asc_tag = document.getElementById('cal_asc');
+      let cal_desc_tag = document.getElementById('cal_desc');
+
+      let act_asc_tag = document.getElementById('act_asc');
+      let act_desc_tag = document.getElementById('act_desc');
+
+      let risk_asc_tag = document.getElementById('risk_asc');
+      let risk_desc_tag = document.getElementById('risk_desc');
+
+      cal_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity')
+        let intensity = intensity_tag.value
+
+        fetch("/exdata/list_all_exdata_cal_asc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("asc " + intensity);
+          });
+
+      });
+
+
+      cal_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity')
+        let intensity = intensity_tag.value
+
+        fetch("/exdata/list_all_exdata_cal_desc", {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("desc " + intensity);
+          });
+
+      });
+    }
+
+    function test_asc(intensity) {
+      fetch("/exdata/list_all_exdata_cal_asc?intensity=" + intensity, {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      }).then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
+
+            msg += "<tr id='exdata" + row.exdatano + "'>";
+            msg += "<td>" + row.exgroup + "</td>";
+            msg += "<td>" + row.exname + "</td>";
+            msg += "<td>" + row.muscle + "</td>";
+            msg += "<td>" + row.musclesub + "</td>";
+            msg += "<td>" + row.exlevel + "</td>";
+            if (intensity == 1) {
+              msg += "<td>" + row.lowmet + "</td>";
+              msg += "<td>" + row.lowact + "</td>";
+              msg += "<td>" + row.lowrisk + "</td>";
+              console.log("asc " + intensity);
+            } else if (intensity == 2) {
+              msg += "<td>" + row.midmet + "</td>";
+              msg += "<td>" + row.midact + "</td>";
+              msg += "<td>" + row.midrisk + "</td>";
+              console.log("asc " + intensity);
+            } else if (intensity == 3) {
+              msg += "<td>" + row.highmet + "</td>";
+              msg += "<td>" + row.highact + "</td>";
+              msg += "<td>" + row.highrisk + "</td>";
+              console.log("asc " + intensity);
+            }
+            document.getElementById('list_exdata').innerHTML = msg;
+
+          }
+        });
+    }
+
+  </script>
+  <h2>추천 운동 데이터</h2>
+
+    <label for="ex_intensity">운동강도선택&nbsp;</label>
+    <select id="ex_intensity">
+      <option value="1">낮음</option>
+      <option value="2">보통</option>
+      <option value="3">높음</option>
+    </select>
+
+
+    <label for="ex_group">&nbsp;&nbsp;&nbsp;&nbsp;부위별 조회&nbsp;</label>
+    <select id="ex_group">
+      <option value="all">모두보기</option>
+      <option value="chest">가슴</option>
+      <option value="back">등</option>
+      <option value="shoulder">어깨</option>
+      <option value="arm">팔</option>
+      <option value="leg">하체</option>
+      <option value="abs">복근</option>
+      <option value="cardio">유산소</option>
+
+    </select>
+
+
+  <table>
+    <thead>
+      <tr>
+        <th>운동근육그륩</th>
+        <th>운동명</th>
+        <th>주동근</th>
+        <th>협응근</th>
+        <th>난이도 </th>
+        <th>소모칼로리 &nbsp;&nbsp;<button name="cal_asc" id="cal_asc" type="button" class="button-style"
+            onclick="">△</button><button name="cal_desc" id="cal_desc" type="button" class="button-style">▽</th>
+        <th>근육활성도 &nbsp;&nbsp;<button name="act_asc" id="act_asc" type="button" class="button-style">△</button><button
+            name="act_desc" id="act_desc" type="button" class="button-style">▽</th>
+        <th>부상위험도 &nbsp;&nbsp;<button name="risk_asc" id="risk_asc" type="button" class="button-style">△</button><button
+            name="risk_desc" id="risk_desc" type="button" class="button-style">▽</th>
+      </tr>
+    </thead>
+    <tbody name="list_exdata" id="list_exdata">
+
+
+
+    </tbody>
+  </table>
+
+
+
+
+</div>
+
+</body>
+
+</html>

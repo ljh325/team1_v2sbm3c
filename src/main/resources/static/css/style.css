@@ -20,11 +20,22 @@
     font-style: normal;
 }
   /* 모든 태그에 적용 */
+  /*주찬 수정 - 원상복구*/
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
      font-size: 14px; 
      margin: 0px;  /* top right bottom left */
      padding: 0px;
+<<<<<<< HEAD
+     color: #555555;
+  }  
+  
+  /*주찬 수정 - 원상복구*/
+  .container_main {
+    width: 98%; 
+    margin: 5px auto;
+  }
+=======
      color: rgb(0, 0, 0);
   } 
   
@@ -75,6 +86,7 @@
 
 
 
+>>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
   
 
   .top_menu_label {
@@ -188,16 +200,24 @@
     width: 15%;
     float: left;
   }
-  
+  /*주찬 수정 - 원상복구*/
   .content {
     width: 90%;
     margin: 10px auto;
   }
+  /*주찬 수정 - 원상복구*/
+  .content_body {
+    width: 90%;
+    margin: 10px auto;
+  }
   
+<<<<<<< HEAD
+=======
   .content_body {
     width: 100%;
     margin: 10px auto;
   }
+>>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
   
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
@@ -210,6 +230,7 @@
     background-color: rgb(255, 255, 255);
   }
   
+  /*주찬 수정 - 원상복구*/
   .content_bottom {
     width: 98%;
     margin: 1px auto;

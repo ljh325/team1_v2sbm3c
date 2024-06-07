@@ -1,7 +1,6 @@
 package dev.mvc.member;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,15 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.cate.CateVOMenu;
-import dev.mvc.contents.Contents;
 import dev.mvc.mlogin.MloginProcInter;
 import dev.mvc.mlogin.MloginVO;
 import dev.mvc.tool.Security;
@@ -525,7 +521,7 @@ public class MemberCont {
       return "redirect:/"; // 삭제 성공시(1) template/index.html
     } else {
       model.addAttribute("code", "delete_fail");
-      return "member/msg"; // /templates/member/msg.html
+      return "member/login"; // /templates/member/msg.html
     }
   }
   /***************************************************************************************/
