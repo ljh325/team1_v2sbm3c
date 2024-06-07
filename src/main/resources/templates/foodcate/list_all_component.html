@@ -45,28 +45,29 @@
     <table class="table table-hover">
       <colgroup>
         <col style='width: 20%;'/>
-        <col style='width: 40%;'/>
         <col style='width: 15%;'/>
+        <col style='width: 40%;'/>
         <col style='width: 15%;'/>
         <col style='width: 10%;'/>
       </colgroup>
       <thead>
         <tr>
           <th class="th_bs">번호</th>
-          
           <th class="th_bs">등록일</th>
-          <th class="th_bs">식품번호</th>
+          <th class="th_bs">이미지</th>
+          <th class="th_bs">식품코드</th>
           <th class="th_bs">기타</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="foodcateVO, status:${list}">
           <td class="td_bs" th:text="${status.index + 1}"></td>
-          
-          <!-- 이미지 URL 설정 -->
-         
-          
           <td class="td_bs" th:text="${foodcateVO.fdate.substring(5, 10)}"></td>
+          <td class="td_bs">
+              
+                        <img th:src="@{|file:///C:/kd/deploy/team1_v2sbm3c/contents/storage/${foodcateVO.thumb}|}" style="width: 50; height: 40;">
+               
+          </td>           
           <td class="td_bs" th:text="${foodcateVO.foodcode}"></td>
   
           <td class="td_bs">
