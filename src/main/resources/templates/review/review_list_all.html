@@ -82,7 +82,7 @@
       }
     </style>
 
-<<<<<<< HEAD
+
     <h2>리뷰 목록</h2>
 
     <!-- 모달창 -->
@@ -102,9 +102,9 @@
         </div>
       </div>
     </div>
-=======
+
     <h2>리뷰 목록</h2><span th:text="|총 ${review_cnt} 건|"></span>
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
+
     <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
     <div class="d-flex justify-content-end mb-3">
       <a href="#" class="btn btn-link" onclick="loadReviews('recent')">최신순 /</a>
@@ -118,7 +118,7 @@
     <div id="review" class="review">
       <!-- 리뷰 목록이 여기에 표시됩니다 -->
     </div>
-<<<<<<< HEAD
+
 
 
 <!-- 삭제 확인 모달 -->
@@ -143,7 +143,6 @@
 
 
 
-=======
     
     
     <!-- 삭제 확인 모달 -->
@@ -167,8 +166,6 @@
     
   
     
-    
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
     <!-- JavaScript 코드 -->
     <script>
       let deleteReviewNo = null;  // 삭제할 리뷰 번호를 저장할 변수
@@ -198,13 +195,12 @@
             data.forEach(reviewVO => {
               const id = reviewVO.id;  // 리뷰 ID
               const star = reviewVO.star;  // 별점
-              const rdate = reviewVO.rdate;  // 작성일자
+              const rdate = reviewVO.rdate.substring(0, 10);  // 작성일자
               const contents = reviewVO.contents;  // 리뷰 내용
-<<<<<<< HEAD
+
               const memberno = document.getElementById("memberno").value;
               const sessionId = document.getElementById("id").value;
-=======
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
+
               const reviewno = reviewVO.reviewno;
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
@@ -218,13 +214,8 @@
                         </div>
                         <span class="review-date">${rdate}</span>
                         <div class="update_delete">
-<<<<<<< HEAD
-                             ${sessionId === id ? `<span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>` : ''}
-                            ${sessionId === id ? `<span class="delete_review" data-url="/review/review_delete?memberno=${memberno}&reviewno=${reviewno}">삭제</span>` : ''}
-=======
                             ${sessionId === id ? `<span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>` : ''}
                             ${sessionId === id ? `<span class="delete_review" data-reviewno="${reviewno}">삭제</span>` : ''}
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
                         </div>
                     </div>
                     <div class="contents">
