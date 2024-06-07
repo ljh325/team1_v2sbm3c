@@ -43,13 +43,13 @@ public class ExdataVO {
   private int exlevel;
   
   /** 낮은강도MET */
-  private int lowmet;
+  private float lowmet;
   
   /** 중간강도MET */
-  private int midmet;
+  private float midmet;
   
   /** 높은강도MET */
-  private int highmet;
+  private float highmet;
   
   /** 낮은강도근육활성도 */
   private int lowact;

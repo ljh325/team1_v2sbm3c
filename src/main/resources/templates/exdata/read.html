@@ -1,586 +1,296 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-  <script>
-
-    function checkID() {
-
-      let url = './check_login'
-      fetch(url, {
-        method: 'GET',
-        // headers: {
-        //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
-        // },
-        // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
-      })
-        .then(response => response.json())
-        .then(rdata => {
-          if (rdata.check == 0) { // 로그인 X
-            alert("로그인 후 추천 가능합니다.")
-          }
-        })
-        .catch(error => { // 서버 다운등 통신 에러
-          console.error('Error:', error);
-        });
-
-      // ---------------------------------------------------------------------------------------
-      // fetch 관련 종료
-      // ---------------------------------------------------------------------------------------
-
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
 
+    th {
+      background-color: #f2f2f2;
+    }
 
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
+    tr:hover {
+      background-color: #ddd;
+    }
 
+    .button-style {
+      border: none;
+    }
 
-  </script>
+    .button-style:hover {
+      color: dimgrey;
+    }
+  </style>
   <div class='title_line'>
-    <span th:text="${cateVO.name }" class="title_line_text"></span>
-    > <span th:text="${cateVO.namesub}" class="title_line_text"></span>
-    > 글 조회
+    <span th:text="|추천 운동 데이터&nbsp;&nbsp;|" class="title_line_text"></span>
+    > &nbsp;<span th:text="|${memberVO.id} 님|" class="title_line_text"></span>
+
   </div>
-  <aside class="aside_right">
-    <a th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">목록</a>
-    <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/create?cateno=${cateVO.cateno}|}">등록</a>
-    <span class='menu_divide'>│</span>
-    <a
-      th:href="@{|/contents/youtube?cateno=${cateVO.cateno }&contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
-    <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/update_text?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">글
-      수정</a>
-    <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/update_file?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">파일
-      수정</a>
-    <span class='menu_divide'>│</span>
-    <a
-      th:href="@{|/contents/delete?contentsno=${contentsVO.contentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>
-    <span class='menu_divide'>│</span>
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
-  </aside>
-  <!-- 
-  <aside class="aside_right" th:if="${session.grade != 'admin'}">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|/contents/list_by_cateno?cateno=${cateVO.cateno }&word=${word }&now_page=${now_page}|}">목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|/contents/list_by_cateno_grid?cateno=${cateVO.cateno }&now_page=${now_page}&word=${word }|}">갤러리형</a>
-  </aside> -->
-
-
-
 
   <div class='menu_line'></div>
 
-  <fieldset class="fieldset_basic">
-    <ul>
-      <li class="li_none">
-        <div style="width: 100%; word-break: break-all;">
+  <script>
+    window.onload = () => {
+      list_all_form();
+      list_all_sort();
+       
+      document.getElementById('ex_intensity').addEventListener("change", () => {
+        list_all_form();
+      })
+    }
+    //---------------------------- window 함수 종료 -----------------------------------
+    function list_all_form() {
+      let list_exdata_tag = document.getElementById('list_exdata');
+      let intensity_tag = document.getElementById('ex_intensity')
+      let intensity = intensity_tag.value
+      
+     
+      
+      fetch("/exdata/list_all_exdata", {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          //alert(data['res'][1].exname);
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
 
-          <div
-            th:if="${contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png') or contentsVO.file1.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${contentsVO.file1saved}|}"
-              style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-          </div>
+            msg += "<tr id='exdata" + row.exdatano + "'>";
+            msg += "<td>" + row.exgroup + "</td>";
+            msg += "<td>" + row.exname + "</td>";
+            msg += "<td>" + row.muscle + "</td>";
+            msg += "<td>" + row.musclesub + "</td>";
+            msg += "<td>" + row.exlevel + "</td>";
+            if (intensity == 1) {
+              msg += "<td>" + row.lowmet + "</td>";
+              msg += "<td>" + row.lowact + "</td>";
+              msg += "<td>" + row.lowrisk + "</td>";
+              console.log(intensity);
+            } else if (intensity == 2) {
 
-          <span style="font-size: 1.5em; font-weight: bold;" th:text="${contentsVO.title}"></span>
-          <span style="font-size: 1em;" th:text="${contentsVO.rdate}"></span><br><br>
-          <div style="white-space: pre-wrap;"><span th:text="${contentsVO.content}"></span></div>
-        </div>
-      </li>
+              msg += "<td>" + row.midmet + "</td>";
+              msg += "<td>" + row.midact + "</td>";
+              msg += "<td>" + row.midrisk + "</td>";
+              console.log(intensity);
+            }
 
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
-        th:if="${contentsVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${contentsVO.youtube}">
-        </div>
+            else if (intensity == 3) {
+              msg += "<td>" + row.highmet + "</td>";
+              msg += "<td>" + row.highact + "</td>";
+              msg += "<td>" + row.highrisk + "</td>";
+              console.log(intensity);
+            }
 
-      </li>
+          }
+          list_exdata_tag.innerHTML = msg;
 
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
-        <span th:if="${session.memberno != null}">
-          <button id="recom" type="button"
-            th:attr="onclick=|location.href='/contents/recom?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}'|"
-            class="btn btn-secondary btn-sm">추천</button>
-        </span>
+        });
+    }
 
-        <span th:unless="${session.memberno != null}">
-          <button id="recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
-        </span>
-      </li>
+    function list_all_sort() {
+      let cal_asc_tag = document.getElementById('cal_asc');
+      let cal_desc_tag = document.getElementById('cal_desc');
 
-      <li class="li_none" style="clear: both;" th:text="|태그(키워드): ${contentsVO.tag}|">
-      </li>
+      let act_asc_tag = document.getElementById('act_asc');
+      let act_desc_tag = document.getElementById('act_desc');
 
-      <li class="li_none" th:if="${contentsVO.size1 > 0}">
-        <div>
-          <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
-          첨부 파일: <a
-            th:href='@{|/download?dir=/contents/storage&filename=${contentsVO.file1saved}&downname=${contentsVO.file1}|}'
-            th:text="|${contentsVO.file1}|"></a> <span th:text="|(${contentsVO.size1_label})|"></span>
-        </div>
-      </li>
-      <li class="li_none">
-        <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
-        <script>
-          window.onload = () => {
-            let contents_tag = document.getElementById('contents');
-            let btn_create_tag = document.getElementById('btn_create');
+      let risk_asc_tag = document.getElementById('risk_asc');
+      let risk_desc_tag = document.getElementById('risk_desc');
 
-            contents_tag.addEventListener('click', () => {
-              let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
-              //alert('Click: ' + id);
-              if (id == '') {
-                alert('로그인 후 댓글 입력 가능합니다.');
-                location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
-              } else {
+      cal_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity')
+        let intensity = intensity_tag.value
+
+        fetch("/exdata/list_all_exdata_cal_asc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
 
               }
-            });
+              document.getElementById('list_exdata').innerHTML = msg;
 
-            btn_create_tag.addEventListener('click', () => {
-              let contents = document.getElementById('contents').value;
 
-              if (contents.trim().length == 0) {
-                alert('댓글의 내용이 없습니다. 내용을 입력 해주세요.');
-              } else {
-                //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
-                fetch("/comments/create", {
-                  "method": "post",
-                  "headers": {"Content-Type": "application/json"},
-                  body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "contents": contents}),
-                  credentials: "include"
-                })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    //list_by_contentsno_join(); // 목록 출력
-                    //result_tag.value = data['res'];
-                    //result_animation_tag.innerHTML = '';
-                  });
 
-                //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+            }
+            console.log("asc " + intensity);
+          });
+
+      });
+
+
+      cal_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity')
+        let intensity = intensity_tag.value
+
+        fetch("/exdata/list_all_exdata_cal_desc", {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
               }
+              document.getElementById('list_exdata').innerHTML = msg;
 
-            });
-
-            list_by_contentsno_join(); // 목록 출력
-
-          } //----------------------- window.onload() 종료 -----------------------------
-
-
-
-          //------------------------------------------ 댓글 관련 함수 시작---------------------------------------------------
-
-          function list_by_contentsno_join() { // 댓글 목록 출력
-            fetch("/comments/list_by_contentsno_join?contentsno=[[${contentsVO.contentsno}]]", {
-              "method": "get" // get 방식은 header 와 body 불필요
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                //alert('res: ' + data['res']);
-                //result_tag.value = data['res'];
-                //result_animation_tag.innerHTML = '';
-                let msg = '';
-                for (let i = 0; i < data['res'].length; i++) {
-                  let row = data['res'][i];
-
-                  msg += "<div id='comments" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
-                  msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
-                  msg += "  " + row.rdate;
-
-                  if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                    msg += " <a href='javascript:comments_update_form(" + row.commentsno + ")'>" + "수정" + "</a>";
-                    msg += " <a href='javascript:comments_delete(" + row.commentsno + ")'>" + "삭제" + "</a>";
-                  }
-                  msg += "  " + "<br>";
-                  msg += row.contents + "<br><br>";
-
-                  //대댓글 관련
-                  msg += "<button type = 'button' id='reply_list_btn" + row.commentsno + "' onclick='list_by_commentsno_join(" + row.commentsno + ")' style='border:none;'>" + "답글";
-                  msg += row.replycnt + "개" + "</button>";
-                  msg += "<button type = 'button' id='reply_list_cancel_btn" + row.commentsno + "' onclick='reply_list_view(" + row.commentsno + ")' style='border:none; display:none;'>" + "답글숨기기";
-                  msg += "</button>";
-                  msg += "<button type = 'button' id='reply_create_form_button" + row.commentsno + "' onclick='reply_create_form(" + row.commentsno + ")' style='border:none; margin-left:20px;'>" + "답글 달기";
-                  msg += "</button>";
-                  msg += "<div id='reply_create_form" + row.commentsno + "' style='width: 100%; margin: 0px auto; clear:both; text-align: center;'>";
-                  msg += "</div>";
-                  msg += "<div id='reply_list" + row.commentsno + "' data-replypage='1' style='margin-left: 20px;'>";
-                  msg += "</div>";
-                  msg += "</div>";
-                }
-
-                document.getElementById('comments_list').innerHTML = msg;
-              });
-
-
-          }
-
-
-          function comments_update_form(no) { // 댓글 수정 폼
-            let comments_tag = document.getElementById('comments' + no);
-            let msg = '';
-            msg += "<hr>";
-            msg += "<form name='frm_reply' id='frm_reply'>";
-            msg += "<input type='hidden' name='memberno' id='memberno' value=''>";
-            msg += "<input type='hidden' name='commentsno' id='commentsno' value=''>";
-            msg += "<textarea name='comments_update_contents" + no + "' id='comments_update_contents" + no + "' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
-            msg += "</textarea>";
-            msg += "<button type='button' id='btn_reply_create' onclick='comments_update(" + no + ")'>";
-            msg += "&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;";
-            msg += "</button>";
-            msg += "<button type='button' id='btn_reply_cancel' onclick='list_by_contentsno_join()' style='margin-left:5px;'>";
-            msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
-            msg += "</button>";
-            msg += "</form>";
-            msg += "<hr>";
-            comments_tag.innerHTML = msg;
-
-            let commentsno_tag = document.getElementById('commentsno');
-            let memberno_tag = document.getElementById('memberno');
-            let comments_contents_tag = document.getElementById('comments_update_contents' + no);
-
-            fetch("/comments/read?commentsno=" + no, {
-              "method": "get",
-              "headers": {"Content-Type": "application/json"},
-              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                commentsno_tag.value = data['res']['commentsno'];
-                memberno_tag.value = data['res']['memberno'];
-                comments_contents_tag.value = data['res']['contents'];
-              });
-
-          }
-
-
-          function comments_update(no) { // 댓글 수정 처리
-            let commentsno_tag = document.getElementById('commentsno');
-            let memberno_tag = document.getElementById('memberno');
-            let comments_contents_tag = document.getElementById('comments_update_contents' + no);
-
-            let contents = comments_contents_tag.value;
-            let memberno = memberno_tag.value;
-            let commentsno = commentsno_tag.value;
-
-            if (contents.length == 0) {
-              alert('내용이 없습니다. 내용을 입력해주세요.');
-            } else {
-              fetch("/comments/update", {
-                "method": "post",
-                "headers": {"Content-Type": "application/json"},
-                body: JSON.stringify({"commentsno": commentsno, "memberno": memberno, "contents": contents})
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data['res'] == 0) {
-                    alert('댓글 수정에 실패 했습니다.)');
-                  } else {
-                    list_by_contentsno_join(); // 목록 출력
-                  }
-                });
 
             }
+            console.log("desc " + intensity);
+          });
 
-          }
+      });
+    }
 
-          function comments_delete(no) { // 댓글 삭제
+    function test_asc(intensity) {
+      fetch("/exdata/list_all_exdata_cal_asc?intensity=" + intensity, {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      }).then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
 
-            let contents_tag = document.getElementById('contents');
-
-            fetch("/comments/read?commentsno=" + no, {
-              "method": "get",
-              "headers": {"Content-Type": "application/json"},
-              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
-                if (sw == true) {
-
-                  fetch("/comments/delete", {
-                    "method": "post",
-                    "headers": {"Content-Type": "application/json"},
-                    body: JSON.stringify({"commentsno": no, "memberno": data['res']['memberno']})
-                  })
-                    .then((response) => response.json())
-                    .then((data) => {
-
-                      if (data['res'] == 1) {
-                        list_by_contentsno_join(); // 목록 출력
-
-                      } else {
-                        alert('댓글 삭제에 실패했습니다. 다시 시도 해주세요.');
-                      }
-                    });
-
-                } else {
-                  alert('삭제를 취소 했습니다.');
-                }
-              });
-          }
-
-
-
-          //------------------------------------------ 댓글 관련 함수 종료---------------------------------------------------
-
-          //------------------------------------------ 대댓글 관련 함수 시작---------------------------------------------------
-
-          function list_by_commentsno_join(no) { // 대댓글 목록 출력
-            let reply_list_tag = document.getElementById('reply_list' + no);
-            let reply_list_btn_tag = document.getElementById('reply_list_btn' + no);
-            let reply_list_cancel_btn_tag = document.getElementById('reply_list_cancel_btn' + no);
-
-            reply_list_btn_tag.style.display = 'none';
-            reply_list_cancel_btn_tag.style.display = '';
-            reply_list_tag.style.display = '';
-
-            fetch("/reply/list_by_commentsno_join?commentsno=" + no, {
-              "method": "get" // get 방식은 header 와 body 불필요
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                //alert('res: ' + data['res']);
-                //result_tag.value = data['res'];
-                //result_animation_tag.innerHTML = '';
-                let msg = '';
-
-                for (let i = 0; i < data['res_reply'].length; i++) {
-                  let row = data['res_reply'][i];
-
-                  msg += "<div id='reply" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; background-color: #f5f5dc; margin-bottom: 10px; margin-top: 5px; text-align:left;'>";
-                  msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
-                  msg += "  " + row.rdate;
-
-                  if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                    msg += " <a href='javascript:reply_update_form(" + row.replyno + ")'>" + "수정" + "</a>";
-                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'>" + "삭제" + "</a>";
-                  }
-                  msg += "  " + "<br>";
-                  msg += row.contents + "<br><br>";
-
-                  msg += "</div>";
-                }
-
-                document.getElementById('reply_list' + no).innerHTML = msg;
-              });
-          }
-
-          function reply_list_view(no) { // 대댓글 리스트 접기
-            let reply_list_tag = document.getElementById('reply_list' + no);
-            let reply_list_btn_tag = document.getElementById('reply_list_btn' + no);
-            let reply_list_cancel_btn_tag = document.getElementById('reply_list_cancel_btn' + no);
-
-            reply_list_tag.style.display = 'none';
-            reply_list_btn_tag.style.display = '';
-            reply_list_cancel_btn_tag.style.display = 'none';
-
-          }
-
-          function reply_create_form(no) { // 대댓글 작성 폼
-            let reply_create_form_tag = document.getElementById('reply_create_form' + no);
-            let msg = '';
-            msg += "<hr>";
-            msg += "<form name='frm_reply' id='frm_reply'>";
-            msg += "<textarea name='reply_contents' id='reply_contents' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
-            msg += "</textarea>";
-            msg += "<button type='button' id='btn_reply_create' onclick='reply_create(" + no + ")'>";
-            msg += "&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;";
-            msg += "</button>";
-            msg += "<button type='button' id='btn_reply_cancel' onclick='reply_cancel(" + no + ")' style='margin-left:5px;'>";
-            msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
-            msg += "</button>";
-            msg += "</form>";
-            msg += "<hr>";
-            if (reply_create_form_tag.style.display == 'none') {
-              reply_create_form_tag.style.display = '';
+            msg += "<tr id='exdata" + row.exdatano + "'>";
+            msg += "<td>" + row.exgroup + "</td>";
+            msg += "<td>" + row.exname + "</td>";
+            msg += "<td>" + row.muscle + "</td>";
+            msg += "<td>" + row.musclesub + "</td>";
+            msg += "<td>" + row.exlevel + "</td>";
+            if (intensity == 1) {
+              msg += "<td>" + row.lowmet + "</td>";
+              msg += "<td>" + row.lowact + "</td>";
+              msg += "<td>" + row.lowrisk + "</td>";
+              console.log("asc " + intensity);
+            } else if (intensity == 2) {
+              msg += "<td>" + row.midmet + "</td>";
+              msg += "<td>" + row.midact + "</td>";
+              msg += "<td>" + row.midrisk + "</td>";
+              console.log("asc " + intensity);
+            } else if (intensity == 3) {
+              msg += "<td>" + row.highmet + "</td>";
+              msg += "<td>" + row.highact + "</td>";
+              msg += "<td>" + row.highrisk + "</td>";
+              console.log("asc " + intensity);
             }
-            document.getElementById('reply_create_form' + no).innerHTML = msg;
-          }
-
-          function reply_create(no) { // 대댓글 작성 처리
-            let reply_contents = document.getElementById('reply_contents').value;
-
-            if (reply_contents.trim().length == 0) {
-              alert('답글의 내용이 없습니다. 내용을 입력 해주세요.');
-            } else {
-              //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
-              fetch("/reply/create", {
-                "method": "post",
-                "headers": {"Content-Type": "application/json"},
-                body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "commentsno": no, "contents": reply_contents}),
-                credentials: "include"
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  list_by_contentsno_join(); // 목록 출력
-                });
-
-            }
+            document.getElementById('list_exdata').innerHTML = msg;
 
           }
+        });
+    }
 
-          function reply_cancel(no) { // 대댓글 등록 취소
-            let reply_create_form_tag = document.getElementById('reply_create_form' + no);
-            reply_create_form_tag.style.display = 'none';
-          }
+  </script>
+  <h2>추천 운동 데이터</h2>
 
-          function reply_update_form(no) { // 대댓글 수정 폼
-            let reply_tag = document.getElementById('reply' + no);
-
-            let msg = '';
-
-            fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
-              "method": "get",
-              "headers": {"Content-Type": "application/json"},
-              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                let commentsno = data['res']['commentsno']; // 댓글 번호 추출
-
-                msg += "<hr>";
-                msg += "<form name='frm_reply' id='frm_reply'>";
-                msg += "<input type='hidden' name='memberno' id='memberno' value=''>";
-                msg += "<input type='hidden' name='replyno' id='replyno' value=''>";
-                msg += "<textarea name='reply_update_contents" + no + "' id='reply_update_contents" + no + "' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
-                msg += "</textarea>";
-                msg += "<button type='button' id='btn_reply_create' onclick='reply_update(" + no + ")'>";
-                msg += "&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;";
-                msg += "</button>";
-                msg += "<button type='button' id='btn_reply_cancel' onclick='list_by_commentsno_join(" + commentsno + ")' style='margin-left:5px;'>";
-                msg += "&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;";
-                msg += "</button>";
-                msg += "</form>";
-                msg += "<hr>";
-                reply_tag.innerHTML = msg;
-
-                let replyno_tag = document.getElementById('replyno');
-                let memberno_tag = document.getElementById('memberno');
-                let reply_update_contents_tag = document.getElementById('reply_update_contents' + no);
+    <label for="ex_intensity">운동강도선택&nbsp;</label>
+    <select id="ex_intensity">
+      <option value="1">낮음</option>
+      <option value="2">보통</option>
+      <option value="3">높음</option>
+    </select>
 
 
-                replyno_tag.value = data['res']['replyno'];
-                memberno_tag.value = data['res']['memberno'];
-                reply_update_contents_tag.value = data['res']['contents'];
-              });
+    <label for="ex_group">&nbsp;&nbsp;&nbsp;&nbsp;부위별 조회&nbsp;</label>
+    <select id="ex_group">
+      <option value="all">모두보기</option>
+      <option value="chest">가슴</option>
+      <option value="back">등</option>
+      <option value="shoulder">어깨</option>
+      <option value="arm">팔</option>
+      <option value="leg">하체</option>
+      <option value="abs">복근</option>
+      <option value="cardio">유산소</option>
 
-          }
+    </select>
 
-          function reply_update(no) { // 대댓글 수정 처리
-            let replyno_tag = document.getElementById('replyno');
-            let memberno_tag = document.getElementById('memberno');
-            let reply_contents_tag = document.getElementById('reply_update_contents' + no);
 
-            let contents = reply_contents_tag.value;
-            let memberno = memberno_tag.value;
-            let replyno = replyno_tag.value;
-
-            if (contents.length == 0) {
-              alert('내용이 없습니다. 내용을 입력해주세요.');
-            } else {
-              fetch("/reply/update", {
-                "method": "post",
-                "headers": {"Content-Type": "application/json"},
-                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "contents": contents})
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data['res'] == 0) {
-                    alert('답글 수정에 실패 했습니다.)');
-                  } else {
-                    
-                    fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
-                      "method": "get",
-                      "headers": {"Content-Type": "application/json"},
-                      // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
-                    })
-                      .then((response) => response.json())
-                      .then((data) => {
-                        let commentsno = data['res']['commentsno']; // 댓글 번호 추출
-                        list_by_commentsno_join(commentsno); // 대댓글 목록 출력
-                      });
-
-                  }
-                  
-                });
-
-            }
-
-          }
-          
-          function reply_delete(no) { // 댓글 삭제
-
-            let contents_tag = document.getElementById('contents');
-
-            fetch("/reply/read?replyno=" + no, {
-              "method": "get",
-              "headers": {"Content-Type": "application/json"},
-              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                let commentsno = data['res']['commentsno'];
-                let memberno = data['res']['memberno'];
-                let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
-                if (sw == true) {
-
-                  fetch("/reply/delete", {
-                    "method": "post",
-                    "headers": {"Content-Type": "application/json"},
-                    body: JSON.stringify({"replyno": no, "memberno": memberno, "commentsno": commentsno})
-                  })
-                    .then((response) => response.json())
-                    .then((data) => {
-
-                      if (data['res'] == 1) {
-                        list_by_commentsno_join(commentsno); // 목록 출력
-
-                      } else {
-                        alert('댓글 삭제에 실패했습니다. 다시 시도 해주세요.');
-                      }
-                    });
-
-                } else {
-                  alert('삭제를 취소 했습니다.');
-                }
-              });
-          }
+  <table>
+    <thead>
+      <tr>
+        <th>운동근육그륩</th>
+        <th>운동명</th>
+        <th>주동근</th>
+        <th>협응근</th>
+        <th>난이도 </th>
+        <th>소모칼로리 &nbsp;&nbsp;<button name="cal_asc" id="cal_asc" type="button" class="button-style"
+            onclick="">△</button><button name="cal_desc" id="cal_desc" type="button" class="button-style">▽</th>
+        <th>근육활성도 &nbsp;&nbsp;<button name="act_asc" id="act_asc" type="button" class="button-style">△</button><button
+            name="act_desc" id="act_desc" type="button" class="button-style">▽</th>
+        <th>부상위험도 &nbsp;&nbsp;<button name="risk_asc" id="risk_asc" type="button" class="button-style">△</button><button
+            name="risk_desc" id="risk_desc" type="button" class="button-style">▽</th>
+      </tr>
+    </thead>
+    <tbody name="list_exdata" id="list_exdata">
 
 
 
+    </tbody>
+  </table>
 
 
 
-//------------------------------------------ 대댓글 관련 함수 종료---------------------------------------------------
-
-
-        </script>
-        <div style='width: 100%; margin: 0px auto; clear:both; text-align: center;'>
-          <hr>
-          <form name='frm_comments' id='frm_comments'>
-
-            <textarea name='contents' id='contents' class="form-control" style='width: 100%; height: 60px;'
-              placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다."></textarea>
-            <button type='button' id='btn_create'
-              onclick="javascript:location.reload()">&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
-          </form>
-          <hr>
-
-          <div id='comments_list' data-commentspage='1'> <!-- 목록 -->
-            등록된 댓글이 없습니다.
-          </div>
-          <div id='comments_list_btn' style="border: none;">
-            <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
-          </div>
-
-        </div>
-
-        <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
-      </li>
-    </ul>
-  </fieldset>
 
 </div>
 

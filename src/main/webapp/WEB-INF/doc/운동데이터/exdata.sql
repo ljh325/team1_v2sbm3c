@@ -10,9 +10,9 @@ CREATE TABLE EXDATA(
 		MUSCLE                        		VARCHAR2(100)		 NULL ,
 		MUSCLESUB                     		VARCHAR2(100)		 NULL ,
 		EXLEVEL                         	NUMBER(10)		 NOT NULL,
-		LOWMET                        		NUMBER(10)		 NOT NULL,
-		MIDMET                        		NUMBER(10)		 NOT NULL,
-		HIGHMET                       		NUMBER(10)		 NOT NULL,
+		LOWMET                        		NUMBER(10,1)		 NOT NULL,
+		MIDMET                        		NUMBER(10,1)		 NOT NULL,
+		HIGHMET                       		NUMBER(10,1)		 NOT NULL,
 		LOWACT                        		NUMBER(10)		 NOT NULL,
 		MIDACT                        		NUMBER(10)		 NOT NULL,
 		HIGHACT                       		NUMBER(10)		 NOT NULL,
@@ -46,7 +46,7 @@ COMMENT ON COLUMN EXDATA.HIGHRISK is '높은강도부상위험도';
 
 
 
-DROP SEQUENCE exdata_seq
+DROP SEQUENCE exdata_seq;
 
 CREATE SEQUENCE exdata_seq
   START WITH 1              -- 시작 번호
@@ -54,7 +54,7 @@ CREATE SEQUENCE exdata_seq
   MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
-
+commit;
 -- 운동 데이터 삽입
 INSERT INTO exdata(exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk)
 VALUES (exdata_seq.nextval, '가슴', '바벨 벤치프레스', '상부가슴', '삼두근, 전면어깨', 2, 3.5, 5.5, 7.5, 60, 85, 95, 30, 60, 80);
@@ -251,6 +251,7 @@ VALUES (exdata_seq.nextval, '유산소', '스텝퍼', '전신', '', 2, 5.5, 7.0,
 INSERT INTO exdata(exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk)
 VALUES (exdata_seq.nextval, '유산소', '로잉 머신', '전신', '', 2, 6.0, 7.5, 10.0, 60, 80, 95, 20, 40, 60);
 
+commit;
 -- 운동 데이터 조회
 -- 전체 데이터
 SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
