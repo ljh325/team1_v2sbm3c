@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 주찬 xml   (o)표시: 수정 완료  -->
+<!--
+
+    KEYWORDNO                         NUMBER(10)     NOT NULL    PRIMARY KEY,
+    KEYWORDNAME                       VARCHAR2(100)  NOT NULL,
+    WORD                              VARCHAR2(100)  NOT NULL,
+    REVIEWNO                          NUMBER(10)     NOT NULL, (FK)
+-->
+<mapper namespace="dev.mvc.keyword.KeywordDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 키워드 등록 -->
+  <insert id = "keyword_insert" parameterType="dev.mvc.keyword.KeywordVO">
+    INSERT INTO keyword(keywordno, keywordname, word, reviewno)
+    VALUES(keyword_seq.nextval, #{keywordname}, #{word},  (SELECT MAX(reviewno) FROM review));
+  </insert>
+
+
+
+  
+  <!-- 키워드 -->
+  <select id="keyword_all" resultType="dev.mvc.keyword.KeywordVO">
+    SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
+    FROM keyword k, REVIEW r
+    WHERE k.reviewno = r.reviewno
+  </select>
+
+    <!-- 회원 리뷰 조회 -->
+  <select id="keyword_read" resultType="dev.mvc.keyword.KeywordVO">
+    SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
+    FROM keyword k, REVIEW r
+    WHERE k.reviewno = r.reviewno AND k.reviewno = #{reviewno}
+  </select>
+  
+  
+</mapper>

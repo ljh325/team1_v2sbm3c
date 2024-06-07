@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.keyword.KeywordDAOInter;
+import dev.mvc.keyword.KeywordProc;
+import dev.mvc.keyword.KeywordVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
 import jakarta.servlet.http.HttpSession;
@@ -36,7 +39,9 @@ public class ReviewCont {
   @Qualifier("dev.mvc.member.MemberProc")  // @Service("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
   
-  
+  @Autowired
+  @Qualifier("dev.mvc.keyword.KeywordProc") 
+  private KeywordProc keywordProc;
   /***************************************************************************************/  
   /**
    * 리뷰 등록 폼
@@ -97,6 +102,8 @@ public class ReviewCont {
   public String review_list_all(@RequestParam(required = false, defaultValue = "recent") String sort, Model model) {
       // 리뷰 목록 정렬을 위한 JSONArray 객체 생성
       JSONArray array = new JSONArray();
+      
+      ArrayList<KeywordVO> keywords = keywordProc.keyword_all(); // 키워드
 
       // 정렬 기준에 따라 리뷰 목록을 처리
       switch (sort) {
@@ -111,7 +118,7 @@ public class ReviewCont {
                   reviewJson.put("id", review.getId());
                   reviewJson.put("star", review.getStar());
                   reviewJson.put("rdate", review.getRdate());
-                  reviewJson.put("contents", review.getContents());
+                  reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
                   array.put(reviewJson);
               }
               break;
@@ -127,7 +134,7 @@ public class ReviewCont {
                   reviewJson.put("id", review.getId());
                   reviewJson.put("star", review.getStar());
                   reviewJson.put("rdate", review.getRdate());
-                  reviewJson.put("contents", review.getContents());
+                  reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
                   array.put(reviewJson);
               }
               break;
@@ -143,7 +150,7 @@ public class ReviewCont {
                   reviewJson.put("id", review.getId());
                   reviewJson.put("star", review.getStar());
                   reviewJson.put("rdate", review.getRdate());
-                  reviewJson.put("contents", review.getContents());
+                  reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
                   array.put(reviewJson);
               }
               break;
@@ -160,7 +167,7 @@ public class ReviewCont {
                   reviewJson.put("id", review.getId());
                   reviewJson.put("star", review.getStar());
                   reviewJson.put("rdate", review.getRdate());
-                  reviewJson.put("contents", review.getContents());
+                  reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
                   array.put(reviewJson);
               }
               break;
@@ -169,8 +176,16 @@ public class ReviewCont {
       return array.toString();
   }
   /***************************************************************************************/
-  
-  
+  /***************************************************************************************/
+  /***************************************************************************************/
+  private String highlightKeywords(String content, ArrayList<KeywordVO> keywords) {
+    for (KeywordVO keyword : keywords) {
+        content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#81F79F;'>" + keyword.getWord() + "</span>");
+    }
+    return content;
+}
+  /***************************************************************************************/
+  /***************************************************************************************/
   /***************************************************************************************/
   /**
    * 리뷰 전체 목록

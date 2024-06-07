@@ -6,12 +6,18 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.mvc.keyword.KeywordProc;
+import dev.mvc.keyword.KeywordVO;
+
 @Component("dev.mvc.review.ReviewProc")
 public class ReviewProc implements ReviewProcInter {
   
   
   @Autowired
   private ReviewDAOInter reviewDAO;
+  
+  @Autowired
+  private KeywordProc keywordProc;
   
   @Override
   public int review_insert(ReviewVO reviewVO) {
@@ -22,6 +28,18 @@ public class ReviewProc implements ReviewProcInter {
   @Override
   public ArrayList<ReviewVO> review_list_all() {
     ArrayList<ReviewVO> list = this.reviewDAO.review_list_all();
+    ArrayList<KeywordVO> keywords = keywordProc.keyword_all();
+    
+    for (ReviewVO review : list) {
+      String content = review.getContents();
+      for (KeywordVO keyword : keywords) {
+        if (content.contains(keyword.getWord())) {
+          content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='color:red;'>" + keyword.getWord() + "</span>");
+          // (?!) -> (정규표현식)대소문자를 구분하지 않고 매칭을 수행하도록 지정합니다.
+        }
+      }
+      review.setContents(content);
+    }
     return list;
   }
 
@@ -80,5 +98,3 @@ public class ReviewProc implements ReviewProcInter {
   }
 
 }
-
-
