@@ -32,6 +32,12 @@ public class KeywordProc implements KeywordProcInter{
     return keywordVO;
   }
 
+  @Override
+  public int keyword_delete(int reviewno) {
+    int cnt = this.keywordDAO.keyword_delete(reviewno);
+    return cnt;
+  }
+
   
   
 

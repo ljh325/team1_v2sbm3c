@@ -97,4 +97,16 @@ public class ReviewProc implements ReviewProcInter {
     return reviewVO;
   }
 
+  @Override
+  public int avg_cnt() {
+    int cnt = this.reviewDAO.avg_cnt();
+    return cnt;
+  }
+
+  @Override
+  public int star_cnt(int star) {
+    int cnt = this.reviewDAO.star_cnt(star);
+    return cnt;
+  }
+
 }

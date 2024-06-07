@@ -83,27 +83,9 @@
     </style>
 
 
-    <h2>리뷰 목록</h2>
 
-    <!-- 모달창 -->
-    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="warningModalLabel">경고</h5>
-          </div>
-          <div class="modal-body" id="modalBody">
-            <!-- 경고 메시지가 여기에 표시됩니다 -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <h2>리뷰 목록</h2><span th:text="|총 ${review_cnt} 건|"></span>
+    <h2>리뷰 목록</h2><span th:text="|전체 리뷰수 ${review_cnt} |"></span>
 
     <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
     <div class="d-flex justify-content-end mb-3">
@@ -120,25 +102,6 @@
     </div>
 
 
-
-<!-- 삭제 확인 모달 -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        리뷰를 삭제하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">삭제</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -232,7 +195,6 @@
                 button.addEventListener('click', (event) => {
                     event.preventDefault(); // 기본 동작을 막음
                     const url = button.getAttribute('data-url');
-                    alert('수정 버튼이 클릭되었습니다.');
                     window.location.href = url;
                 });
             });
@@ -257,7 +219,7 @@
       
        // 삭제 확인 버튼 클릭 시 실행될 함수
       document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-        alert("1");
+
         if (deleteReviewNo) {
           fetch('http://localhost:9093/review/review_delete', {
             method: 'POST',
@@ -267,15 +229,13 @@
             body: JSON.stringify({ reviewno: deleteReviewNo })
           })
           .then(response => {
-            alert(deleteReviewNo);
+
             if (!response.ok) {
               throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
           })
           .then(data => {
-            alert(3);
-            alert('리뷰가 삭제되었습니다.');
             const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
             deleteModal.hide();
             loadReviews('recent'); // 삭제 후 리뷰 목록을 다시 로드

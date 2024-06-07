@@ -61,7 +61,12 @@ UPDATE keyword
 SET star=4, contents='야 너무 좋다',udate=sysdate
 WHERE memberno = 40 AND reviewno = 1;
 
--- 리뷰 삭제
+-- 리뷰 삭제 
+-- (자식)
+DELETE FROM keyword
+WHERE reviewno=16;
+
+-- (부모)
 DELETE FROM review
-WHERE memberno=40 and reviewno=3;
+WHERE reviewno=16;
 

@@ -30,9 +30,20 @@
     <!-- 회원 리뷰 조회 -->
   <select id="keyword_read" resultType="dev.mvc.keyword.KeywordVO">
     SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
-    FROM keyword k, REVIEW r
+    FROM keyword k, review r
     WHERE k.reviewno = r.reviewno AND k.reviewno = #{reviewno}
   </select>
+  
+  
+    
+  <!-- 리뷰 수정 | 수정일 확인 필요 -->
+
+  
+  <!-- 리뷰 삭제 -->
+  <delete id="keyword_delete" parameterType="int">
+    DELETE FROM keyword
+    WHERE reviewno=#{reviewno}
+  </delete>
   
   
 </mapper>

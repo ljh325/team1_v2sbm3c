@@ -16,14 +16,14 @@ CREATE SEQUENCE REVIEW_SEQ
 
 
 CREATE TABLE REVIEW(
-		REVIEWNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		STAR                          		NUMBER(5)		 NOT NULL,
-		CONTENTS                      		VARCHAR2(1000)	 NOT NULL,
+		REVIEWNO                      		NUMBER(10)		     NOT NULL		 PRIMARY KEY,
+		STAR                          		NUMBER(5) default 0  NOT NULL,
+		CONTENTS                      		VARCHAR2(1000)	     NOT NULL,
         POSITIVE                            NUMBER(5) default 0,
         NAGATIVE                            NUMBER(5) default 0,
-		RDATE                         		DATE		     NOT NULL,
-        UDATE                         		DATE		     NULL,
-		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+		RDATE                         		DATE		         NOT NULL,
+        UDATE                         		DATE		         NULL,
+		MEMBERNO                      		NUMBER(10)		     NOT NULL,
   FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
 );
 
@@ -52,9 +52,9 @@ VALUES (REVIEW_seq.nextval, 2,'예시3',sysdate, null, 40, 3);
 commit;
 
 -- READ
-SELECT r.REVIEWNO, r.STAR, r.CONTENTS,  r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
-FROM MEMBER m, REVIEW r, FOODCATE f
-WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno;
+SELECT r.REVIEWNO, r.STAR, r.CONTENTS,  r.RDATE, r.UDATE, m.MEMBERNO
+FROM MEMBER m, REVIEW r
+WHERE m.memberno = r.memberno ;
 
 -- 음식에 따른 전체 리뷰조회
 SELECT r.REVIEWNO, r.STAR, r.CONTENTS, r.RDATE, r.UDATE, m.MEMBERNO, f.FOODCATENO
@@ -115,9 +115,17 @@ WHERE m.memberno = r.memberno AND r.foodcateno = f.foodcateno AND f.foodcateno =
 ORDER BY COALESCE(r.udate, r.rdate) ASC;
 
 
+-- 리뷰 총 평균 평점
+SELECT ROUND(AVG(star), 1) as avg
+FROM review;
 
-
-
-
+-- 별점당 갯수
+SELECT 
+from review 
+Group by star;
+SELECT star, COUNT(*) as total
+FROM review
+GROUP BY star
+ORDER BY star;
   
 commit;

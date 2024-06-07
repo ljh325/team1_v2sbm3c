@@ -84,8 +84,18 @@ public interface ReviewDAOInter {
    */
   public ArrayList<ReviewVO> old_review();
   
+  /**
+   * 리뷰 총 평균 평점
+   * @return
+   */
+  public int avg_cnt();
 
-  
+  /**
+   * 별점당 갯수
+   * @param star
+   * @return
+   */
+  public int star_cnt(int star);
   
   
 }

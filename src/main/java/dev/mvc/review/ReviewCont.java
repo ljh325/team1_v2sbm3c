@@ -104,7 +104,8 @@ public class ReviewCont {
       JSONArray array = new JSONArray();
       
       ArrayList<KeywordVO> keywords = keywordProc.keyword_all(); // 키워드
-
+      
+      
       // 정렬 기준에 따라 리뷰 목록을 처리
       switch (sort) {
           // 별점 높은 순으로 정렬
@@ -197,7 +198,11 @@ public class ReviewCont {
     
     // 리뷰 총 수를 모델에 추가
     int review_cnt = this.reviewProc.review_cnt();
+    int avg_cnt =this.reviewProc.avg_cnt();
+    
+   
     model.addAttribute("review_cnt", review_cnt);
+    model.addAttribute("avg_cnt", avg_cnt);
     
     return "review/review_list_all"; //  /templates/review/review_list_all.html
   }
@@ -247,13 +252,19 @@ public class ReviewCont {
   @PostMapping(value="/review_update_proc")
   public String review_update_proc(Model model, ReviewVO reviewVO) {
     
+    //highlightKeywords("contents", reviewVO.getContents());
     int cnt = this.reviewProc.review_update(reviewVO);
     model.addAttribute("cnt", cnt);
 
     return "redirect:/review/review_list_form"; // http://localhost:9093/review/review_list_form
   }
  /***************************************************************************************/
-  
+//  private String highlightKeywords(String content, ArrayList<KeywordVO> keywords) {
+//    for (KeywordVO keyword : keywords) {
+//        content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#81F79F;'>" + keyword.getWord() + "</span>");
+//    }
+//    return content;
+//}
   
   /***************************************************************************************/
   
@@ -282,7 +293,9 @@ public class ReviewCont {
 
     try {
         int reviewno = Integer.parseInt(reviewnoStr);
-        int cnt = this.reviewProc.review_delete(reviewno);
+        this.keywordProc.keyword_delete(reviewno); // 자식 삭제
+        int cnt = this.reviewProc.review_delete(reviewno); // 부모 삭제
+        
         Map<String, Object> response = new HashMap<>();
         response.put("cnt", cnt);
         return ResponseEntity.ok(response);

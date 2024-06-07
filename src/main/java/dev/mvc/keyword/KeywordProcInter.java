@@ -24,5 +24,12 @@ public interface KeywordProcInter {
    * @return
    */
   public KeywordVO keyword_read(int reviewno);
+  
+  /**
+   * 키워드 삭제
+   * @param reviewno
+   * @return
+   */
+  public int keyword_delete(int reviewno);
 
 }

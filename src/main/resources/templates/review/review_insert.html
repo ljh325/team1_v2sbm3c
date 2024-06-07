@@ -169,7 +169,9 @@
         
         //  6월6일
          document.forms['frm'].submit(); // 폼 제출
-alert(1); 
+         
+         showModal("등록이 완료되었습니다.");
+         
         fetch("http://127.0.0.1:5000/emotion", {
           method: "post",
           headers: { "Content-Type": "application/json" },
