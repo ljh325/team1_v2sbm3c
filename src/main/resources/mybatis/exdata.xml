@@ -188,6 +188,7 @@
   <select id='list_part_highmet_asc' resultType="dev.mvc.exdata.ExdataVO">
   SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk 
   FROM exdata
+  WHERE exgroup = #{exgroup}
   ORDER BY highmet ASC
   </select>
   
