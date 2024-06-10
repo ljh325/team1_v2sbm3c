@@ -47,9 +47,11 @@ public class MemberVO {
   /** 포인트 */
   private int point = 0;
   /** 생일 */
-  private int birth;
+  private String birth;
   /** sex */
   private String sex = "";
+  /** 닉네임 */
+  private String nickname="";
   
   
   

@@ -3,6 +3,7 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.mlogin.MloginProcInter;
@@ -61,11 +64,71 @@ public class MemberCont {
     // return "{\"cnt\": " + cnt + "}";    // {"cnt": 1} JSON
     
     JSONObject obj = new JSONObject();
-    obj.put("cnts", cnt);
+    obj.put("cnt", cnt);
     
     return obj.toString();
   }
   /***************************************************************************************/
+  /**
+   * 아이디 찾기 폼
+   * @param model
+   * @return
+   */
+  @GetMapping(value="/find_id_form")
+  public String find_id_form(Model model) {
+       
+    return "member/find_id";
+  }
+  
+  /**
+   * 아이디 찾기 Proc
+   * @param model
+   * @return
+   */
+  @PostMapping(value="/find_id")
+  public String find_id(Model model, String mname, String tel, MemberVO memberVO) {
+    
+    System.out.println(mname);
+    System.out.println(tel);
+    ArrayList<MemberVO> memberList = this.memberProc.find_id(memberVO);
+    System.out.println("memberList->" + memberList);
+    
+    
+    if (memberList != null && !memberList.isEmpty()) {
+        model.addAttribute("code", "find_id_success");
+        model.addAttribute("memberList", memberList);
+        model.addAttribute("id", memberVO.getId());
+        System.out.println("id-> "  + memberVO.getId());
+    } else {
+        model.addAttribute("code", "find_id_fail");
+    }
+    
+
+
+    return "member/msg";
+  }
+  
+  @GetMapping(value="/find_passwd_form")
+  public String find_passwd_form(Model model) {
+    
+    
+    return "member/find_passwd";
+  }
+  @PostMapping(value="/find_passwd")
+  public String find_passwd(Model model, String id, String mname, String tel) {
+HashMap<String, Object> map = new HashMap<String, Object>();
+    
+    map.put("id", id);
+    map.put("mname", mname); 
+    map.put("tel", tel);
+    System.out.println(id);
+    System.out.println(mname);
+    System.out.println(tel);
+    
+    
+    
+    return "member/msg";
+  }
   /***************************************************************************************/
   /**
    * 회원 가입 폼
@@ -113,7 +176,7 @@ public class MemberCont {
   }
   /***************************************************************************************/
   
-  
+
   /***************************************************************************************/
   /**
    * 회원정보 조회

@@ -25,16 +25,16 @@
     WHERE id=#{id}
   </select>
   
-  <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
+  <!-- (o) 회원 가입 || ( 회원 이미지 : profile 설계 필요  -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, birth, sex)
-    VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{tel}, #{zipcode}, 
+    INSERT INTO member(memberno, id, passwd, mname, nickname,  tel, zipcode, address1, address2, mdate, birth, sex)
+    VALUES (member_seq.nextval, #{id}, #{passwd}, #{mname}, #{nickname}, #{tel}, #{zipcode}, 
                  #{address1}, #{address2}, sysdate, #{birth}, #{sex})
   </insert>
 
   <!-- (o) 회원 전체 목록 || profile (X) -->
   <select id="list" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
+    SELECT memberno, id, passwd, mname, nickname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex
     FROM member
     ORDER BY grade ASC, id ASC
   </select>
@@ -42,7 +42,7 @@
   
   <!-- (o) memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex,
+    SELECT memberno, id, passwd, mname, nickname, tel, zipcode, address1, address2, mdate, grade, point, birth, sex,
     profile, profilesaved, thumbs, sizes
     FROM member
     WHERE memberno = #{memberno}
@@ -50,7 +50,7 @@
 
   <!-- (o) (로그인) id로 회원 정보 조회 -->
   <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade, profile, point, birth, sex
+    SELECT memberno, id, passwd, mname, nickname, tel, zipcode, address1, address2, mdate, grade, profile, point, birth, sex
     FROM member
     WHERE id = #{id}
   </select>
@@ -58,7 +58,7 @@
   <!-- (o) 수정 처리 -->
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
-    SET mname=#{mname}, passwd=#{passwd}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2},
+    SET mname=#{mname}, nickname=#{nickname}, passwd=#{passwd}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2},
     profile=#{profile}, profilesaved=#{profilesaved}, thumbs=#{thumbs}, sizes=#{sizes} WHERE memberno=#{memberno}
   </update>
   
@@ -85,19 +85,18 @@
     WHERE id=#{id} AND passwd=#{passwd} AND grade != 3
   </select>
   
-  <!--  (o) 현재 패스워드 검사 -->
-  <!--<select id="passwd_check" parameterType="HashMap" resultType="int">
-    SELECT COUNT(memberno) as cnt
+  <!-- 아이디 찾기 -->
+  <select id="find_id" parameterType="dev.mvc.member.MemberVO" resultType="dev.mvc.member.MemberVO">
+    SELECT memberno, id, mname, nickname 
     FROM member
-    WHERE memberno=#{memberno} AND passwd=#{passwd}
-  </select>-->
-   
-  <!-- (o) 패스워드 변경 -->
-  <!--<update id="passwd_update" parameterType="HashMap">
-    UPDATE member
-    SET passwd=#{passwd}
-    WHERE memberno=#{memberno}
-  </update>-->
+    WHERE mname=#{mname} AND tel=#{tel} 
+  </select>
   
+  <!-- 비번 찾기 -->
+  <select id="find_passwd" parameterType="HashMap" resultType="dev.mvc.member.MemberVO">
+    SELECT passwd 
+    FROM member
+    WHERE id=#{id} AND mname=#{mname} AND tel=#{tel} 
+  </select>
 </mapper>
 

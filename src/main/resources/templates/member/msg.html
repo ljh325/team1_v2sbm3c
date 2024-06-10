@@ -51,6 +51,25 @@
            <div th:case="passwd_change_fail">
             <span class="span_fail">패스워드 변경을 실패했습니다.</span><br>
           </div>
+          
+          <div th:case="'find_id_success'">
+            <span class="span_success" th:text="|현재 고객님의 아이디는  입니다.|"></span><br>
+            <ul>
+              <li th:each="member : ${memberList}">
+                  아이디: <span th:text="${member.id}"></span>, 
+<!--                  이름: <span th:text="${member.mname}"></span>, 
+                  별명: <span th:text="${member.nickname}"></span>-->
+              </li>
+            </ul>
+          </div>
+          <div th:case="'find_id_fail'">
+            <span class="span_fail">현재 아이디가 조회되지 않습니다.</span><br>
+          </div>
+          <div th:case="find_id_fail">
+            <span class="span_fail">현재 아이디가 조회되지 않습니다.</span><br>
+          </div>
+          
+
         </li>
         
         <li class="li_none">

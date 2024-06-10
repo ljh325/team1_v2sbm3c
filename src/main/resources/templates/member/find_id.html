@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+
+
+     <script>
+      window.onload = () => {
+        document.querySelector('#id').addEventListener('keypress', (event) => {
+          if(event.key === 'Enter') {
+            document.getElementById('btn_checkID').focus();
+          }
+        });
+
+        document.querySelector('#passwd').addEventListener('keypress', (event) => {
+          if(event.key === 'Enter') {
+            document.getElementById('btn_send').focus();
+          }
+        });
+
+        // 모달 확인 버튼에 이벤트 리스너 추가
+        document.getElementById('modalConfirmButton').addEventListener('click', () => {
+          document.getElementById('frm').submit();
+        });
+      }
+      
+
+      function send() { // 회원 가입 처리
+        let mname = document.getElementById('mname');
+        let mname_msg = document.getElementById('mname_msg');
+
+        if (mname.value.trim().length == 0) {
+          mname_msg.innerHTML= '이름 입력은 필수 입니다.';
+          mname_msg.classList.add('span_warning');    // class 적용
+          mname.focus();
+          return false;  // 로그인 진행 중지
+        }
+
+        let tel = document.getElementById('tel');
+        let tel_msg = document.getElementById('tel_msg');
+
+        if (tel.value.trim().length == 0) {
+          tel_msg.innerHTML= '전화번호 입력은 필수 입니다.';
+          tel_msg.classList.add('span_warning');    // class 적용
+          tel.focus();
+          return false;  // 로그인 진행 중지
+        }
+        
+        document.getElementById('frm').submit();
+      }
+    </script>
+    <h2>아이디 찾기</h2>
+    <div class="title_line"></div>
+    <aside class="aside_right">
+      <a href='/'>홈</a>
+      <span class='menu_divide' >│</span> 
+      <a href='./login'>로그인</a>
+      <span class='menu_divide' >│</span> 
+      <a href="./create">회원가입</a>
+    </aside> 
+    <div style="width: 50%; margin: 0px auto; margin-top: 70px;">
+      <form name="frm" id="frm" method="post" action="/member/find_id">
+        <div>
+          <label for="mname">이름</label>
+          <input type="text" name="mname" id="mname" autofocus="autofocus" placeholder="이름을 입력하시오"
+                 class="form-control fom-control-sm" style="width: 100%;">
+          <span id='mname_msg'></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="tel">전화번호*</label>
+          <input type='text' name='tel' id='tel' required="required"
+                    placeholder="전화번호을 입력하시오" class="form-control form-control-sm" style="width: 100%;">
+          <span id='tel_msg'></span>
+        </div>
+
+        <div class="content_body_bottom">
+          <button type="button" onclick="send();" class="btn btn-secondary btn-sm">ID 찾기</button>
+          <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+        </div>
+      </form>
+    </div>
+    
+
+    
+</div>
+</html>
