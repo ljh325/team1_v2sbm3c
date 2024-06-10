@@ -61,6 +61,9 @@
       
     }
     
+   
+
+    
     function checkID() {
       // alert('checkID()');
       
@@ -174,6 +177,18 @@
             return false;  // 회원 가입 진행 중지
           }
           
+          // 닉네임 유효성 검사 **
+          let nickname = document.getElementById('nickname');
+          let nickname_msg = document.getElementById('nickname_msg');
+
+          if (nickname.value.length == 0) {
+            nickname_msg.innerHTML = '닉네임 입력은 필수입니다.';
+            nickname_msg.classList.add('span_warning');    // class 적용
+            nickname.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }
+          
           // 전화 번호 유효성 검사 **
           let tel = document.getElementById('tel');
           let tel_msg = document.getElementById('tel_msg');
@@ -239,26 +254,27 @@
             sex.focus();
 
             return false;  // 회원 가입 진행 중지
-          } else if (!['M', 'W'].includes(sex.value.toUpperCase())) {  // 성별이 M 또는 W인지 확인, 대소문자 구분 없음
-              sex_msg.innerHTML = '성별은 \'M\' 또는 \'W\'로만 입력 가능합니다.';
-              sex_msg.classList.add('span_warning');    // class 적용
-              sex.focus();  // 성별 입력란에 포커스 이동
-              return false;  // 회원 가입 진행 중지
           }
           
-  
         } // passwd2_msg else 끝
+        
+        
         document.getElementById('frm').submit(); // required="required" 작동 안됨.
       }    
   </script>
+  <style>
+  .form-group{
+    margin-top: 7px;
+  }
+  </style>
 
   <div class="title_line">회원 가입(*: 필수)</div>
   <aside class="aside_right">
+    <a href='/'>홈</a>
+    <span class='menu_divide' >│</span> 
+    <a href='./login'>로그인</a>
+    <span class='menu_divide' >│</span> 
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./list'>목록</a>
   </aside> 
 
   <div class='menu_line'></div>
@@ -267,45 +283,54 @@
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
       <div>
         <label for="id">아이디(이메일)*</label>
-        <input type="text" name="id" id="id" value="" autofocus="autofocus"
-               class="form-control fom-control-sm" style="width: 50%;" th:field="*{id}">
-        <button type='button' id="btn_checkID" onclick="checkID()" 
-                     class="btn btn-primary btn-sm" style="margin-top: 4px;">중복확인</button>
+        <div class="id_float" style="display: flex; align-items: center;">
+            <input type="text" name="id" id="id" value="" autofocus="autofocus"
+                   class="form-control form-control-sm" style="width: 70%;" th:field="*{id}">
+            <button type="button" id="btn_checkID" onclick="checkID()" 
+                    class="btn btn-primary btn-sm" style="margin-left: 8px; margin-top: 4px;">중복확인</button>
+        </div>
         <span id='id_msg'></span>  
       </div>
       
       <div class="form-group">
         <label for="passwd">패스워드*</label> 
         <input type='password' name='passwd' id='passwd' value='' required="required" 
-                  placeholder="패스워드" class="form-control form-control-sm" style="width: 30%;">
+                  placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
         <span id='passwd1_msg'></span>  
       </div>
 
       <div class="form-group">
         <label for="passwd2">패스워드 확인*</label>
         <input type='password' name='passwd2' id='passwd2' value='' required="required" 
-                  placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 30%;">
+                  placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 100%;">
         <span id='passwd2_msg'></span>
       </div>
-
+      
       <div class="form-group">
         <label for="mname">성명*</label>
         <input type='text' name='mname' id='mname' value='' required="required" 
-                   placeholder="성명" class="form-control form-control-sm" style="width: 30%;">
+                   placeholder="성명" class="form-control form-control-sm" style="width: 100%;">
         <span id='mname_msg'></span>
+      </div>   
+      
+      <div class="form-group">
+        <label for="nickname">닉네임*</label>
+        <input type='text' name='nickname' id='nickname' value='' required="required" 
+                   placeholder="닉네임" class="form-control form-control-sm" style="width: 100%;">
+        <span id='nickname_msg'></span>
       </div>   
   
       <div class="form-group">
         <label for="tel">전화 번호* (- 포함x)</label>
-        <input type='text' name='tel' id='tel' value='' required="required" 
-                  placeholder="전화번호" class="form-control form-control-sm" style="width: 30%;">
+        <input type='text' name="tel" id='tel' value='' required="required" 
+                  placeholder="전화번호" class="form-control form-control-sm" style="width: 100%;">
         <span id='tel_msg'></span>
       </div>
       
       <div class="form-group"> 
         <label for="zipcode">우편 번호</label>
         <input type='text' name='zipcode' id='zipcode' value='' placeholder="우편번호"
-                  class="form-control form-control-sm" style="width: 30%;">
+                  class="form-control form-control-sm" style="width: 60%;">
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" 
                   class="btn btn-primary btn-sm" style="margin-top: 4px;">우편번호 찾기</button>
         <span id='zipcode_msg'></span>
@@ -325,17 +350,60 @@
       </div> 
       
       <div class="form-group">
+      <label for="date" style="width: 60%;" >날짜를 선택하세요:
+      <input type="date"  class="form-control form-control-sm"
+         id="birth" name='birth'
+         max=""
+         min="1970-01-01">
+      </label><br>
+      <span id='birth_msg'></span>
+      </div>
+<script>
+    // 오늘 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // 현재 날짜를 value와 max 속성에 설정
+    var today = formatDate(new Date());
+    document.getElementById('birth').value = '';
+    document.getElementById('birth').max = today;
+</script>     
+      
+      <!--<div class="form-group">
         <label for="birth" style="width: 100%;">생년월일 (예: 012345)</label>
         <input type='text' name='birth' id='birth' value='' placeholder="생년월일"
                   class="form-control form-control-sm">
         <span id='birth_msg'></span>          
-      </div> 
+      </div>--> 
+      
+      <div class="form-group">
+        <label for="sex" style="width: 100%;">성별</label>      
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sex" id="sex" value="남자">
+          <label class="form-check-label" for="inlineRadio1">남자</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sex" id="sex" value="여자">
+          <label class="form-check-label" for="inlineRadio2">여자</label>
+        </div>
+        <span id='sex_msg'></span>          
+      </div>
+<!--
       <div class="form-group">
         <label for="sex" style="width: 100%;">성별</label>
         <input type='text' name='sex' id='sex' value='' placeholder="성별"
                   class="form-control form-control-sm">
         <span id='sex_msg'></span>          
-      </div>   
+      </div>   --> 
 
 <!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
     <div>

@@ -3,6 +3,7 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.mlogin.MloginProcInter;
@@ -61,11 +64,95 @@ public class MemberCont {
     // return "{\"cnt\": " + cnt + "}";    // {"cnt": 1} JSON
     
     JSONObject obj = new JSONObject();
-    obj.put("cnts", cnt);
+    obj.put("cnt", cnt);
     
     return obj.toString();
   }
   /***************************************************************************************/
+  /**
+   * 아이디 찾기 폼
+   * @param model
+   * @return
+   */
+  @GetMapping(value="/find_id_form")
+  public String find_id_form(Model model) {
+       
+    return "member/find_id";
+  }
+  
+  /**
+   * 아이디 찾기 Proc
+   * @param model
+   * @return
+   */
+  @PostMapping(value="/find_id")
+  public String find_id(Model model, MemberVO memberVO) {
+    
+
+    ArrayList<MemberVO> memberList = this.memberProc.find_id(memberVO);
+    System.out.println("memberList->" + memberList);
+    
+    
+    if (memberList != null && !memberList.isEmpty()) {
+        model.addAttribute("code", "find_id_success");
+        model.addAttribute("memberList", memberList);
+        model.addAttribute("log", 1);
+    } else {
+        model.addAttribute("code", "find_id_fail");
+        model.addAttribute("cnt", 0);
+        model.addAttribute("log", 1);
+    }
+    
+
+
+    return "member/msg";
+  }
+  
+  /**
+   * 비밀번호 찾기 폼
+   * @param model
+   * @return
+   */
+  @GetMapping(value="/find_passwd_form")
+  public String find_passwd_form(Model model) {
+    
+    return "member/find_passwd";
+  }
+  
+  /**
+   * 비밀번호 찾기
+   * @param model
+   * @param id
+   * @param mname
+   * @param tel
+   * @return
+   */
+  @PostMapping(value="/find_passwd")
+  public String find_passwd(Model model, MemberVO memberVO) {
+      // MemberVO 객체에서 비밀번호를 찾습니다.
+      MemberVO member = this.memberProc.find_passwd(memberVO);
+
+      if (member != null && member.getPasswd() != null && !member.getPasswd().isEmpty()) {
+          try {
+              // member 객체에서 암호화된 비밀번호를 가져와서 복호화합니다.
+              String decryptedPasswd = security.aesDecode(member.getPasswd());
+              model.addAttribute("passwd", decryptedPasswd); // 복호화된 비밀번호 추가
+              model.addAttribute("code", "find_passwd_success");
+              model.addAttribute("log", 1);
+          } catch (Exception e) {
+              e.printStackTrace();
+              model.addAttribute("code", "find_passwd_fail");
+              model.addAttribute("cnt", 0);
+              model.addAttribute("log", 1);
+          }
+      } else {
+          model.addAttribute("code", "find_passwd_fail");
+          model.addAttribute("cnt", 0);
+          model.addAttribute("log", 1);
+      }
+
+      return "member/msg";
+  }
   /***************************************************************************************/
   /**
    * 회원 가입 폼
@@ -113,7 +200,7 @@ public class MemberCont {
   }
   /***************************************************************************************/
   
-  
+
   /***************************************************************************************/
   /**
    * 회원정보 조회

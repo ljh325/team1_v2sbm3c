@@ -62,22 +62,24 @@ public interface MemberDAOInter {
   public int delete(int memberno);
   
   /**
-   * 현재 패스워드 검사
-   * @param map
-   * @return 0: 일치하지 않음, 1: 일치함
-   */
-  public int passwd_check(HashMap<String, Object> map);
-  
-  /**
-   * 패스워드 변경
-   * @param map
-   * @return 변경된 패스워드 갯수
-   */
-  public int passwd_update(HashMap<String, Object> map);
-  
-  /**
    * 로그인 처리
+   * @param map
+   * @return
    */
   public int login(HashMap<String, Object> map);
+  
+  /**
+   * 아이디 찾기
+   * @param memberVO
+   * @return
+   */
+  public ArrayList<MemberVO> find_id(MemberVO memberVO);
+  
+  /**
+   * 비밀번호 찾기
+   * @param memberVO
+   * @return
+   */
+  public MemberVO find_passwd(MemberVO memberVO);
   
 }

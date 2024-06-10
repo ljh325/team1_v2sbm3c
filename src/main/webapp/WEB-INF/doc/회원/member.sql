@@ -1,5 +1,5 @@
 /**********************************/
-/* Table Name: νμ› */
+/* Table Name: ??› */
 /**********************************/
 CREATE TABLE MEMBER(
 		MEMBERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
@@ -12,33 +12,33 @@ CREATE TABLE MEMBER(
 		ADDRESS2                      		VARCHAR2(50)		 NULL ,
 		MDATE                         		DATE		 NOT NULL,
 		GRADE                         		NUMBER(2)		 NOT NULL,
-		PROFILE                       		VARCHAR2(1000)		 NULL ,
 		POINT                         		NUMBER(10)		 NOT NULL,
+        BIRTH                               NUMBER(10)		 NOT NULL,
   CONSTRAINT SYS_C008567 UNIQUE (ID)
 );
 
+commit;
 
-
-COMMENT ON TABLE MEMBER is 'νμ›';
-COMMENT ON COLUMN MEMBER.MEMBERNO is 'νμ› λ²νΈ';
-COMMENT ON COLUMN MEMBER.ID is 'μ•„μ΄λ””';
-COMMENT ON COLUMN MEMBER.PASSWD is 'ν¨μ¤μ›λ“';
-COMMENT ON COLUMN MEMBER.MNAME is 'μ„±λª…';
-COMMENT ON COLUMN MEMBER.TEL is 'μ „ν™”λ²νΈ';
-COMMENT ON COLUMN MEMBER.ZIPCODE is 'μ°νΈλ²νΈ';
+COMMENT ON TABLE MEMBER is '??›';
+COMMENT ON COLUMN MEMBER.MEMBERNO is '??› λ²νΈ';
+COMMENT ON COLUMN MEMBER.ID is '?•„?΄?””';
+COMMENT ON COLUMN MEMBER.PASSWD is '?¨?¤?›?“';
+COMMENT ON COLUMN MEMBER.MNAME is '?„±λª?';
+COMMENT ON COLUMN MEMBER.TEL is '? „?™”λ²νΈ';
+COMMENT ON COLUMN MEMBER.ZIPCODE is '?°?Έλ²νΈ';
 COMMENT ON COLUMN MEMBER.ADDRESS1 is 'μ£Όμ†1';
 COMMENT ON COLUMN MEMBER.ADDRESS2 is 'μ£Όμ†2';
-COMMENT ON COLUMN MEMBER.MDATE is 'κ°€μ…μΌ';
-COMMENT ON COLUMN MEMBER.GRADE is 'λ“±κΈ‰';
-COMMENT ON COLUMN MEMBER.PROFILE is 'νμ› ν”„λ΅ν•„ μ΄λ―Έμ§€';
-COMMENT ON COLUMN MEMBER.POINT is 'ν¬μΈνΈ';
+COMMENT ON COLUMN MEMBER.MDATE is 'κ°??…?Ό';
+COMMENT ON COLUMN MEMBER.GRADE is '?“±κΈ?';
+COMMENT ON COLUMN MEMBER.PROFILE is '??› ?”„λ΅ν•„ ?΄λ―Έμ?';
+COMMENT ON COLUMN MEMBER.POINT is '?¬?Έ?Έ';
 
 
 
 CREATE SEQUENCE member_seq
-  START WITH 1              -- μ‹μ‘ λ²νΈ
-  INCREMENT BY 1          -- μ¦κ°€κ°’
-  MAXVALUE 9999999999 -- μµλ€κ°’: 9999999 --> NUMBER(7) λ€μ‘
-  CACHE 2                       -- 2λ²μ€ λ©”λª¨λ¦¬μ—μ„λ§ κ³„μ‚°
-  NOCYCLE;                     -- λ‹¤μ‹ 1λ¶€ν„° μƒμ„±λλ” κ²ƒμ„ λ°©μ§€
+  START WITH 1              -- ?‹?‘ λ²νΈ
+  INCREMENT BY 1          -- μ¦κ?κ°?
+  MAXVALUE 9999999999 -- μµλ?κ°?: 9999999 --> NUMBER(7) ???‘
+  CACHE 2                       -- 2λ²μ? λ©”λª¨λ¦¬μ—?„λ§? κ³„μ‚°
+  NOCYCLE;                     -- ?‹¤?‹ 1λ¶??„° ?ƒ?„±??” κ²ƒμ„ λ°©μ?
  

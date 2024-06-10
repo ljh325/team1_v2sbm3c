@@ -47,9 +47,11 @@ public class MemberVO {
   /** 포인트 */
   private int point = 0;
   /** 생일 */
-  private int birth;
+  private String birth;
   /** sex */
   private String sex = "";
+  /** 닉네임 */
+  private String nickname="";
   
   
   
@@ -85,5 +87,9 @@ public class MemberVO {
   private String thumbs = "";
   /** 메인 이미지 크기 */
   private long sizes;
+  /** 비밀번호가 비어 있는지 확인하는 isEmpty 메서드 구현 */
+  public boolean isEmpty() {
+      return this.passwd == null || this.passwd.isEmpty();
+  }
   
 }
