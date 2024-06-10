@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.cate.CateVO;
 import dev.mvc.foodrecom.FoodrecomProcInter;
 import dev.mvc.goals.GoalsProcInter;
 import dev.mvc.goals.GoalsVO;
@@ -65,6 +66,8 @@ public class MhCont {
     System.out.println("-> Goals created.");  
   }
   
+
+
   
   /**
    * 조회폼

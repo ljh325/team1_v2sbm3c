@@ -361,11 +361,11 @@ def foodrecom_create_proc():
     
     insert_query = """
     INSERT INTO FOODRECOM (FOODRECOMNO, FRECOM, GOALSNO, MHNO, RDATE)
-    VALUES (FOODRECOM_SEQ.nextval, :frecom, 1, 1, sysdate)
+    VALUES (FOODRECOM_SEQ.nextval, :frecom, :goalsno, :mhno, sysdate)
     """
 
     # 바인드 변수 사용하여 JSON 문자열 삽입
-    cursor.execute(insert_query, {'frecom': frecom})
+    cursor.execute(insert_query, {'frecom': frecom,'goalsno' : goalsno,'mhno' : mhno})
 
     # 커밋
     conn.commit()
@@ -375,7 +375,7 @@ def foodrecom_create_proc():
     # 연결 종료
     cursor.close()
     conn.close()
-    return frecom
+    return response
 
 
 if __name__ == '__main__':

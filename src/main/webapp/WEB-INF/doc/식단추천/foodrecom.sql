@@ -15,11 +15,13 @@ CREATE SEQUENCE FOODRECOM_SEQ
     CACHE 2              -- 2번은 메모리에서만 계산
     NOCYCLE;            
 
-select*
+select * from mh
 from foodrecom
+sel
+
 CREATE TABLE FOODRECOM(
 		FOODRECOMNO                   		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		FRECOM                      		VARCHAR2(300)		 NOT NULL,
+		FRECOM                        		CLOB		 NOT NULL,
 		GOALSNO                       		NUMBER(10)		 NOT NULL,
 		MHNO                          		NUMBER(10)		 NOT NULL,
 		RDATE                         		DATE		 NOT NULL,
@@ -33,7 +35,6 @@ COMMENT ON COLUMN FOODRECOM.FRECOM is '식단추천내용';
 COMMENT ON COLUMN FOODRECOM.GOALSNO is '목표 번호';
 COMMENT ON COLUMN FOODRECOM.MHNO is '회원건강 정보 번호';
 COMMENT ON COLUMN FOODRECOM.RDATE is '날짜';
-
 
 -- CREATE
 INSERT INTO FOODRECOM (FOODRECOMNO, FRECOM, GOALSNO, MHNO, RDATE)
