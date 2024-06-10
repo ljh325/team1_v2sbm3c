@@ -234,7 +234,7 @@
       font-size: 14px; /* 버튼 글꼴 크기 */
       cursor: pointer; /* 커서 모양 변경 */
       border-radius: 5px; /* 버튼 둥글게 */
-      display: flex;
+
       align-items: center; /* 아이콘과 텍스트 수직 가운데 정렬 */
       border: 1px solid #999;
 
@@ -375,15 +375,7 @@
     padding-right: 20px;
   }
     
-  .fieldset_basic {
-    width: 90%; 
-    margin: 5px auto; 
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    border-left: none;
-    padding: 10px;
-  }
+
   
   .legend_basic {
     margin-left: 30px; 
