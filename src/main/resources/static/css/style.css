@@ -148,7 +148,7 @@
   
   .menu_line {
     text-align: left;
-    width: 90%;
+    width: 97%;
     border-bottom: dotted 1px rgb(255, 0, 0);
 
     clear: both;
@@ -163,7 +163,7 @@
     background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
     color: none; /* 텍스트 색상 */
     border: none; /* 테두리 없음 */
-    margin: 10px 0px 2px 15px; /* top -> right -> bottom -> left */
+    margin: 10px 10px 2px 10px; /* top -> right -> bottom -> left */
     padding: none; /* 내부 여백 */
     border-radius: none; /* 버튼 모서리 둥글게 */
     cursor: pointer; /* 커서 모양 변경 */
@@ -216,18 +216,30 @@
   }
   
   .registration{/*등록*/
-     width: 25px;
-  }
-.registration-button {
-    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+         background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
     color: none; /* 텍스트 색상 */
     border: none; /* 테두리 없음 */
     padding: none; /* 내부 여백 */
     border-radius: none; /* 버튼 모서리 둥글게 */
     cursor: pointer; /* 커서 모양 변경 */
     font-size: 16px; /* 폰트 크기 */
-   
+  }
+.registration-button {
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    cursor: pointer; /* 커서 모양 변경 */
+      background-color: rgb(255, 255, 255); /* 버튼 배경색 */
+      color: rgb(0, 0, 0); /* 버튼 글자색 */
+      border: none; /* 버튼 테두리 제거 */
+      padding: 5px 10px; /* 버튼 패딩 */
+      font-size: 14px; /* 버튼 글꼴 크기 */
+      cursor: pointer; /* 커서 모양 변경 */
+      border-radius: 5px; /* 버튼 둥글게 */
+      display: flex;
+      align-items: center; /* 아이콘과 텍스트 수직 가운데 정렬 */
+      border: 1px solid #999;
+
 }
+  
   
   .left_menu {
     width: 15%;
@@ -299,7 +311,7 @@
 
   .aside_left {
     float: left;
-    font-size: 1.3em;
+    font-size: 0.9em;
   }
   
   /** 본래의 A 태그의 크기를 제거하고 부모의 가변 크기를 사용 */
@@ -310,6 +322,7 @@
   .aside_right {
     float: right;
     font-size: 0.9em; /* 부모 글꼴 크기 대비 90%로 출력 */
+    justify-content: space-start;
   }
 
   .aside_right A {
@@ -398,13 +411,13 @@
   .title_line {
     text-align: left;
     border-bottom: solid 3px rgb(128, 0, 0);
-    width: 90%;
+    width: 97%;
     margin-top: -30px;
     margin: 0px auto;
     font-size: 20px;  
     color: rgb(255, 0, 0);
-    
-    display: flex;
+    justify-content: space-around;
+
   }
     .member_title_line {
     text-align: left;
@@ -430,16 +443,14 @@
 
   .title_line_text {
    font-size: 20px; 
-    color: rgb(0, 0, 0);  
+    color: rgb(0, 0, 0);
+    margin-top: 20px;  
   }
   .line_text {
     font-size: 20px;
     color: rgb(255, 128, 192);  
   }
-    .line_text1 {
-    font-size: 20px;
-    color: rgb(128, 0, 255);  
-  }
+
     
   .title_link:link{  /* 방문전 상태 */
     font-size: 20px;    
@@ -488,7 +499,7 @@
   
   .th_bs {
     text-align: center;
-    font-size: 20px;
+    font-size: 16px;
     
   }
   
@@ -670,6 +681,7 @@
     text-align: center;
     width: 80%;
     margin-top: 2px; 
+    font-size: 16px;
   }  
   
   /* 처리 성공 메시지 */
@@ -731,53 +743,8 @@
   }
   
   
-/* 작은 화면에서는 테이블의 가로 스크롤이 생기도록 설정 */
-@media screen and (max-width: 358px) {
-  table {
-    overflow-x: auto;
-    display: block;
-    width: 100%;
-  }
-}
 
-/* 테이블의 셀들을 세로로 배치 */
-@media screen and (max-width: 200px) {
-  table thead, table tbody, table th, table td, table tr {
-    display: block;
-  }
-  table tbody tr {
-    margin-bottom: 10px;
-  }
-  table th, table td {
-    /* 셀 사이의 간격을 조절 */
-    border: none;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    padding-left: 50%;
-    text-align: left;
-    width: 100%;
-  }
-  table th:before, table td:before {
-    /* 각 셀의 라벨을 표시 */
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    content: attr(data-label);
-    font-weight: bold;
-  }
-}
 
-/* 글자 크기 조절 */
-@media screen and (max-width: 500px) {
-  table th, table td, table td_bs{
-    font-size: 12px;
-  }
-  
-  
-}
 
 
 
