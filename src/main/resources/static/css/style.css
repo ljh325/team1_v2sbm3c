@@ -20,22 +20,11 @@
     font-style: normal;
 }
   /* 모든 태그에 적용 */
-  /*주찬 수정 - 원상복구*/
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
-     font-size: 14px; 
+     font-size: 30px; 
      margin: 0px;  /* top right bottom left */
      padding: 0px;
-<<<<<<< HEAD
-     color: #555555;
-  }  
-  
-  /*주찬 수정 - 원상복구*/
-  .container_main {
-    width: 98%; 
-    margin: 5px auto;
-  }
-=======
      color: rgb(0, 0, 0);
   } 
   
@@ -84,9 +73,53 @@
     width: 40px;
     }
 
+   .container_main {
+    width: 98%; 
+    margin: 1px auto;
+    
+    } 
+     .main_menu {
+      margin-top: 100px;
+    }
+    .main_navigation {
+    
+      position: fixed;
+      top: 50px;
+      padding: 0;
+      width: 98%;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 1px 0;
+      box-shadow: 0 1px 6px rgb(128, 255, 255), 0 6px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      border: 1px solid #999;
+      font-size: 8px; /* 글자 크기 조정 */
+    }
+     
+    .main_navigation a {
+      text-align: center;
+      cursor: pointer; /* 포인터 커서로 변경 */
+    }
+    .main_navigation a span {
+      display: block;
+      margin-top: 0px; /* 아이콘과 글자 사이의 간격 조정 */
+      font-size: 14px; /* 텍스트 크기 변경 */
+    }
+    .main_navigation .bi {
+      margin-top: -10px;
+      font-size: 1.2rem; /* 아이콘 크기 */
+    }
+    .main_navigation a:hover {
+      color: rgb(128, 255, 255); /* 호버 시 색상 변경 */
+    }
+    .main_icon{
+      width: 20px;
+    }
+    .offcanvas_icon{
+    width: 40px;
+    }
 
 
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
   
 
   .top_menu_label {
@@ -200,24 +233,16 @@
     width: 15%;
     float: left;
   }
-  /*주찬 수정 - 원상복구*/
+  
   .content {
     width: 90%;
     margin: 10px auto;
   }
-  /*주찬 수정 - 원상복구*/
-  .content_body {
-    width: 90%;
-    margin: 10px auto;
-  }
   
-<<<<<<< HEAD
-=======
   .content_body {
     width: 100%;
     margin: 10px auto;
   }
->>>>>>> 1b7c5182111821bf91d561971b2c1138f9294740
   
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
@@ -230,7 +255,6 @@
     background-color: rgb(255, 255, 255);
   }
   
-  /*주찬 수정 - 원상복구*/
   .content_bottom {
     width: 98%;
     margin: 1px auto;
