@@ -32,7 +32,7 @@ public class MemberTest {
     String address1 = "dkdk";
     String address2 = "dkdk";  
 
-    int birth = 990424;
+    //int birth = 990424;
     String sex = "M";
     
     memberVO.setId(id); // setId id값을 memberVO에 할당
@@ -42,7 +42,7 @@ public class MemberTest {
     memberVO.setZipcode(zipcode);
     memberVO.setAddress1(address1);
     memberVO.setAddress2(address2);
-    memberVO.setBirth(birth);
+//    memberVO.setBirth(birth);
     memberVO.setSex(sex);
     
     int cnt = this.memberProc.create(memberVO);

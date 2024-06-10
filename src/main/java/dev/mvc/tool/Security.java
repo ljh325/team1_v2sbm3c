@@ -22,8 +22,7 @@ public class Security {
   // 키 생성
   public Security() {
     try {
-      // String key = "soldeskAES256KEY"; // key는 16자, 123 -> spyryuhFvhnnv6cD2ROB8g==
-      String key = "soldeskAES256235";    // key는 16자, 123 -> KUxUbf+4VrlpsFZ3tSAKdw==
+      String key = "soldeskAES256235";    // key는 16자
       this.iv = key.substring(0, 16);
    
       byte[] keyBytes = new byte[16];
@@ -69,43 +68,41 @@ public class Security {
     return enStr;
   }
  
-//  // 복호화
-//  public String aesDecode(String str)
-//      throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
-//      InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-//    Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//    c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
-// 
-//    byte[] byteStr = Base64.decodeBase64(str.getBytes());
-// 
-//    return new String(c.doFinal(byteStr), "UTF-8");
-//  }
+  // 복호화
+  public String aesDecode(String str)
+      throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
+      InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+    Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
  
-//  public static void main(String[] args) throws Exception {
-//    AES256Util aes256 = new AES256Util();
-// 
-//    String text = "가나다 123 ABC !@#";
-//    // String text = "123"; // spyryuhFvhnnv6cD2ROB8g==
-//    System.out.println("암호화할 문자 : " + text);
-//    
-//    String encText = aes256.aesEncode(text);      // 암호화
-//    System.out.println("암호화된 문자(DBMS 저장) : " + encText);
-//    
-//    String decText = aes256.aesDecode(encText); // 복호화
-//    System.out.println("복호화된 문자 : " + decText);
-//    
-//    System.out.println("새로운 문자열 다시 암호화");
-//    String text2 = "가나다 123 ABC !@#";
-//    String encText2 = aes256.aesEncode(text);      // 암호화
-//    System.out.println("암호화된 문자(DBMS 저장) : " + encText2);
-//    
-//    // 비교시 복호화가 아니라 암호화를하여 비교
-//    if (encText.equals(encText2)) {
-//      System.out.println("암호화를하여 비교했으며 동일한 패스워드임.");
-//    }
-// 
-//  }
+    byte[] byteStr = Base64.decodeBase64(str.getBytes());
  
+    return new String(c.doFinal(byteStr), "UTF-8");
+  }
+ 
+  public static void main(String[] args) throws Exception {
+    Security aes256 = new Security();
+ 
+    String text = "가나다 123 ABC !@#";
+    System.out.println("암호화할 문자 : " + text);
+    
+    String encText = aes256.aesEncode(text);      // 암호화
+    System.out.println("암호화된 문자(DBMS 저장) : " + encText);
+    
+    String decText = aes256.aesDecode(encText); // 복호화
+    System.out.println("복호화된 문자 : " + decText);
+    
+    System.out.println("새로운 문자열 다시 암호화");
+    String text2 = "가나다 123 ABC !@#";
+    String encText2 = aes256.aesEncode(text2);      // 암호화
+    System.out.println("암호화된 문자(DBMS 저장) : " + encText2);
+    
+    // 비교시 복호화가 아니라 암호화를하여 비교
+    if (encText.equals(encText2)) {
+      System.out.println("암호화를하여 비교했으며 동일한 패스워드임.");
+    }
+  }
 }
+
 
 

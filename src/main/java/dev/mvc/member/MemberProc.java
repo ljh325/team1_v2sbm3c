@@ -138,8 +138,8 @@ public class MemberProc implements MemberProcInter {
   }
 
   @Override
-  public MemberVO find_passwd(HashMap<String, Object> map) {
-    MemberVO passwd =  this.memberDAO.find_passwd(map);
+  public MemberVO find_passwd(MemberVO memberVO) {
+    MemberVO passwd =  this.memberDAO.find_passwd(memberVO);
     return passwd;
   }
 

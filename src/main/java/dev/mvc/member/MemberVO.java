@@ -87,5 +87,9 @@ public class MemberVO {
   private String thumbs = "";
   /** 메인 이미지 크기 */
   private long sizes;
+  /** 비밀번호가 비어 있는지 확인하는 isEmpty 메서드 구현 */
+  public boolean isEmpty() {
+      return this.passwd == null || this.passwd.isEmpty();
+  }
   
 }

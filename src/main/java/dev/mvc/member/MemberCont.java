@@ -86,10 +86,9 @@ public class MemberCont {
    * @return
    */
   @PostMapping(value="/find_id")
-  public String find_id(Model model, String mname, String tel, MemberVO memberVO) {
+  public String find_id(Model model, MemberVO memberVO) {
     
-    System.out.println(mname);
-    System.out.println(tel);
+
     ArrayList<MemberVO> memberList = this.memberProc.find_id(memberVO);
     System.out.println("memberList->" + memberList);
     
@@ -97,10 +96,11 @@ public class MemberCont {
     if (memberList != null && !memberList.isEmpty()) {
         model.addAttribute("code", "find_id_success");
         model.addAttribute("memberList", memberList);
-        model.addAttribute("id", memberVO.getId());
-        System.out.println("id-> "  + memberVO.getId());
+        model.addAttribute("log", 1);
     } else {
         model.addAttribute("code", "find_id_fail");
+        model.addAttribute("cnt", 0);
+        model.addAttribute("log", 1);
     }
     
 
@@ -108,26 +108,50 @@ public class MemberCont {
     return "member/msg";
   }
   
+  /**
+   * 비밀번호 찾기 폼
+   * @param model
+   * @return
+   */
   @GetMapping(value="/find_passwd_form")
   public String find_passwd_form(Model model) {
     
-    
     return "member/find_passwd";
   }
+  
+  /**
+   * 비밀번호 찾기
+   * @param model
+   * @param id
+   * @param mname
+   * @param tel
+   * @return
+   */
   @PostMapping(value="/find_passwd")
-  public String find_passwd(Model model, String id, String mname, String tel) {
-HashMap<String, Object> map = new HashMap<String, Object>();
-    
-    map.put("id", id);
-    map.put("mname", mname); 
-    map.put("tel", tel);
-    System.out.println(id);
-    System.out.println(mname);
-    System.out.println(tel);
-    
-    
-    
-    return "member/msg";
+  public String find_passwd(Model model, MemberVO memberVO) {
+      // MemberVO 객체에서 비밀번호를 찾습니다.
+      MemberVO member = this.memberProc.find_passwd(memberVO);
+
+      if (member != null && member.getPasswd() != null && !member.getPasswd().isEmpty()) {
+          try {
+              // member 객체에서 암호화된 비밀번호를 가져와서 복호화합니다.
+              String decryptedPasswd = security.aesDecode(member.getPasswd());
+              model.addAttribute("passwd", decryptedPasswd); // 복호화된 비밀번호 추가
+              model.addAttribute("code", "find_passwd_success");
+              model.addAttribute("log", 1);
+          } catch (Exception e) {
+              e.printStackTrace();
+              model.addAttribute("code", "find_passwd_fail");
+              model.addAttribute("cnt", 0);
+              model.addAttribute("log", 1);
+          }
+      } else {
+          model.addAttribute("code", "find_passwd_fail");
+          model.addAttribute("cnt", 0);
+          model.addAttribute("log", 1);
+      }
+
+      return "member/msg";
   }
   /***************************************************************************************/
   /**

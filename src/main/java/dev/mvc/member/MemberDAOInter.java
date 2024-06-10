@@ -70,16 +70,16 @@ public interface MemberDAOInter {
   
   /**
    * 아이디 찾기
-   * @param map
+   * @param memberVO
    * @return
    */
   public ArrayList<MemberVO> find_id(MemberVO memberVO);
   
   /**
    * 비밀번호 찾기
-   * @param map
+   * @param memberVO
    * @return
    */
-  public MemberVO find_passwd(HashMap<String, Object> map);
+  public MemberVO find_passwd(MemberVO memberVO);
   
 }

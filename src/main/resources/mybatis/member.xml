@@ -93,7 +93,7 @@
   </select>
   
   <!-- 비번 찾기 -->
-  <select id="find_passwd" parameterType="HashMap" resultType="dev.mvc.member.MemberVO">
+  <select id="find_passwd" parameterType="dev.mvc.member.MemberVO" resultType="dev.mvc.member.MemberVO">
     SELECT passwd 
     FROM member
     WHERE id=#{id} AND mname=#{mname} AND tel=#{tel} 
