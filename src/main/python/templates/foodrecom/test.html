@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>식단 정보</title>
+  <style>
+    .meal {
+      margin-bottom: 20px;
+    }
+    .meal-title {
+      font-weight: bold;
+    }
+    .item-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .item {
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="mealInfo">
+    <h3>식단 정보</h3>
+    <div class="meal" id="breakfast">
+      <h4 class="meal-title">아침</h4>
+      <ul class="item-list" id="breakfastItems">
+        <!-- 아침 아이템들이 여기에 동적으로 추가될 것입니다. -->
+      </ul>
+    </div>
+    <div class="meal" id="lunch">
+      <h4 class="meal-title">점심</h4>
+      <ul class="item-list" id="lunchItems">
+        <!-- 점심 아이템들이 여기에 동적으로 추가될 것입니다. -->
+      </ul>
+    </div>
+    <div class="meal" id="dinner">
+      <h4 class="meal-title">저녁</h4>
+      <ul class="item-list" id="dinnerItems">
+        <!-- 저녁 아이템들이 여기에 동적으로 추가될 것입니다. -->
+      </ul>
+    </div>
+    <div class="meal" id="snack">
+      <h4 class="meal-title">간식</h4>
+      <ul class="item-list" id="snackItems">
+        <!-- 간식 아이템들이 여기에 동적으로 추가될 것입니다. -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // 데이터를 HTML에 삽입하는 함수
+    function populateMeals(data) {
+      const breakfastList = document.getElementById('breakfastItems');
+      const lunchList = document.getElementById('lunchItems');
+      const dinnerList = document.getElementById('dinnerItems');
+      const snackList = document.getElementById('snackItems');
+      
+      data.food.forEach(meal => {
+        const itemList = document.createElement('ul');
+        itemList.className = 'item-list';
+        meal.items.forEach(item => {
+          const listItem = document.createElement('li');
+          listItem.className = 'item';
+          listItem.textContent = item.name;
+          itemList.appendChild(listItem);
+        });
+        
+        switch (meal.meal) {
+          case '아침':
+            breakfastList.appendChild(itemList);
+            break;
+          case '점심':
+            lunchList.appendChild(itemList);
+            break;
+          case '저녁':
+            dinnerList.appendChild(itemList);
+            break;
+          case '간식':
+            snackList.appendChild(itemList);
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    // 페이지 로드 후 실행
+    window.onload = () => {
+      const jsonData = <%= JSON.stringify(data) %>;
+      populateMeals(jsonData);
+    };
+  </script>
+</body>
+</html>
