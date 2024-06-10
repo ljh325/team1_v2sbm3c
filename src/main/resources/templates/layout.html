@@ -19,12 +19,24 @@
 $(document).ready(function(){
     $("#dictionaryBtn").click(function(){
         $("#mainMenuBar").removeClass("hidden");
+        $("#foodMenuBar").addClass("hidden");
 
         // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
         setTimeout(function(){
             $("#mainMenuBar").addClass("hidden");
         }, 4000); // 10000 밀리초 = 4초
     });
+    
+    $("#foodBtn").click(function(){
+        $("#foodMenuBar").removeClass("hidden");
+        $("#mainMenuBar").addClass("hidden");
+
+        // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
+        setTimeout(function(){
+            $("#foodMenuBar").addClass("hidden");
+        }, 4000); // 10000 밀리초 = 4초
+    });
+    
 });
 </script>
 
@@ -59,64 +71,81 @@ $(document).ready(function(){
   <!-- footer 하단 메뉴 시작 -->  
 <div class='content_bottom'>
     <div class='bottom_menu'>
-      <div class="navigation">
-        <a id="dictionaryBtn" aria-label="운동">
-          <img src="/home/health.png" class="icon">
-          <span>운동</span>
-        </a>
-        
-        <a href="dictionaryBtn" aria-label="식단">
-          <img src="/home/eat.png" class="icon">
-          <span>식단</span>
-        </a>
-        <a href="/analysis" aria-label="분석">
-          <img src="/home/chart.png" class="icon">
-          <span>분석</span>
-        </a>
-        <a href="/analysis" aria-label="분석">
-          <img src="/home/record.png" class="icon">
-          <span>기록</span>
-        </a>
-        <a href="/community" aria-label="커뮤니티">
-          <img src="/home/community.png" class="icon">
-          <span>커뮤니티</span>
-        </a>
+        <div class="navigation">
+            <a id="dictionaryBtn" aria-label="운동">
+                <img src="/home/health.png" class="icon">
+                <span>운동</span>
+            </a>
     
-        <a th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}" aria-label="프로필">
-          <img src="/home/profil.png" class="icon">
-          <span>프로필</span>
-        </a>
-        <a th:if="${session.memberno == null}" th:href="@{/member/login}" aria-label="로그인">
-          <img src="/home/login.png" class="icon">
-          <span>로그인</span>
-        </a>
-      </div>
+            <a id ="foodBtn" aria-label="식단">
+              <img src="/home/eat.png" class="icon">
+              <span>식단</span>
+            </a>
+            <a href="/analysis" aria-label="분석">
+              <img src="/home/chart.png" class="icon">
+              <span>분석</span>
+            </a>
+            <a href="/analysis" aria-label="분석">
+              <img src="/home/record.png" class="icon">
+              <span>기록</span>
+            </a>
+            <a href="/community" aria-label="커뮤니티">
+              <img src="/home/community.png" class="icon">
+              <span>커뮤니티</span>
+            </a>
+
+            <a th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}" aria-label="프로필">
+              <img src="/home/profil.png" class="icon">
+              <span>프로필</span>
+            </a>
+            <a th:if="${session.memberno == null}" th:href="@{/member/login}" aria-label="로그인">
+              <img src="/home/login.png" class="icon">
+              <span>로그인</span>
+            </a>
+        </div>
+       </div>
     </div>
-</div>
 <!-- footer 종료 -->
 
     <!--운동 Main Menu Bar  운동 등록 -->
     <div id="mainMenuBar" class="container_main hidden">
         <div class="main_menu">
             <div class="main_navigation">
-                <a href="/" aria-label="메뉴">
+                <a href="/health/list_by_htcno?htcno=6" aria-label="메뉴">
                     <span>팔</span>
                 </a>
-                <a href="/" aria-label="메뉴">
+                <a href="/health/list_by_htcno?htcno=7" aria-label="메뉴">
+                    <span>다리</span>
+                </a>
+                <a href="/health/list_by_htcno?htcno=11" aria-label="메뉴">
                     <span>어깨</span>
                 </a>
-                <a href="/" aria-label="메뉴">
-                    <span>등</span>
-                </a>
-                <a href="/" aria-label="메뉴">
-                    <span>팔</span>
+                <a href="/health/list_by_htcno?htcno=12" aria-label="메뉴">
+                    <span>가슴</span>
                 </a>
             </div>
         </div>
     </div>
     
-    
+    <!--식단 추천과 운동 추천을 위한 정보 입력과 출력을 위한 메뉴-->
+     <div id="foodMenuBar" class="container_main hidden">
+        <div class="food_menu">
+            <div class="main_navigation">
+                <a href="/mh/list_all" aria-label="메뉴">
+                    <span>건강 정보</span>
+                </a>
+                <a href="/goals/list_all" aria-label="메뉴">
+                    <span>목표 정보</span>
+                </a>
+                <a href="/healthrecom/list_all" aria-label="메뉴">
+                    <span>운동 추천</span>
+                </a>
+                <a href="/foodrecom/list_all" aria-label="메뉴">
+                    <span>식단 추천</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
-
 

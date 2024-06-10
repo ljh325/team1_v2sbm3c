@@ -1,59 +1,116 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<head>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9; /* Change background color */
+    }
+    .title_line {
+      background-color: #343a40;
+      color: #ffffff;
+      padding: 10px;
+      font-size: 1.5em; /* Increase font size */
+      margin-bottom: 20px; /* Increase margin */
+      text-align: center; /* Center align text */
+    }
+    .title_line .title_line_text {
+      margin-right: 10px; /* Increase margin */
+    }
+    .aside_right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px; /* Increase margin */
+    }
+    .menu_divide {
+      margin: 0 10px; /* Increase margin */
+    }
+    .menu_line {
+      border-bottom: 2px solid #343a40;
+      margin-bottom: 30px; /* Increase margin */
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px; /* Increase padding */
+      border: 1px solid #ced4da;
+      border-radius: 6px; /* Increase border radius */
+      box-sizing: border-box;
+      margin-top: 10px; /* Increase margin */
+      margin-bottom: 20px; /* Increase margin */
+      font-size: 16px; /* Increase font size */
+    }
+    .btn {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px 20px; /* Increase padding */
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px; /* Increase font size */
+      border-radius: 6px; /* Increase border radius */
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* Add transition */
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .content_body_bottom {
+      margin-top: 30px; /* Increase margin */
+      text-align: center; /* Center align content */
+    }
+  </style>
+</head>
+<body>
 <div layout:fragment="content">
-  <div class='title_line'>
-    <span th:text="${htcVO.name }" class="title_line_text"></span > 
-    > <span th:text="${htcVO.namesub}" class="title_line_text"></span > 
+  <div class="title_line" style="font-size: 24px;"> <!-- Increase font size -->
+    <span th:text="${htcVO.name }" class="title_line_text"></span> 
+    > <span th:text="${htcVO.namesub}" class="title_line_text"></span> 
     > 글 수정
   </div>
   
   <aside class="aside_right">
-    <a th:href="@{|./create?htcno=${htcVO.htcno }|}">등록</a>
-    <span class='menu_divide' >│</span>
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_htcno_search_paging?htcno=${htcVO.htcno }|}">기본 목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_htcno_grid?htcno=${htcVO.htcno }|}">갤러리형</a>
+    <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
+        <img src="/home/insert.png" class="icon" title="등록">
+    </a>
+    <span class="menu_divide">│</span>
+    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+        <img src="/home/list1.png" class="icon" title="목록">
+    </a>
   </aside>
   
-  <div class='menu_line'></div>
+  <div class="menu_line"></div>
   
-  <form name='frm' method='post' th:object="${healthVO}" action='./update_text'>
-    <input type="hidden" name="htcno" th:value="${htcVO.htcno }">
-    <input type="hidden" name="healthno" th:value="${healthVO.healthno }">
+  <form name="frm" method="post" th:object="${healthVO}" action="./update_text">
+    <input type="hidden" name="htcno" th:value="${htcVO.htcno}">
+    <input type="hidden" name="healthno" th:value="${healthVO.healthno}">
     <input type="hidden" name="now_page" th:value="${now_page}">
     <input type="hidden" name="search_word" th:value="${word}">
     
     <div>
-       <label>제목</label>
-       <input type='text' name='title' th:value='${healthVO.title}' required="required" 
-                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title" th:value="${healthVO.title}" required="required" autofocus="autofocus" class="form-control">
     </div>
     <div>
-       <label>내용</label>
-       <textarea name='explan' required="required" class="form-control" rows="12" style='width: 100%;' 
-                      th:text='${healthVO.explan}'></textarea>
+      <label for="explan">내용</label>
+      <textarea id="explan" name="explan" required="required" class="form-control" rows="12" th:text="${healthVO.explan}"></textarea>
     </div>
     <div>
-       <label>검색어</label>
-       <input type='text' name='word' th:value='${healthVO.word}' required="required" 
-                 class="form-control" style='width: 100%;'>
+      <label for="word">검색어</label>
+      <input type="text" id="word" name="word" th:value="${healthVO.word}" required="required" class="form-control">
     </div>   
     <div>
-       <label>패스워드</label>
-       <input type='password' name='passwd' th:value='1234' required="required" 
-                 class="form-control" style='width: 50%;'>
+      <label for="passwd">패스워드</label>
+      <input type="password" id="passwd" name="passwd" value="1234" required="required" class="form-control">
     </div>
     <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-      <button type="button" th:attr="onclick=|location.href='./list_by_htcno_search_paging?htcno=${htcno}'|" class="btn btn-secondary btn-sm">목록</button>
+      <button type="submit" class="btn">저장</button>
+      
     </div>
-  
   </form>
-
 </div>
-
-
-  
+</body>
+</html>

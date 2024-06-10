@@ -21,20 +21,54 @@
             
                  <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
                     
-                    <!-- 이메일 및 아이디 회원 이름-->
-                        <div style="display: flex; justify-content: space-around;">
-                            <div class="member_title_line">내 계정 </div>
-                              <aside class="aside_right">
-                              <!-- 이메일 및 아이디 회원 이름 등록   -->
-                              </aside>
-                        </div>
+       <!-- 이메일 및 아이디 회원 이름-->
+                    <div style="display: flex; justify-content: space-around;">
+                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown0"
+                                 aria-controls="navbarSupportedContent" >계정
+                             </button> 
+                     </div>
+                     <div class="collapse navbar-collapse" id="navDropdown0">
+                          <ul class="nav-top" style="font-size: 10px;">
+                            <!-- 로그인 -->
+                            <a class="review_title_line" th:if="${session.memberno == null}" th:href="@{/member/login}" >로그인 </a>
+                            
+                               <!-- 회원가입 --> 
+                            <a class="review_title_line" th:if="${session.memberno == null}" href="/member/create">회원가입</a>
+                            
+                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}">회원정보</a>
+                            <!--로그인시 로그인 내역 -->
+                          <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그인 내역</a>    
+   
+                            <!-- 로그인시 로그아웃 -->
+                            <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그아웃</a>
+                            
+                          <!--로그인시 비밀번호 변경 -->
+                            <a class="review_title_line" th:if="${session.memberno != null}" href="/member/passwd_update_form">비밀번호 변경</a>
+
+                          </ul>
+                      </div>
                         
-                      <!-- 카테 목록 바로 가기-->
+        <!-- 카테 목록 바로 가기-->
                         <div style="display: flex; justify-content: space-around;">
-                            <div class="review_title_line">바로가기</div>
-        
-                          
-                       </div>
+                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown"
+                                 aria-controls="navbarSupportedContent" aria-label="Toggle navigation">바로가기
+                             </button> 
+                        </div>
+                        <div class="collapse navbar-collapse" id="navDropdown">
+                              <ul class="nav-top" style="font-size: 10px;">
+                                <li class="review_title_line" th:each="htcVOMenu:${menu}">
+                                      <a class="review_title_line" href="#" id="navbarDropdownMenuLink" 
+                                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
+                                      </a>
+                                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                          <a th:each="htcVO:${htcVOMenu.list_namesub}">
+                                          <a class="member_title_line" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}|}" th:text="${htcVO.namesub}"></a>
+                                          </a>
+                                      </ul>
+                                </li>
+          
+                              </ul>
+                         </div>
                         
                         <!-- 리뷰남기기, 문의-->
                         <div style="display: flex; justify-content: space-around;">
@@ -51,49 +85,33 @@
                                 <!-- 정보, 이용약관 등록 -->
                               </aside>
                        </div>
-                       
-                       <!--로그인 로그아웃 탈퇴하기 등록 필요-->
-                        <div style="display: flex; justify-content: space-around;">
-                            <a class="review_title_line" th:if="${session.memberno == null}" th:href="@{/member/login}" >로그인 </a>
-                                
-                         <a class="review_title_line" th:if="${session.memberno == null}"href="/member/create">회원가입</a>
-                            <div class="review_title_line" th:if="${session.memberno != null}" >
-                               <a class="review_title_line" href="/member/logout">로그아웃</a>
-                            </div>
-                       </div> 
-                    </span>
-                        
-          
-                    <!-- admin 권한 -->
-                    <span style="background-color: rgb(192, 192, 192); text-align:center;" th:if="${session.memberno=='admin'}">관리자 등록
-                              
+ <!-- admin 권한 -->
+                               
+                    <div style="display: flex; justify-content: space-around;">
+                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
+                                 aria-controls="navbarSupportedContent" >관리자 등록
+                             </button> 
+                     </div>
+                     <div class="collapse navbar-collapse" id="navDropdown1">
+                          <ul class="nav-top" style="font-size: 10px;">
+                            <!-- admin 전체 회원 목록 -->
+                                <div style="display: flex; justify-content: space-around;">
+                                    <a class="review_title_line" href="/member/list">회원 목록</a>
+                                </div>
+                              <!-- admin 운동 글 전체  -->   
+                                <div style="display: flex; justify-content: space-around;">
+                                    <a class="review_title_line" href="/health/list_all?now_page=1">운동 글 전체 목록</a>
+                                </div>
+                                                    <!-- admin 운동 카테 등록 목록 -->
+                                <div style="display: flex; justify-content: space-around;">
+                                    <a class="review_title_line" href="/htc/list_search">운동 카테 등록, 목록 </a>
+                                </div>
 
-                    <!-- admin 전체 회원 목록 -->
-                        <div style="display: flex; justify-content: space-around;">
-                            <a class="member_title_line" href="/member/list">회원 목록</a>
-                        </div>
-                    <!-- admin 운동 카테 등록 목록 -->
-                        <div style="display: flex; justify-content: space-around;">
-                            <a class="member_title_line" href="/htc/list_search">운동 카테 등록, 목록 </a>
-                        </div>
-                     <!-- admin 운동 글 전체  -->   
-                        <div style="display: flex; justify-content: space-around;">
-                            <a class="member_title_line" href="/health/list_all?now_page=1">운동 글 전체 목록</a>
-                        </div>
-                        
-                      <!-- admin 소분류 운동 카테 회원이 볼수 있는(0) -->
-                        <li class="nav-item dropdown" th:each="cateVOMenu:${menu}">
-                              <a class="member_title_line" href="#" id="navbarDropdownMenuLink" 
-                                   role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
-                              </a>
-                              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                  <a th:each="cateVO:${cateVOMenu.list_namesub}">
-                                  <a class="member_title_line" href="#" th:text="${cateVO.namesub}"></a>
-                                  </a>
-                              </ul>
-                        </li>
-        
-                    </span>
+
+                          </ul>
+                      </div>
+                 </span>
+
           
                    
           </ul>

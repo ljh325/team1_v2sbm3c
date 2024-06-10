@@ -22,6 +22,10 @@
       background-color: #f9f9f9;
     }
 
+    tr {
+      cursor: pointer;
+    }
+
     tr:hover {
       background-color: #ddd;
     }
@@ -43,22 +47,81 @@
   <div class='menu_line'></div>
 
   <script>
+    let extime = 0.0167; // 운동시간 (0.0167 = 1분)
+
     window.onload = () => {
+      let ex_time_tag = document.getElementById('ex_time');
+      
       list_all_form();
       list_all_sort();
-       
+      list_part_sort();
+      
       document.getElementById('ex_intensity').addEventListener("change", () => {
+        
+        if(document.getElementById('ex_group').value == 'all'){
         list_all_form();
-      })
+        } else {
+          list_part_form();
+        }
+      });
+      
+      document.getElementById('ex_group').addEventListener("change", () => {
+        
+        if (document.getElementById('ex_group').value != 'all') {
+          document.getElementById('cal_asc').style.display = 'none';
+          document.getElementById('cal_desc').style.display = 'none';
+          document.getElementById('act_asc').style.display = 'none';
+          document.getElementById('act_desc').style.display = 'none';
+          document.getElementById('risk_asc').style.display = 'none';
+          document.getElementById('risk_desc').style.display = 'none';
+          document.getElementById('part_cal_asc').style.display = '';
+          document.getElementById('part_cal_desc').style.display = '';
+          document.getElementById('part_act_asc').style.display = '';
+          document.getElementById('part_act_desc').style.display = '';
+          document.getElementById('part_risk_asc').style.display = '';
+          document.getElementById('part_risk_desc').style.display = '';
+          list_part_form();
+          
+        } else {
+          
+          document.getElementById('cal_asc').style.display = '';
+          document.getElementById('cal_desc').style.display = '';
+          document.getElementById('act_asc').style.display = '';
+          document.getElementById('act_desc').style.display = '';
+          document.getElementById('risk_asc').style.display = '';
+          document.getElementById('risk_desc').style.display = '';
+          document.getElementById('part_cal_asc').style.display = 'none';
+          document.getElementById('part_cal_desc').style.display = 'none';
+          document.getElementById('part_act_asc').style.display = 'none';
+          document.getElementById('part_act_desc').style.display = 'none';
+          document.getElementById('part_risk_asc').style.display = 'none';
+          document.getElementById('part_risk_desc').style.display = 'none';
+          
+          list_all_form();
+          
+        }
+      });
+      
+      ex_time_tag.addEventListener("change", () => {
+        
+        extime = 0.0167 * ex_time_tag.value;
+        
+        if (document.getElementById('ex_group').value != 'all'){
+          list_part_form();
+        } else {
+          list_all_form();
+        }
+        
+      });
     }
     //---------------------------- window 함수 종료 -----------------------------------
-    function list_all_form() {
+    function list_all_form() { // 모든 운동 데이터 폼
       let list_exdata_tag = document.getElementById('list_exdata');
-      let intensity_tag = document.getElementById('ex_intensity')
-      let intensity = intensity_tag.value
-      
-     
-      
+      let intensity_tag = document.getElementById('ex_intensity');
+      let intensity = intensity_tag.value;
+
+
+
       fetch("/exdata/list_all_exdata", {
         "method": "get",
         "headers": {"Content-Type": "application/json"},
@@ -70,7 +133,20 @@
           for (let i = 0; i < data['res'].length; i++) {
             let row = data['res'][i];
 
-            msg += "<tr id='exdata" + row.exdatano + "'>";
+            let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.lowmet = lowcal + "kcal";
+
+            let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.midmet = midcal + "kcal";;
+
+            let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.highmet = highcal + "kcal";;
+
+            if (row.musclesub == null) {
+              row.musclesub = ' ';
+            }
+
+            msg += "<tr id='exdata" + row.exdatano + "' onclick=>";
             msg += "<td>" + row.exgroup + "</td>";
             msg += "<td>" + row.exname + "</td>";
             msg += "<td>" + row.muscle + "</td>";
@@ -102,7 +178,7 @@
         });
     }
 
-    function list_all_sort() {
+    function list_all_sort() { // 모든 운동 데이터 정렬
       let cal_asc_tag = document.getElementById('cal_asc');
       let cal_desc_tag = document.getElementById('cal_desc');
 
@@ -124,6 +200,19 @@
             let msg = '';
             for (let i = 0; i < data['res'].length; i++) {
               let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
 
               msg += "<tr id='exdata" + row.exdatano + "'>";
               msg += "<td>" + row.exgroup + "</td>";
@@ -159,10 +248,10 @@
 
 
       cal_desc_tag.addEventListener("click", () => {
-        let intensity_tag = document.getElementById('ex_intensity')
-        let intensity = intensity_tag.value
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
 
-        fetch("/exdata/list_all_exdata_cal_desc", {
+        fetch("/exdata/list_all_exdata_cal_desc?intensity=" + intensity, {
           "method": "get",
           "headers": {"Content-Type": "application/json"},
         }).then((response) => response.json())
@@ -170,6 +259,19 @@
             let msg = '';
             for (let i = 0; i < data['res'].length; i++) {
               let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
 
               msg += "<tr id='exdata" + row.exdatano + "'>";
               msg += "<td>" + row.exgroup + "</td>";
@@ -201,19 +303,282 @@
           });
 
       });
+
+      act_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity')
+        let intensity = intensity_tag.value
+
+        fetch("/exdata/list_all_exdata_act_asc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("asc " + intensity);
+          });
+
+      });
+
+
+      act_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        fetch("/exdata/list_all_exdata_act_desc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("desc " + intensity);
+          });
+
+      });
+
+      risk_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        fetch("/exdata/list_all_exdata_risk_asc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("asc " + intensity);
+          });
+
+      });
+
+
+      risk_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        fetch("/exdata/list_all_exdata_risk_desc?intensity=" + intensity, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("desc " + intensity);
+          });
+
+      });
+
     }
 
-    function test_asc(intensity) {
-      fetch("/exdata/list_all_exdata_cal_asc?intensity=" + intensity, {
+    //---------------------------------------------------------------------------------------------------------------------------
+
+    function list_part_form() { // 부위별 운동 데이터 폼
+      let list_exdata_tag = document.getElementById('list_exdata');
+      let group_tag = document.getElementById('ex_group');
+      let group = group_tag.value;
+
+      let intensity_tag = document.getElementById('ex_intensity');
+      let intensity = intensity_tag.value;
+
+      if (group == 'all') {
+        list_all_form()
+        return;
+      }
+      console.log("group => " + group);
+
+      fetch("/exdata/list_part_exdata?part=" + group, {
         "method": "get",
         "headers": {"Content-Type": "application/json"},
-      }).then((response) => response.json())
+      })
+        .then((response) => response.json())
         .then((data) => {
           let msg = '';
+          //alert(data['res'][1].exname);
           for (let i = 0; i < data['res'].length; i++) {
             let row = data['res'][i];
 
-            msg += "<tr id='exdata" + row.exdatano + "'>";
+            let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.lowmet = lowcal + "kcal";;
+
+            let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.midmet = midcal + "kcal";;
+
+            let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.highmet = highcal + "kcal";;
+
+            if (row.musclesub == null) {
+              row.musclesub = ' ';
+            }
+
+            msg += "<tr id='exdata" + row.exdatano + "' onclick=>";
             msg += "<td>" + row.exgroup + "</td>";
             msg += "<td>" + row.exname + "</td>";
             msg += "<td>" + row.muscle + "</td>";
@@ -223,47 +588,442 @@
               msg += "<td>" + row.lowmet + "</td>";
               msg += "<td>" + row.lowact + "</td>";
               msg += "<td>" + row.lowrisk + "</td>";
-              console.log("asc " + intensity);
+              console.log(intensity);
             } else if (intensity == 2) {
+
               msg += "<td>" + row.midmet + "</td>";
               msg += "<td>" + row.midact + "</td>";
               msg += "<td>" + row.midrisk + "</td>";
-              console.log("asc " + intensity);
-            } else if (intensity == 3) {
+              console.log(intensity);
+            }
+
+            else if (intensity == 3) {
               msg += "<td>" + row.highmet + "</td>";
               msg += "<td>" + row.highact + "</td>";
               msg += "<td>" + row.highrisk + "</td>";
-              console.log("asc " + intensity);
+              console.log(intensity);
             }
-            document.getElementById('list_exdata').innerHTML = msg;
 
           }
+          list_exdata_tag.innerHTML = msg;
+
         });
+
     }
+
+    function list_part_sort() { // 부위별 운동 데이터 정렬
+      let part_cal_asc_tag = document.getElementById('part_cal_asc');
+      let part_cal_desc_tag = document.getElementById('part_cal_desc');
+
+      let part_act_asc_tag = document.getElementById('part_act_asc');
+      let part_act_desc_tag = document.getElementById('part_act_desc');
+
+      let part_risk_asc_tag = document.getElementById('part_risk_asc');
+      let part_risk_desc_tag = document.getElementById('part_risk_desc');
+
+      part_cal_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+
+
+        fetch("/exdata/list_part_exdata_cal_asc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("partasc " + intensity);
+          });
+
+      });
+
+
+      part_cal_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+        fetch("/exdata/list_part_exdata_cal_desc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("partdesc " + intensity);
+          });
+
+      });
+
+      part_act_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+        fetch("/exdata/list_part_exdata_act_asc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("partasc " + intensity);
+          });
+
+      });
+
+
+      part_act_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+        fetch("/exdata/list_part_exdata_act_desc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("partdesc " + intensity);
+          });
+
+      });
+
+      part_risk_asc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+        fetch("/exdata/list_part_exdata_risk_asc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1 || intensity == '') {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+
+            }
+            console.log("partasc " + intensity);
+          });
+
+      });
+
+
+      part_risk_desc_tag.addEventListener("click", () => {
+        let intensity_tag = document.getElementById('ex_intensity');
+        let intensity = intensity_tag.value;
+
+        let group_tag = document.getElementById('ex_group');
+        let group = group_tag.value;
+
+        fetch("/exdata/list_part_exdata_risk_desc?intensity=" + intensity + "&part=" + group, {
+          "method": "get",
+          "headers": {"Content-Type": "application/json"},
+        }).then((response) => response.json())
+          .then((data) => {
+            let msg = '';
+            for (let i = 0; i < data['res'].length; i++) {
+              let row = data['res'][i];
+
+              let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.lowmet = lowcal + "kcal";;
+
+              let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.midmet = midcal + "kcal";;
+
+              let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+              row.highmet = highcal + "kcal";;
+
+              if (row.musclesub == null) {
+                row.musclesub = ' ';
+              }
+
+              msg += "<tr id='exdata" + row.exdatano + "'>";
+              msg += "<td>" + row.exgroup + "</td>";
+              msg += "<td>" + row.exname + "</td>";
+              msg += "<td>" + row.muscle + "</td>";
+              msg += "<td>" + row.musclesub + "</td>";
+              msg += "<td>" + row.exlevel + "</td>";
+              if (intensity == 1) {
+                msg += "<td>" + row.lowmet + "</td>";
+                msg += "<td>" + row.lowact + "</td>";
+                msg += "<td>" + row.lowrisk + "</td>";
+
+              } else if (intensity == 2) {
+                msg += "<td>" + row.midmet + "</td>";
+                msg += "<td>" + row.midact + "</td>";
+                msg += "<td>" + row.midrisk + "</td>";
+
+              } else if (intensity == 3) {
+                msg += "<td>" + row.highmet + "</td>";
+                msg += "<td>" + row.highact + "</td>";
+                msg += "<td>" + row.highrisk + "</td>";
+
+              }
+              document.getElementById('list_exdata').innerHTML = msg;
+
+
+            }
+            console.log("partdesc " + intensity);
+          });
+
+      });
+
+    }
+
 
   </script>
   <h2>추천 운동 데이터</h2>
 
-    <label for="ex_intensity">운동강도선택&nbsp;</label>
-    <select id="ex_intensity">
-      <option value="1">낮음</option>
-      <option value="2">보통</option>
-      <option value="3">높음</option>
-    </select>
+  <label for="ex_intensity">운동강도&nbsp;</label>
+  <select id="ex_intensity">
+    <option value="1">낮음</option>
+    <option value="2">보통</option>
+    <option value="3">높음</option>
+  </select>
 
 
-    <label for="ex_group">&nbsp;&nbsp;&nbsp;&nbsp;부위별 조회&nbsp;</label>
-    <select id="ex_group">
-      <option value="all">모두보기</option>
-      <option value="chest">가슴</option>
-      <option value="back">등</option>
-      <option value="shoulder">어깨</option>
-      <option value="arm">팔</option>
-      <option value="leg">하체</option>
-      <option value="abs">복근</option>
-      <option value="cardio">유산소</option>
-
-    </select>
+  <label for="ex_group">&nbsp;&nbsp;&nbsp;부위별 조회&nbsp;</label>
+  <select id="ex_group">
+    <option value="all">모두보기</option>
+    <option value="가슴">가슴</option>
+    <option value="등">등</option>
+    <option value="어깨">어깨</option>
+    <option value="팔">팔</option>
+    <option value="하체">하체</option>
+    <option value="복근">복근</option>
+    <option value="유산소">유산소</option>
+  </select>
+  
+  <label for="ex_time">&nbsp;&nbsp;운동시간&nbsp;</label>
+  <select id="ex_time">
+    <option value="1">1분</option>
+    <option value="5">5분</option>
+    <option value="15">15분</option>
+    <option value="30">30분</option>
+    <option value="60">60분</option>
+  </select>
 
 
   <table>
@@ -274,12 +1034,27 @@
         <th>주동근</th>
         <th>협응근</th>
         <th>난이도 </th>
-        <th>소모칼로리 &nbsp;&nbsp;<button name="cal_asc" id="cal_asc" type="button" class="button-style"
-            onclick="">△</button><button name="cal_desc" id="cal_desc" type="button" class="button-style">▽</th>
+        <th>소모 칼로리 &nbsp;&nbsp;&nbsp;<button name="cal_asc" id="cal_asc" type="button" class="button-style"
+            onclick="">△</button><button name="cal_desc" id="cal_desc" type="button" class="button-style">▽</button>
+          <button name="part_cal_asc" id="part_cal_asc" type="button" class="button-style" style="display: none;"
+            onclick="">△</button><button name="part_cal_desc" id="part_cal_desc" type="button" class="button-style"
+            style="display: none;">▽</button>
+        </th>
+
         <th>근육활성도 &nbsp;&nbsp;<button name="act_asc" id="act_asc" type="button" class="button-style">△</button><button
-            name="act_desc" id="act_desc" type="button" class="button-style">▽</th>
+            name="act_desc" id="act_desc" type="button" class="button-style">▽</button>
+          <button name="part_act_asc" id="part_act_asc" type="button" class="button-style" style="display: none;"
+            onclick="">△</button><button name="part_act_desc" id="part_act_desc" type="button" class="button-style"
+            style="display: none;">▽</button>
+        </th>
+
         <th>부상위험도 &nbsp;&nbsp;<button name="risk_asc" id="risk_asc" type="button" class="button-style">△</button><button
-            name="risk_desc" id="risk_desc" type="button" class="button-style">▽</th>
+            name="risk_desc" id="risk_desc" type="button" class="button-style">▽</button>
+          <button name="part_risk_asc" id="part_risk_asc" type="button" class="button-style"
+            style="display: none;">△</button><button name="part_risk_desc" id="part_risk_desc" type="button"
+            class="button-style" style="display: none;">▽</button>
+        </th>
+
       </tr>
     </thead>
     <tbody name="list_exdata" id="list_exdata">
