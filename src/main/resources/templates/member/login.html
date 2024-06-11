@@ -4,23 +4,14 @@
 
 <div layout:fragment="content">
 <style>
-<<<<<<< HEAD
+      *{
+        font-size:13px;
+      }
       .body {
             font-size: 13px !important; /* 원하는 폰트 크기로 변경 */
         }
-=======
-   .fieldset_basic {
-    width: 95%; 
-    margin: 0px auto; 
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    border-left: none;
-
-  }
->>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
       .text-center a {
-        font-size: 13px; /* 원하는 글자 크기로 설정 */
+        font-size: 11px; /* 원하는 글자 크기로 설정 */
         color: #007bff; /* 링크 색상 */
         text-decoration: none; /* 밑줄 제거 */
       }
@@ -29,37 +20,12 @@
         color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
         text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
       }
-      .login_btn {
-      margin-top: 5px;
-      justify-content: center;
-      display: flex;
-    }
-    .form-wrapper {
-      display: flex;
-      
-      justify-content: center; /* 수평 가운데 정렬 */
-      align-items: center; /* 수직 가운데 정렬 */
-      height: 65vh; /* 화면 전체 높이로 설정하여 세로 가운데 정렬 */
-    }
-    .form-group {
-      position: relative;
-      width: 100%;
-      gap: 10px; /* 버튼 간격 추가 */
-    }
-    #btn_checkID {
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
-      position:fixed;
-    }
 </style>
     <h2>로그인</h2>
     <div class="title_line"></div>
     <aside class="aside_right">
         <a href='/'>홈</a>
         <span class='menu_divide'>│</span>
-        <a href='./create'>회원가입</a>
         <span class='menu_divide'>│</span>
         <a href="javascript:location.reload();">새로고침</a>
     </aside>
@@ -81,6 +47,7 @@
                 <span id='passwd_msg'></span>
             </div>
             <div class="text-center mb-3">
+                <a href="/member/create" class="mr-3">회원 가입 |</a>
                 <a href="/member/find_id_form" class="mr-3">아이디 찾기 |</a>
                 <a href="/member/find_passwd_form">비밀번호 찾기</a>
             </div>
@@ -182,43 +149,7 @@
         });
       }
     </script>
-<<<<<<< HEAD
     
-=======
-  <div class="title_line">
-<div class="form-group" style=" text-align:center;"> 로그인</div>
-  </div>
-  <fieldset class="fieldset_basic">
-  <div class="form-wrapper" style="width: 100%;">
-    <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/login">
-       
-        <div class="form-group" style="margin-top: 5px; ">
-          <label for="id" style=" font-size:20px;">아이디(이메일)*</label>
-        <input style="margin-top: 5px; width:100%; font-size:x-large" type="text" name="id" id="id" th:value="${ck_id}" required="required" placeholder="id 입력"
-               class="form-control fom-control-sm" >      
-          
-          <span id='id_msg'></span>
-        </div>
-        
-        <div class="form-group" style="margin-top: 5px;">
-          <label for="passwd" style=" font-size:20px;">패스워드*</label>
-        <input style="margin-top: 5px; width:100%; font-size:x-large" type='password' name='passwd' id='passwd' th:value="${ck_passwd}" required="required" 
-                  placeholder="패스워드" class="form-control form-control-sm">      
-          <span id='passwd_msg'></span>
-        </div>
-        <div class="text-center">
-          <a href='./create'>회원가입 |</a>
-          <a href="/member/find_id_form" >아이디 찾기 |</a>
-          <a href="/member/find_passwd_form">비밀번호 찾기</a>
-        </div>
-        <div class="login_btn">
-          <button type="button" onclick="send();" class="registration-button" style=" font-size:small">로그인</button>
-
-        </div>
-      </form>
-    </div>
-  </fieldset>
->>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
 
     
 </div>

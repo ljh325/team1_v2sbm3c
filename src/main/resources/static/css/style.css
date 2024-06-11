@@ -655,6 +655,7 @@
   }
   
   /* 알림 메시지 */ 
+  /* 주찬 수정*/ 
   .span_info {
     font-weight: bold;
     color: rgb(128, 255, 128);
@@ -662,7 +663,7 @@
     padding: 2px;
     margin-top: 2px;
     text-align: center;
-    font-size: 13px;
+    font-size: 13px; /* 주찬 수정*/
   }
   
   /* 주의 메시지 */
