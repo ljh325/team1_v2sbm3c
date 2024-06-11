@@ -245,4 +245,42 @@ public class ExdataProc implements ExdataProcInter {
     return list;
   }
 
+  @Override
+  public ArrayList<ExdataVO> list_effect_low_weight() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_low_weight();
+    return list;
+  }
+
+  @Override
+  public ArrayList<ExdataVO> list_effect_mid_weight() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_mid_weight();
+    return list;
+  }
+
+  @Override
+  public ArrayList<ExdataVO> list_effect_high_weight() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_high_weight();
+    return list;
+  }
+
+  @Override
+  public ArrayList<ExdataVO> list_effect_low_muscle() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_low_muscle();
+    return list;
+  }
+
+  @Override
+  public ArrayList<ExdataVO> list_effect_mid_muscle() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_mid_muscle();
+    return list;
+  }
+
+  @Override
+  public ArrayList<ExdataVO> list_effect_high_muscle() {
+    ArrayList<ExdataVO> list = this.exdataDAO.list_effect_high_muscle();
+    return list;
+  }
+  
+  
+
 }

@@ -2,6 +2,14 @@
 <html layout:decorate="~{layout}">
 <head>
   <style>
+      .login_btn {
+      margin-top: 20px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+      margin-bottom:10px;
+    }
+
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
@@ -33,13 +41,13 @@
       margin-bottom: 30px; /* Increase margin */
     }
     .form-control {
-      width: 100%;
+      width: 97%; /* Set width to 97% */
       padding: 10px; /* Increase padding */
       border: 1px solid #ced4da;
       border-radius: 6px; /* Increase border radius */
       box-sizing: border-box;
-      margin-top: 10px; /* Increase margin */
-      margin-bottom: 20px; /* Increase margin */
+      margin: 0px auto; /* Increase margin */
+
       font-size: 16px; /* Increase font size */
     }
     .btn {
@@ -91,23 +99,23 @@
     <input type="hidden" name="search_word" th:value="${word}">
     
     <div>
-      <label for="title">제목</label>
+      <label for="title" style="font-size: 24px;">제목</label>
       <input type="text" id="title" name="title" th:value="${healthVO.title}" required="required" autofocus="autofocus" class="form-control">
     </div>
     <div>
-      <label for="explan">내용</label>
+      <label for="explan" style="font-size: 24px;">내용</label>
       <textarea id="explan" name="explan" required="required" class="form-control" rows="12" th:text="${healthVO.explan}"></textarea>
     </div>
     <div>
-      <label for="word">검색어</label>
+      <label for="word" style="font-size: 24px;">검색어</label>
       <input type="text" id="word" name="word" th:value="${healthVO.word}" required="required" class="form-control">
     </div>   
     <div>
-      <label for="passwd">패스워드</label>
+      <label for="passwd" style="font-size: 24px;">패스워드</label>
       <input type="password" id="passwd" name="passwd" value="1234" required="required" class="form-control">
     </div>
-    <div class="content_body_bottom">
-      <button type="submit" class="btn">저장</button>
+    <div class="login_btn">
+      <button type="submit" class="registration-button" >저장</button>
       
     </div>
   </form>

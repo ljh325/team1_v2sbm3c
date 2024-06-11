@@ -2,6 +2,9 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <style>
+    *{
+      font-size: 13px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -51,22 +54,26 @@
 
     window.onload = () => {
       let ex_time_tag = document.getElementById('ex_time');
-      
+
+      let effect_intensity_tag = document.getElementById('effect_intensity');
+      let effect_purpose_tag = document.getElementById('effect_purpose');
+
       list_all_form();
       list_all_sort();
       list_part_sort();
-      
+      list_effect_form();
+
       document.getElementById('ex_intensity').addEventListener("change", () => {
-        
-        if(document.getElementById('ex_group').value == 'all'){
-        list_all_form();
+
+        if (document.getElementById('ex_group').value == 'all') {
+          list_all_form();
         } else {
           list_part_form();
         }
       });
-      
+
       document.getElementById('ex_group').addEventListener("change", () => {
-        
+
         if (document.getElementById('ex_group').value != 'all') {
           document.getElementById('cal_asc').style.display = 'none';
           document.getElementById('cal_desc').style.display = 'none';
@@ -81,9 +88,9 @@
           document.getElementById('part_risk_asc').style.display = '';
           document.getElementById('part_risk_desc').style.display = '';
           list_part_form();
-          
+
         } else {
-          
+
           document.getElementById('cal_asc').style.display = '';
           document.getElementById('cal_desc').style.display = '';
           document.getElementById('act_asc').style.display = '';
@@ -96,23 +103,32 @@
           document.getElementById('part_act_desc').style.display = 'none';
           document.getElementById('part_risk_asc').style.display = 'none';
           document.getElementById('part_risk_desc').style.display = 'none';
-          
+
           list_all_form();
-          
+
         }
       });
-      
+
       ex_time_tag.addEventListener("change", () => {
-        
+
         extime = 0.0167 * ex_time_tag.value;
-        
-        if (document.getElementById('ex_group').value != 'all'){
+
+        if (document.getElementById('ex_group').value != 'all') {
           list_part_form();
         } else {
           list_all_form();
         }
-        
+
       });
+
+      effect_intensity_tag.addEventListener("change", () => {
+        list_effect_form();
+      });
+
+      effect_purpose_tag.addEventListener("change", () => {
+        list_effect_form();
+      });
+
     }
     //---------------------------- window 함수 종료 -----------------------------------
     function list_all_form() { // 모든 운동 데이터 폼
@@ -992,6 +1008,101 @@
 
     }
 
+    function list_effect_form() {
+      let list_effect_exdata_tag = document.getElementById('list_effect_exdata');
+
+      let intensity_tag = document.getElementById('effect_intensity');
+      let intensity = intensity_tag.value;
+
+      let purpose_tag = document.getElementById('effect_purpose');
+      let purpose = purpose_tag.value;
+
+
+
+      fetch("/exdata/list_effect?intensity=" + intensity + "&purpose=" + purpose, {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          //alert(data['res'][1].exname);
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
+
+            if (purpose == "muscle") {
+
+              let loweffect = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.lowact * 0.7 - row.lowrisk * 0.2).toFixed(2));
+              row.loweffect = loweffect;
+
+              let mideffect = parseFloat((row.midmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.midact * 0.7 - row.midrisk * 0.2).toFixed(2));
+              row.mideffect = mideffect;
+
+              let higheffect = parseFloat((row.highmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.highact * 0.7 - row.highrisk * 0.2).toFixed(2));
+              row.higheffect = higheffect;
+
+            } else if (purpose == "weight") {
+
+              let loweffect = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.lowact * 0.1 - row.lowrisk * 0.2).toFixed(2));
+              row.loweffect = loweffect;
+
+              let mideffect = parseFloat((row.midmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.midact * 0.1 - row.midrisk * 0.2).toFixed(2));
+              row.mideffect = mideffect;
+
+              let higheffect = parseFloat((row.highmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.highact * 0.1 - row.highrisk * 0.2).toFixed(2));
+              row.higheffect = higheffect;
+            }
+
+            let lowcal = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.lowmet = lowcal + "kcal";
+
+            let midcal = parseFloat((row.midmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.midmet = midcal + "kcal";;
+
+            let highcal = parseFloat((row.highmet * "[[${mhVO.kg}]]" * extime).toFixed(2));
+            row.highmet = highcal + "kcal";;
+
+
+
+            if (row.musclesub == null) {
+              row.musclesub = ' ';
+            }
+
+            msg += "<tr id='exdata" + row.exdatano + "' onclick=>";
+            msg += "<td>" + row.exgroup + "</td>";
+            msg += "<td>" + row.exname + "</td>";
+            msg += "<td>" + row.muscle + "</td>";
+            msg += "<td>" + row.musclesub + "</td>";
+            msg += "<td>" + row.exlevel + "</td>";
+            if (intensity == 1) {
+              msg += "<td>" + row.lowmet + "</td>";
+              msg += "<td>" + row.lowact + "</td>";
+              msg += "<td>" + row.lowrisk + "</td>";
+              msg += "<td>" + row.loweffect + "</td>";
+              console.log(intensity);
+            } else if (intensity == 2) {
+
+              msg += "<td>" + row.midmet + "</td>";
+              msg += "<td>" + row.midact + "</td>";
+              msg += "<td>" + row.midrisk + "</td>";
+              msg += "<td>" + row.mideffect + "</td>";
+              console.log(intensity);
+            }
+
+            else if (intensity == 3) {
+              msg += "<td>" + row.highmet + "</td>";
+              msg += "<td>" + row.highact + "</td>";
+              msg += "<td>" + row.highrisk + "</td>";
+              msg += "<td>" + row.higheffect + "</td>";
+              console.log(intensity);
+            }
+
+          }
+          list_effect_exdata_tag.innerHTML = msg;
+
+        });
+    }
+
 
   </script>
   <h2>추천 운동 데이터</h2>
@@ -1015,7 +1126,7 @@
     <option value="복근">복근</option>
     <option value="유산소">유산소</option>
   </select>
-  
+
   <label for="ex_time">&nbsp;&nbsp;운동시간&nbsp;</label>
   <select id="ex_time">
     <option value="1">1분</option>
@@ -1058,6 +1169,45 @@
       </tr>
     </thead>
     <tbody name="list_exdata" id="list_exdata">
+
+
+
+    </tbody>
+  </table>
+  <br><br>
+  <h2 style="float:left;">효율적인 운동&nbsp;</h2>
+  <h6 style="margin-top:10px">- 목적에 맞는 각 부위별 효율적인 운동 제공</h6>
+  <br>
+
+  <label for="effect_intensity">운동강도&nbsp;</label>
+  <select id="effect_intensity">
+    <option value="1">낮음</option>
+    <option value="2">보통</option>
+    <option value="3">높음</option>
+  </select>
+
+  <label for="effect_purpose">&nbsp;운동목적&nbsp;</label>
+  <select id="effect_purpose">
+    <option value="muscle">근육량 증가</option>
+    <option value="weight">체중 감소</option>
+  </select>
+
+  <table>
+    <thead>
+      <tr>
+        <th>운동근육그륩</th>
+        <th>운동명</th>
+        <th>주동근</th>
+        <th>협응근</th>
+        <th>난이도 </th>
+        <th>소모 칼로리</th>
+        <th>근육활성도</th>
+        <th>부상위험도</th>
+        <th>효율점수</th>
+
+      </tr>
+    </thead>
+    <tbody name="list_effect_exdata" id="list_effect_exdata">
 
 
 

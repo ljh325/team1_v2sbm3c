@@ -71,8 +71,12 @@ public class FoodrecomCont {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
     FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
-//    foodrecomVO.setMemberno(memberno);  
+
     model.addAttribute("foodrecomVO", foodrecomVO);
+    String frecom = foodrecomVO.getFrecom();
+ 
+    
+    model.addAttribute("frecom", frecom);
     ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
     model.addAttribute("list", list);
     

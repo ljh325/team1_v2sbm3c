@@ -3,6 +3,66 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
+ <style>
+      .login_btn {
+      margin-top: 20px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+      margin-bottom:10px;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9; /* Change background color */
+    }
+
+    .title_line .title_line_text {
+      margin-right: 10px; /* Increase margin */
+    }
+    .aside_right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px; /* Increase margin */
+    }
+    .menu_divide {
+      margin: 0 10px; /* Increase margin */
+    }
+
+    .form-control {
+      width: 97%; /* Set width to 97% */
+      padding: 10px; /* Increase padding */
+      border: 1px solid #ced4da;
+      border-radius: 6px; /* Increase border radius */
+      box-sizing: border-box;
+      margin: 0px auto; /* Increase margin */
+
+      font-size: 16px; /* Increase font size */
+    }
+    .btn {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px 20px; /* Increase padding */
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px; /* Increase font size */
+      border-radius: 6px; /* Increase border radius */
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* Add transition */
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .content_body_bottom {
+      margin-top: 30px; /* Increase margin */
+      text-align: center; /* Center align content */
+    }
+  </style>
   <script>
     window.onload = () => {
       document.querySelector('#id').addEventListener('keypress', (event) => {
@@ -340,59 +400,58 @@
   </style>
 
   <div class="title_line">회원 가입(*: 필수)</div>
-  <aside class="aside_right">
-    <a href='/'>홈</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./login'>로그인</a>
-    <span class='menu_divide' >│</span> 
-    <a href="javascript:location.reload();">새로고침</a>
-  </aside> 
 
-  <div class='menu_line'></div>
+
   
-  <div style="width: 60%; margin: 0px auto ">
+  <div class="form-wrapper">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
-      <div>
-        <label for="id">아이디(이메일)*</label>
+      <div class="form-group" style="text-align:center">회원가입</div>
+      <div class="form-group">
+      
         <div class="id_float" style="display: flex; align-items: center;">
+<<<<<<< HEAD
             <input type="text" name="id" id="id" value="" autofocus="autofocus"
                    class="form-control form-control-sm" style="width: 70%;" th:field="*{id}">
             <button type="button" id="btn_checkID" onclick="checkID()" 
                     class="btn btn-primary btn-sm" style="margin-left: 8px; margin-top: 4px;">중복확인</button>
                     <span id="check_mark" style="display:none; margin-left: 8px;">&#10003;</span>
+=======
+                    <input style="margin-top: 5px; width:74%; font-size:medium " type="text" name="id" id="id" th:field="*{id}" placeholder="아이디(이메일)*" class="form-control form-control-sm">
+        <button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm" style="margin-left:20px; font-size:small">확인</button>
+>>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
         </div>
         <span id='id_msg'></span>  
       </div>
       
       <div class="form-group">
-        <label for="passwd">패스워드*</label> 
-        <input type='password' name='passwd' id='passwd' value='' required="required" 
-                  placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
-        <span id='passwd1_msg'></span>  
+        <input style=" margin-top: 5px;width:100%; font-size:medium" type="password" name="passwd" id="passwd" required="required"
+             placeholder="패스워드" class="form-control form-control-sm">
+             <span id='passwd1_msg'></span> 
       </div>
+         
+      
 
       <div class="form-group">
-        <label for="passwd2">패스워드 확인*</label>
-        <input type='password' name='passwd2' id='passwd2' value='' required="required" 
-                  placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 100%;">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="password" name="passwd2" id="passwd2" required="required"
+        placeholder="패스워드 확인" class="form-control form-control-sm">
         <span id='passwd2_msg'></span>
       </div>
       
-      <div class="form-group">
-        <label for="mname">성명*</label>
-        <input type='text' name='mname' id='mname' value='' required="required" 
-                   placeholder="성명" class="form-control form-control-sm" style="width: 100%;">
+     <div class="form-group">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="mname" id="mname" required="required"
+          placeholder="성명" class="form-control form-control-sm">
         <span id='mname_msg'></span>
-      </div>   
+      </div>
       
       <div class="form-group">
-        <label for="nickname">닉네임*</label>
-        <input type='text' name='nickname' id='nickname' value='' required="required" 
-                   placeholder="닉네임" class="form-control form-control-sm" style="width: 100%;">
+
+        <input style="margin-top: 5px; width:100%; font-size:medium" type='text' name='nickname' id='nickname' value='' required="required" 
+                   placeholder="닉네임" class="form-control form-control-sm">
         <span id='nickname_msg'></span>
       </div>   
   
       <div class="form-group">
+<<<<<<< HEAD
         <label for="tel">전화 번호*</label>
         <input type='text' name="tel" id='tel' value='' required="required" 
                   placeholder="전화번호" class="form-control form-control-sm" style="width: 100%;">
@@ -488,10 +547,80 @@
         </select>
         <span id="sex_msg"></span>          
       </div>
+=======
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="tel" id="tel" required="required"
+        placeholder="전화번호" class="form-control form-control-sm">
+        <span id='tel_msg'></span>
+      </div>
+      
+  
+      <div class="form-group">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address1" id="address1" placeholder="주소" class="form-control form-control-sm">
+        <span id='address1_msg'></span>      
+      </div>  
+  
+  
+      <div class="form-group">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address2" id="address2" placeholder="상세 주소" class="form-control form-control-sm">
+      </div>
+      
+      <div class="form-group">
+      <label for="date" style="font-size:20px;">생년월일:
+      <input type="date"  class="form-control form-control-sm"
+         id="birth" name='birth'
+         max=""
+         min="1970-01-01">
+      </label><br>
+      <span id='birth_msg'></span>
+      
+<script>
+    // 오늘 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
 
-      <div class="content_body_bottom">
-        <button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
-        <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // 현재 날짜를 value와 max 속성에 설정
+    var today = formatDate(new Date());
+    document.getElementById('birth').value = '';
+    document.getElementById('birth').max = today;
+</script>     
+     </div> 
+      
+      <div class="form-group">
+          <label for="sex" style="font-size:20px;">성별:</label>
+        <div class="form-check form-check-inline" style="margin-top: 5px; width:100%; font-size:medium">
+           
+          <input class="form-check-input" type="radio" name="sex" id="sex" value="남자">
+          <label class="form-check-label" for="inlineRadio1" style="font-size:20px;">남자</label>
+        </div>
+        <div class="form-check form-check-inline"  style="margin-top: 5px; width:100%; font-size:medium">
+          <input class="form-check-input" type="radio" name="sex" id="sex" value="여자">
+          <label class="form-check-label" for="inlineRadio2" style="font-size:20px;">여자</label>
+        </div>
+        <span id='sex_msg'></span>          
+      </div>
+<!--
+      <div class="form-group">
+        <label for="sex" style="width: 100%;">성별</label>
+        <input type='text' name='sex' id='sex' value='' placeholder="성별"
+                  class="form-control form-control-sm">
+        <span id='sex_msg'></span>          
+      </div>   --> 
+
+
+>>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
+
+      <div class="login_btn">
+        <button type="button" class="btn btn-primary btn-sm" style="margin-right:15px; font-size:small" onclick="send();"  title="가입">가 입</button>
+        <button type="button" class="btn btn-primary btn-sm" style="margin-left:15px; font-size:small" onclick="history.back();"  title="취소">취 소</button>
       </div>
 
 

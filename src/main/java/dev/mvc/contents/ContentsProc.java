@@ -396,6 +396,20 @@ public class ContentsProc implements ContentsProcInter {
     int cnt = this.contentsDAO.recom(contentsno);
     return cnt;
   }
+
+  @Override
+  public int increase_commentcnt(int contentsno) {
+    int cnt = this.contentsDAO.increase_commentcnt(contentsno);
+    return cnt;
+  }
+
+  @Override
+  public int decrease_commentcnt(int contentsno) {
+    int cnt = this.contentsDAO.decrease_commentcnt(contentsno);
+    return cnt;
+  }
+  
+  
   
   
   

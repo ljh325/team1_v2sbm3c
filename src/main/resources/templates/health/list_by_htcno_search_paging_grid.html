@@ -10,50 +10,49 @@
   </div>
 
   <aside class="aside_right">
-    <span th:if="${session.grade == 'admin'}">
-      <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">등록</a>
-      <span class="menu_devide">│</span>    
-    </span>
-    
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_htcno?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">목록형</a>    
+    <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
+        <img src="/home/insert.png" class="icon" title="등록">
+    </a>
+    <span class="menu_divide">│</span>
+    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+        <img src="/home/list1.png" class="icon" title="목록">
+    </a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_htcno_grid?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">갤러리형</a>    
+    <a th:href="@{|./list_by_htcno?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
+      <img src="/home/list.png" class="icon" title="목록형">
+    </a>    
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_htcno_grid?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
+      <img src="/home/gallery.png" class="icon" title="갤러리형">
+    </a>
   </aside> 
 
-  <!-- /health/list_search_component.html 파일의 list_search_fragment import -->
-  <div th:replace="~{health/list_search_component::list_search_fragment}"></div>
      
   <div class='menu_line'></div>
        
-  <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
+  <div style="width: 97%; margin: 0 auto;"> <!-- 갤러리 Layout  시작 -->
     <div th:if="${list.size() > 0}"  th:each="healthVO, status:${list}" 
          th:attr="onclick=|location.href='/health/read?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}'|"
-         style='width: 24%; height: 190px; float: left; margin: 0.5%; padding: 0.5%; background-color: #EEEFFF; text-align: left; cursor: pointer;'>
+         style='width: 24%; height: 140px; float: left; margin: 0.5%; padding: 0.5%; background-color: #EEEFFF; text-align: center; cursor: pointer;'>
 
       <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')}"
              style="width: 100%; height: 100px;">
-        <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 100%; height: 100%;">
+        <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 100%; height: 100%; font-size:18px;">
       </div>
 
       <div th:if="${((healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')) == false) and (healthVO.size1 > 0)}"
-             style="width: 100%; height: 100px;">
-        <span th:text="${healthVO.file1}"></span>
+             style="width: 100%; height: 100px; font-size:18px;">
+        
       </div>
 
-      <div th:if="${healthVO.size1 == 0}" style="width: 100%; height: 100px;">
-        <img src="/health/images/none1.png" style="width: 100%; height: 100%;">
+      <div th:if="${healthVO.size1 == 0}" style="width: 100%; height: 100px; font-size:18px;">
+        <img src="/health/images/none1.png" style="width: 100%; height: 100%; font-size:18px;">
       </div>
       <div>
-        <span th:text="${healthVO.title}" style="font-weight: bold;"></span><br>
-        <span th:if="${healthVO.explan.length() > 80 }" 
-                  th:text="|${healthVO.explan.substring(0, 80) }...|"></span>
-        <span th:if="${healthVO.explan.length() <= 80 }" 
-                  th:text="|${healthVO.explan}|"></span>
+        <span th:text="${healthVO.title}" style=" font-size:14px;"></span><br>
+
       </div>
-      
-      <div style="width: 100%; text-align: right;">♡</div>
+
       
     </div>
     
