@@ -1006,6 +1006,22 @@ WHERE exgroup = '유산소'
 ORDER BY highrisk DESC;
 
 
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (midmet * 5.6 + midact * 0.1 - midrisk*0.2) as effect
+FROM exdata
+ORDER BY effect DESC;
+
+-- 체중 감량 -> 전체적으로 조회 후 순위 나열, 근육량 증가 -> 부위별로 순위 나열
+SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, rank
+FROM(
+    SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by loweffect desc) as rank
+    FROM(
+        SELECT exdatano, exgroup, exname, muscle, musclesub, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 5.6 + lowact * 0.1 - lowrisk*0.2) as loweffect, (midmet * 5.6 + midact * 0.1 - midrisk*0.2) as mideffect, (highmet * 5.6 + highact * 0.1 - highrisk*0.2) as higheffect
+        FROM exdata
+        ORDER BY loweffect DESC
+        )
+    )
+WHERE rank = 1 or exgroup = '유산소'
+ORDER BY loweffect desc;
 
 
 

@@ -37,6 +37,17 @@ $(document).ready(function(){
         }, 4000); // 10000 밀리초 = 4초
     });
     
+    $("#communityBtn").click(function(){
+        $("#communityMenuBar").removeClass("hidden");
+        $("#mainMenuBar").addClass("hidden");
+        $("#foodMenuBar").addClass("hidden");
+
+        // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
+        setTimeout(function(){
+            $("#communityMenuBar").addClass("hidden");
+        }, 4000); // 10000 밀리초 = 4초
+    });
+    
 });
 </script>
 
@@ -89,7 +100,7 @@ $(document).ready(function(){
               <img src="/home/record.png" class="icon">
               <span>기록</span>
             </a>
-            <a href="/community" aria-label="커뮤니티">
+            <a id ="communityBtn" aria-label="커뮤니티">
               <img src="/home/community.png" class="icon">
               <span>커뮤니티</span>
             </a>
@@ -142,6 +153,20 @@ $(document).ready(function(){
                 </a>
                 <a href="/foodrecom/list_all" aria-label="메뉴">
                     <span>식단 추천</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!--커뮤니티 메뉴-->
+     <div id="communityMenuBar" class="container_main hidden">
+        <div class="community_menu">
+            <div class="main_navigation">
+                <a href="/contents/list_cate?cateno=1&word=&now_page=1" aria-label="메뉴">
+                    <span>테스트</span>
+                </a>
+                <a href="/adcontents/list_cate?cateno=10&word=&now_page=1" aria-label="메뉴">
+                    <span>관리자테스트</span>
                 </a>
             </div>
         </div>

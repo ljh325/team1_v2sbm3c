@@ -68,4 +68,16 @@ public class ExdataVO {
   
   /** 높은강도부상위험도 */
   private int highrisk;
+  
+  /** 효율 순위 */
+  private int rank;
+  
+  /** 낮은강도 효율 */
+  private int loweffect;
+  
+  /** 중간강도 효율 */
+  private int mideffect;
+  
+  /** 높은강도 효율 */
+  private int higheffect;
 }

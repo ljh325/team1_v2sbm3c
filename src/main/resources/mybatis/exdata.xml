@@ -295,4 +295,97 @@
   ORDER BY highrisk DESC
   </select>
   
+  <!-- 낮은강도 체중감량 목적 효율성 순위 정렬 -->
+  <select id='list_effect_low_weight' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel, lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by loweffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 5.6 + lowact * 0.1 - lowrisk*0.2) as loweffect, (midmet * 5.6 + midact * 0.1 - midrisk*0.2) as mideffect, (highmet * 5.6 + highact * 0.1 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY loweffect DESC
+          )
+      )
+  WHERE rank = 1 or exgroup = '유산소'
+  ORDER BY loweffect desc
+  </select>
+  
+  <!-- 중간강도 체중감량 목적 효율성 순위 정렬 -->
+  <select id='list_effect_mid_weight' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by mideffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 5.6 + lowact * 0.1 - lowrisk*0.2) as loweffect, (midmet * 5.6 + midact * 0.1 - midrisk*0.2) as mideffect, (highmet * 5.6 + highact * 0.1 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY mideffect DESC
+          )
+      )
+  WHERE rank = 1 or exgroup = '유산소'
+  ORDER BY mideffect desc
+  </select>
+  
+  <!-- 높은강도 체중감량 목적 효율성 순위 정렬 -->
+  <select id='list_effect_high_weight' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by higheffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 5.6 + lowact * 0.1 - lowrisk*0.2) as loweffect, (midmet * 5.6 + midact * 0.1 - midrisk*0.2) as mideffect, (highmet * 5.6 + highact * 0.1 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY higheffect DESC
+          )
+      )
+  WHERE rank = 1 or exgroup = '유산소'
+  ORDER BY higheffect desc
+  </select>
+  
+  <!-- 낮은강도 근육량증가 목적 효율성 순위 정렬 -->
+  <select id='list_effect_low_muscle' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by loweffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 0.8 + lowact * 0.7 - lowrisk*0.2) as loweffect, (midmet * 0.8 + midact * 0.7 - midrisk*0.2) as mideffect, (highmet * 0.8 + highact * 0.7 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY loweffect DESC
+          )
+      )
+  WHERE rank = 1 AND exgroup != '유산소'
+  ORDER BY loweffect desc
+  </select>
+  
+  <!-- 중간강도 근육량증가 목적 효율성 순위 정렬 -->
+  <select id='list_effect_mid_muscle' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by mideffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 0.8 + lowact * 0.7 - lowrisk*0.2) as loweffect, (midmet * 0.8 + midact * 0.7 - midrisk*0.2) as mideffect, (highmet * 0.8 + highact * 0.7 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY mideffect DESC
+          )
+      )
+  WHERE rank = 1 AND exgroup != '유산소'
+  ORDER BY mideffect desc
+  </select>
+  
+  <!-- 높은강도 근육량증가 목적 효율성 순위 정렬 -->
+  <select id='list_effect_high_muscle' resultType="dev.mvc.exdata.ExdataVO">
+  SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, rank
+  FROM(
+      SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, loweffect, mideffect, higheffect, row_number() over(partition by muscle order by higheffect desc) as rank
+      FROM(
+          SELECT exdatano, exgroup, exname, muscle, musclesub, exlevel,  lowmet, midmet, highmet, lowact, midact, highact, lowrisk, midrisk, highrisk, (lowmet * 0.8 + lowact * 0.7 - lowrisk*0.2) as loweffect, (midmet * 0.8 + midact * 0.7 - midrisk*0.2) as mideffect, (highmet * 0.8 + highact * 0.7 - highrisk*0.2) as higheffect
+          FROM exdata
+          ORDER BY higheffect DESC
+          )
+      )
+  WHERE rank = 1 AND exgroup != '유산소'
+  ORDER BY higheffect desc
+  </select>
+  
+  
+  
+  
 </mapper>

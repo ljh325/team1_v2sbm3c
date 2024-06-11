@@ -61,6 +61,9 @@ public class CommentsCont {
     commentsVO.setMemberno(memberno);
 
     int cnt = this.commentsProc.create(commentsVO);
+    if (cnt == 1) {
+      this.contentsProc.increase_commentcnt(commentsVO.getContentsno());
+    }
     JSONObject json = new JSONObject();
     json.put("res", cnt);
     return json.toString();
@@ -68,14 +71,7 @@ public class CommentsCont {
   }
 
   /**
-   * 컨텐츠별 댓글 목록 { "list":[ {"memberno":2,"rdate":"2024-05-31
-   * 15:54:51","replyno":6,"id":"admin","content":"675","contentsno":12},
-   * {"memberno":2,"rdate":"2024-05-31
-   * 15:53:39","replyno":5,"id":"admin","content":"456","contentsno":12},
-   * {"memberno":2,"rdate":"2024-05-31
-   * 13:05:00","replyno":4,"id":"admin","content":"대기업의 쪼개기 지분
-   * 상장","contentsno":12} ] }
-   * http://localhost:9093/comments/list_by_contentsno_join?contentsno=30
+   * 컨텐츠별 댓글 목록
    * 
    * @param contentsno
    * @return
@@ -93,7 +89,7 @@ public class CommentsCont {
 
     return obj.toString();
   }
-  
+
   /**
    * 댓글 조회
    * 
@@ -191,12 +187,13 @@ public class CommentsCont {
     return json.toString();
   }
 
-/**
- * 댓글 삭제 처리
- * @param session
- * @param commentsVO
- * @return
- */
+  /**
+   * 댓글 삭제 처리
+   * 
+   * @param session
+   * @param commentsVO
+   * @return
+   */
   @PostMapping(value = "/delete")
   @ResponseBody
   public String delete(HttpSession session, @RequestBody CommentsVO commentsVO) {
@@ -208,6 +205,11 @@ public class CommentsCont {
     if (memberno == commentsVO.getMemberno()) { // 회원 자신이 쓴 글만 수정 가능
 
       cnt = this.commentsProc.delete(commentsVO.getCommentsno());
+      this.contentsProc.decrease_commentcnt(commentsVO.getContentsno());
+//      if (cnt == 1) {
+//        this.contentsProc.decrease_commentcnt(commentsVO.getContentsno());
+//      }
+
     }
     JSONObject json = new JSONObject();
     json.put("res", cnt); // 1: 성공, 0: 실패

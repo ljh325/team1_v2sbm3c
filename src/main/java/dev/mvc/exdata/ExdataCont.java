@@ -543,5 +543,67 @@ public class ExdataCont {
       return null;
     }
   }
+  
+  /**
+   * 목적별 효율성 순위 정렬
+   * 
+   * @param commentsno
+   * @return
+   */
+  @ResponseBody
+  @GetMapping(value = "/list_effect")
+  public String list_effect(int intensity, String purpose) {
+
+    if (intensity == 1 && "weight".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_low_weight();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    } else if (intensity == 2 && "weight".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_mid_weight();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    } else if (intensity == 3 && "weight".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_high_weight();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    } else if (intensity == 1 && "muscle".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_low_muscle();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    }
+    
+    else if (intensity == 2 && "muscle".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_mid_muscle();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    }
+    
+    else if (intensity == 3 && "muscle".equals(purpose)) {
+      ArrayList<ExdataVO> list = this.exdataProc.list_effect_high_muscle();
+      JSONObject obj = new JSONObject();
+      obj.put("res", list);
+      
+      return obj.toString();
+      
+    }  else {
+      return null;
+    }
+  }
+  
 
 }
