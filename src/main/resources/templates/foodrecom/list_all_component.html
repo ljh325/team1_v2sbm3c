@@ -64,8 +64,9 @@
         form.submit();
     }
 </script>
- <div style="display: flex; justify-content: center;">
-  <table class="table table-hover">
+ <div class='menu_line'></div>
+ <div style="margin: 1em;">
+  <table class="table table-striped" style='width: 100%;'>
     
     
     <colgroup>
@@ -86,11 +87,11 @@
     </thead>
     <tbody>
       <tr th:each="foodrecomVO, status:${list}">
-        <td class="td_bs" th:text="${status.index + 1}"></td>
+        <td class="td_basic" th:text="${status.index + 1}"></td>
     
-        <td class="td_bs" th:text="${foodrecomVO.rdate.substring(5, 10)}"></td>
+        <td class="td_basic" th:text="${foodrecomVO.rdate.substring(5, 10)}"></td>
   
-        <td class="td_bs">
+        <td class="td_basic">
           
           <img src="/images/read.png" class="icon" th:onclick="'javascript:readFoodrecom(' + ${foodrecomVO.foodrecomno} + ')'">    
           
@@ -100,6 +101,7 @@
       </tr>
     </tbody>
   </table>
+ </div>
   
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>

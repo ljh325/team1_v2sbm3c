@@ -25,7 +25,7 @@ CORS(app)
 
 prompt = '''
     아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [식단 목록]에서 운동 목표를 달성하기 위해 필요한 하루의 식단을 식단의 섭취량(g)을 포함해서 출력해줘 식품 코드 또한 출력
-    출력 형식은 JSON으로 해줘 
+    출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘
 
     [회원 건강정보]
     체중: kg
@@ -150,14 +150,105 @@ prompt = '''
     육수	230020300
     기타 음료	231020200
     
-    체중조절용 즉석식품	233020200
+   
     만두	302020200
-    만두피	304030200
-    기타 즉석식품	305020200
-    기타가공품	200010000
+ 
+  
+    
+    [출력 형식1]
+    {
+    "res": [
+        {
+            "day": 1,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 3,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) },
+                        {"food": 식품명, "code": 식품코드, "amount_g": 섭취량(g) }
+                    ]
+                }
+            ]
+        }
+    ]
+}
 
-
-    [출력 형식]
+    [출력 형식2]
     {
     "res": 추천 식사 목록
     }

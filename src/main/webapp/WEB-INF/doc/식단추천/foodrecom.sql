@@ -15,9 +15,12 @@ CREATE SEQUENCE FOODRECOM_SEQ
     CACHE 2              -- 2번은 메모리에서만 계산
     NOCYCLE;            
 
-select * from mh
-from foodrecom
-sel
+ SELECT fr.foodrecomno,fr.frecom,fr.goalsno,fr.mhno,fr.rdate
+    FROM foodrecom fr
+    JOIN mh mh ON fr.mhno = mh.mhno
+    JOIN member m ON mh.memberno = m.memberno
+    WHERE m.memberno = 39
+  
 
 CREATE TABLE FOODRECOM(
 		FOODRECOMNO                   		NUMBER(10)		 NOT NULL		 PRIMARY KEY,

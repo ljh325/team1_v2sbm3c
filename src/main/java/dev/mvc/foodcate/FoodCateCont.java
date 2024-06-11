@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.contents.Contents;
+import dev.mvc.foodcate.FoodContents;
 import dev.mvc.contents.ContentsVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.healthrecom.HealthrecomProcInter;
@@ -88,7 +88,7 @@ public class FoodCateCont {
     String fupname = ""; // 저장된 파일명, image
     String thumb = ""; // preview image
 
-    String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+    String upDir = FoodContents.getUploadDir(); // 파일을 업로드할 폴더 준비
     System.out.println("-> upDir: " + upDir);
 
     MultipartFile mf = foodCateVO.getFileMF();
@@ -128,7 +128,8 @@ public class FoodCateCont {
     // ------------------------------------------------------------------------------
 
     // Call By Reference: 메모리 공유, Hashcode 전달
-    int adminsno = (int) session.getAttribute("adminsno"); // 관리자 번호
+//    int adminsno = (int) session.getAttribute("adminsno"); // 관리자 번호 admins의 변경으로 test용으로 1만 넣음
+    int adminsno =1;
     foodCateVO.setAdminsno(adminsno);  // 식단을 입력한 관리자의 번호를 입력
     
     int cnt = this.foodCateProc.create(foodCateVO);

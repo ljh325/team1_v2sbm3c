@@ -20,7 +20,7 @@
 
     <!-- 운동 추천 목록 조회 -->
   <select id = 'list_all' parameterType="dev.mvc.foodrecom.FoodrecomVO">
-     SELECT fr.*
+     SELECT fr.foodrecomno,fr.frecom,fr.goalsno,fr.mhno,fr.rdate
     FROM foodrecom fr
     JOIN mh mh ON fr.mhno = mh.mhno
     JOIN member m ON mh.memberno = m.memberno

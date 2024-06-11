@@ -83,8 +83,9 @@
         form.submit();
     }
 </script>
- <div style="display: flex; justify-content: center;">
-  <table class="table table-hover">
+ <div class='menu_line'></div>
+ <div style="margin: 1em;">
+  <table class="table table-striped" style='width: 100%;'>
     
     
     <colgroup>
@@ -116,28 +117,28 @@
     </thead>
     <tbody>
       <tr th:each="mhVO, status:${list}">
-        <td class="td_bs" th:text="${status.index + 1}"></td>
-        <td class="td_bs" th:text="${mhVO.kg}"></td>
-        <td class="td_bs" th:text="${mhVO.cm}"></td>
-        <td class="td_bs" th:text="${mhVO.ckg}"></td>
-        <td class="td_bs" th:text="${mhVO.muscle}"></td>
-        <td class="td_bs" th:text="${mhVO.memberno}"></td>
-        <td class="td_bs" th:text="${mhVO.insertdate.substring(5, 10)}"></td>
+        <td class="td_basic"  th:text="${status.index + 1}"></td>
+        <td class="td_basic" th:text="${mhVO.kg + ' kg'}"></td>
+        <td class="td_basic" th:text="${mhVO.cm + ' cm'}"></td>
+        <td class="td_basic" th:text="${mhVO.ckg + ' %'}"></td>
+        <td class="td_basic" th:text="${mhVO.muscle + 'kg'}"></td>
+        <td class="td_basic" th:text="${mhVO.memberno}"></td>
+        <td class="td_basic" th:text="${mhVO.insertdate.substring(5, 10)}"></td>
   
-        <td class="td_bs">
+        <td class="td_basic">
           
           <img src="/mh/images/read.png" class="icon" th:onclick="'javascript:readMh(' + ${mhVO.mhno} + ')'">    
           <img src="/mh/images/update.png" class="icon" th:onclick="'javascript:updateMh(' + ${mhVO.mhno} + ')'">
           <img src="/mh/images/delete.png" class="icon" th:onclick="'javascript:deleteMh(' + ${mhVO.mhno} + ')'">
    
-        <td class="td_bs">
+        <td class="td_basic">
           <a th:href="@{|/mh/choose?mhno=${mhVO.mhno}|}">선택 1</a>
 
         </td>
       </tr>
     </tbody>
   </table>
-  
+ </div>
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>
   <!-- 페이지 버튼 목록 출력 종료 --> 

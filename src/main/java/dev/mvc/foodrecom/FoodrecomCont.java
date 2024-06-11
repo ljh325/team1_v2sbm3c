@@ -66,8 +66,10 @@ public class FoodrecomCont {
    * @param 조회할 foodrecomno
    * @return
    */
-  @PostMapping(value = "/read")
-  public String read(HttpSession session,Model model,@RequestParam("foodrecomno") int foodrecomno ) {
+  @GetMapping(value = "/read")
+  public String read(HttpSession session,Model model,@RequestParam("foodrecomno") int foodrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
     FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
@@ -75,7 +77,7 @@ public class FoodrecomCont {
     model.addAttribute("foodrecomVO", foodrecomVO);
     String frecom = foodrecomVO.getFrecom();
  
-    
+    System.out.println(frecom);
     model.addAttribute("frecom", frecom);
     ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
     model.addAttribute("list", list);
@@ -86,7 +88,8 @@ public class FoodrecomCont {
     else {
       return "index";
     }
- 
+   
+   
 
      // /templates/cate/read.html
   }

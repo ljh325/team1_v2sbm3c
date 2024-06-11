@@ -62,8 +62,9 @@
         form.submit();
     }
 </script>
- <div style="display: flex; justify-content: center;">
-  <table class="table table-hover">
+ <div class='menu_line'></div>
+ <div style="margin: 1em;">
+  <table class="table table-striped" style='width: 100%;'>
     
     
     <colgroup>
@@ -93,26 +94,26 @@
     </thead>
     <tbody>
       <tr th:each="goalsVO, status:${list}">
-        <td class="td_bs" th:text="${status.index + 1}"></td>
-        <td class="td_bs" th:text="${goalsVO.kg}"></td>
-        <td class="td_bs" th:text="${goalsVO.cm}"></td>
-        <td class="td_bs" th:text="${goalsVO.ckg}"></td>
-        <td class="td_bs" th:text="${goalsVO.muscle}"></td>
-        <td class="td_bs" th:text="${goalsVO.memberno}"></td>
-        <td class="td_bs" th:text="${goalsVO.gdate.substring(5, 10)}"></td>
+        <td class="td_basic" th:text="${status.index + 1}"></td>
+        <td class="td_basic" th:text="${goalsVO.kg + 'kg'}"></td>
+        <td class="td_basic" th:text="${goalsVO.cm + 'cm'}"></td>
+        <td class="td_basic" th:text="${goalsVO.ckg + '%'}"></td>
+        <td class="td_basic" th:text="${goalsVO.muscle + 'kg'}"></td>
+        <td class="td_basic" th:text="${goalsVO.memberno}"></td>
+        <td class="td_basic" th:text="${goalsVO.gdate.substring(5, 10)}"></td>
   
-        <td class="td_bs">
+        <td class="td_basic">
           <img src="/goals/images/read.png" class="icon" th:onclick="'javascript:readGoals(' + ${goalsVO.goalsno} + ')'">    
           <img src="/goals/images/update.png" class="icon" th:onclick="'javascript:updateGoals(' + ${goalsVO.goalsno} + ')'">
           <img src="/goals/images/delete.png" class="icon" th:onclick="'javascript:deleteGoals(' + ${goalsVO.goalsno} + ')'">
    
-        <td class="td_bs">
+        <td class="td_basic">
          
         </td>
       </tr>
     </tbody>
   </table>
-  
+  </div>
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>
   <!-- 페이지 버튼 목록 출력 종료 --> 

@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>식단 달력</title>
-  
-  <link href="/css/style.css" rel="stylesheet" type="text/css"> <!-- /static 기준 -->
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
   <style>
     .calendar {
       display: grid;
@@ -33,53 +29,144 @@
       height: 30px;
     }
   </style>
-</head>
-<body>
-  <h1>식단 달력</h1>
-  <div class="calendar" id="calendar"></div>
+
+<div>
+  <h1>식단 추천</h1>
+  <div class="calendar" id="calendar" th:data-frecom="${frecom}"></div>
+ 
+  <a href="/foodrecom/list_all" class="btn btn-secondary btn-sm">확인</a>
 
   <script>
-
-   window.onload = () => {
-    console.log('${frecom}'); // 값 출력
-    const calendarDiv = document.getElementById('calendar');
-  
-    const mealData = JSON.parse('${frecom}');
-    
-    // Create calendar for each day
-    mealData.res.forEach(dayData => {
+    window.onload = () => {
+      const calendarDiv = document.getElementById('calendar');
+      const frecom = calendarDiv.dataset.frecom;
+      const mealData = {
+        "res": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal": "breakfast",
+                "items": [
+                  {"food": "안됨", "code": "403000400", "amount_g": 100},
+                  {"food": "나오면", "code": "001000100", "amount_g": 200},
+                  {"food": "아", "code": "302030100", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "lunch",
+                "items": [
+                  {"food": "볶음면", "code": "009000200", "amount_g": 150},
+                  {"food": "배추김치", "code": "101010200", "amount_g": 100},
+                  {"food": "우유", "code": "101010100", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "dinner",
+                "items": [
+                  {"food": "햄", "code": "100010100", "amount_g": 150},
+                  {"food": "쌀국수", "code": "010000200", "amount_g": 200},
+                  {"food": "과·채음료", "code": "303030100", "amount_g": 200}
+                ]
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal": "breakfast",
+                "items": [
+                  {"food": "베이글", "code": "404000400", "amount_g": 100},
+                  {"food": "유부", "code": "002000300", "amount_g": 200},
+                  {"food": "두유", "code": "500050100", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "lunch",
+                "items": [
+                  {"food": "파스타", "code": "014000100", "amount_g": 150},
+                  {"food": "물김치", "code": "102010200", "amount_g": 100},
+                  {"food": "유산균음료", "code": "601060100", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "dinner",
+                "items": [
+                  {"food": "소시지", "code": "201020100", "amount_g": 150},
+                  {"food": "칼국수", "code": "013000100", "amount_g": 200},
+                  {"food": "탄산수", "code": "402040100", "amount_g": 200}
+                ]
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal": "breakfast",
+                "items": [
+                  {"food": "빵", "code": "405000100", "amount_g": 100},
+                  {"food": "묵", "code": "004000400", "amount_g": 200},
+                  {"food": "연유", "code": "603060500", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "lunch",
+                "items": [
+                  {"food": "쫄면", "code": "012000100", "amount_g": 150},
+                  {"food": "김", "code": "401040000", "amount_g": 100},
+                  {"food": "가공우유", "code": "204020400", "amount_g": 200}
+                ]
+              },
+              {
+                "meal": "dinner",
+                "items": [
+                  {"food": "베이컨", "code": "300030000", "amount_g": 150},
+                  {"food": "메밀국수/냉면국수", "code": "008000100", "amount_g": 200},
+                  {"food": "기타 음료", "code": "231020200", "amount_g": 200}
+                ]
+              }
+            ]
+          }
+        ]
+      };
+       const mealData2 = JSON.parse(frecom);
+      // Create calendar for each day
+      mealData2.res.forEach(dayData => {
         const dayDiv = document.createElement('div');
         dayDiv.classList.add('day');
         dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
         dayData.meals.forEach(meal => {
-            const mealDiv = document.createElement('div');
-            mealDiv.classList.add('meal');
-            
-            // Add image if the first item exists
-            if (meal.items.length > 0) {
-                const firstItem = meal.items[0];
-                const mealTitle = document.createElement('h3');
-                mealTitle.textContent = meal.meal;
-                const mealImage = document.createElement('img');
-                mealImage.src = `/food_images/${firstItem.code}.png`; // Assuming image file name matches the code
-                mealImage.alt = firstItem.food;
-                mealTitle.appendChild(mealImage);
-                mealDiv.appendChild(mealTitle);
-            } else {
-                mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
-            }
+          const mealDiv = document.createElement('div');
+          mealDiv.classList.add('meal');
+          
+          // Add image if the first item exists
+          if (meal.items.length > 0) {
+            const firstItem = meal.items[0];
+            const mealTitle = document.createElement('h3');
+            mealTitle.textContent = meal.meal;
+            const mealImage = document.createElement('img'); //${firstItem.code}
+            mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+            mealImage.alt = firstItem.food;
+            mealTitle.appendChild(mealImage);
+            mealDiv.appendChild(mealTitle);
+          } else {
+            mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+          }
 
-            meal.items.forEach(item => {
-                const mealItem = document.createElement('p');
-                mealItem.classList.add('meal-item');
-                mealItem.textContent = `${item.food} (${item.amount_g}g)`;
-                mealDiv.appendChild(mealItem);
-            });
-            dayDiv.appendChild(mealDiv);
+          meal.items.forEach(item => {
+            const mealItem = document.createElement('p');
+            mealItem.classList.add('meal-item');
+            mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+            mealDiv.appendChild(mealItem);
+          });
+          dayDiv.appendChild(mealDiv);
         });
         calendarDiv.appendChild(dayDiv);
-    });
-}
+      });
+    }
   </script>
-</body>
-</html>
+</div>
+</div> <!-- layout: contents 끝 -->
+</html> <!-- layout: html 끝 -->s

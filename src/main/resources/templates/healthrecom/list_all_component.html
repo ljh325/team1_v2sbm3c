@@ -64,9 +64,9 @@
         form.submit();
     }
 </script>
- <div style="display: flex; justify-content: center;">
-  <table class="table table-hover">
-    
+ <div class='menu_line'></div>
+ <div style="margin: 1em;">
+  <table class="table table-striped" style='width: 100%;'>
     
     <colgroup>
       <col style='width: 30%;'/>
@@ -100,7 +100,7 @@
       </tr>
     </tbody>
   </table>
-  
+ </div>
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>
   <!-- 페이지 버튼 목록 출력 종료 --> 
