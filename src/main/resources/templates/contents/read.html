@@ -302,7 +302,7 @@
                   fetch("/comments/delete", {
                     "method": "post",
                     "headers": {"Content-Type": "application/json"},
-                    body: JSON.stringify({"commentsno": no, "memberno": data['res']['memberno']})
+                    body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "commentsno": no, "memberno": data['res']['memberno']})
                   })
                     .then((response) => response.json())
                     .then((data) => {
@@ -510,7 +510,7 @@
 
           }
           
-          function reply_delete(no) { // 댓글 삭제
+          function reply_delete(no) { // 대댓글 삭제
 
             let contents_tag = document.getElementById('contents');
 

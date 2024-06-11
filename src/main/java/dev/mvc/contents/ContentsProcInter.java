@@ -184,5 +184,19 @@ public interface ContentsProcInter {
    * @return 추천수 증가 여부
    */
   public int recom(int contentsno);
+  
+  /**
+   * 댓글수 증가
+   * @param contentsno
+   * @return
+   */
+  public int increase_commentcnt(int contentsno);
+  
+  /**
+   * 댓글수 감소
+   * @param contentsno
+   * @return
+   */
+  public int decrease_commentcnt(int contentsno);
 
 }

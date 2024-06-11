@@ -239,6 +239,43 @@ public interface ExdataDAOInter {
    */
   public ArrayList<ExdataVO> list_part_highrisk_desc(String exgroup);
   
+  /**
+   * 낮은 강도 체중감량 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_low_weight();
+  
+  /**
+   * 중간 강도 체중감량 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_mid_weight();
+  
+  /**
+   * 높은 강도 체중감량 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_high_weight();
+  
+  /**
+   * 낮은 강도 근육량증가 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_low_muscle();
+  
+  /**
+   * 중간 강도 근육량증가 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_mid_muscle();
+  
+  /**
+   * 높은 강도 근육량증가 목적 효율성 순위 정렬
+   * @return
+   */
+  public ArrayList<ExdataVO> list_effect_high_muscle();
+  
+  
   
 
 }

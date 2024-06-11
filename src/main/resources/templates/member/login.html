@@ -4,6 +4,11 @@
 
 <div layout:fragment="content">
 <style>
+<<<<<<< HEAD
+      .body {
+            font-size: 13px !important; /* 원하는 폰트 크기로 변경 */
+        }
+=======
    .fieldset_basic {
     width: 95%; 
     margin: 0px auto; 
@@ -13,6 +18,7 @@
     border-left: none;
 
   }
+>>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
       .text-center a {
         font-size: 13px; /* 원하는 글자 크기로 설정 */
         color: #007bff; /* 링크 색상 */
@@ -48,6 +54,43 @@
       position:fixed;
     }
 </style>
+    <h2>로그인</h2>
+    <div class="title_line"></div>
+    <aside class="aside_right">
+        <a href='/'>홈</a>
+        <span class='menu_divide'>│</span>
+        <a href='./create'>회원가입</a>
+        <span class='menu_divide'>│</span>
+        <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+    <div style="width: 50%; margin: 0px auto; margin-top: 70px;">
+        <form name="frm" id="frm" method="post" action="/member/login">
+            <div>
+                <label for="id">아이디(이메일)*</label>
+                <input type="text" name="id" id="id" th:value="${ck_id}"  autofocus="autofocus" placeholder="아이디"
+                       class="form-control fom-control-sm" style="width: 100%;">
+                <label><input type="checkbox" name="id_save" id="id_save" th:checked="${ck_id_save == 'Y'}" value="Y"> 저장<label>
+                <span id='id_msg'></span>
+            </div>
+
+            <div class="form-group">
+                <label for="passwd">패스워드*</label>
+                <input type='password' name='passwd' id='passwd' th:value="${ck_passwd}" required="required"
+                       placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
+                <label><input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"> 저장<label>
+                <span id='passwd_msg'></span>
+            </div>
+            <div class="text-center mb-3">
+                <a href="/member/find_id_form" class="mr-3">아이디 찾기 |</a>
+                <a href="/member/find_passwd_form">비밀번호 찾기</a>
+            </div>
+            <div class="content_body_bottom">
+                <button type="button" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
+                <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+            </div>
+        </form>
+    </div>
+
     <!-- 모달창 -->
     <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -64,8 +107,8 @@
         </div>
       </div>
     </div>
-
-     <script>
+    <!-- 모달창 x -->
+    <script>
       // 경고 모달창 표시 함수
       function showModal(message) {
         document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
@@ -88,6 +131,7 @@
         // 모달 확인 버튼에 이벤트 리스너 추가
         document.getElementById('modalConfirmButton').addEventListener('click', () => {
           document.getElementById('frm').submit();
+          $('#warningModal').modal('hide'); // 모달창 닫기
         });
       }
 
@@ -111,11 +155,36 @@
           passwd.focus();
           return false;  // 로그인 진행 중지
         }
-        
-        // 로그인 성공 메시지 표시
-        showModal("로그인 성공!");
+
+        id = id.value;
+        passwd = passwd.value;
+
+        fetch('http://localhost:9093/member/logins', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, passwd })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.cnt === 1) {
+            // 로그인 성공
+            showModal("로그인 성공!");
+          } else {
+            // 로그인 실패 메시지 표시
+            showModal("로그인 실패! 아이디와 패스워드를 확인해주세요.");
+          }
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+          showModal("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        });
       }
     </script>
+<<<<<<< HEAD
+    
+=======
   <div class="title_line">
 <div class="form-group" style=" text-align:center;"> 로그인</div>
   </div>
@@ -149,6 +218,7 @@
       </form>
     </div>
   </fieldset>
+>>>>>>> d3dd5cba57371a8e93a0c6767f5809d3029bfbe1
 
     
 </div>
