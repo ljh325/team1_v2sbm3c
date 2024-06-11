@@ -3,6 +3,7 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -432,6 +434,7 @@ public class MemberCont {
       ck_id_save.setPath("/");
       ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
       response.addCookie(ck_id_save);
+      System.out.println("ck_id_save" + ck_id_save);
       // -------------------------------------------------------------------
   
       // -------------------------------------------------------------------
@@ -467,6 +470,30 @@ public class MemberCont {
       return "member/msg"; // templates/member/msg.html로 이동  
     }
   
+  }
+  @PostMapping(value="/logins")
+  @ResponseBody
+  public String login_json(Model model, @RequestBody Map<String, String> payload) {
+    String id = payload.get("id");
+    String passwd = payload.get("passwd");
+
+    if (id == null || id.trim().isEmpty() || passwd == null || passwd.trim().isEmpty()) {
+        JSONObject obj = new JSONObject();
+        obj.put("cnt", 0);
+        obj.put("error", "ID and Password cannot be empty");
+        return obj.toString();
+    }
+
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("id", id); // map에 id 저장
+    map.put("passwd", this.security.aesEncode(passwd)); // map에 암호화된 패스워드 저장
+
+    int cnt = this.memberProc.login(map); // 로그인 확인
+
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
   }
   
   /***************************************************************************************/

@@ -1,5 +1,5 @@
 /**********************************/
-/* Table Name: ?šŒ?› */
+/* Table Name: ?ï¿½ï¿½?ï¿½ï¿½ */
 /**********************************/
 CREATE TABLE MEMBER(
 		MEMBERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
@@ -19,26 +19,29 @@ CREATE TABLE MEMBER(
 
 commit;
 
-COMMENT ON TABLE MEMBER is '?šŒ?›';
-COMMENT ON COLUMN MEMBER.MEMBERNO is '?šŒ?› ë²ˆí˜¸';
-COMMENT ON COLUMN MEMBER.ID is '?•„?´?””';
-COMMENT ON COLUMN MEMBER.PASSWD is '?Œ¨?Š¤?›Œ?“œ';
-COMMENT ON COLUMN MEMBER.MNAME is '?„±ëª?';
-COMMENT ON COLUMN MEMBER.TEL is '? „?™”ë²ˆí˜¸';
-COMMENT ON COLUMN MEMBER.ZIPCODE is '?š°?Ž¸ë²ˆí˜¸';
+COMMENT ON TABLE MEMBER is '?ï¿½ï¿½?ï¿½ï¿½';
+COMMENT ON COLUMN MEMBER.MEMBERNO is '?ï¿½ï¿½?ï¿½ï¿½ ë²ˆí˜¸';
+COMMENT ON COLUMN MEMBER.ID is '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½';
+COMMENT ON COLUMN MEMBER.PASSWD is '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½';
+COMMENT ON COLUMN MEMBER.MNAME is '?ï¿½ï¿½ï¿½?';
+COMMENT ON COLUMN MEMBER.TEL is '?ï¿½ï¿½?ï¿½ï¿½ë²ˆí˜¸';
+COMMENT ON COLUMN MEMBER.ZIPCODE is '?ï¿½ï¿½?ï¿½ï¿½ë²ˆí˜¸';
 COMMENT ON COLUMN MEMBER.ADDRESS1 is 'ì£¼ì†Œ1';
 COMMENT ON COLUMN MEMBER.ADDRESS2 is 'ì£¼ì†Œ2';
-COMMENT ON COLUMN MEMBER.MDATE is 'ê°??ž…?¼';
-COMMENT ON COLUMN MEMBER.GRADE is '?“±ê¸?';
-COMMENT ON COLUMN MEMBER.PROFILE is '?šŒ?› ?”„ë¡œí•„ ?´ë¯¸ì?';
-COMMENT ON COLUMN MEMBER.POINT is '?¬?¸?Š¸';
+COMMENT ON COLUMN MEMBER.MDATE is 'ï¿½??ï¿½ï¿½?ï¿½ï¿½';
+COMMENT ON COLUMN MEMBER.GRADE is '?ï¿½ï¿½ï¿½?';
+COMMENT ON COLUMN MEMBER.PROFILE is '?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ë¡œí•„ ?ï¿½ï¿½ë¯¸ï¿½?';
+COMMENT ON COLUMN MEMBER.POINT is '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½';
 
-
+    SELECT passwd 
+    FROM member
+    WHERE id='juchan1212' AND mname='ë°•ì£¼ì°¬' AND tel='01083720288';
 
 CREATE SEQUENCE member_seq
-  START WITH 1              -- ?‹œ?ž‘ ë²ˆí˜¸
-  INCREMENT BY 1          -- ì¦ê?ê°?
-  MAXVALUE 9999999999 -- ìµœë?ê°?: 9999999 --> NUMBER(7) ???‘
-  CACHE 2                       -- 2ë²ˆì? ë©”ëª¨ë¦¬ì—?„œë§? ê³„ì‚°
-  NOCYCLE;                     -- ?‹¤?‹œ 1ë¶??„° ?ƒ?„±?˜?Š” ê²ƒì„ ë°©ì?
+  START WITH 1              -- ?ï¿½ï¿½?ï¿½ï¿½ ë²ˆí˜¸
+  INCREMENT BY 1          -- ì¦ï¿½?ï¿½?
+  MAXVALUE 9999999999 -- ìµœï¿½?ï¿½?: 9999999 --> NUMBER(7) ???ï¿½ï¿½
+  CACHE 2                       -- 2ë²ˆï¿½? ë©”ëª¨ë¦¬ì—?ï¿½ï¿½ï¿½? ê³„ì‚°
+  NOCYCLE;                     -- ?ï¿½ï¿½?ï¿½ï¿½ 1ï¿½??ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ê²ƒì„ ë°©ï¿½?
+ commit;
  

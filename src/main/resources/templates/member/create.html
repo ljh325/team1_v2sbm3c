@@ -58,17 +58,19 @@
           document.getElementById('btn_send').focus();
         }
       });
-      
+
     }
     
    
 
-    
+    let isIdChecked = false; // 중복확인 여부를 나타내는 플래그 변수
     function checkID() {
       // alert('checkID()');
       
       let id = document.getElementById('id');
       let id_msg = document.getElementById('id_msg');
+      let btn_checkID = document.getElementById('btn_checkID');
+      let check_mark = document.getElementById('check_mark');
   
       if (id.value.trim().length == 0) {
         id_msg.innerHTML= 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
@@ -103,8 +105,15 @@
           } else { // 아이디 중복 안됨.
             id_msg.innerHTML= '사용 가능한 ID(이메일) 입니다.';
             id_msg.classList.add('span_info');
+            btn_checkID.classList.add('btn-disabled');
+            btn_checkID.disabled = true; // 버튼 비활성화
+            btn_checkID.innerHTML = '확인'
+            id.disabled = true; // 아이디 입력창 비활성화
+            check_mark.style.display = 'inline'; // 체크 표시 보이기
+            isIdChecked = true; // 중복확인 완료 플래그 설정
             document.getElementById('passwd').focus(); 
           }
+
         })
         .catch(error => { // 서버 다운등 통신 에러
             console.error('Error:', error);
@@ -122,18 +131,27 @@
     
       function send() { // 회원 가입 처리
       
+        if (!isIdChecked) {
+          id_showModal("중복확인을 해주세요!");
+          return false; // 회원 가입 진행 중지
+        }
+      
         // 아이디 유효성 검사 **
         let id = document.getElementById('id');
         let id_msg = document.getElementById('id_msg');
 
+        
         if (id.value.trim().length == 0) {
           id_msg.innerHTML = 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
           id_msg.classList.add('span_warning');    // class 적용
           id.focus();
 
-          return false;  // 회원 가입 진행 중지
-
+          return false;  // 회원 가입 진행 중지 
         }
+        //if (id_msg) {
+        //  id_msg.remove(); // 경고문 삭제
+        //}
+        
         
         
         // 패스워드 유효성 검사 **
@@ -146,14 +164,18 @@
         if (passwd.value.length == 0) {
           passwd1_msg.innerHTML = '패스워드 입력은 필수입니다.';
           passwd1_msg.classList.add('span_warning');    // class 적용
-          mname.focus();
+          passwd.focus();
 
           return false;  // 회원 가입 진행 중지
         }
+        if (passwd1_msg) {
+          passwd1_msg.remove(); // 경고문 삭제
+        }
+        
         if (passwd2.value.length == 0) {
           passwd2_msg.innerHTML = '패스워드 확인해주세요.';
           passwd2_msg.classList.add('span_warning');    // class 적용
-          mname.focus();
+          passwd2.focus();
 
           return false;  // 회원 가입 진행 중지
         } else if (passwd.value != passwd2.value) {
@@ -163,7 +185,9 @@
 
           return false;  // 회원 가입 진행 중지
         } else {
-
+          if (passwd2_msg) {
+            passwd2_msg.remove(); // 경고문 삭제
+          } 
 
           // 성명 유효성 검사 **
           let mname = document.getElementById('mname');
@@ -173,9 +197,14 @@
             mname_msg.innerHTML = '이름 입력은 필수입니다.';
             mname_msg.classList.add('span_warning');    // class 적용
             mname.focus();
-
+            
             return false;  // 회원 가입 진행 중지
+            
           }
+          if (mname_msg) {
+            mname_msg.remove(); // 경고문 삭제
+          }
+          
           
           // 닉네임 유효성 검사 **
           let nickname = document.getElementById('nickname');
@@ -188,6 +217,10 @@
 
             return false;  // 회원 가입 진행 중지
           }
+          if (nickname_msg) {
+            nickname_msg.remove(); // 경고문 삭제
+          }
+          
           
           // 전화 번호 유효성 검사 **
           let tel = document.getElementById('tel');
@@ -205,19 +238,11 @@
               tel.focus();
               return false;  // 회원 가입 진행 중지
           }
+            if (tel_msg) {
+              tel_msg.remove(); // 경고문 삭제
+            }
           
-          
-          // 우편번호 유효성 검사 **  
-          let zipcode = document.getElementById('zipcode');
-          let zipcode_msg = document.getElementById('zipcode_msg');
 
-          if (zipcode.value.length == 0) {
-            zipcode_msg.innerHTML = '우편번호입력은 필수입니다.';
-            zipcode_msg.classList.add('span_warning');    // class 적용
-            zipcode.focus();
-
-            return false;  // 회원 가입 진행 중지
-          }
           
           // 주소 유효성 검사 **  
           let address1 = document.getElementById('address1');
@@ -230,19 +255,53 @@
 
             return false;  // 회원 가입 진행 중지
           }
+          if (address1_msg) {
+            address1_msg.remove(); // 경고문 삭제
+          }
           
-          
-          // 생년월일 유효성 검사 **  
-          let birth = document.getElementById('birth');
+          // 년도 유효성 검사 **  
+          let year = document.getElementById('year');
           let birth_msg = document.getElementById('birth_msg');
 
-          if (birth.value.length == 0) {
-            birth_msg.innerHTML = '생년월일은 필수입니다.';
+          if (year.value.length == 0) {
+            birth_msg.innerHTML = '연도는 필수입니다.';
             birth_msg.classList.add('span_warning');    // class 적용
-            birth.focus();
+            year.focus();
 
             return false;  // 회원 가입 진행 중지
           } 
+          if (birth_msg) {
+            birth_msg.remove(); // 경고문 삭제
+          }
+           
+          // 월 유효성 검사 **  
+          let month = document.getElementById('month');
+
+          if (month.value.length == 0) {
+            birth_msg.innerHTML = '월은 필수입니다.';
+            birth_msg.classList.add('span_warning');    // class 적용
+            month.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }
+          if (birth_msg) {
+            birth_msg.remove(); // 경고문 삭제
+          }
+          
+          
+          // 일 유효성 검사 **  
+          let day = document.getElementById('day');
+
+          if (day.value.length == 0) {
+            birth_msg.innerHTML = '일은 필수입니다.';
+            birth_msg.classList.add('span_warning');    // class 적용
+            day.focus();
+
+            return false;  // 회원 가입 진행 중지
+          }  
+          if (birth_msg) {
+            birth_msg.remove(); // 경고문 삭제
+          }
           
           // 성별 유효성 검사 **  
           let sex = document.getElementById('sex');
@@ -254,18 +313,30 @@
             sex.focus();
 
             return false;  // 회원 가입 진행 중지
+          } 
+          if (sex_msg) {
+            sex_msg.remove(); // 경고문 삭제
           }
           
         } // passwd2_msg else 끝
         
+        submitForm()
+        // 모달 확인 버튼에 이벤트 리스너 추가
+
+       document.getElementById('frm').submit();
         
-        document.getElementById('frm').submit(); // required="required" 작동 안됨.
       }    
   </script>
   <style>
   .form-group{
     margin-top: 7px;
   }
+  .btn-disabled {
+  background-color: #d3d3d3; /* 연한색 */
+  border-color: #d3d3d3;
+  color: #ffffff;
+  cursor: not-allowed;
+}
   </style>
 
   <div class="title_line">회원 가입(*: 필수)</div>
@@ -288,6 +359,7 @@
                    class="form-control form-control-sm" style="width: 70%;" th:field="*{id}">
             <button type="button" id="btn_checkID" onclick="checkID()" 
                     class="btn btn-primary btn-sm" style="margin-left: 8px; margin-top: 4px;">중복확인</button>
+                    <span id="check_mark" style="display:none; margin-left: 8px;">&#10003;</span>
         </div>
         <span id='id_msg'></span>  
       </div>
@@ -321,185 +393,127 @@
       </div>   
   
       <div class="form-group">
-        <label for="tel">전화 번호* (- 포함x)</label>
+        <label for="tel">전화 번호*</label>
         <input type='text' name="tel" id='tel' value='' required="required" 
                   placeholder="전화번호" class="form-control form-control-sm" style="width: 100%;">
         <span id='tel_msg'></span>
       </div>
-      
-      <div class="form-group"> 
-        <label for="zipcode">우편 번호</label>
-        <input type='text' name='zipcode' id='zipcode' value='' placeholder="우편번호"
-                  class="form-control form-control-sm" style="width: 60%;">
-        <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" 
-                  class="btn btn-primary btn-sm" style="margin-top: 4px;">우편번호 찾기</button>
-        <span id='zipcode_msg'></span>
-      </div>  
   
       <div class="form-group">
-        <label for="address1" style="width: 100%;">주소</label>
+        <label for="address1" style="width: 100%;">주소*</label>
         <input type='text' name='address1' id='address1' value='' placeholder="주소"
                    class="form-control form-control-sm">
         <span id='address1_msg'></span>           
       </div>   
   
       <div class="form-group">
-        <label for="address2" style="width: 100%;">상세 주소</label>
+        <label for="address2" style="width: 100%;">상세 주소*</label>
         <input type='text' name='address2' id='address2' value='' placeholder="상세 주소"
                   class="form-control form-control-sm">
       </div> 
       
-      <div class="form-group">
-      <label for="date" style="width: 60%;" >날짜를 선택하세요:
-      <input type="date"  class="form-control form-control-sm"
-         id="birth" name='birth'
-         max=""
-         min="1970-01-01">
-      </label><br>
-      <span id='birth_msg'></span>
+<div class="form-group">     
+  <label for="date" style="width: 60%;">생년월일을 입력하세요:</label>
+  <div class="container text-center">
+    <div class="row">
+      <div class="col px-1">
+        <input type="text" class="form-control date-input" id="year"  placeholder="YYYY">
       </div>
-<script>
-    // 오늘 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
-    function formatDate(date) {
-        var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('-');
-    }
-
-    // 현재 날짜를 value와 max 속성에 설정
-    var today = formatDate(new Date());
-    document.getElementById('birth').value = '';
-    document.getElementById('birth').max = today;
-</script>     
-      
-      <!--<div class="form-group">
-        <label for="birth" style="width: 100%;">생년월일 (예: 012345)</label>
-        <input type='text' name='birth' id='birth' value='' placeholder="생년월일"
-                  class="form-control form-control-sm">
-        <span id='birth_msg'></span>          
-      </div>--> 
-      
-      <div class="form-group">
-        <label for="sex" style="width: 100%;">성별</label>      
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="sex" id="sex" value="남자">
-          <label class="form-check-label" for="inlineRadio1">남자</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="sex" id="sex" value="여자">
-          <label class="form-check-label" for="inlineRadio2">여자</label>
-        </div>
-        <span id='sex_msg'></span>          
+      <div class="col px-1">
+        <input type="text" class="form-control date-input" id="month"  placeholder="MM">
       </div>
-<!--
-      <div class="form-group">
-        <label for="sex" style="width: 100%;">성별</label>
-        <input type='text' name='sex' id='sex' value='' placeholder="성별"
-                  class="form-control form-control-sm">
-        <span id='sex_msg'></span>          
-      </div>   --> 
-
-<!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
-    <div>
-<div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+      <div class="col px-1">
+        <input type="text" class="form-control date-input" id="day"  placeholder="DD">
+      </div>
+    </div>
+    <span id="birth_msg"></span>
+  </div>
+  <input type="hidden" id="birth" name="birth">
 </div>
-
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-    // 우편번호 찾기 찾기 화면을 넣을 element
-    var element_wrap = document.getElementById('wrap');
-
-    function foldDaumPostcode() {
-        // iframe을 넣은 element를 안보이게 한다.
-        element_wrap.style.display = 'none';
+  function submitForm() {
+    const year = document.getElementById('year').value;
+    const month = document.getElementById('month').value;
+    const day = document.getElementById('day').value;
+    const birth = year + '-' + month + '-' + day;
+    document.getElementById('birth').value = birth;
+    
+    // Validate date input
+    if (!validateDate(year, month, day)) {
+      document.getElementById('birth_msg').textContent = '유효한 날짜를 입력하세요.';
+      return;
     }
+    
+    // Form submission logic (for demonstration, this part can be customized)
+    console.log('생년월일:', birth);
+    // document.getElementById('form-id').submit(); // Uncomment this to submit the form
+  }
 
-    function DaumPostcode() {
-        // 현재 scroll 위치를 저장해놓는다.
-        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-        new daum.Postcode({
-            oncomplete: function(data) {
-                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+  function validateDate(year, month, day) {
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === parseInt(year) &&
+           date.getMonth() === parseInt(month) - 1 &&
+           date.getDate() === parseInt(day);
+  }
+  
+  
+      // 경고 아이디 중복 체크 모달창 표시 함수
+      function id_showModal(message) {
+        document.getElementById("id_modalBody").innerText = message; // 모달창 내용 설정
+        $('#warningModal').modal('show'); // 모달창 표시
+      }
 
-                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                var addr = ''; // 주소 변수
-                var extraAddr = ''; // 참고항목 변수
-
-                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                    addr = data.roadAddress;
-                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                    addr = data.jibunAddress;
-                }
-
-                /*
-                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                if(data.userSelectedType === 'R'){
-                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraAddr += data.bname;
-                    }
-                    // 건물명이 있고, 공동주택일 경우 추가한다.
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                    if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("sample3_extraAddress").value = extraAddr;
-                
-                } else {
-                    document.getElementById("sample3_extraAddress").value = '';
-                }
-                */
-
-                // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zipcode').value = data.zonecode; // 우편번호
-                document.getElementById("address1").value = addr;  // 주소
-
-                document.getElementById("address2").innerHTML=""; // 상세 주소 지우기
-                // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("address2").focus();  // 상세 주소로 포커스 이동
-
-                // iframe을 넣은 element를 안보이게 한다.
-                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-                element_wrap.style.display = 'none';
-
-                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-                document.body.scrollTop = currentScroll;
-            },
-            // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-            onresize : function(size) {
-                element_wrap.style.height = size.height+'px';
-            },
-            width : '100%',
-            height : '100%'
-        }).embed(element_wrap);
-
-        // iframe을 넣은 element를 보이게 한다.
-        element_wrap.style.display = 'block';
-    }
 </script>
 
-    </div>
-<!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
+<style>
+  .date-input {
+    width: 100%;
+  }
+</style>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <div class="form-group">
+        <label for="sex" style="width: 100%;">성별*</label>       
+        <select class="form-select" id="sex" name="sex" aria-label="Default select example" required>
+          <option value="">성별</option>
+          <option value="남자">남자</option>
+          <option value="여자">여자</option>
+        </select>
+        <span id="sex_msg"></span>          
+      </div>
 
       <div class="content_body_bottom">
         <button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
         <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
       </div>
 
+
+
+
+    <!-- 중복아이디 검사 모달창 -->
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel">경고</h5>
+          </div>
+          <div class="modal-body" id="id_modalBody">
+            <!-- 경고 메시지가 여기에 표시됩니다 -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="check_ids">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 모달창 x -->
 
     </form>
   </div>

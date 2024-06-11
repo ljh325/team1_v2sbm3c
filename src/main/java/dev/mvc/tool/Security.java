@@ -40,7 +40,10 @@ public class Security {
   }
  
   // 암호화
-  public String aesEncode(String str) {    
+  public String aesEncode(String str) {  
+    if (str == null) {
+      throw new IllegalArgumentException("The input string cannot be null");
+    }
     String enStr = "";
     
     try {
