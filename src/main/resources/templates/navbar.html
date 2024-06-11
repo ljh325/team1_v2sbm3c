@@ -36,14 +36,18 @@
                             <a class="review_title_line" th:if="${session.memberno == null}" href="/member/create">회원가입</a>
                             
                             <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}">회원정보</a>
-                            <!--로그인시 로그인 내역 -->
-                          <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그인 내역</a>    
+                            
+                            <!-- 회원수정 -->
+                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/update_form?memberno=${session.memberno}|}">회원수정</a> 
+                            
+                            <!-- 회원 탈퇴 -->
+                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원탈퇴</a>   
    
                             <!-- 로그인시 로그아웃 -->
                             <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그아웃</a>
                             
-                          <!--로그인시 비밀번호 변경 -->
-                            <a class="review_title_line" th:if="${session.memberno != null}" href="/member/passwd_update_form">비밀번호 변경</a>
+                          
+                            
 
                           </ul>
                       </div>
@@ -70,14 +74,24 @@
                               </ul>
                          </div>
                         
-                        <!-- 리뷰남기기, 문의-->
-                        <div style="display: flex; justify-content: space-around;">
-                            <div class="review_title_line">리뷰 </div>
-                              <aside class="aside_right">
-                                <!-- 리뷰남기기, 문의 하기  -->
-                              </aside>
-                       </div>
-                       
+                     <!-- 리뷰남기기, 문의-->
+                     <div style="display: flex; justify-content: space-around;">
+                       <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown2"
+                           aria-controls="navbarSupportedContent" >리뷰
+                       </button> 
+                     </div>
+                     <div class="collapse navbar-collapse" id="navDropdown2">
+                          <ul class="nav-top" style="font-size: 10px;">
+                                <div style="display: flex; justify-content: space-around;">
+                                  <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰</a>
+                                </div>
+                                <div style="display: flex; justify-content: space-around;">
+                                  <a class="review_title_line" href="/review/review_list_form">리뷰 목록</a>
+                                </div>
+                          </ul>
+                      </div>
+                      
+                      
                        <!-- 정보-->
                         <div style="display: flex; justify-content: space-around;">
                             <div class="review_title_line">정보 </div>
@@ -85,8 +99,8 @@
                                 <!-- 정보, 이용약관 등록 -->
                               </aside>
                        </div>
- <!-- admin 권한 -->
-                               
+                       
+                    <!-- admin 권한 -->
                     <div style="display: flex; justify-content: space-around;">
                              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
                                  aria-controls="navbarSupportedContent" >관리자 등록
