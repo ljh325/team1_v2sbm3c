@@ -547,7 +547,7 @@ public class MemberCont {
     String profilesaved = "";   // 저장된 파일명, image
     String thumbs = "";     // preview image
 
-    String upDir =  MemberProfile.getUploadDir(); // 파일을 업로드할 폴더 준비
+    String upDir =  Member.getUploadDir(); // 파일을 업로드할 폴더 준비
     System.out.println("-> upDir: " + upDir);
     
     // 전송 파일이 없어도 files1MF 객체가 생성됨.

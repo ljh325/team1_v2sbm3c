@@ -20,13 +20,15 @@
     font-style: normal;
 }
   /* 모든 태그에 적용 */
+  /* ========================================주찬 수정=====================================*/
   *{
      font-family: TTHakgyoansimMonggeulmonggeulR; 
-     font-size: 30px; 
+     /*font-size: 13px;*/  /* 전체 폰트사이즈 제거- 기본사이즈 12px : 주찬 수정 ★★★★★★★★★★★★★★★ */
      margin: 0px;  /* top right bottom left */
      padding: 0px;
      color: #555555;
   }  
+  /* ========================================주찬 수정=====================================*/
   
   /*주찬 수정 - 원상복구*/
   .container_main {
@@ -58,10 +60,14 @@
       font-size: 8px; /* 글자 크기 조정 */
     }
      
+     /* ========================================주찬 수정=====================================*/
+     /* 로고 */
     .top_navigation a {
       text-align: center;
       cursor: pointer; /* 포인터 커서로 변경 */
+      font-size: 30px; /* 로고 폰트사이즈 변경: 주찬 수정 ★★★★★★★★★★★★★★★ */
     }
+    /* ========================================주찬 수정=====================================*/
     .top_navigation a span {
       display: block;
       margin-top: 0px; /* 아이콘과 글자 사이의 간격 조정 */
@@ -286,10 +292,10 @@
       .bottom_menu {
       margin-top: 100px;
     }
+    /* ========================================주찬 수정=====================================*/
     .navigation {
       position: fixed;
       bottom: 0px;
-      position: fixed;
       padding: 0;
       width: 98%;
       background-color: rgb(255, 255, 255);
@@ -298,8 +304,9 @@
       padding: 1px 0;
       box-shadow: 0px 2px 4px 7px rgb(128, 255, 255), 0 6px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
       border: 1px solid #999;
-      font-size: 9px; /* 글자 크기 조정 */
+      font-size: 30px;/* 로고 폰트사이즈 변경:12px; -> 30px; 주찬 수정 ★★★★★★★★★★★★★★★ */ /* 글자 크기 조정 */
     }
+    /* ========================================주찬 수정=====================================*/
     .navigation a {
       text-align: center;
       cursor: pointer; /* 포인터 커서로 변경 */
