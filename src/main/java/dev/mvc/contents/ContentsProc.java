@@ -50,9 +50,9 @@ public class ContentsProc implements ContentsProcInter {
   }
 
   @Override
-  public ContentsVO read(int contentsno) {
-    ContentsVO contentsVO = this.contentsDAO.read(contentsno);
-    return contentsVO;
+  public ContentsMemberVO read(int contentsno) {
+    ContentsMemberVO contentsMemberVO = this.contentsDAO.read(contentsno);
+    return contentsMemberVO;
   }
 
   @Override

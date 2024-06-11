@@ -62,11 +62,11 @@
   </select>
   
   <!-- 게시글 조회 -->
-  <select id = "read" resultType="dev.mvc.contents.ContentsVO" parameterType="int">
-    SELECT contentsno, memberno, cateno, title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-    FROM contents
-    WHERE contentsno = #{contentsno}
+  <select id = "read" resultType="dev.mvc.contents.ContentsMemberVO" parameterType="int">
+    SELECT c.contentsno, c.memberno, c.cateno, c.title, c.content, c.recom, c.viewcnt, c.commentcnt, c.passwd, c.tag, c.rdate, c.file1,
+              c.file1saved, c.thumb1, c.size1, m.thumbs, m.grade, m.id
+    FROM contents c, member m
+    WHERE c.memberno = m.memberno and c.contentsno = #{contentsno}
   </select>
   
   <!-- Youtube 등록, 수정, 삭제  -->

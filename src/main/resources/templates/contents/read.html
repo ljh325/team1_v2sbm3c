@@ -1,6 +1,55 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <style>
+    .title_line_text {
+      font-size: 14px;
+    }
+
+    * {
+      font-size: 14px;
+    }
+
+    .table-striped img {
+      width: 60px;
+      height: 45px;
+    }
+
+    .table-striped .td_left {
+      font-size: 14px;
+    }
+
+    .table-striped th,
+    .table-striped td {
+      padding: 5px;
+    }
+
+    .table-striped th {
+      font-size: 14px;
+    }
+
+    .table-striped .td_basic {
+      vertical-align: top;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
   <script>
 
     function checkID() {
@@ -43,22 +92,23 @@
   <aside class="aside_right">
     <a th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">목록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/create?cateno=${cateVO.cateno}|}">등록</a>
-    <span class='menu_divide'>│</span>
-    <a
-      th:href="@{|/contents/youtube?cateno=${cateVO.cateno }&contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
-    <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/update_text?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">글
-      수정</a>
-    <span class='menu_divide'>│</span>
-    <a th:href="@{|/contents/update_file?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">파일
-      수정</a>
-    <span class='menu_divide'>│</span>
-    <a
-      th:href="@{|/contents/delete?contentsno=${contentsVO.contentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>
-    <span class='menu_divide'>│</span>
+    <span th:if="${(session.memberno == contentsVO.memberno) }">
+      <a th:href="@{|/contents/create?cateno=${cateVO.cateno}|}">등록</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/contents/youtube?cateno=${cateVO.cateno }&contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
+      <span class='menu_divide'>│</span>
+      <a th:href="@{|/contents/update_text?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">글
+        수정</a>
+      <span class='menu_divide'>│</span>
+      <a th:href="@{|/contents/update_file?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}|}">파일
+        수정</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/contents/delete?contentsno=${contentsVO.contentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>
+      <span class='menu_divide'>│</span>
+    </span>
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
   </aside>
   <!-- 
   <aside class="aside_right" th:if="${session.grade != 'admin'}">
@@ -78,22 +128,38 @@
     <ul>
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
+          
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${contentsVO.title}"></span>
+          <span style="font-size: 1em; float:right; margin-top:7px;" th:text="${contentsVO.rdate}"></span><br>
+          
+          <span th:if="${contentsVO.thumbs == null}">
+            <img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
+          </span>
+          
+          <span th:text="${contentsVO.thumbs}"></span>
+          <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
+            th:text="${contentsVO.id}"></span>
 
+          <span style="color:darkgray">&nbsp;조회수&nbsp;</span><span th:text="${contentsVO.viewcnt}"></span>
+          <span style="color:darkgray">&nbsp;추천수&nbsp;</span><span th:text="${contentsVO.recom}"></span>
+          <span style="color:darkgray">&nbsp;댓글&nbsp;</span><span th:text="${contentsVO.commentcnt}"></span>
+          <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
+
+        </div>
+        <div style="width: 100%; word-break: break-all;">
           <div
             th:if="${contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png') or contentsVO.file1.endsWith('gif')}">
             <img th:src="@{|/contents/storage/${contentsVO.file1saved}|}"
               style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
           </div>
-
-          <span style="font-size: 1.5em; font-weight: bold;" th:text="${contentsVO.title}"></span>
-          <span style="font-size: 1em;" th:text="${contentsVO.rdate}"></span><br><br>
           <div style="white-space: pre-wrap;"><span th:text="${contentsVO.content}"></span></div>
         </div>
       </li>
 
       <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
         th:if="${contentsVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${contentsVO.youtube}">
+        <div style='text-align: center; width:640px; margin: 0px auto;' class="video-container"
+          th:utext="${contentsVO.youtube}">
         </div>
 
       </li>
@@ -110,8 +176,10 @@
         </span>
       </li>
 
-      <li class="li_none" style="clear: both;" th:text="|태그(키워드): ${contentsVO.tag}|">
+      <li class="li_none" style="clear: both;">
+        <span style="color:dimgray" th:text="|태그(키워드): ${contentsVO.tag}|"></span>
       </li>
+
 
       <li class="li_none" th:if="${contentsVO.size1 > 0}">
         <div>
@@ -186,7 +254,18 @@
                   let row = data['res'][i];
 
                   msg += "<div id='comments" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
-                  msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+                  // 프로필 사진 출력 코드 들어갈 부분
+                  if (row.thumbs != "none") {
+                    if (row.thumbs.endsWith('jpg') || row.thumbs.endsWith('png') || row.thumbs.endsWith('gif')) {
+                      msg += "<img src='/member/storage/" + row.thumbs + "' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                    }
+                  }
+
+                  if (row.thumbs == "none") {
+                    msg += "<img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                  }
+
+                  msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
                   msg += "  " + row.rdate;
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
@@ -194,7 +273,7 @@
                     msg += " <a href='javascript:comments_delete(" + row.commentsno + ")'>" + "삭제" + "</a>";
                   }
                   msg += "  " + "<br>";
-                  msg += row.contents + "<br><br>";
+                  msg += "<span style='display: inline-block; margin-top:10px;'>" + row.contents + "</span> <br><br>";
 
                   //대댓글 관련
                   msg += "<button type = 'button' id='reply_list_btn" + row.commentsno + "' onclick='list_by_commentsno_join(" + row.commentsno + ")' style='border:none;'>" + "답글";
@@ -490,7 +569,7 @@
                   if (data['res'] == 0) {
                     alert('답글 수정에 실패 했습니다.)');
                   } else {
-                    
+
                     fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
                       "method": "get",
                       "headers": {"Content-Type": "application/json"},
@@ -503,13 +582,13 @@
                       });
 
                   }
-                  
+
                 });
 
             }
 
           }
-          
+
           function reply_delete(no) { // 대댓글 삭제
 
             let contents_tag = document.getElementById('contents');

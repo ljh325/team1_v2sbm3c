@@ -393,7 +393,7 @@ public class ContentsCont {
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
-    ContentsVO contentsVO = this.contentsProc.read(contentsno);
+    ContentsMemberVO contentsVO = this.contentsProc.read(contentsno);
     long size1 = contentsVO.getSize1();
     String size1_label = Tool.unit(size1);
     contentsVO.setSize1_label(size1_label);
@@ -466,7 +466,7 @@ public class ContentsCont {
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
-    ContentsVO contentsVO = this.contentsProc.read(contentsno); // map 정보 읽어 오기
+    ContentsMemberVO contentsVO = this.contentsProc.read(contentsno); // map 정보 읽어 오기
     model.addAttribute("contentsVO", contentsVO); // request.setAttribute("contentsVO", contentsVO);
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno()); // 그룹 정보 읽기
@@ -523,7 +523,7 @@ public class ContentsCont {
     model.addAttribute("menu", menu);
 
 //    if (this.memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
-    ContentsVO contentsVO = this.contentsProc.read(contentsno);
+    ContentsMemberVO contentsVO = this.contentsProc.read(contentsno);
     model.addAttribute("contentsVO", contentsVO);
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
@@ -600,7 +600,7 @@ public class ContentsCont {
     model.addAttribute("word", word);
     model.addAttribute("now_page", now_page);
 
-    ContentsVO contentsVO = this.contentsProc.read(contentsno);
+    ContentsMemberVO contentsVO = this.contentsProc.read(contentsno);
     model.addAttribute("contentsVO", contentsVO);
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
@@ -620,7 +620,7 @@ public class ContentsCont {
 
 //    if (this.memberProc.isMemberAdmin(session)) {
     // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
-    ContentsVO contentsVO_old = contentsProc.read(contentsVO.getContentsno());
+    ContentsMemberVO contentsVO_old = contentsProc.read(contentsVO.getContentsno());
 
     // -------------------------------------------------------------------
     // 파일 삭제 시작
@@ -710,7 +710,7 @@ public class ContentsCont {
     model.addAttribute("now_page", now_page);
 
 //    if (memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
-    ContentsVO contentsVO = this.contentsProc.read(contentsno);
+    ContentsMemberVO contentsVO = this.contentsProc.read(contentsno);
     model.addAttribute("contentsVO", contentsVO);
 
     CateVO cateVO = this.cateProc.read(contentsVO.getCateno());
@@ -737,7 +737,7 @@ public class ContentsCont {
     // 파일 삭제 시작
     // -------------------------------------------------------------------
     // 삭제할 파일 정보를 읽어옴.
-    ContentsVO contentsVO_read = contentsProc.read(contentsno);
+    ContentsMemberVO contentsVO_read = contentsProc.read(contentsno);
 
     String file1saved = contentsVO_read.getFile1saved();
     String thumb1 = contentsVO_read.getThumb1();

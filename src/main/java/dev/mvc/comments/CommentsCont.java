@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -81,11 +82,29 @@ public class CommentsCont {
   public String list_by_contentsno_join(int contentsno) {
     // String msg="JSON 출력";
     // return msg;
-
     ArrayList<CommentsMemberVO> list = this.commentsProc.comment_list(contentsno);
+    JSONArray jsonArray = new JSONArray();
+
+    for (CommentsMemberVO vo : list) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("commentsno", vo.getCommentsno());
+        jsonObject.put("contentsno", vo.getContentsno());
+        jsonObject.put("grade", vo.getGrade());
+        jsonObject.put("replycnt", vo.getReplycnt());
+        jsonObject.put("id", vo.getId());
+        jsonObject.put("rdate", vo.getRdate());
+        jsonObject.put("memberno", vo.getMemberno());
+        jsonObject.put("contents", vo.getContents());
+        if(vo.getThumbs() == null) {
+          jsonObject.put("thumbs", "none");
+        } else {
+        jsonObject.put("thumbs", vo.getThumbs());
+        }
+        jsonArray.put(jsonObject);
+    }
 
     JSONObject obj = new JSONObject();
-    obj.put("res", list);
+    obj.put("res", jsonArray);
 
     return obj.toString();
   }

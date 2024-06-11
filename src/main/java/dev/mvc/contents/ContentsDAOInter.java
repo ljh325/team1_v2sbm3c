@@ -43,7 +43,7 @@ public interface ContentsDAOInter {
    * @param contentsno
    * @return 게시글 내용
    */
-  public ContentsVO read(int contentsno);
+  public ContentsMemberVO read(int contentsno);
   
   /**
    * Youtube 등록/수정/삭제
