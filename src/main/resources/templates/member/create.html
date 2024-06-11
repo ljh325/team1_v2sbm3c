@@ -3,6 +3,66 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
+ <style>
+      .login_btn {
+      margin-top: 20px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+      margin-bottom:10px;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9; /* Change background color */
+    }
+
+    .title_line .title_line_text {
+      margin-right: 10px; /* Increase margin */
+    }
+    .aside_right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px; /* Increase margin */
+    }
+    .menu_divide {
+      margin: 0 10px; /* Increase margin */
+    }
+
+    .form-control {
+      width: 97%; /* Set width to 97% */
+      padding: 10px; /* Increase padding */
+      border: 1px solid #ced4da;
+      border-radius: 6px; /* Increase border radius */
+      box-sizing: border-box;
+      margin: 0px auto; /* Increase margin */
+
+      font-size: 16px; /* Increase font size */
+    }
+    .btn {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px 20px; /* Increase padding */
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px; /* Increase font size */
+      border-radius: 6px; /* Increase border radius */
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* Add transition */
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .content_body_bottom {
+      margin-top: 30px; /* Increase margin */
+      text-align: center; /* Center align content */
+    }
+  </style>
   <script>
     window.onload = () => {
       document.querySelector('#id').addEventListener('keypress', (event) => {
@@ -269,95 +329,74 @@
   </style>
 
   <div class="title_line">회원 가입(*: 필수)</div>
-  <aside class="aside_right">
-    <a href='/'>홈</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./login'>로그인</a>
-    <span class='menu_divide' >│</span> 
-    <a href="javascript:location.reload();">새로고침</a>
-  </aside> 
 
-  <div class='menu_line'></div>
+
   
-  <div style="width: 60%; margin: 0px auto ">
+  <div class="form-wrapper">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
-      <div>
-        <label for="id">아이디(이메일)*</label>
+      <div class="form-group" style="text-align:center">회원가입</div>
+      <div class="form-group">
+      
         <div class="id_float" style="display: flex; align-items: center;">
-            <input type="text" name="id" id="id" value="" autofocus="autofocus"
-                   class="form-control form-control-sm" style="width: 70%;" th:field="*{id}">
-            <button type="button" id="btn_checkID" onclick="checkID()" 
-                    class="btn btn-primary btn-sm" style="margin-left: 8px; margin-top: 4px;">중복확인</button>
+                    <input style="margin-top: 5px; width:74%; font-size:medium " type="text" name="id" id="id" th:field="*{id}" placeholder="아이디(이메일)*" class="form-control form-control-sm">
+        <button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm" style="margin-left:20px; font-size:small">확인</button>
         </div>
         <span id='id_msg'></span>  
       </div>
       
       <div class="form-group">
-        <label for="passwd">패스워드*</label> 
-        <input type='password' name='passwd' id='passwd' value='' required="required" 
-                  placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
-        <span id='passwd1_msg'></span>  
+        <input style=" margin-top: 5px;width:100%; font-size:medium" type="password" name="passwd" id="passwd" required="required"
+             placeholder="패스워드" class="form-control form-control-sm">
+             <span id='passwd1_msg'></span> 
       </div>
+         
+      
 
       <div class="form-group">
-        <label for="passwd2">패스워드 확인*</label>
-        <input type='password' name='passwd2' id='passwd2' value='' required="required" 
-                  placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 100%;">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="password" name="passwd2" id="passwd2" required="required"
+        placeholder="패스워드 확인" class="form-control form-control-sm">
         <span id='passwd2_msg'></span>
       </div>
       
-      <div class="form-group">
-        <label for="mname">성명*</label>
-        <input type='text' name='mname' id='mname' value='' required="required" 
-                   placeholder="성명" class="form-control form-control-sm" style="width: 100%;">
+     <div class="form-group">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="mname" id="mname" required="required"
+          placeholder="성명" class="form-control form-control-sm">
         <span id='mname_msg'></span>
-      </div>   
+      </div>
       
       <div class="form-group">
-        <label for="nickname">닉네임*</label>
-        <input type='text' name='nickname' id='nickname' value='' required="required" 
-                   placeholder="닉네임" class="form-control form-control-sm" style="width: 100%;">
+
+        <input style="margin-top: 5px; width:100%; font-size:medium" type='text' name='nickname' id='nickname' value='' required="required" 
+                   placeholder="닉네임" class="form-control form-control-sm">
         <span id='nickname_msg'></span>
       </div>   
   
       <div class="form-group">
-        <label for="tel">전화 번호* (- 포함x)</label>
-        <input type='text' name="tel" id='tel' value='' required="required" 
-                  placeholder="전화번호" class="form-control form-control-sm" style="width: 100%;">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="tel" id="tel" required="required"
+        placeholder="전화번호" class="form-control form-control-sm">
         <span id='tel_msg'></span>
       </div>
       
-      <div class="form-group"> 
-        <label for="zipcode">우편 번호</label>
-        <input type='text' name='zipcode' id='zipcode' value='' placeholder="우편번호"
-                  class="form-control form-control-sm" style="width: 60%;">
-        <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" 
-                  class="btn btn-primary btn-sm" style="margin-top: 4px;">우편번호 찾기</button>
-        <span id='zipcode_msg'></span>
+  
+      <div class="form-group">
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address1" id="address1" placeholder="주소" class="form-control form-control-sm">
+        <span id='address1_msg'></span>      
       </div>  
   
-      <div class="form-group">
-        <label for="address1" style="width: 100%;">주소</label>
-        <input type='text' name='address1' id='address1' value='' placeholder="주소"
-                   class="form-control form-control-sm">
-        <span id='address1_msg'></span>           
-      </div>   
   
       <div class="form-group">
-        <label for="address2" style="width: 100%;">상세 주소</label>
-        <input type='text' name='address2' id='address2' value='' placeholder="상세 주소"
-                  class="form-control form-control-sm">
-      </div> 
+        <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address2" id="address2" placeholder="상세 주소" class="form-control form-control-sm">
+      </div>
       
       <div class="form-group">
-      <label for="date" style="width: 60%;" >날짜를 선택하세요:
+      <label for="date" style="font-size:20px;">생년월일:
       <input type="date"  class="form-control form-control-sm"
          id="birth" name='birth'
          max=""
          min="1970-01-01">
       </label><br>
       <span id='birth_msg'></span>
-      </div>
+      
 <script>
     // 오늘 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
     function formatDate(date) {
@@ -377,23 +416,18 @@
     document.getElementById('birth').value = '';
     document.getElementById('birth').max = today;
 </script>     
-      
-      <!--<div class="form-group">
-        <label for="birth" style="width: 100%;">생년월일 (예: 012345)</label>
-        <input type='text' name='birth' id='birth' value='' placeholder="생년월일"
-                  class="form-control form-control-sm">
-        <span id='birth_msg'></span>          
-      </div>--> 
+     </div> 
       
       <div class="form-group">
-        <label for="sex" style="width: 100%;">성별</label>      
-        <div class="form-check form-check-inline">
+          <label for="sex" style="font-size:20px;">성별:</label>
+        <div class="form-check form-check-inline" style="margin-top: 5px; width:100%; font-size:medium">
+           
           <input class="form-check-input" type="radio" name="sex" id="sex" value="남자">
-          <label class="form-check-label" for="inlineRadio1">남자</label>
+          <label class="form-check-label" for="inlineRadio1" style="font-size:20px;">남자</label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline"  style="margin-top: 5px; width:100%; font-size:medium">
           <input class="form-check-input" type="radio" name="sex" id="sex" value="여자">
-          <label class="form-check-label" for="inlineRadio2">여자</label>
+          <label class="form-check-label" for="inlineRadio2" style="font-size:20px;">여자</label>
         </div>
         <span id='sex_msg'></span>          
       </div>
@@ -405,99 +439,11 @@
         <span id='sex_msg'></span>          
       </div>   --> 
 
-<!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
-    <div>
-<div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-</div>
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    // 우편번호 찾기 찾기 화면을 넣을 element
-    var element_wrap = document.getElementById('wrap');
 
-    function foldDaumPostcode() {
-        // iframe을 넣은 element를 안보이게 한다.
-        element_wrap.style.display = 'none';
-    }
-
-    function DaumPostcode() {
-        // 현재 scroll 위치를 저장해놓는다.
-        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-        new daum.Postcode({
-            oncomplete: function(data) {
-                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                var addr = ''; // 주소 변수
-                var extraAddr = ''; // 참고항목 변수
-
-                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                    addr = data.roadAddress;
-                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                    addr = data.jibunAddress;
-                }
-
-                /*
-                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                if(data.userSelectedType === 'R'){
-                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraAddr += data.bname;
-                    }
-                    // 건물명이 있고, 공동주택일 경우 추가한다.
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                    if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("sample3_extraAddress").value = extraAddr;
-                
-                } else {
-                    document.getElementById("sample3_extraAddress").value = '';
-                }
-                */
-
-                // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zipcode').value = data.zonecode; // 우편번호
-                document.getElementById("address1").value = addr;  // 주소
-
-                document.getElementById("address2").innerHTML=""; // 상세 주소 지우기
-                // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("address2").focus();  // 상세 주소로 포커스 이동
-
-                // iframe을 넣은 element를 안보이게 한다.
-                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-                element_wrap.style.display = 'none';
-
-                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-                document.body.scrollTop = currentScroll;
-            },
-            // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-            onresize : function(size) {
-                element_wrap.style.height = size.height+'px';
-            },
-            width : '100%',
-            height : '100%'
-        }).embed(element_wrap);
-
-        // iframe을 넣은 element를 보이게 한다.
-        element_wrap.style.display = 'block';
-    }
-</script>
-
-    </div>
-<!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
-
-      <div class="content_body_bottom">
-        <button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
-        <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+      <div class="login_btn">
+        <button type="button" class="btn btn-primary btn-sm" style="margin-right:15px; font-size:small" onclick="send();"  title="가입">가 입</button>
+        <button type="button" class="btn btn-primary btn-sm" style="margin-left:15px; font-size:small" onclick="history.back();"  title="취소">취 소</button>
       </div>
 
 

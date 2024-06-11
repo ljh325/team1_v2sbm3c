@@ -1,43 +1,85 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<div layout:fragment="content">
-
-   
-
-  <div class="title_line">운동 추천 조회</div>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>식단 달력</title>
   
-  
-  
-   <aside class="aside_right">
-    <a href="/foodrecom/list_all">목록</a>
-    <span class="menu_devide">│</span>
-     <a th:href="@{|/foodrecom/update?foodrecomno=${foodrecomVO.foodrecomno}|}">수정</a>
-    <span class="menu_devide">│</span>
-    <a th:href="@{|/foodrecom/delete?foodrecomno=${foodrecomVO.foodrecomno}|}">삭제</a>
-    <span class="menu_devide">│</span>
-   
-    <a href="/foodrecom/create">등록</a>
-    <span class="menu_devide">│</span>
-    <a href="javascript: location.reload();">새로 고침</a>
-  </aside>
+  <link href="/css/style.css" rel="stylesheet" type="text/css"> <!-- /static 기준 -->
+  <style>
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .day {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .meal {
+      margin-bottom: 10px;
+    }
+    .meal h3 {
+      margin: 0 0 5px 0;
+      display: flex;
+      align-items: center;
+    }
+    .meal-item {
+      margin: 0 0 5px 0;
+    }
+    .meal img {
+      margin-left: 10px;
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>식단 달력</h1>
+  <div class="calendar" id="calendar"></div>
 
- <div class="menu_line"></div>
-  
-  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">번호: <span th:text="${foodrecomVO.foodrecomno}"></span></li>
-      <li class="list-group-item">운동 추천 내용: <span th:text="${foodrecomVO.hrecom}"></span></li>
-      <li class="list-group-item">추천 날짜: <span th:text="${foodrecomVO.rdate}"></span></li>
- 
-    </ul>  
-  </div>
+  <script>
 
-  <!-- /templates/foodrecom/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{foodrecom/list_all_component::list_all_fragment}"></div>
- 
-</div>
+   window.onload = () => {
+    console.log('${frecom}'); // 값 출력
+    const calendarDiv = document.getElementById('calendar');
+  
+    const mealData = JSON.parse('${frecom}');
+    
+    // Create calendar for each day
+    mealData.res.forEach(dayData => {
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('day');
+        dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+        dayData.meals.forEach(meal => {
+            const mealDiv = document.createElement('div');
+            mealDiv.classList.add('meal');
+            
+            // Add image if the first item exists
+            if (meal.items.length > 0) {
+                const firstItem = meal.items[0];
+                const mealTitle = document.createElement('h3');
+                mealTitle.textContent = meal.meal;
+                const mealImage = document.createElement('img');
+                mealImage.src = `/food_images/${firstItem.code}.png`; // Assuming image file name matches the code
+                mealImage.alt = firstItem.food;
+                mealTitle.appendChild(mealImage);
+                mealDiv.appendChild(mealTitle);
+            } else {
+                mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+            }
+
+            meal.items.forEach(item => {
+                const mealItem = document.createElement('p');
+                mealItem.classList.add('meal-item');
+                mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                mealDiv.appendChild(mealItem);
+            });
+            dayDiv.appendChild(mealDiv);
+        });
+        calendarDiv.appendChild(dayDiv);
+    });
+}
+  </script>
+</body>
 </html>
-
-
-

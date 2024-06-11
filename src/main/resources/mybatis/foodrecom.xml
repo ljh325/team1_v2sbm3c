@@ -12,7 +12,7 @@
   
   <!-- 운동 목표 조회 -->
   <select id = 'read' resultType="dev.mvc.foodrecom.FoodrecomVO" parameterType="Integer">
-    SELECT foodrecomno,hrecom, goalsno, mhno,rdate
+    SELECT foodrecomno,frecom, goalsno, mhno,rdate
     FROM foodrecom
     WHERE foodrecomno = #{foodrecomno}
   </select>
