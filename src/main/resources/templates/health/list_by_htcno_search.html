@@ -2,16 +2,82 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <style>
+    .login_btn {
+      margin-top: 5px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+    }
+    .title_line {
+    text-align: left;
+    border-bottom: solid 3px rgb(128, 0, 0);
+    width: 97%;
+    margin-top: -30px;
+    margin: 0px auto;
+    font-size: 20px;  
+    color: rgb(255, 0, 0);
+    justify-content: space-around;
+    }
 
+    .form-wrapper {
+      display: flex;
+      justify-content: center; /* 수평 가운데 정렬 */
+      align-items: center; /* 수직 가운데 정렬 */
+      width: 100%;
+      margin: 20px 0; /* 상하 여백 */
+      min-height: 200px; /* 최소 높이 추가 */
+    }
+    .table-wrapper {
+      width: 97%;
+      margin: 0 auto; /* 수평 가운데 정렬 */
+      font-size: 20px;  
+      color: rgb(255, 0, 0);
+    }
+    .form-group {
+      position: relative;
+      width: 100%;
+    }
+    #btn_checkID {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+    }
+    /* 추가된 스타일 */
+    .small-form {
+      width: 96%; /* 폼 전체 너비 조정 */
+      max-width: 400px; /* 폼 최대 너비 조정 */
+      background-color: #f9f9f9; /* 배경색 추가 */
+      padding: 10px; /* 패딩 추가 */
+      border: 1px solid #ddd; /* 테두리 추가 */
+      border-radius: 8px; /* 테두리 둥글게 */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 내부 요소 가운데 정렬 */
+    }
+    .small-form .form-control {
+      font-size: 14px; /* 입력 필드 글꼴 크기 조정 */
+      padding: 5px; /* 입력 필드 패딩 조정 */
+      margin-bottom: 10px; /* 하단 여백 추가 */
+    }
+    .small-form .btn {
+      font-size: 14px; /* 버튼 글꼴 크기 조정 */
+      padding: 5px 10px; /* 버튼 패딩 조정 */
+      margin: 5px; /* 버튼 간격 추가 */
+    }
+  </style>
   <div class='title_line'>
     <span th:text="${htcVO.name}" class="title_line_text"></span >
     > <span th:text="${htcVO.namesub}" class="title_line_text"></span >
   </div>
 
   <aside class="aside_right">
-    <span th:if="${session.grade == 'admin'}">
-      <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">등록</a>
-      <span class="menu_devide">│</span>
+      <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">
+      <img src="/home/insert.png" class="icon" title="등록">
+      </a>
+      <span class="menu_devide">│</span>    
     </span>
     
     <a href="javascript:location.reload();">새로고침</a>
@@ -30,7 +96,7 @@
 
       <tr>
         <th class='th_bs'>파일</th>
-        <th class='th_bs' style="text-align: left;">제목/내용/키워드</th>
+        <th class='th_bs' style="text-align: left;">제목</th>
         
         <th class='th_bs'>등록일</th>
       </tr>

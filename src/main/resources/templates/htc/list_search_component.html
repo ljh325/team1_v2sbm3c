@@ -1,15 +1,17 @@
 <div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
-    <div style="text-align: right; clear: both;">
-    <form name="frm_search" method="get" action="/htc/list_search">
-      <input type="text" name="word" id="word" th:value="${word}" >
-      <button type='submit' class='btn btn-secondary btn-sm' 
-                   style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
+
+    <div>
+    <form style="text-align: center;" name="frm_search" method="get" action="/htc/list_search" class="form-control">
+      <input type="text" name="word" id="word" th:value="${word}" class="form-control small" style='font-size:xx-small;'>
+      
+                              <!--테이블 등록--> 
+      <button class="registration-button" type="button" onclick="toggleFormVisibility()">등록</button>    
+      <button type='submit' class="registration-button">검색</button>
+      
       <span th:if="${word != null and word != ''}">
-        <button type='button' class='btn btn-secondary btn-sm' 
-                     style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;"
-                     th:onclick="location.href='/htc/list_search'">검색 취소</button>
-      </span>
-                    
+       <button type='button' class="registration-button" th:onclick="location.href='/htc/list_search'">취소</button>
+      </span> 
+       
     </form>
   </div>
 </div>

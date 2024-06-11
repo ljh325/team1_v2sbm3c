@@ -83,14 +83,13 @@
         form.style.display = "none";
     });
   </script>
-  
-  <div class="title_line" th:fragment="list_search_fragment" th:if="${session.grade=='admin'}">
-          <!--테이블 등록--> 
-      <button class="registration" type="button" onclick="toggleFormVisibility()">
-          <span><img src="/home/menu.gif" class="top_icon" title="테이블 등록"></span>
-      </button>
-      <a href="javascript: location.reload();" class="line_text" style="font-size: 20px;">전체 목록 </a>
-      <span th:if="${word!=null and word!=''}" th:text="| - ${word}(${no} 건)|" class="line_text"></span>
+
+
+
+  <div class="title_line" th:fragment="list_search_fragment"> 
+      <span th:if="${word!=null and word!=''}" th:text="|  ${word}(${no} 건)|" class="line_text"></span>
+        <!-- /htc/list_search_component.html 파일의 list_search_fragment import -->
+      <div th:replace="~{htc/list_search_component::list_search_fragment}"></div>
    </div>
 
   <!-- 등록 시작-->
