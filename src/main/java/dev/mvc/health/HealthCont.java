@@ -26,7 +26,7 @@ import dev.mvc.admin.AdminProcInter;
 import dev.mvc.htc.HtcProcInter;
 import dev.mvc.htc.HtcVO;
 import dev.mvc.htc.HtcVOMenu;
-
+import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 
@@ -44,7 +44,9 @@ public class HealthCont {
   @Autowired
   @Qualifier("dev.mvc.health.HealthProc") // @Component("dev.mvc.health.HealthProc")
   private HealthProcInter healthProc;
-
+  @Autowired
+  @Qualifier("dev.mvc.member.MemberProc") // @Service("dev.mvc.member.MemberProc")
+  private MemberProcInter memberProc;
   public HealthCont() {
     System.out.println("-> HealthCont created.");
   }

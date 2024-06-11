@@ -68,8 +68,8 @@
       margin: 5px; /* 버튼 간격 추가 */
     }
     .registration-button {
-      font-size: 18px;
-      padding: 10px 20px;
+      font-size: 14px;
+      padding: 8px 14px;
     }
   </style>
 </head>
@@ -85,10 +85,11 @@
     <aside class="aside_right">
       <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
         <img src="/home/insert.png" class="icon" title="등록">
-        <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
-          <img src="/home/list1.png" class="icon" title="목록">
-        </a>
       </a>
+      <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+        <img src="/home/list1.png" class="icon" title="목록">
+      </a>
+      
     </aside>
 
     <div class='menu_line'></div>
@@ -123,7 +124,7 @@
         </div>   
         <div class="login_btn">
           <!--등록-->
-          <button type="submit" class="registration-button">등록</button>
+          <button type="submit" class="registration-button sm">등록</button>
           
         </div>
       </form>
