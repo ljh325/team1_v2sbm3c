@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
   <style>
-    @media (max-width: 360px) {
-      .title_line_text {
-        font-size: 14px;
-      }
+
       .table-striped img {
         width: 60px;
         height: 45px;
@@ -22,68 +19,84 @@
       .table-striped .td_basic {
         vertical-align: top;
       }
+      
+      .table-striped img {
+        width: 60px;
+        height: 45px;
+      }
+      .table-striped .td_left {
+        font-size: 14px;
+      }
+      .table-striped th,
+      .table-striped td {
+        padding: 5px;
+      }
+      .table-striped th {
+        font-size: 14px;
+      }
+      .table-striped .td_basic {
+        vertical-align: top;
+      }
+      .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
 </head>
 <body>
 
-<div layout:fragment="content">
-    <div class='title_line'>운동 전체 목록</div>
-      
-
-
-    <div class='menu_line'></div>
-  <div style="width: 97%; margin: 0 auto;">
-    <table class="table table-striped" style='width: 100%;'>
-        <colgroup>
-            <col style='width: 10%;'/>
-            <col style='width: 40%;'/>
-            <col style='width: 20%;'/>
-            <col style='width: 30%;'/>
-        </colgroup>
-
-        <tr>
-            <th class='th_bs' >파일</th>
-            <th class='th_bs' style="text-align: left;">제목</th>
-            <th class='th_bs'>관리자</th>
-            <th class='th_bs'>등록일</th>
-        </tr>
+  <div layout:fragment="content">
+     <div class='title_line'>운동 전체 목록</div>
         
-    <tr th:each="healthVO, status:${list}" 
-         th:attr="onclick=|location.href='/health/read?healthno=${healthVO.healthno}&now_page=${now_page}'|"style="cursor: pointer; height: 50px;">
-         
-          <td class='td_basic' style="vertical-align: middle; text-align: center;">
-              <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png') or healthVO.file1.endsWith('gif')}">
-                <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 100%; height: 100%;">
-              </div>
-          
-              <div th:if="${!(healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')) and (healthVO.size1 > 0)}">
-                <span th:text="${healthVO.file1}" style="font-size:18px;"></span>
-              </div>
-             <div th:if="${healthVO.size1 == 0}">
-                <img src="/health/images/post.png" style="width: 100%; height: 70px;">
-             </div>
-          </td>
-             <!-- 제목/내용/키워드-->
-          <td class='td_left'>
-              <span th:text="${healthVO.title}" style="text-align: center; font-size:17px;"></span>
-              <br>
   
-          </td>
-          
-          <td class="td_left" style="text-align: center; font-size:17px;">
-              <span th:text="${healthVO.adminsno}" style="font-size:18px;"></span>
-          </td>
-          
-          <td class="td_left" style="text-align: center; font-size:17px;">
-              <span th:text="${healthVO.rdate}" style="font-size:18px;"></span>
-          </td>
-        </tr>
-    </table>
+  
+      <div class='menu_line' style="justify-content: end;">
+          <a th:href="@{/health/list_all?now_page=1}" class="menu-item">
+            <img src="/home/all.png" class="icon" title="전체">
+            <span>전체</span>
+          </a>
+      </div>
+      <div style="width: 97%; margin: 0 auto;">
+        <table class="table table-striped" style='width: 100%;'>
+          <colgroup>
+            <col style='width: 25%;'/>
+            <col style='width: 75%;'/>
+          </colgroup>
+    
+          <tr>
+            <th class='th_bs'>파일</th>
+            <th class='th_bs' style="text-align: center;">제목</th>
+          </tr>
+            
+          <tr th:each="healthVO, status:${list}" 
+               th:attr="onclick=|location.href='/health/read?healthno=${healthVO.healthno}&now_page=${now_page}'|"
+               style="cursor: pointer; height: 90px;">
+               
+              <td class='td_basic' style="vertical-align: middle; text-align: center;">
+                  <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png') or healthVO.file1.endsWith('gif')}">
+                    <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 100%; height: 100%;">
+                  </div>
+              
+                  <div th:if="${!(healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')) and (healthVO.size1 > 0)}">
+                    <span th:text="${healthVO.file1}" style="font-size:18px;"></span>
+                  </div>
+                 <div th:if="${healthVO.size1 == 0}">
+                    <img src="/health/images/post.png" style="width: 100%; height: 70px;">
+                 </div>
+              </td>
+                   <!-- 제목/내용/키워드-->
+              <td class='td_left'>
+                  <span th:text="${healthVO.title}" style="text-align: center; font-size:17px;"></span>
+                  <br>
+              </td>
+      
+          </tr>
+        </table>
+      </div>
+    <!-- 페이지 버튼 목록 출력 시작 -->
+    <div class="bottom_menu" th:utext="${paging}"></div>
+    <!-- 페이지 버튼 목록 출력 종료 --> 
   </div>
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
-</div>
 </body>
 </html>

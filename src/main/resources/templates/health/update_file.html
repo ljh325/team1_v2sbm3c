@@ -100,6 +100,11 @@
           <span>등록</span>
       </a>
       <span class="menu_divide">│</span>
+      <a th:href="@{/health/list_all?now_page=1}" class="menu-item">
+        <img src="/home/all.png" class="icon" title="전체">
+        <span>전체</span>
+      </a>
+      <span class="menu_divide">│</span>
       <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}" class="menu-item">
           <img src="/home/list1.png" class="icon" title="목록">
           <span>목록</span>
