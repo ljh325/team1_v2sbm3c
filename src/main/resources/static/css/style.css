@@ -167,7 +167,7 @@
     clear: both;
     font-size: 10px; /* 폰트 크기 */ 
     margin-top: -40px;
-    margin: 20px auto;
+    margin: 10px auto;
     display: flex;
   }
   
@@ -229,7 +229,7 @@
   }
   
   .registration{/*등록*/
-         background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
+    background-color: transparent; /* 버튼 배경색을 투명으로 설정 */
     color: none; /* 텍스트 색상 */
     border: none; /* 테두리 없음 */
     padding: none; /* 내부 여백 */
@@ -243,7 +243,7 @@
       background-color: rgb(255, 255, 255); /* 버튼 배경색 */
       color: rgb(0, 0, 0); /* 버튼 글자색 */
       border: none; /* 버튼 테두리 제거 */
-      padding: 5px 10px; /* 버튼 패딩 */
+      padding: 2px 4px; /* 버튼 패딩 */
       font-size: 14px; /* 버튼 글꼴 크기 */
       cursor: pointer; /* 커서 모양 변경 */
       border-radius: 5px; /* 버튼 둥글게 */

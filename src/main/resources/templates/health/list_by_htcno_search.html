@@ -1,143 +1,101 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<div layout:fragment="content">
-  <style>
-    .login_btn {
-      margin-top: 5px;
-      justify-content: center;
-      display: flex;
-      gap: 10px; /* 버튼 간격 추가 */
-    }
-    .title_line {
-    text-align: left;
-    border-bottom: solid 3px rgb(128, 0, 0);
-    width: 97%;
-    margin-top: -30px;
-    margin: 0px auto;
-    font-size: 20px;  
-    color: rgb(255, 0, 0);
-    justify-content: space-around;
-    }
 
-    .form-wrapper {
-      display: flex;
-      justify-content: center; /* 수평 가운데 정렬 */
-      align-items: center; /* 수직 가운데 정렬 */
-      width: 100%;
-      margin: 20px 0; /* 상하 여백 */
-      min-height: 200px; /* 최소 높이 추가 */
-    }
-    .table-wrapper {
-      width: 97%;
-      margin: 0 auto; /* 수평 가운데 정렬 */
-      font-size: 20px;  
-      color: rgb(255, 0, 0);
-    }
-    .form-group {
-      position: relative;
-      width: 100%;
-    }
-    #btn_checkID {
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
-    }
-    /* 추가된 스타일 */
-    .small-form {
-      width: 96%; /* 폼 전체 너비 조정 */
-      max-width: 400px; /* 폼 최대 너비 조정 */
-      background-color: #f9f9f9; /* 배경색 추가 */
-      padding: 10px; /* 패딩 추가 */
-      border: 1px solid #ddd; /* 테두리 추가 */
-      border-radius: 8px; /* 테두리 둥글게 */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+<head>
+  <style>
+
+      .menu-item {
       display: flex;
       flex-direction: column;
-      align-items: center; /* 내부 요소 가운데 정렬 */
-    }
-    .small-form .form-control {
-      font-size: 14px; /* 입력 필드 글꼴 크기 조정 */
-      padding: 5px; /* 입력 필드 패딩 조정 */
-      margin-bottom: 10px; /* 하단 여백 추가 */
-    }
-    .small-form .btn {
-      font-size: 14px; /* 버튼 글꼴 크기 조정 */
-      padding: 5px 10px; /* 버튼 패딩 조정 */
-      margin: 5px; /* 버튼 간격 추가 */
+      align-items: center;
     }
   </style>
-  <div class='title_line'>
-    <span th:text="${htcVO.name}" class="title_line_text"></span >
-    > <span th:text="${htcVO.namesub}" class="title_line_text"></span >
-  </div>
-
-  <aside class="aside_right">
-      <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">
-      <img src="/home/insert.png" class="icon" title="등록">
-      </a>
-      <span class="menu_devide">│</span>    
-    </span>
-    
-    <a href="javascript:location.reload();">새로고침</a>
-  </aside> 
+</head>
+<body>
+  <div layout:fragment="content">
   
-  <div class='menu_line'></div>
-
-  <!-- Adding a container with margin -->
-  <div style="margin: 1em;">
-    <table class="table table-striped" style='width: 100%;'>
-      <colgroup>
-        <col style='width: 15%;'/>
-        <col style='width: 70%;'/>
-        <col style='width: 15%;'/>
-      </colgroup>
-
-      <tr>
-        <th class='th_bs'>파일</th>
-        <th class='th_bs' style="text-align: left;">제목</th>
+    <div class='title_line'>
+      <span th:text="${htcVO.name}" class="title_line_text"></span >
+      > <span th:text="${htcVO.namesub}" class="title_line_text"></span >
+    </div>
+  
+    <aside class="aside_right">
+      <span th:if="${session.grade == 'admin'}">
+        <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">등록</a>
+        <span class="menu_devide">│</span>
+      </span>
+  
+    </aside> 
+    
+    <div class='menu_line' style=" justify-content: end;">
+        <a th:href="@{|./create?htcno=${htcVO.htcno }|}" class="menu-item">
+            <img src="/home/insert.png" class="icon" aria-label="등록">
+            <span>등록</span>
+        </a>
         
-        <th class='th_bs'>등록일</th>
-      </tr>
-
-      <tr th:each="healthVO, status:${list}" 
-           th:attr="onclick=|location.href='/health/read?healthno=${healthVO.healthno}'|"
-           style="cursor: pointer; height: 90px;">
-        <!-- 이미지-->
-        <td class='td_basic' style="vertical-align: middle; text-align: center;">
-          <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')}">
-            <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 120px; height: 90px;">
-          </div>
-
-          <div th:if="${((healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')) == false) and (healthVO.size1 > 0)}">
-            <span th:text="${healthVO.file1}"></span>
-          </div>
-
-          <div th:if="${healthVO.size1 == 0}">
-            <img src="/health/images/none1.png" style="width: 120px; height: 90px;">
-          </div>             
-        </td>
-
-        <!-- 제목/내용/키워드-->
-        <td class='td_left'>
-          <span th:text="${healthVO.title}" style="font-weight: bold;"></span>
-          <br>
-          <span th:if="${healthVO.explan.length() > 160 }" 
-              th:text="|${healthVO.explan.substring(0, 160) }...|"></span>
-          <span th:if="${healthVO.explan.length() <= 160 }" 
-              th:text="|${healthVO.explan}|"></span>
-          <br>
-          <span th:text="${healthVO.word}"></span>
-        </td>
-
-
-        <td class="td_left" style="text-align: center;">
-          <span th:text="${healthVO.rdate}"></span>
-        </td>
-      </tr>
-    </table>
+        <span class="menu_divide">│</span>
+        <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}" class="menu-item">
+            <img src="/home/list1.png" class="icon" title="목록">
+            <span>목록</span>
+        </a>
+    
+    </div>
+  
+    <!-- Adding a container with margin -->
+    <div style="margin: 1em;">
+      <table class="table table-striped" style='width: 100%;'>
+        <colgroup>
+          <col style='width: 15%;'/>
+          <col style='width: 70%;'/>
+          <col style='width: 15%;'/>
+        </colgroup>
+  
+        <tr>
+          <th class='th_bs'>파일</th>
+          <th class='th_bs' style="text-align: left;">제목/내용/키워드</th>
+          
+          <th class='th_bs'>등록일</th>
+        </tr>
+  
+        <tr th:each="healthVO, status:${list}" 
+             th:attr="onclick=|location.href='/health/read?healthno=${healthVO.healthno}'|"
+             style="cursor: pointer; height: 90px;">
+          <!-- 이미지-->
+          <td class='td_basic' style="vertical-align: middle; text-align: center;">
+            <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')}">
+              <img th:src="@{|/health/storage/${healthVO.thumb1}|}" style="width: 120px; height: 90px;">
+            </div>
+  
+            <div th:if="${((healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png')  or healthVO.file1.endsWith('gif')) == false) and (healthVO.size1 > 0)}">
+              <span th:text="${healthVO.file1}"></span>
+            </div>
+  
+            <div th:if="${healthVO.size1 == 0}">
+              <img src="/health/images/none1.png" style="width: 120px; height: 90px;">
+            </div>             
+          </td>
+  
+          <!-- 제목/내용/키워드-->
+          <td class='td_left'>
+            <span th:text="${healthVO.title}" style="font-weight: bold;"></span>
+            <br>
+            <span th:if="${healthVO.explan.length() > 160 }" 
+                th:text="|${healthVO.explan.substring(0, 160) }...|"></span>
+            <span th:if="${healthVO.explan.length() <= 160 }" 
+                th:text="|${healthVO.explan}|"></span>
+            <br>
+            <span th:text="${healthVO.word}"></span>
+          </td>
+  
+  
+          <td class="td_left" style="text-align: center;">
+            <span th:text="${healthVO.rdate}"></span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  
   </div>
-
-</div>
+</body>
 </html>

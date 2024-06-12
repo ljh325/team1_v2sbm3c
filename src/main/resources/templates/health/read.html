@@ -75,7 +75,11 @@
     border-left: none;
 
   }
-
+    .menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -86,29 +90,42 @@
     > 글 조회
   </div>
   
-  <aside class="aside_right" th:if="${session.grade == 'admin'}">
-    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+  <div class="menu_line" style="justify-content: end;">
+    <a class="menu-item" th:href="@{|./create?htcno=${htcVO.htcno }|}">
+        <img src="/home/insert.png" class="icon" title="등록">
+        <span>등록</span>
+    </a>
+    <span class="menu_divide">│</span>
+    
+    <a class="menu-item" th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
       <img src="/home/list1.png" class="icon" title="목록">
+      <span>목록</span>
     </a>
+    
     <span class="menu_divide">│</span>
-    <a th:href="@{|/health/update_text?healthno=${healthVO.healthno}&now_page=${now_page}&word=${word }|}">
+    <a class="menu-item" th:href="@{|/health/update_text?healthno=${healthVO.healthno}&now_page=${now_page}&word=${word }|}">
       <img src="/home/change.png" class="icon" title="글 수정">
+      <span>글</span>
     </a>
+    
     <span class="menu_divide">│</span>
-    <a th:href="@{|./update_file?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}|}">
+    <a class="menu-item" th:href="@{|./update_file?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}|}">
       <img src="/home/file_change.png" class="icon" title="파일 수정">
+      <span>파일</span>
     </a>
+    
+    <span class="menu_divide">│</span>
+    <a class="menu-item" th:href="@{|./delete?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}&htcno=${healthVO.htcno}|}">
+      <img src="/home/delete.png" class="icon" title="삭제">
+      <span>삭제</span>
+    </a>
+    
     <span class="menu_divide">│</span>
     <a th:href="@{|/health/youtube?htcno=${healthVO.htcno}&healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}|}">
       <img src="/home/youtube.png" class="icon" title="유뷰트">
     </a>
-    <span class="menu_divide">│</span>
-    <a th:href="@{|./delete?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}&htcno=${healthVO.htcno}|}">
-      <img src="/home/delete.png" class="icon" title="삭제">
-    </a>
-  </aside>
-  
-  <div class="menu_line"></div>
+
+  </div>
   
   <fieldset class="fieldset_basic">
 

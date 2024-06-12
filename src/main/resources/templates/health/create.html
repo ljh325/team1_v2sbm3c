@@ -10,16 +10,7 @@
       display: flex;
       gap: 10px; /* 버튼 간격 추가 */
     }
-    .title_line {
-      text-align: left;
-      border-bottom: solid 3px rgb(128, 0, 0);
-      width: 97%;
-      margin-top: -30px;
-      margin: 0px auto;
-      font-size: 20px;  
-      color: rgb(255, 0, 0);
-      justify-content: space-around;
-    }
+
     .form-wrapper {
       display: flex;
       justify-content: center; /* 수평 가운데 정렬 */
@@ -71,6 +62,11 @@
       font-size: 14px;
       padding: 8px 14px;
     }
+        .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   </style>
 </head>
 
@@ -82,17 +78,18 @@
       >  운동 등록
     </div>
 
-    <aside class="aside_right">
-      <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
-        <img src="/home/insert.png" class="icon" title="등록">
-      </a>
-      <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
-        <img src="/home/list1.png" class="icon" title="목록">
-      </a>
-      
-    </aside>
 
-    <div class='menu_line'></div>
+    <div class='menu_line' style="justify-content: end;">
+      <a th:href="@{|./create?htcno=${htcVO.htcno }|}" class="menu-item">
+          <img src="/home/insert.png" class="icon" aria-label="등록">
+          <span>등록</span>
+      </a>
+      <span class="menu_divide">│</span>
+      <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}" class="menu-item">
+          <img src="/home/list1.png" class="icon" title="목록">
+          <span>목록</span>
+      </a>
+    </div>
 
     <!-- Adding a container with margin -->
     <div style="margin: 1em;">
@@ -115,7 +112,7 @@
         </div>   
         <div>
           <label style="font-size:18px;">이미지</label>
-          <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택" style="font-size:18px;">
+          <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택" style=" width: 50%;font-size:18px;">
         </div>   
         <div>
           <label style="font-size:18px;">패스워드</label>

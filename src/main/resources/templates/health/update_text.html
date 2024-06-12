@@ -16,14 +16,7 @@
       padding: 0;
       background-color: #f9f9f9; /* Change background color */
     }
-    .title_line {
-      background-color: #343a40;
-      color: #ffffff;
-      padding: 10px;
-      font-size: 1.5em; /* Increase font size */
-      margin-bottom: 20px; /* Increase margin */
-      text-align: center; /* Center align text */
-    }
+
     .title_line .title_line_text {
       margin-right: 10px; /* Increase margin */
     }
@@ -36,10 +29,7 @@
     .menu_divide {
       margin: 0 10px; /* Increase margin */
     }
-    .menu_line {
-      border-bottom: 2px solid #343a40;
-      margin-bottom: 30px; /* Increase margin */
-    }
+
     .form-control {
       width: 97%; /* Set width to 97% */
       padding: 10px; /* Increase padding */
@@ -70,6 +60,11 @@
       margin-top: 30px; /* Increase margin */
       text-align: center; /* Center align content */
     }
+    .menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -80,17 +75,18 @@
     > 글 수정
   </div>
   
-  <aside class="aside_right">
-    <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
-        <img src="/home/insert.png" class="icon" title="등록">
+  <div class="menu_line" style="justify-content: end;">
+    <a class="menu-item" th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+      <img src="/home/list1.png" class="icon" title="목록">
+      <span>목록</span>
     </a>
+    
     <span class="menu_divide">│</span>
-    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
-        <img src="/home/list1.png" class="icon" title="목록">
+    <a class="menu-item" th:href="@{|./create?htcno=${htcVO.htcno }|}">
+      <img src="/home/insert.png" class="icon" title="등록">
+      <span>등록</span>
     </a>
-  </aside>
-  
-  <div class="menu_line"></div>
+  </div>
   
   <form name="frm" method="post" th:object="${healthVO}" action="./update_text">
     <input type="hidden" name="htcno" th:value="${htcVO.htcno}">

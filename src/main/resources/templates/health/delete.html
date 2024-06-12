@@ -85,9 +85,14 @@
       margin-top: 20px;
     }
     
-        .registration-button {
+     .registration-button {
       font-size: 14px;
       padding: 6px 12px;
+    }
+      .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
 </head>
@@ -99,18 +104,20 @@
     > <span th:text="${healthVO.title}" class="title_line_text"></span>
     > 삭제
   </div>
+
   
-  <aside class="aside_right">
-    <a th:href="@{|./create?htcno=${htcVO.htcno }|}">
-        <img src="/home/insert.png" class="icon" title="등록">
-    </a>
-    <span class="menu_divide">│</span>
-    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
-        <img src="/home/list1.png" class="icon" title="목록">
-    </a>
-  </aside>
-  
-  <div class='menu_line'></div>
+  <div class='menu_line' style=" justify-content: end;">
+      <a th:href="@{|./create?htcno=${htcVO.htcno }|}" class="menu-item">
+        <img src="/home/insert.png" class="icon" aria-label="등록">
+        <span>등록</span>
+      </a>
+      
+      <span class="menu_divide">│</span>
+      <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}" class="menu-item">
+          <img src="/home/list1.png" class="icon" title="목록">
+          <span>목록</span>
+      </a>
+  </div>
   
   <fieldset class="fieldset_basic">
 

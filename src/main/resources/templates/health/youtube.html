@@ -1,57 +1,70 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-
-<style>
-      .login_btn {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-
-        gap: 10px; /* 버튼 간격 추가 */
-        margin-left: 50px;
-      }
-      
-</style>
-
-<div layout:fragment="content">
-  <div class='title_line'>
-    <span th:text="${htcVO.name }" class="title_line_text"></span > 
-    > <span th:text="${htcVO.namesub}" class="title_line_text"></span > 
-    > <span th:text="|${healthVO.title} Youtube|" class="title_line_text"></span>
-  </div>
- 
-  <aside class="aside_right">
-    <a th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
-        <img src="/home/list1.png" class="icon" title="목록">
-    </a>
-  </aside>
-  
-  <div class='menu_line'></div>
-
-  <form name='frm' method='post' action='./youtube'>
-    <input type="hidden" name="healthno" th:value="${healthVO.healthno }">
-    <input type="hidden" name="word" th:value="${word }">
-    <input type="hidden" name="now_page" th:value="${now_page }">
+  <head>
+    <style>
+        .login_btn {
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
     
-    <div style="text-align: center;" >
-       <label style="font-size: 25px; ">Youtube 스크립트</label>
-       <textarea name='youtube' class="form-control" rows="5" style='width: 97%; margin:0% auto;' th:text="${healthVO.youtube }"></textarea>
+          gap: 10px; /* 버튼 간격 추가 */
+          margin-left: 50px;
+        }
+      .menu-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+          
+    </style>
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <div class='title_line'>
+        <span th:text="${htcVO.name }" class="title_line_text"></span > 
+        > <span th:text="${htcVO.namesub}" class="title_line_text"></span > 
+        > <span th:text="|${healthVO.title} Youtube|" class="title_line_text"></span>
+      </div>
+    
+      
+      <div class='menu_line'  style="justify-content: end;">
+        <a class="menu-item" th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
+          <img src="/home/list1.png" class="icon" title="목록">
+          <span>목록</span>
+        </a>
+        
+        <span class="menu_divide">│</span>
+        <a class="menu-item" th:href="@{|./create?htcno=${htcVO.htcno }|}">
+          <img src="/home/insert.png" class="icon" title="등록">
+          <span>등록</span>
+        </a>
+      </div>
+    
+      <form name='frm' method='post' action='./youtube'>
+        <input type="hidden" name="healthno" th:value="${healthVO.healthno }">
+        <input type="hidden" name="word" th:value="${word }">
+        <input type="hidden" name="now_page" th:value="${now_page }">
+        
+        <div style="text-align: center;" >
+           <label style="font-size: 25px; ">Youtube 스크립트</label>
+           <textarea name='youtube' class="form-control" rows="5" style='width: 97%; margin:0% auto;' th:text="${healthVO.youtube }"></textarea>
+        </div>
+        <div class="login_btn" style="text-align: center;" >
+          <button type="submit" class="registration-button">저장</button>
+          <button type="button" onclick="frm.youtube.value=''; frm.submit();" class="registration-button">삭제</button>
+          <button type="button" onclick="history.back();" class="registration-button">취소</button>
+        </div>
+      </form>
+    
+      <hr>
+    
+      <div style="text-align: center;">
+          <label style="font-size: 25px;">[참고] Youtube의 등록 방법</label><br>
+    
+          <img src='/health/images/youtube01.jpg' style='width: 60%;'><br><br>
+          <img src='/health/images/youtube02.jpg' style='width: 60%;'><br>
+      </div>
     </div>
-    <div class="login_btn" style="text-align: center;" >
-      <button type="submit" class="registration-button">저장</button>
-      <button type="button" onclick="frm.youtube.value=''; frm.submit();" class="registration-button">삭제</button>
-      <button type="button" onclick="history.back();" class="registration-button">취소</button>
-    </div>
-  </form>
-
-  <hr>
-
-  <div style="text-align: center;">
-      <label style="font-size: 25px;">[참고] Youtube의 등록 방법</label><br>
-
-      <img src='/health/images/youtube01.jpg' style='width: 60%;'><br><br>
-      <img src='/health/images/youtube02.jpg' style='width: 60%;'><br>
-  </div>
-
+  </body>
 </html>

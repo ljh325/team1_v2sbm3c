@@ -3,10 +3,7 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <head>
   <style>
-    @media (max-width: 360px) {
-      .title_line_text {
-        font-size: 14px;
-      }
+
       .table-striped img {
         width: 60px;
         height: 45px;
@@ -24,7 +21,12 @@
       .table-striped .td_basic {
         vertical-align: top;
       }
+      .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+    
   </style>
 </head>
 <body>
@@ -36,28 +38,32 @@
     <span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|" class="title_line_text"></span>
   </div>
 
-  <aside class="aside_right">
-    <span>
-      <a th:href="@{|/health/create?htcno=${htcVO.htcno}|}">
-      <img src="/home/insert.png" class="icon" title="등록">
-      </a>
-      <span class="menu_devide">│</span>    
-    </span>
-
-    <a th:href="@{|./list_by_htcno?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
-    <img src="/home/list.png" class="icon" title="목록형">
-    </a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_htcno_grid?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
-    <img src="/home/gallery.png" class="icon" title="갤러리형">
-    </a>
-    
-  </aside> 
-  <!-- /health/list_search_component.html 파일의 list_search_fragment import -->
-  <div th:replace="~{health/list_search_component::list_search_fragment}"></div>
 
      
-  <div class='menu_line'></div>
+  <div class='menu_line'style=" justify-content: end;">
+    <!-- /health/list_search_component.html 파일의 list_search_fragment import -->
+      <div th:replace="~{health/list_search_component::list_search_fragment}"></div>
+      
+      <span class="menu_divide">│</span>
+      <a th:href="@{|./create?htcno=${htcVO.htcno }|}" class="menu-item">
+          <img src="/home/insert.png" class="icon" aria-label="등록">
+          <span>등록</span>
+      </a>
+      
+
+      
+      <span class='menu_divide' >│</span>
+      <a class="menu-item" th:href="@{|./list_by_htcno?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
+        <img src="/home/list.png" class="icon" title="목록형">
+        
+      </a>
+          
+      <span class='menu_divide' >│</span>
+      <a class="menu-item" th:href="@{|./list_by_htcno_grid?htcno=${htcVO.htcno }&word=${word }&now_page=${now_page}|}">
+          <img src="/home/gallery.png" class="icon" title="갤러리형">
+          
+      </a>
+  </div>
 
   <!-- Adding a container with margin -->
   <div style="width: 97%; margin: 0 auto;">
