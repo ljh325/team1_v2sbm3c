@@ -44,5 +44,35 @@
    WHERE goalsno = #{goalsno}
   </delete>
   
+  <!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+  <!-- SQL -> CateVO -> ArrayList<CateVO> return -->
+ <select id="list_search_paging" resultType="dev.mvc.foodrecom.FoodrecomVO" parameterType="map">
+    SELECT foodrecomno, frecom, goalsno, mhno, rdate
+    FROM (
+        SELECT foodrecomno, frecom, goalsno, mhno, rdate, rownum AS r
+        FROM (
+            SELECT foodrecomno, frecom, goalsno, mhno, rdate
+            FROM foodrecom
+            <where>
+                <if test="word != null and word != ''">
+                    UPPER(frecom) LIKE '%' || UPPER(#{word}) || '%'
+                </if>
+            </where>
+            ORDER BY foodrecomno ASC
+        )
+    )
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+</select>
+  <!-- 검색된 레코드 수 -->
+  <select id="list_search_count" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM foodrecom
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(frecom) LIKE '%' || UPPER(#{word}) || '%' 
+    </if>
+        
+    ORDER BY foodrecomno ASC
+  </select>
   
 </mapper>

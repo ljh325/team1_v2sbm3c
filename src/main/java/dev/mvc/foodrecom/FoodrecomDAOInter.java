@@ -3,6 +3,7 @@ package dev.mvc.foodrecom;
 import java.util.ArrayList;
 import java.util.Map;
 
+
 public interface FoodrecomDAOInter {
   /**
    * 등록
@@ -22,18 +23,16 @@ public interface FoodrecomDAOInter {
   /**
    * 조회
    * select id="read" resultType="dev.mvc.health.HealthVO" parameterType="int"
-   * @param healthno
+   * @param 
    * @return
    */
   public FoodrecomVO read(int healthno);
   
 
-  /**
-   * delete
-   * delete id="delete" parameterType="Integer"
-   * @param healthno
-   * @return
-   */
+  public ArrayList<FoodrecomVO> list_search_paging(Map<String, Object> map);
+  
+  public int list_search_count(String word);
+  
   public int delete(int goalsno);
   
   public int delete_g(int goalsno);

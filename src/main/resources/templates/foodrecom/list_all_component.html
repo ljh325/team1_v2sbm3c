@@ -47,7 +47,7 @@
     function readFoodrecom(foodrecomno) {
         // 새 form 엘리먼트 생성
         var form = document.createElement("form");
-        form.method = "POST";
+        form.method = "GET";
         form.action ='/foodrecom/read';
         
         // input 엘리먼트 생성하여 foodrecomno 값 추가
@@ -87,13 +87,12 @@
     </thead>
     <tbody>
       <tr th:each="foodrecomVO, status:${list}">
-        <td class="td_basic" th:text="${status.index + 1}"></td>
-    
+        <td class="td_basic" th:text="|${no - status.index}|"></td>
         <td class="td_basic" th:text="${foodrecomVO.rdate.substring(5, 10)}"></td>
   
         <td class="td_basic">
-          
-          <img src="/images/read.png" class="icon" th:onclick="'javascript:readFoodrecom(' + ${foodrecomVO.foodrecomno} + ')'">    
+          <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}?word=${word}&now_page=${now_page}|}"><img src="/images/read.png" class="icon"></a>
+          <a th:href="@{|/foodrecom/delete?foodrecomno=${foodrecomVO.foodrecomno}?word=${word}&now_page=${now_page}|}"><img src="/images/delete.png" class="icon"></a>
           
           <img src="/images/delete.png" class="icon" th:onclick="'javascript:deleteFoodrecom(' + ${foodrecomVO.foodrecomno} + ')'">
           
@@ -106,7 +105,7 @@
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>
   <!-- 페이지 버튼 목록 출력 종료 --> 
-  
+ 
 </div>
 
 
