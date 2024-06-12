@@ -12,14 +12,14 @@
   
   <!-- 대댓글 정보 조회 -->
   <select id="read" resultType="dev.mvc.reply.ReplyMemberVO" parameterType="int">
-    SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+    SELECT m.id, m.grade, m.thumbs, m.nickname, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
     FROM reply r, member m
     WHERE m.memberno = r.memberno AND r.replyno = #{replyno}
   </select>
   
   <!-- 댓글 대댓글 목록 조회 -->
   <select id='reply_list' resultType="dev.mvc.reply.ReplyMemberVO" parameterType="int">
-    SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+    SELECT m.id, m.grade, m.thumbs, m.nickname, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
     FROM reply r, member m
     WHERE m.memberno = r.memberno AND commentsno = #{commentsno}
     ORDER BY replyno ASC
@@ -27,7 +27,7 @@
   
   <!-- 회원이 작성한 대댓글 목록조회 -->
   <select id='reply_member_list' resultType="dev.mvc.reply.ReplyMemberVO" parameterType="int">
-    SELECT m.id, m.grade, m.thumbs, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
+    SELECT m.id, m.grade, m.thumbs, m.nickname, r.replyno, r.contents, r.rdate, r.memberno, r.contentsno, r.commentsno
     FROM reply r, member m
     WHERE m.memberno = r.memberno AND r.memberno = #{memberno}
     ORDER BY replyno ASC

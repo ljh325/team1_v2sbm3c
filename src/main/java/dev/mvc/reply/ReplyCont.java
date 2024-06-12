@@ -143,6 +143,7 @@ public class ReplyCont {
    row.put("id", replyMemberVO.getId());
    row.put("thumbs", replyMemberVO.getThumbs());
    row.put("grade", replyMemberVO.getGrade());
+   row.put("nickname", replyMemberVO.getNickname());
 
    JSONObject obj = new JSONObject();
    obj.put("res", row);

@@ -64,7 +64,7 @@
   <!-- 게시글 조회 -->
   <select id = "read" resultType="dev.mvc.contents.ContentsMemberVO" parameterType="int">
     SELECT c.contentsno, c.memberno, c.cateno, c.title, c.content, c.recom, c.viewcnt, c.commentcnt, c.passwd, c.tag, c.rdate, c.file1,
-              c.file1saved, c.thumb1, c.size1, m.thumbs, m.grade, m.id
+              c.file1saved, c.thumb1, c.size1, c.youtube, m.thumbs, m.grade, m.id, m.nickname
     FROM contents c, member m
     WHERE c.memberno = m.memberno and c.contentsno = #{contentsno}
   </select>
@@ -176,24 +176,29 @@
   </select>   
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsVO" parameterType="HashMap">
+  <select id="list_cate_search_paging" resultType="dev.mvc.contents.ContentsMemberVO" parameterType="HashMap">
    SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, r
+              commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, 
+               id, thumbs, grade, nickname, r
    FROM (
               SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id, rownum as r
+                        commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube,
+                        id, thumbs, grade, nickname, rownum as r
               FROM (
-                        SELECT contentsno, memberno, cateno,  title, content, recom, viewcnt, 
-                                  commentcnt, passwd, tag, rdate, file1, file1saved, thumb1, size1, youtube, id
-                        FROM contents
+                        SELECT c.contentsno, c.memberno, c.cateno,  c.title, c.content, c.recom, c.viewcnt, 
+                                  c.commentcnt, c.passwd, c.tag, c.rdate, c.file1, c.file1saved, c.thumb1, c.size1, c.youtube,
+                                  m.thumbs, m.grade, m.id, m.nickname
+                        FROM contents c, member m
+                        
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
-                            WHERE cateno=#{cateno}
+                            WHERE cateno=#{cateno} AND c.memberno = m.memberno
                           </when>
                           <otherwise>
                             WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
                                                               OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%' 
                                                               OR UPPER(tag) LIKE '%' || UPPER(#{word}) || '%')
+                                                              AND c.memberno = m.memberno
                           </otherwise>
                         </choose>
                         ORDER BY contentsno DESC

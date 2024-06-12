@@ -125,7 +125,7 @@ public class ContentsProc implements ContentsProcInter {
   }
 
   @Override
-  public ArrayList<ContentsVO> list_cate_search_paging(HashMap<String, Object> hashmap) {
+  public ArrayList<ContentsMemberVO> list_cate_search_paging(HashMap<String, Object> hashmap) {
     /*
      * 예) 페이지당 10개의 레코드 출력 1 page: WHERE r >= 1 AND r <= 10 2 page: WHERE r >= 11
      * AND r <= 20 3 page: WHERE r >= 21 AND r <= 30
@@ -158,7 +158,7 @@ public class ContentsProc implements ContentsProcInter {
     hashmap.put("start_num", start_num);
     hashmap.put("end_num", end_num);
 
-    ArrayList<ContentsVO> list = this.contentsDAO.list_cate_search_paging(hashmap);
+    ArrayList<ContentsMemberVO> list = this.contentsDAO.list_cate_search_paging(hashmap);
 
     return list;
   }

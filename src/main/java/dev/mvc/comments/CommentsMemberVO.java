@@ -32,4 +32,7 @@ public class CommentsMemberVO {
   
   /** 댓글 작성 회원 등급 */
   private int grade;
+  
+  /** 댓글 작성 회원 닉네임 */
+  private String nickname;
 }

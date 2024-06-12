@@ -128,21 +128,35 @@
     <ul>
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
-          
+
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${contentsVO.title}"></span>
           <span style="font-size: 1em; float:right; margin-top:7px;" th:text="${contentsVO.rdate}"></span><br>
-          
-          <span th:if="${contentsVO.thumbs == null}">
-            <img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
-          </span>
-          
-          <span th:text="${contentsVO.thumbs}"></span>
-          <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
-            th:text="${contentsVO.id}"></span>
 
+          <span th:if="${contentsVO.thumbs != null}">
+            <span
+              th:if="${contentsVO.thumbs.endsWith('jpg') or contentsVO.thumbs.endsWith('png') or contentsVO.thumbs.endsWith('gif')}">
+              <img th:src="@{|/member/storage/${contentsVO.thumbs}|}"
+                style='width: 25px; height: 25px; border-radius: 50%;'>
+            </span>
+          </span>
+
+          <span th:if="${contentsVO.thumbs == null}">
+            <img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
+          </span>
+
+          <span th:if="${contentsVO.nickname != null}">
+            <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
+              th:text="${contentsVO.nickname}"></span>
+          </span>
+
+          <span th:if="${contentsVO.nickname == null}">
+            <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
+              th:text="${contentsVO.id}"></span>
+          </span>
           <span style="color:darkgray">&nbsp;조회수&nbsp;</span><span th:text="${contentsVO.viewcnt}"></span>
           <span style="color:darkgray">&nbsp;추천수&nbsp;</span><span th:text="${contentsVO.recom}"></span>
           <span style="color:darkgray">&nbsp;댓글&nbsp;</span><span th:text="${contentsVO.commentcnt}"></span>
+
           <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
 
         </div>
@@ -150,7 +164,7 @@
           <div
             th:if="${contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png') or contentsVO.file1.endsWith('gif')}">
             <img th:src="@{|/contents/storage/${contentsVO.file1saved}|}"
-              style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+              style="width: 100%; height: auto; display: block; margin-top: 0.5%; margin-bottom: 1%;">
           </div>
           <div style="white-space: pre-wrap;"><span th:text="${contentsVO.content}"></span></div>
         </div>
@@ -253,6 +267,12 @@
                 for (let i = 0; i < data['res'].length; i++) {
                   let row = data['res'][i];
 
+                  // 시간을 연도, 월, 일, 시간, 분, 초 단위로 나누는 부분
+                  let [datePart, timePart] = row.rdate.split(' ');
+                  let [year, month, day] = datePart.split('-');
+                  let [hour, minute, second] = timePart.split(':');
+                  let postDate = new Date(year, month - 1, day, hour, minute, second);
+
                   msg += "<div id='comments" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
                   // 프로필 사진 출력 코드 들어갈 부분
                   if (row.thumbs != "none") {
@@ -262,11 +282,16 @@
                   }
 
                   if (row.thumbs == "none") {
-                    msg += "<img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                    msg += "<img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
                   }
 
-                  msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
-                  msg += "  " + row.rdate;
+                  if (row.nickname == null) {
+                    msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
+                  } else {
+                    msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                  }
+
+                  msg += "<span id='comments_date" + row.commentsno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
                     msg += " <a href='javascript:comments_update_form(" + row.commentsno + ")'>" + "수정" + "</a>";
@@ -400,6 +425,33 @@
               });
           }
 
+          function timeSince(date) { // 작성일자 표시 함수
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+
+            if (interval > 1) {
+              return Math.floor(interval) + "년 전";
+            }
+            interval = seconds / 2592000;
+            if (interval > 1) {
+              return Math.floor(interval) + "달 전";
+            }
+            interval = seconds / 86400;
+            if (interval > 1) {
+              return Math.floor(interval) + "일 전";
+            }
+            interval = seconds / 3600;
+            if (interval > 1) {
+              return Math.floor(interval) + "시간 전";
+            }
+            interval = seconds / 60;
+            if (interval > 1) {
+              return Math.floor(interval) + "분 전";
+            }
+            return Math.floor(seconds) + "초 전";
+          }
+
+
 
 
           //------------------------------------------ 댓글 관련 함수 종료---------------------------------------------------
@@ -427,17 +479,40 @@
 
                 for (let i = 0; i < data['res_reply'].length; i++) {
                   let row = data['res_reply'][i];
+                  
+                  let [datePart, timePart] = row.rdate.split(' ');
+                  let [year, month, day] = datePart.split('-');
+                  let [hour, minute, second] = timePart.split(':');
+                  let postDate = new Date(year, month - 1, day, hour, minute, second);
 
                   msg += "<div id='reply" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; background-color: #f5f5dc; margin-bottom: 10px; margin-top: 5px; text-align:left;'>";
-                  msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
-                  msg += "  " + row.rdate;
+                  
+                  if (row.thumbs != null) {
+                    
+                    if (row.thumbs.endsWith('jpg') || row.thumbs.endsWith('png') || row.thumbs.endsWith('gif')) {
+                      msg += "<img src='/member/storage/" + row.thumbs + "' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                    }
+                    
+                  }
+
+                  if (row.thumbs == null) {
+                    msg += "<img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                  }
+                  
+                  if (row.nickname == null) {
+                    msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
+                  } else {
+                    msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                  }
+                  
+                  msg += "<span id='reply_date" + row.replyno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                    msg += " <a href='javascript:reply_update_form(" + row.replyno + ")'>" + "수정" + "</a>";
-                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'>" + "삭제" + "</a>";
+                    msg += " <a href='javascript:reply_update_form(" + row.replyno + ")'>&nbsp;&nbsp;&nbsp;" + "수정" + "</a>";
+                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'>&nbsp;" + "삭제" + "</a>";
                   }
                   msg += "  " + "<br>";
-                  msg += row.contents + "<br><br>";
+                  msg += "<span style='display: inline-block; margin-top:10px;'>" + row.contents + "</span> <br><br>";
 
                   msg += "</div>";
                 }

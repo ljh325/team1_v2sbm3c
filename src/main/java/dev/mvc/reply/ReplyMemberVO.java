@@ -28,6 +28,9 @@ public class ReplyMemberVO {
   /** 대댓글 작성자 등급 */
   private int grade;
   
+  /** 대댓글 작성자 닉네임 */
+  private String nickname;
+  
   /** 대댓글 작성 회원 번호 */
   private int memberno;
   

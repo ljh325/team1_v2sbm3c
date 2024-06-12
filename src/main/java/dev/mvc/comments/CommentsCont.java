@@ -100,6 +100,7 @@ public class CommentsCont {
         } else {
         jsonObject.put("thumbs", vo.getThumbs());
         }
+        jsonObject.put("nickname", vo.getNickname());
         jsonArray.put(jsonObject);
     }
 
@@ -132,6 +133,7 @@ public class CommentsCont {
     row.put("id", commentsMemberVO.getId());
     row.put("thumbs", commentsMemberVO.getThumbs());
     row.put("grade", commentsMemberVO.getGrade());
+    row.put("nickname", commentsMemberVO.getNickname());
 
     JSONObject obj = new JSONObject();
     obj.put("res", row);

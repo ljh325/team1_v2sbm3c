@@ -203,7 +203,14 @@
           <br>
           <span style="color:gray; font-size: 12px;" th:id="'date' + ${contentsVO.contentsno}"
             th:data-date="${contentsVO.rdate}"></span>
-          <span style="color:gray; font-size: 12px;" th:text="|/ ${contentsVO.id} / 추천 ${contentsVO.recom}|"></span>
+            
+          <span th:if="${contentsVO.nickname != null}">
+            <span style="color:gray; font-size: 12px;" th:text="|/ ${contentsVO.nickname} / 추천 ${contentsVO.recom}|"></span>
+          </span>
+          
+          <span th:if="${contentsVO.nickname == null}">
+            <span style="color:gray; font-size: 12px;" th:text="|/ ${contentsVO.id} / 추천 ${contentsVO.recom}|"></span>
+          </span>
         </td>
 
 

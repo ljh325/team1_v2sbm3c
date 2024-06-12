@@ -336,7 +336,7 @@ public class ContentsCont {
     map.put("cateno", cateno);
     map.put("now_page", now_page);
 
-    ArrayList<ContentsVO> list = this.contentsProc.list_cate_search_paging(map);
+    ArrayList<ContentsMemberVO> list = this.contentsProc.list_cate_search_paging(map);
     model.addAttribute("list", list);
 
     model.addAttribute("word", word);

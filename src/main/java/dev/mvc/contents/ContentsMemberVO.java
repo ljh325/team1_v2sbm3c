@@ -75,6 +75,9 @@ public class ContentsMemberVO {
   /** 작성자 등급 */
   private int grade;
   
+  /** 작성자 닉네임 */
+  private String nickname;
+  
   
 //------------------------------------ 파일 업로드 관련 ---------------------------------------------
   /**

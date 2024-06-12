@@ -92,7 +92,7 @@ public interface ContentsDAOInter {
    * @param hashmap
    * @return 검색된 게시글 목록
    */
-  public ArrayList<ContentsVO> list_cate_search_paging(HashMap<String, Object> hashmap);
+  public ArrayList<ContentsMemberVO> list_cate_search_paging(HashMap<String, Object> hashmap);
   
   /**
    * 패스워드 검사

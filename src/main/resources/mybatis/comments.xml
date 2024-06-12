@@ -12,14 +12,14 @@
   
   <!-- 댓글 정보 조회 -->
   <select id="read" resultType="dev.mvc.comments.CommentsMemberVO" parameterType="int">
-    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade
+    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade, m.nickname
     FROM comments c, member m
     WHERE (c.memberno = m.memberno) AND commentsno = #{commentsno}
   </select>
   
   <!-- 게시글 댓글 조회 -->
   <select id='comment_list' resultType="dev.mvc.comments.CommentsMemberVO" parameterType="int">
-    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade
+    SELECT c.commentsno, c.contents, c.rdate, c.memberno, c.contentsno, c.replycnt, m.id, m.thumbs, m.grade, m.nickname
     FROM comments c, member m
     WHERE (c.memberno = m.memberno) AND contentsno = #{contentsno}
     ORDER BY commentsno ASC
