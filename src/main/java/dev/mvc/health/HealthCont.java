@@ -419,7 +419,11 @@ public class HealthCont {
    *
    */
   @GetMapping(value = "/update_text")
-  public String update_text(HttpSession session, Model model, int healthno, RedirectAttributes ra, String word,
+  public String update_text(HttpSession session, 
+      Model model, 
+      int healthno,
+      RedirectAttributes ra, 
+      String word,
       int now_page) {
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
@@ -451,7 +455,9 @@ public class HealthCont {
    * @return
    */
   @PostMapping(value = "/update_text")
-  public String update_text(HttpSession session, Model model, HealthVO healthVO, 
+  public String update_text(HttpSession session,
+            Model model,
+            HealthVO healthVO, 
            RedirectAttributes ra,
            String search_word, // healthVO.word와 구분 필요
            int now_page) {
