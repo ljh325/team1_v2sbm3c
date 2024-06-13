@@ -90,11 +90,12 @@ WHERE  r >= 1 AND r <= 10;
             FROM (
                 SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex
                 FROM member
-                    WHERE  grade LIKE '%' || UPPER('1') || '%' 
+                    WHERE  grade LIKE '%' || UPPER('3') || '%' 
         )
     )
 WHERE  r >= 1 AND r <= 10;
  
- 
- 
+    UPDATE member 
+    SET grade=3
+    WHERE memberno=38;
  

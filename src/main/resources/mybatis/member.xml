@@ -69,6 +69,12 @@
     WHERE memberno = #{memberno}
   </update>  
   
+  <!-- (o) 관리자 권한 등급 변경 처리 -->
+  <update id="grade_update"  parameterType="dev.mvc.member.MemberVO">
+    UPDATE member 
+    SET grade=#{grade} 
+    WHERE memberno=#{memberno}
+  </update>
   
   <!-- (o) 회원 삭제 처리 || 탈퇴 성공 : 1, 실패 : 0 -->
   <!-- 회원등급 -> 일반회원: 1, 정지회원: 2, 탈퇴회원: 3 -->

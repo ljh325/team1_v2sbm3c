@@ -3,6 +3,21 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
+  <script>
+    window.onload = () => {
+      let buttons = document.querySelectorAll('#manager_btn');
+    
+      buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          let tr = this.closest('tr'); // 자기 자신이 속한 부모 태그
+          let memberno = tr.querySelector('#memberno').value; // 부모에 속한 자식 찾기
+          window.location.href = "/member/admin_read_form?memberno=" + memberno;
+  
+        // 추가적인 로직을 여기에 작성하세요.
+        });
+      });
+    }
+  </script>
   <div class='title_line' style="color: white; border-color: white;">회원목록(관리자 전용)
     
     <!-- 검색창 -->  
@@ -20,8 +35,7 @@
     </div>  
   </div>
   
-
-  
+ 
 
 <style>
  body{
@@ -50,7 +64,7 @@
     </script>
     <!-- 셀렉트 바 -->
     <span class='menu_divide' style="color: white;" >│</span>
-    <a href="javascript:location.reload();" style="color: white; margin-top: 5px;">새로고침</a>
+    <a href="/member/list" style="color: white; margin-top: 5px;">새로고침</a>
     <span class='menu_divide' style="color: white;" >│</span> 
   </aside> 
    
@@ -75,7 +89,11 @@
           <div th:if="${memberVO.grade == 3}"><img src='/member/images/x.png' title="탈퇴 회원" class="icon" style="font-size: 12px;"></div>
         </div>
       </td>
-      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.id}" style="font-size: 14px;"></a></td>
+       
+      <td class='td_left'>
+        <a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.id}" style="font-size: 14px;"></a>
+        <input id="memberno" type="hidden" th:value="${memberVO.memberno}">
+      </td>
       <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.mname}" style="font-size: 14px;"></a></td>
       <td class='td_basic' th:switch="${memberVO.grade}" style="font-size: 14px; padding-top: 15px;">
         <span th:case="0">관리자</span>
@@ -84,7 +102,8 @@
         <span th:case="3">탈퇴 회원</span>
       </td>
       <td class='td_basic'>
-        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"  style="font-size: 14px; width: 60px; height: 25px; padding:3px;">회원 관리</button>
+        <!--<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"  style="font-size: 14px; width: 60px; height: 25px; padding:3px;">회원 관리</button>-->
+        <button id="manager_btn" class="btn btn-dark" style="font-size: 14px; width: 60px; height: 25px; padding:3px;">회원 관리</button>
       </td>
       
     </tr>
@@ -98,6 +117,7 @@
   <!-- 페이지 버튼 목록 출력 종료 --> 
 
   <!-- 회원 관리 모달창 -->
+  <!--
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -124,13 +144,8 @@
       </div>
     </div>
   </div>
-  <script>
-    // 저장 버튼 클릭 이벤트 리스너
-    document.getElementById("manager_btn").addEventListener("click", () => {
-        //alert("Changes have been saved.");
-        
-    });
-  </script>
+  -->
+
 </div>
 </html>
 

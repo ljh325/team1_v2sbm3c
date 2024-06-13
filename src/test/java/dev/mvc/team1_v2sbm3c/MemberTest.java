@@ -20,36 +20,55 @@ public class MemberTest {
    * 회원가입 테스트
    * MemberVO
    * */
+//  @Test
+//  public void create() {
+//    MemberVO memberVO = new MemberVO();
+//    
+//    String id = "juch";
+//    String passwd = "11111";
+//    String mname = "박주찬";
+//    String tel = "01083720288";
+//    String zipcode = "123";
+//    String address1 = "dkdk";
+//    String address2 = "dkdk";  
+//
+//    //int birth = 990424;
+//    String sex = "M";
+//    
+//    memberVO.setId(id); // setId id값을 memberVO에 할당
+//    memberVO.setPasswd(passwd);
+//    memberVO.setMname(mname);
+//    memberVO.setTel(tel);
+//    memberVO.setZipcode(zipcode);
+//    memberVO.setAddress1(address1);
+//    memberVO.setAddress2(address2);
+////    memberVO.setBirth(birth);
+//    memberVO.setSex(sex);
+//    
+//    int cnt = this.memberProc.create(memberVO);
+//    
+//    System.out.println("-> cnt: " + cnt);
+    //====================================================회원가입 //
+    
+  
   @Test
-  public void create() {
+  public void grade_update() {
+    
     MemberVO memberVO = new MemberVO();
     
-    String id = "juch";
-    String passwd = "11111";
-    String mname = "박주찬";
-    String tel = "01083720288";
-    String zipcode = "123";
-    String address1 = "dkdk";
-    String address2 = "dkdk";  
-
-    //int birth = 990424;
-    String sex = "M";
+    int memberno = 39;
+    int grade = 3;
     
-    memberVO.setId(id); // setId id값을 memberVO에 할당
-    memberVO.setPasswd(passwd);
-    memberVO.setMname(mname);
-    memberVO.setTel(tel);
-    memberVO.setZipcode(zipcode);
-    memberVO.setAddress1(address1);
-    memberVO.setAddress2(address2);
-//    memberVO.setBirth(birth);
-    memberVO.setSex(sex);
+    memberVO.setMemberno(memberno);
+    memberVO.setGrade(grade);
     
-    int cnt = this.memberProc.create(memberVO);
+    int cnt = this.memberProc.grade_update(memberVO);
     
-    System.out.println("-> cnt: " + cnt);
-    //====================================================회원가입 //
+    System.out.println("cnt --->>>>>>>lfjasl>>>" + cnt);
+    
     
     
   }
+    
+
 }

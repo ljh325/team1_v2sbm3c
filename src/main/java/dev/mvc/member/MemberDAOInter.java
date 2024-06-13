@@ -53,6 +53,13 @@ public interface MemberDAOInter {
    * @return 처리된 레코드 갯수
    */
   public int update_profile(MemberVO memberVO);
+  
+  /**
+   * 관리자 권환 회원등급 변경
+   * @param memberVO
+   * @return
+   */
+  public int grade_update(MemberVO memberVO);
  
   /**
    * 회원 삭제 처리

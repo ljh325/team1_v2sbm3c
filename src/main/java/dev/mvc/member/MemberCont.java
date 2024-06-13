@@ -334,6 +334,57 @@ public class MemberCont {
   /***************************************************************************************/
   
   
+  
+  /***************************************************************************************/
+  /**
+   * 관리자 회원 관리폼
+   * @param model
+   * @param memberno
+   * @return
+   */
+  @GetMapping(value="admin_read_form") // http://localhost:9093/member/admin_read_form?memberno=??
+  public String admin_read_form(Model model, int memberno) {
+    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    return "member/admin_read";//  /templates/member/admin_read.html
+  }
+  
+  
+  @PostMapping(value="admin_update")
+  public String admin_read(Model model, MemberVO memberVO, RedirectAttributes ra) {
+
+    int cnt = this.memberProc.grade_update(memberVO);
+    ra.addAttribute("cnt", cnt);
+
+    if (cnt == 1) {
+      System.out.println("성공");
+    } else {
+      System.out.println("실패");
+    }
+    ra.addAttribute("memberno", memberVO.getMemberno());
+    return "redirect:/member/admin_read_form"; //templates/member/admin_read.html
+  }
+  
+//  @PostMapping(value="admin_update")
+//  @ResponseBody
+//  public String admin_read(Model model, MemberVO memberVO) {
+//    
+//    
+//    int cnt = this.memberProc.grade_update(memberVO);
+//    model.addAttribute("cnt", cnt);
+//    System.out.println("id-->" + memberVO.getId());
+//    System.out.println("grade--->" + memberVO.getGrade());
+//    JSONObject obj = new JSONObject();
+//    obj.put("cnt", cnt);
+//
+//    
+//    return obj.toString();
+//  }
+  /***************************************************************************************/
+  
+  
   /***************************************************************************************/
   /**
   

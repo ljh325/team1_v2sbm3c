@@ -121,6 +121,12 @@ public class MemberProc implements MemberProcInter {
   }
   
   @Override
+  public int grade_update(MemberVO memberVO) {
+    int cnt = this.memberDAO.grade_update(memberVO);
+    return cnt;
+  }
+  
+  @Override
   public int delete(int memberno) {
     int cnt = this.memberDAO.delete(memberno);
     return cnt;
@@ -381,7 +387,6 @@ public class MemberProc implements MemberProcInter {
 
     return str.toString();
   }
-
 
 
 
