@@ -82,4 +82,29 @@ public interface MemberDAOInter {
    */
   public MemberVO find_passwd(MemberVO memberVO);
   
+  
+  /* 검색 및 페이징------------------------------------------------------------ */
+  
+  /**
+   * 이름, 아이디별 검색 목록
+   * @param map
+   * @return
+   */
+  public ArrayList<MemberVO> list_by_search(HashMap<String, Object> hashMap);
+  
+  /**
+   * 이름, 아이디별 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int list_by_search_count(HashMap<String, Object> hashMap);
+  
+  /**
+   * 이름, 아이디별 검색 목록 + 페이징
+   * @param contentsVO
+   * @return
+   */
+  public ArrayList<MemberVO> list_by_search_paging(HashMap<String, Object> map);
+  
+  
 }

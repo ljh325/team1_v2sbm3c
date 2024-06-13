@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.contents.Contents;
 import dev.mvc.mlogin.MloginProcInter;
 import dev.mvc.mlogin.MloginVO;
 import dev.mvc.tool.Security;
@@ -258,32 +259,49 @@ public class MemberCont {
    * @return
    */
   @GetMapping(value="/list") // http://localhost:9093/member/list
-  public String list(HttpSession session, Model model) {
+  public String list(HttpSession session, Model model,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     
+      word = Tool.checkNull(word).trim(); // 검색 단어에 공백 제거
 
-      System.out.println("HttpSession ------)_)_))>>" + session);
-      ArrayList<MemberVO> list = this.memberProc.list(); //관리자가 회원 목록 실행
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("word", word); // 입력한 검색어를 map에 저장
+      map.put("now_page", now_page); // 
+      model.addAttribute("word", word); // word 검색어 다시 반환
       
-      model.addAttribute("list", list); // 회원목록들 반환
+      
+      // 회원목록 리스트
+      ArrayList<MemberVO> list = this.memberProc.list_by_search_paging(map); // 페이징, 검색리스트 회원목록
+      model.addAttribute("list", list); // 페이징, 검색리스트 회원목록들 반환
+      
+      
+      // 검색 목록 갯수
+      int search_count = this.memberProc.list_by_search_count(map);
+      
+      // 페이징 
+      String paging = this.memberProc.pagingBox(now_page, word, "/member/list", 
+          search_count, Member.RECORD_PER_PAGE, Member.PAGE_PER_BLOCK);
+      
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("search_count", search_count);
+      
+      int no = search_count - ((now_page - 1) * Member.RECORD_PER_PAGE);
+      model.addAttribute("no", no);
+      //System.out.println("HttpSession ------)_)_))>>" + session);
+      //ArrayList<MemberVO> list = this.memberProc.list(); //관리자가 회원 목록 실행
+      
+      
       
       return "member/list";  // templates/member/list.html      
-// 조회 
-//    @GetMapping(value="/list")
-//    public String list(HttpSession session, Model model) {
-//      if (this.memberProc.isMemberAdmin(session)) {
-  //
-//        System.out.println("HttpSession ------)_)_))>>" + session);
-//        ArrayList<MemberVO> list = this.memberProc.list();
-//        
-//        model.addAttribute("list", list);
-//        
-//        return "member/list";  // templates/member/list.html      
-//      } else {
-//        //return "redirect:/member/login_form_need";  // redirect
-//        return "redirect:/member/list";
-//      }  
-  //
-//    }
+
+      
+      
+      
+      
+      
+      
   }
   /***************************************************************************************/
   
