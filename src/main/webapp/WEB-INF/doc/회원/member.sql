@@ -84,7 +84,16 @@ WHERE  r >= 1 AND r <= 10;
           3 page: WHERE r >= 21 AND r <= 30; -->
   </select>
  
- 
+ SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex, r
+    FROM (
+        SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex, rownum as r
+            FROM (
+                SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex
+                FROM member
+                    WHERE  grade LIKE '%' || UPPER('1') || '%' 
+        )
+    )
+WHERE  r >= 1 AND r <= 10;
  
  
  

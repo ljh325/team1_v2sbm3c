@@ -123,7 +123,7 @@
    
    
    
-  <!-- 카테고리별 검색 레코드 갯수 -->
+  <!-- 아이디 이름별 검색 레코드 갯수 -->
   <select id="list_by_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
     FROM member
@@ -144,40 +144,78 @@
   
   
   
-  <!-- 이름, 아이디별 검색 + 페이징 목록 -->
-<select id="list_by_search_paging" resultType="dev.mvc.member.MemberVO" parameterType="HashMap">
- SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
-        profile, profilesaved, thumbs, sizes, r
- FROM (
-        SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
-               profile, profilesaved, thumbs, sizes, rownum as r
-        FROM (
-            SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
-                   profile, profilesaved, thumbs, sizes
-            FROM member
-            <choose>
-              <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
-                ORDER BY mdate DESC <!-- 최신 등록 날짜 순으로 나열 -->
-              </when>
-              <otherwise>
-                WHERE (
-                        UPPER(id) LIKE '%' || UPPER(#{word}) || '%' 
-                        OR UPPER(mname) LIKE '%' || UPPER(#{word}) || '%' 
-                      )
-                ORDER BY grade ASC  <!-- 이름 순으로 나열 -->                  
-              </otherwise>
-            </choose>
-         )
-  )
-  WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>  
-<!--
-1 page: WHERE r >= 1 AND r <= 10; 
-2 page: WHERE r >= 11 AND r <= 20;
-3 page: WHERE r >= 21 AND r <= 30; 
--->
-</select>
+    <!-- 이름, 아이디별 검색 + 페이징 목록 -->
+  <select id="list_by_search_paging" resultType="dev.mvc.member.MemberVO" parameterType="HashMap">
+   SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+          profile, profilesaved, thumbs, sizes, r
+   FROM (
+          SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+                 profile, profilesaved, thumbs, sizes, rownum as r
+          FROM (
+              SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+                     profile, profilesaved, thumbs, sizes
+              FROM member
+              <choose>
+                <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                  ORDER BY mdate DESC <!-- 최신 등록 날짜 순으로 나열 -->
+                </when>
+                <otherwise>
+                  WHERE (
+                          UPPER(id) LIKE '%' || UPPER(#{word}) || '%' 
+                          OR UPPER(mname) LIKE '%' || UPPER(#{word}) || '%'
+                        )
+                  ORDER BY mname ASC  <!-- 이름 순으로 나열 -->                  
+                </otherwise>
+              </choose>
+           )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>  
+  <!--
+  1 page: WHERE r >= 1 AND r <= 10; 
+  2 page: WHERE r >= 11 AND r <= 20;
+  3 page: WHERE r >= 21 AND r <= 30; 
+  -->
+  </select>
   
   
+  
+  
+  
+  
+    <!-- 등급별 검색 레코드 갯수 -->
+  <select id="grade_list_by_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM member
+    WHERE UPPER(grade) like '%' || UPPER(#{word}) || '%'
+  </select>
+  
+  
+  
+  
+  
+      <!-- 셀렉트 등급별 검색 + 페이징 목록 -->
+  <select id="grade_list_by_search_paging" resultType="dev.mvc.member.MemberVO" parameterType="HashMap">
+   SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+          profile, profilesaved, thumbs, sizes, r
+   FROM (
+          SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+                 profile, profilesaved, thumbs, sizes, rownum as r
+          FROM (
+              SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
+                     profile, profilesaved, thumbs, sizes
+              FROM member
+
+                  WHERE UPPER(grade) like '%' || UPPER(#{word}) || '%'
+                  ORDER BY mname ASC  <!-- 이름 순으로 나열 -->                  
+           )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>  
+  <!--
+  1 page: WHERE r >= 1 AND r <= 10; 
+  2 page: WHERE r >= 11 AND r <= 20;
+  3 page: WHERE r >= 21 AND r <= 30; 
+  -->
+  </select>
   
   <!-- ===============================검색 및 페이징======================================= -->
 </mapper>

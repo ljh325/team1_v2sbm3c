@@ -262,38 +262,66 @@ public class MemberCont {
   public String list(HttpSession session, Model model,
       @RequestParam(name = "word", defaultValue = "") String word,
       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-    
+      
       word = Tool.checkNull(word).trim(); // 검색 단어에 공백 제거
+      
+      // 등급을 셀렉트 검색할때
+      if (word.contains("__")) {
+        
+        //문자열을 "_"를 기준으로 나눔
+        String[] parts = word.split("__");
+        word = parts[1];  // 예):  word 값 ==> grade__3  word[0] = "grade", word[1] = "3"
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("word", word); // 분리한 word값을 map에 저장
+        map.put("now_page", now_page); 
+        
+        ArrayList<MemberVO> list = this.memberProc.grade_list_by_search_paging(map); // 페이징, 검색리스트 회원목록
+        model.addAttribute("list", list); // 페이징, 검색리스트 회원목록들 반환
+        
+        // 검색 목록 갯수
+        int search_count = this.memberProc.grade_list_by_search_count(map);
+        
+        // 페이징 
+        String paging = this.memberProc.pagingBox(now_page, word, "/member/list", 
+            search_count, Member.RECORD_PER_PAGE, Member.PAGE_PER_BLOCK);
+        
+        model.addAttribute("paging", paging);
+        model.addAttribute("now_page", now_page);
+        model.addAttribute("search_count", search_count);
+        
+        int no = search_count - ((now_page - 1) * Member.RECORD_PER_PAGE);
+        model.addAttribute("no", no);
+        
+      } //  등급 코드
+      else { // 이름 및 아이디 검색 코드
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("word", word); // 입력한 검색어를 map에 저장
+        map.put("now_page", now_page); // 
+        model.addAttribute("word", word); // word 검색어 다시 반환
+        
+        // 회원목록 리스트
+        ArrayList<MemberVO> list = this.memberProc.list_by_search_paging(map); // 페이징, 검색리스트 회원목록
+        model.addAttribute("list", list); // 페이징, 검색리스트 회원목록들 반환
+        
+        
+        // 검색 목록 갯수
+        int search_count = this.memberProc.list_by_search_count(map);
+        
+        // 페이징 
+        String paging = this.memberProc.pagingBox(now_page, word, "/member/list", 
+            search_count, Member.RECORD_PER_PAGE, Member.PAGE_PER_BLOCK);
+        
+        model.addAttribute("paging", paging);
+        model.addAttribute("now_page", now_page);
+        model.addAttribute("search_count", search_count);
+        
+        int no = search_count - ((now_page - 1) * Member.RECORD_PER_PAGE);
+        model.addAttribute("no", no);
+        //System.out.println("HttpSession ------)_)_))>>" + session);
+        //ArrayList<MemberVO> list = this.memberProc.list(); //관리자가 회원 목록 실행
+      } // 검색 코드 종료
+      
 
-      HashMap<String, Object> map = new HashMap<>();
-      map.put("word", word); // 입력한 검색어를 map에 저장
-      map.put("now_page", now_page); // 
-      model.addAttribute("word", word); // word 검색어 다시 반환
-      
-      
-      // 회원목록 리스트
-      ArrayList<MemberVO> list = this.memberProc.list_by_search_paging(map); // 페이징, 검색리스트 회원목록
-      model.addAttribute("list", list); // 페이징, 검색리스트 회원목록들 반환
-      
-      
-      // 검색 목록 갯수
-      int search_count = this.memberProc.list_by_search_count(map);
-      
-      // 페이징 
-      String paging = this.memberProc.pagingBox(now_page, word, "/member/list", 
-          search_count, Member.RECORD_PER_PAGE, Member.PAGE_PER_BLOCK);
-      
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("search_count", search_count);
-      
-      int no = search_count - ((now_page - 1) * Member.RECORD_PER_PAGE);
-      model.addAttribute("no", no);
-      //System.out.println("HttpSession ------)_)_))>>" + session);
-      //ArrayList<MemberVO> list = this.memberProc.list(); //관리자가 회원 목록 실행
-      
-      
-      
       return "member/list";  // templates/member/list.html      
 
       

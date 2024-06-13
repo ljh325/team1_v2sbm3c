@@ -106,5 +106,18 @@ public interface MemberDAOInter {
    */
   public ArrayList<MemberVO> list_by_search_paging(HashMap<String, Object> map);
   
+  /**
+   * 등급별 검색된 레코드 갯수
+   * @param hasMap
+   * @return
+   */
+  public int grade_list_by_search_count(HashMap<String, Object> hasMap);
+  
+  /**
+   * 등급 별 검색 + 페이징
+   * @param map
+   * @return
+   */
+  public ArrayList<MemberVO> grade_list_by_search_paging(HashMap<String, Object> map);
   
 }

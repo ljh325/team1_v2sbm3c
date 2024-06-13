@@ -4,7 +4,7 @@
 <div layout:fragment="content">
 
   <div class='title_line' style="color: white; border-color: white;">회원목록(관리자 전용)
-  
+    
     <!-- 검색창 -->  
     <div style="text-align: right; clear: both;">
       <form name="frm_search" method="get" action="/member/list"> 
@@ -16,15 +16,8 @@
                        style="padding: 2px 8px 3px 8px; margin: 0px 0px 0px 0px;"
                        th:onclick="|location.href='/member/list'|">검색 취소</button>
         </span>
-                      
       </form>
-    </div>
-    <script>
-    
-    
-    </script>
-    <!-- 검색창 끝 -->
-  
+    </div>  
   </div>
   
 
@@ -36,9 +29,28 @@
  }
 
 </style>
-  <aside class="aside_right" >
+  <aside class="aside_right"  style="display: flex;">
+    <!-- 셀렉트 바 -->
+    
+    <select id="select_bar"style="width: 80px; margin-left: 10px; margin: 3px;" onchange="grades()">
+      <option selected>회원 등급</option>
+      <option value="grade__1">일반 회원</option>
+      <option value="grade__2">블랙리스트 회원</option>
+      <option value="grade__3">탈퇴 회원</option>
+    </select>
+    <script>
+      // select에서 선택될때마다 실시간으로 값을 바꿔서 서버로 보내는 함수
+      function grades() {
+        var select = document.getElementById("select_bar");
+        var selectValue = select.options[select.selectedIndex].value;
+        if(select){
+          window.location.href = "/member/list?word=" + selectValue;
+        }
+      }
+    </script>
+    <!-- 셀렉트 바 -->
     <span class='menu_divide' style="color: white;" >│</span>
-    <a href="javascript:location.reload();" style="color: white;">새로고침</a>
+    <a href="javascript:location.reload();" style="color: white; margin-top: 5px;">새로고침</a>
     <span class='menu_divide' style="color: white;" >│</span> 
   </aside> 
    
@@ -77,12 +89,12 @@
       
     </tr>
     <tr th:if="${list.size() == 0}">
-      <td colspan="2" style="text-align: center;">회원 목록이 등록되지 않았습니다.</td>
+      <td colspan="5" style="text-align: center;">회원 목록이 등록되지 않았습니다.</td>
     </tr> 
   </table>
 
   <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="bottom_menu" th:utext="${paging}"></div>
+  <div class="bottom_menu" th:utext="${paging}" style="color: white;"></div>
   <!-- 페이지 버튼 목록 출력 종료 --> 
 
   <!-- 회원 관리 모달창 -->
