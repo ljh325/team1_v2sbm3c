@@ -118,7 +118,7 @@ public class ContentsCont {
   public String create(HttpServletRequest request, HttpSession session, Model model, ContentsVO contentsVO,
       RedirectAttributes ra) {
 
-//    if (memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
+    if (session.getAttribute("memberno") != null) {
     // ------------------------------------------------------------------------------
     // 파일 전송 코드 시작
     // ------------------------------------------------------------------------------
@@ -209,9 +209,10 @@ public class ContentsCont {
       return "redirect:/contents/msg"; // Post -> Get - param...
     }
 
-//    } else { // 로그인 실패한 경우
+    } else { // 로그인 실패한 경우
 
-//      return "redirect:/member/login_form_need";
+      return "redirect:/member/login";
+    }
   }
 
   /**

@@ -62,7 +62,7 @@ VALUES (contents_seq.nextval, 1, 100, '식단', '다이어트 식단 추천', 0,
         
 -- READ
 SELECT c.contentsno, c.memberno, c.cateno, c.title, c.content, c.recom, c.viewcnt, c.commentcnt, c.passwd, c.tag, c.rdate, c.file1,
-       c.file1saved, c.thumb1, c.size1, m.thumbs, m.grade, m.id
+       c.file1saved, c.thumb1, c.size1, m.thumbs, m.grade, m.id, m.nickname
 FROM contents c, member m
 WHERE c.memberno = m.memberno and c.contentsno = 32;
 

@@ -54,20 +54,24 @@ public class ExdataCont {
    */
   @GetMapping(value = "/")
   public String list_exdata_form(HttpSession session, Model model) {
-    ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
-    model.addAttribute("menu1", menu1);
+    if (session.getAttribute("memberno") != null) {
+      ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+      model.addAttribute("menu1", menu1);
 
-    ArrayList<HtcVOMenu> menu = this.htcProc.menu();
-    model.addAttribute("menu", menu);
+      ArrayList<HtcVOMenu> menu = this.htcProc.menu();
+      model.addAttribute("menu", menu);
 
-    int memberno = (int) session.getAttribute("memberno");
-    MemberVO memberVO = this.memberProc.read(memberno);
-    model.addAttribute("memberVO", memberVO);
-    
-    MhVO mhVO = this.mhProc.read(59);
-    model.addAttribute("mhVO", mhVO);
+      int memberno = (int) session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
 
-    return "exdata/read";
+      MhVO mhVO = this.mhProc.read(59);
+      model.addAttribute("mhVO", mhVO);
+
+      return "exdata/read";
+    } else {
+      return "redirect:/member/login";
+    }
   }
 
   /**
@@ -97,32 +101,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_all_exdata_cal_asc")
   public String list_all_exdata_cal_asc(int intensity) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowmet_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midmet_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highmet_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -139,28 +143,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowmet_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midmet_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highmet_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 운동 데이터 근육활성도 오름차순 전송
    * 
@@ -170,32 +174,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_all_exdata_act_asc")
   public String list_all_exdata_act_asc(int intensity) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowact_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midact_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highact_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -212,28 +216,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowact_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midact_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highact_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 운동 데이터 부상위험도 오름차순 전송
    * 
@@ -243,32 +247,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_all_exdata_risk_asc")
   public String list_all_exdata_risk_asc(int intensity) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowrisk_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midrisk_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highrisk_asc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -285,28 +289,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_lowrisk_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_midrisk_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_all_highrisk_desc();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 부위별 운동 데이터 전송
    * 
@@ -324,7 +328,7 @@ public class ExdataCont {
 
     return obj.toString();
   }
-  
+
   /**
    * 부위별 운동 데이터 소모칼로리 오름차순 전송
    * 
@@ -334,32 +338,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_part_exdata_cal_asc")
   public String list_part_exdata_cal_asc(int intensity, String part) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowmet_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midmet_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highmet_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -376,28 +380,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowmet_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midmet_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highmet_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 부위별 운동 데이터 근육활성도 오름차순 전송
    * 
@@ -407,32 +411,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_part_exdata_act_asc")
   public String list_part_exdata_act_asc(int intensity, String part) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowact_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midact_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highact_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -449,28 +453,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowact_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midact_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highact_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 부위별 운동 데이터 부상위험도 오름차순 전송
    * 
@@ -480,32 +484,32 @@ public class ExdataCont {
   @ResponseBody
   @GetMapping(value = "/list_part_exdata_risk_asc")
   public String list_part_exdata_risk_asc(int intensity, String part) {
-    
+
     if (intensity == 1) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowrisk_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midrisk_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highrisk_asc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
-    
+
   }
 
   /**
@@ -522,28 +526,28 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_lowrisk_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_midrisk_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3) {
       ArrayList<ExdataVO> list = this.exdataProc.list_part_highrisk_desc(part);
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else {
       return null;
     }
   }
-  
+
   /**
    * 목적별 효율성 순위 정렬
    * 
@@ -558,52 +562,51 @@ public class ExdataCont {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_low_weight();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 2 && "weight".equals(purpose)) {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_mid_weight();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 3 && "weight".equals(purpose)) {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_high_weight();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     } else if (intensity == 1 && "muscle".equals(purpose)) {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_low_muscle();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     }
-    
+
     else if (intensity == 2 && "muscle".equals(purpose)) {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_mid_muscle();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
+
     }
-    
+
     else if (intensity == 3 && "muscle".equals(purpose)) {
       ArrayList<ExdataVO> list = this.exdataProc.list_effect_high_muscle();
       JSONObject obj = new JSONObject();
       obj.put("res", list);
-      
+
       return obj.toString();
-      
-    }  else {
+
+    } else {
       return null;
     }
   }
-  
 
 }

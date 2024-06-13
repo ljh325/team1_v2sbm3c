@@ -6,7 +6,18 @@
       font-size: 14px;
     }
 
-    * {
+    ul {
+      padding-left: 0;
+      list-style-type: none;
+    }
+
+    li {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    span,
+    div {
       font-size: 14px;
     }
 
@@ -255,6 +266,10 @@
           //------------------------------------------ 댓글 관련 함수 시작---------------------------------------------------
 
           function list_by_contentsno_join() { // 댓글 목록 출력
+            let cnt = 0; // 댓글 출력 순환 횟수
+            let comment_page = 1;
+            let btn_add_tag = document.getElementById("btn_add");
+
             fetch("/comments/list_by_contentsno_join?contentsno=[[${contentsVO.contentsno}]]", {
               "method": "get" // get 방식은 header 와 body 불필요
             })
@@ -264,7 +279,16 @@
                 //result_tag.value = data['res'];
                 //result_animation_tag.innerHTML = '';
                 let msg = '';
-                for (let i = 0; i < data['res'].length; i++) {
+                let comments_data = data['res'];
+                if (comments_data.length > 5) {
+                  cnt = 5;
+                  btn_add_tag.style.display='';
+                } else {
+                  cnt = comments_data.length;
+                  btn_add_tag.style.display='none';
+                }
+
+                for (let i = 0; i < cnt; i++) {
                   let row = data['res'][i];
 
                   // 시간을 연도, 월, 일, 시간, 분, 초 단위로 나누는 부분
@@ -315,10 +339,87 @@
                 }
 
                 document.getElementById('comments_list').innerHTML = msg;
+
+                btn_add_tag.addEventListener("click", () => {
+
+                  let start_num = 5 * comment_page;
+                  let end_num = start_num + 5;
+
+                  if (comments_data.length > 5) {
+
+                    let msg = '';
+                    let page_div = document.createElement('div'); // 글내용
+                    for (let i = start_num; i < end_num; i++) { // 5 ~ 9, 10 탈출
+                      if (i == comments_data.length) { // 모든 태그를 출력한 이후인지 검사
+                        btn_add_tag.style.display='none';
+                        break;
+                      }
+
+                      let row = data['res'][i];
+
+                      // 시간을 연도, 월, 일, 시간, 분, 초 단위로 나누는 부분
+                      let [datePart, timePart] = row.rdate.split(' ');
+                      let [year, month, day] = datePart.split('-');
+                      let [hour, minute, second] = timePart.split(':');
+                      let postDate = new Date(year, month - 1, day, hour, minute, second);
+
+                      msg += "<div id='comments" + row.commentsno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align:left;'>";
+                      // 프로필 사진 출력 코드 들어갈 부분
+                      if (row.thumbs != "none") {
+                        if (row.thumbs.endsWith('jpg') || row.thumbs.endsWith('png') || row.thumbs.endsWith('gif')) {
+                          msg += "<img src='/member/storage/" + row.thumbs + "' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                        }
+                      }
+
+                      if (row.thumbs == "none") {
+                        msg += "<img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                      }
+
+                      if (row.nickname == null) {
+                        msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
+                      } else {
+                        msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                      }
+
+                      msg += "<span id='comments_date" + row.commentsno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
+
+                      if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                        msg += " <a href='javascript:comments_update_form(" + row.commentsno + ")'>" + "수정" + "</a>";
+                        msg += " <a href='javascript:comments_delete(" + row.commentsno + ")'>" + "삭제" + "</a>";
+                      }
+                      msg += "  " + "<br>";
+                      msg += "<span style='display: inline-block; margin-top:10px;'>" + row.contents + "</span> <br><br>";
+
+                      //대댓글 관련
+                      msg += "<button type = 'button' id='reply_list_btn" + row.commentsno + "' onclick='list_by_commentsno_join(" + row.commentsno + ")' style='border:none;'>" + "답글";
+                      msg += row.replycnt + "개" + "</button>";
+                      msg += "<button type = 'button' id='reply_list_cancel_btn" + row.commentsno + "' onclick='reply_list_view(" + row.commentsno + ")' style='border:none; display:none;'>" + "답글숨기기";
+                      msg += "</button>";
+                      msg += "<button type = 'button' id='reply_create_form_button" + row.commentsno + "' onclick='reply_create_form(" + row.commentsno + ")' style='border:none; margin-left:20px;'>" + "답글 달기";
+                      msg += "</button>";
+                      msg += "<div id='reply_create_form" + row.commentsno + "' style='width: 100%; margin: 0px auto; clear:both; text-align: center;'>";
+                      msg += "</div>";
+                      msg += "<div id='reply_list" + row.commentsno + "' data-replypage='1' style='margin-left: 20px;'>";
+                      msg += "</div>";
+                      msg += "</div>";
+
+                    }
+                    page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
+                    document.getElementById('comments_list').appendChild(page_div);
+
+                    comment_page = comment_page + 1;
+                  }
+
+                });
+
               });
 
-
           }
+
+
+
+
+
 
 
           function comments_update_form(no) { // 댓글 수정 폼
@@ -386,6 +487,7 @@
                 });
 
             }
+            location.reload();
 
           }
 
@@ -423,6 +525,8 @@
                   alert('삭제를 취소 했습니다.');
                 }
               });
+              
+              location.reload();
           }
 
           function timeSince(date) { // 작성일자 표시 함수
@@ -479,32 +583,32 @@
 
                 for (let i = 0; i < data['res_reply'].length; i++) {
                   let row = data['res_reply'][i];
-                  
+
                   let [datePart, timePart] = row.rdate.split(' ');
                   let [year, month, day] = datePart.split('-');
                   let [hour, minute, second] = timePart.split(':');
                   let postDate = new Date(year, month - 1, day, hour, minute, second);
 
                   msg += "<div id='reply" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; background-color: #f5f5dc; margin-bottom: 10px; margin-top: 5px; text-align:left;'>";
-                  
+
                   if (row.thumbs != null) {
-                    
+
                     if (row.thumbs.endsWith('jpg') || row.thumbs.endsWith('png') || row.thumbs.endsWith('gif')) {
                       msg += "<img src='/member/storage/" + row.thumbs + "' style='width: 25px; height: 25px; border-radius: 50%;'>";
                     }
-                    
+
                   }
 
                   if (row.thumbs == null) {
                     msg += "<img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
                   }
-                  
+
                   if (row.nickname == null) {
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
                   } else {
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
                   }
-                  
+
                   msg += "<span id='reply_date" + row.replyno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
 
                   if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
@@ -532,12 +636,23 @@
 
           }
 
+          function reply_check_login() {
+            let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
+            //alert('Click: ' + id);
+            if (id == '') {
+              alert('로그인 후 답글 입력 가능합니다.');
+              location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+            } else {
+
+            }
+          }
+
           function reply_create_form(no) { // 대댓글 작성 폼
             let reply_create_form_tag = document.getElementById('reply_create_form' + no);
             let msg = '';
             msg += "<hr>";
             msg += "<form name='frm_reply' id='frm_reply'>";
-            msg += "<textarea name='reply_contents' id='reply_contents' class='form-control' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
+            msg += "<textarea name='reply_contents' id='reply_contents' class='form-control' onclick='reply_check_login()' style='width: 100%; height: 60px;' placeholder='답글 작성, 로그인해야 등록 할 수 있습니다.'>";
             msg += "</textarea>";
             msg += "<button type='button' id='btn_reply_create' onclick='reply_create(" + no + ")'>";
             msg += "&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;";
@@ -572,6 +687,8 @@
                 });
 
             }
+            
+            location.reload();
 
           }
 
@@ -661,6 +778,8 @@
                 });
 
             }
+            
+            location.reload();
 
           }
 
@@ -700,6 +819,8 @@
                   alert('삭제를 취소 했습니다.');
                 }
               });
+              
+              location.reload();
           }
 
 
