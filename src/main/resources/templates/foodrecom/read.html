@@ -22,6 +22,12 @@
   
   
   <style>
+    
+     .highlight {  
+      background-color: yellow; /* 검색한 단어를 강조하기 위한 스타일 */
+      font-weight: bold; /* 강조할 글자 굵기 */
+    }
+ 
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -52,14 +58,16 @@
 <div>
   <h1>식단 추천</h1>
   <div class="calendar" id="calendar" th:data-frecom="${frecom}"></div>
- 
+ <input type="hidden" id="word" name="word" th:value="${ goalsno }">
+      
+
   <a href="/foodrecom/list_all" class="btn btn-secondary btn-sm">확인</a>
   
   <script>
     window.onload = () => {
       const calendarDiv = document.getElementById('calendar');
       const frecom = calendarDiv.dataset.frecom;
-     
+       const word = document.getElementById('word').value.toLowerCase();
        const mealData2 = JSON.parse(frecom);
       // Create calendar for each day
       mealData2.res.forEach(dayData => {
@@ -92,6 +100,9 @@
           meal.items.forEach(item => {
             const mealItem = document.createElement('p');
             mealItem.classList.add('meal-item');
+            if (item.food.toLowerCase().includes(word)) {
+                                mealItem.classList.add('highlight'); // highlight 클래스 추가
+                            }
             mealItem.textContent = `${item.food} (${item.amount_g}g)`;
             mealDiv.appendChild(mealItem);
           });
