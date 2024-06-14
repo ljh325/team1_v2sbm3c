@@ -96,9 +96,8 @@
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
-      <col style='width: 10%;'/>    
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
+      <col style='width: 15%;'/>    
+      <col style='width: 15%;'/>
       <col style='width: 15%;'/>
       <col style='width: 15%;'/>
       <col style='width: 10%;'/>
@@ -134,7 +133,7 @@
           <img src="/mh/images/read.png" class="icon" th:onclick="'javascript:readMh(' + ${mhVO.mhno} + ')'">    
           <img src="/mh/images/update.png" class="icon" th:onclick="'javascript:updateMh(' + ${mhVO.mhno} + ')'">
           <img src="/mh/images/delete.png" class="icon" th:onclick="'javascript:deleteMh(' + ${mhVO.mhno} + ')'">
-   
+        </td>
         <td class="td_basic">
           <a th:href="@{|/mh/choose?mhno=${mhVO.mhno}|}">선택</a>
 
