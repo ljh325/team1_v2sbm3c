@@ -23,6 +23,18 @@ import tool # tool.py
 app = Flask(__name__)  # __name__ == '__main__'
 CORS(app)
 
+prompt3 ='''
+운동표에 있는 데이터를 바탕으로 소모 칼로리랑 대략적인 예상 운동시간을 표시하여 일주일 간 운동 루틴을 신체 정보에 기반하여 추천해줘.
+
+[신체정보]
+성별: 여자
+나이: 21
+체중: 58
+운동목적: 체중감량
+숙련도: 초급
+
+[운동 표]
+'''
 prompt2 = '''
     아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [운동 목록]에서 운동 목표를 달성하기 위해 필요한 3일의 운동 스케줄을 적절한 운동 시간을 포함해서 출력해줘
     출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘
@@ -452,11 +464,21 @@ def healthrecom_create_proc():
     cursor = conn.cursor()
 
     
+    select_ex = '''
+    SELECT *
+    from exdata 
+    '''
+    
+    cursor.execute(select_ex)
+    rows = cursor.fetchall()
+
+    # 쿼리 결과 문자열 생성
+    result_str = '\n'.join([', '.join(map(str, row)) for row in rows])
+    
     select_mh = '''
     SELECT kg,ckg,cm,muscle from mh
     where mhno = :mhno
     '''
-    
     cursor.execute(select_mh, {'mhno': mhno})
     mh = cursor.fetchall()
     
@@ -466,8 +488,8 @@ def healthrecom_create_proc():
     '''
     cursor.execute(select_goals, {'goalsno': goalsno})
     goals = cursor.fetchall()
-   
-    filled_prompt = populate_prompt(prompt2, mh[0], goals[0])
+    
+    filled_prompt = prompt3 + result_str
     print(filled_prompt)
     response = tool.answer(role='헬스트레이너야', prompt=filled_prompt, output='json', 
                         format='{"health": "값"}', llm='gpt-4o') 

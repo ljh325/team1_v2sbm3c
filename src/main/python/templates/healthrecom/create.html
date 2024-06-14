@@ -98,7 +98,7 @@
       <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
       <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
       <button type="button" id="register" class="btn">생성</button>
-      <button type="button" id="list" onclick="window.location.href='http://localhost:9093/foodrecom/list_all'" class="btn">목록</button>
+      <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
     </form>
     <div id="result_animation">
       <img id="progress" src="/static/images/progress.gif" alt="progress">
@@ -146,7 +146,7 @@
                   const mealTitle = document.createElement('h3');
                   mealTitle.textContent = meal.meal;
                   const mealImage = document.createElement('img');
-                  mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+                  mealImage.src = `/healthrecom/images/f${firstItem.code}.png`; // Assuming image file name matches the code
                   mealImage.alt = firstItem.food;
                   
                   mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
