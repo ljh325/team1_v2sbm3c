@@ -1,173 +1,112 @@
 <!DOCTYPE html>
+
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<head>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f8f9fa;
-    }
+
+<div layout:fragment="content">
+<style>
 
 
+      .text-center a {
+        font-size: 11px; /* 원하는 글자 크기로 설정 */
+        color: #007bff; /* 링크 색상 */
+        text-decoration: none; /* 밑줄 제거 */
+      }
 
-    .form-wrapper {
-      display: flex;
-      justify-content: center; /* 수평 가운데 정렬 */
-      align-items: center; /* 수직 가운데 정렬 */
-      height: 60vh; /* 화면 전체 높이로 설정하여 세로 가운데 정렬 */
-    }
-
-    .form-group {
-      position: relative;
-      width: 100%;
-      margin: 0px auto;
-      text-align: end;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #dee2e6;
-
-    }
-
-    .btn {
-
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .btn-secondary {
-      background-color: rgb(255, 255, 255);
-      color: rgb(0, 0, 0);
-      border: 1px solid #999;
-    }
-
-    .btn-secondary:hover {
-      background-color: #0056b3;
-
-    }
-
-    .text-center a {
-      font-size: 11px; /* 원하는 글자 크기로 설정 */
-      color: #007bff; /* 링크 색상 */
-      text-decoration: none; /* 밑줄 제거 */
-    }
-
-    .text-center a:hover {
-      color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
-      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
-    }
-
-    .login_btn {
+      .text-center a:hover {
+        color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
+        text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+      }
+      .login_btn {
       margin-top: 10px;
       justify-content: center;
       display: flex;
       gap: 10px; /* 버튼 간격 추가 */
-      margin-bottom: 10px;
+      margin-bottom:10px;
     }
+    .form-wrapper {
+      display: flex;
+      justify-content: center; /* 수평 가운데 정렬 */
+      align-items: center; /* 수직 가운데 정렬 */
+      width: 100%;
+      min-height: 10vh; /* 최소 높이 설정 */
 
-    .span_warning {
-      color: #dc3545;
-      font-size: 12px;
-      margin-top: 5px;
-      display: block;
     }
-  </style>
-</head>
-<body>
-  <div layout:fragment="content">
-    <div class="title_line">로그인</div>
+    .form-group {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 99%;
+      margin: 0 auto;
+      text-align: end;
+      margin-top:20px;
 
-    <div class="form-wrapper">
-      <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/login">
-        <div class="form-group">
-          <input type="text" name="id" id="id" th:value="${ck_id}" autofocus="autofocus" placeholder="아이디" class="form-control form-control-sm">
-          <label><input type="checkbox" name="id_save" id="id_save" th:checked="${ck_id_save == 'Y'}" value="Y"> 저장</label>
-          <span id='id_msg' class="span_warning"></span>
-        </div>
-
-        <div class="form-group">
-          <input type='password' name='passwd' id='passwd' th:value="${ck_passwd}" required="required" placeholder="패스워드" class="form-control form-control-sm">
-          <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"> 저장
-          <span id='passwd_msg' class="span_warning"></span>
-        </div>
-
-        <div class="text-center mb-3">
-          <a href="/member/create" class="mr-3">회원 가입 |</a>
-          <a href="/member/find_id_form" class="mr-3">아이디 찾기 |</a>
-          <a href="/member/find_passwd_form">비밀번호 찾기</a>
-        </div>
-
-        <div class="login_btn">
-          <button type="button" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
-          <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- 모달창 -->
-    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="warningModalLabel">경고</h5>
-          </div>
-          <div class="modal-body" id="modalBody">
-            <!-- 경고 메시지가 여기에 표시됩니다 -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="modalConfirmButton">확인</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 모달창 x -->
-  <script>
-    // 경고 모달창 표시 함수
-    function showModal(message) {
-      document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
-      $('#warningModal').modal('show'); // 모달창 표시
     }
+     .small-form .form-control {
+      font-size: 14px; /* 입력 필드 글꼴 크기 조정 */
+      padding: 5px; /* 입력 필드 패딩 조정 */
+      margin-bottom: 10px; /* 하단 여백 추가 */
+    }
+    .menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+</style>
 
-    window.onload = () => {
-      document.querySelector('#id').addEventListener('keypress', (event) => {
-        if(event.key === 'Enter') {
-          document.getElementById('btn_checkID').focus();
+    <!-- 모달창 x -->
+    <script>
+      // 경고 모달창 표시 함수
+      function showModal(message) {
+        document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
+        $('#warningModal').modal('show'); // 모달창 표시
+      }
+
+      window.onload = () => {
+        document.querySelector('#id').addEventListener('keypress', (event) => {
+          if(event.key === 'Enter') {
+            document.getElementById('btn_checkID').focus();
+          }
+        });
+
+        document.querySelector('#passwd').addEventListener('keypress', (event) => {
+          if(event.key === 'Enter') {
+            document.getElementById('btn_send').focus();
+          }
+        });
+
+        // 모달 확인 버튼에 이벤트 리스너 추가
+        document.getElementById('modalConfirmButton').addEventListener('click', () => {
+          document.getElementById('frm').submit();
+          $('#warningModal').modal('hide'); // 모달창 닫기
+        });
+      }
+
+      function send() { // 회원 가입 처리
+        let id = document.getElementById('id');
+        let id_msg = document.getElementById('id_msg');
+
+        if (id.value.trim().length == 0) {
+          id_msg.innerHTML= 'ID 입력은 필수 입니다.';
+          id_msg.classList.add('span_warning');    // class 적용
+          id.focus();
+          return false;  // 로그인 진행 중지
         }
-      });
 
-      document.querySelector('#passwd').addEventListener('keypress', (event) => {
-        if(event.key === 'Enter') {
-          document.getElementById('btn_send').focus();
+        let passwd = document.getElementById('passwd');
+        let passwd_msg = document.getElementById('passwd_msg');
+
+        if (passwd.value.trim().length == 0) {
+          passwd_msg.innerHTML= '패스워드 입력은 필수 입니다.';
+          passwd_msg.classList.add('span_warning');    // class 적용
+          passwd.focus();
+          return false;  // 로그인 진행 중지
         }
-      });
 
-      // 모달 확인 버튼에 이벤트 리스너 추가
-      document.getElementById('modalConfirmButton').addEventListener('click', () => {
-        document.getElementById('frm').submit();
-        $('#warningModal').modal('hide'); // 모달창 닫기
-      });
-    }
+        id = id.value;
+        passwd = passwd.value;
 
-<<<<<<< HEAD
-    function send() { // 회원 가입 처리
-      let id = document.getElementById('id');
-      let id_msg = document.getElementById('id_msg');
-
-      if (id.value.trim().length == 0) {
-        id_msg.innerHTML= 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
-        id_msg.classList.add('span_warning');    // class 적용
-        id.focus();
-        return false;  // 로그인 진행 중지
-=======
-        fetch('/member/logins', {
+        fetch('http://localhost:9093/member/logins', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -188,44 +127,58 @@
           console.error('There was a problem with the fetch operation:', error);
           showModal("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
         });
->>>>>>> d65f157ade62dea996a24d2def99a279bfdacf35
       }
+    </script>
 
-      let passwd = document.getElementById('passwd');
-      let passwd_msg = document.getElementById('passwd_msg');
+    <div class="title_line"></div>
 
-      if (passwd.value.trim().length == 0) {
-        passwd_msg.innerHTML= '패스워드 입력은 필수 입니다. 패스워드는 8자이상 권장합니다.';
-        passwd_msg.classList.add('span_warning');    // class 적용
-        passwd.focus();
-        return false;  // 로그인 진행 중지
-      }
+  <div class="form-wrapper"  style="width: 100%; height: 50vh;">
+    <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/login">
+       <div class="form-group" > 로그인
+            <div style="position:flex;">
+                <input type="text" name="id" id="id" th:value="${ck_id}"  autofocus="autofocus" placeholder="아이디"
+                       class="form-control fom-control-sm">
+                       <span id='id_msg'></span>
+                <label><input type="checkbox" name="id_save" id="id_save" th:checked="${ck_id_save == 'Y'}" value="Y"> 저장<label>
+                
+            </div>
 
-      id = id.value;
-      passwd = passwd.value;
+            <div>
+                <input type='password' name='passwd' id='passwd' th:value="${ck_passwd}" required="required"
+                       placeholder="패스워드" class="form-control form-control-sm">
+                       <span id='passwd_msg'></span>
+                <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"> 저장
+                
+            </div>
+            <div class="text-center">
+                <a href="/member/create" class="mr-3">회원 가입 |</a>
+                <a href="/member/find_id_form" class="mr-3">아이디 찾기 |</a>
+                <a href="/member/find_passwd_form">비밀번호 찾기</a>
+            </div>
+            <div class="login_btn">
+                <button type="button" onclick="send();" class="registration-button">로그인</button>
+                <button type="button" onclick="history.back();" class="registration-button">취소</button>
+            </div>
+            </div>
+        </form>
+    </div>
 
-      fetch('http://localhost:9093/member/logins', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, passwd })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.cnt === 1) {
-          // 로그인 성공
-          showModal("로그인 성공!");
-        } else {
-          // 로그인 실패 메시지 표시
-          showModal("로그인 실패! 아이디와 패스워드를 확인해주세요.");
-        }
-      })
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        showModal("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-      });
-    }
-  </script>
-</body>
+    <!-- 모달창 -->
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel">경고</h5>
+          </div>
+          <div class="modal-body" id="modalBody">
+            <!-- 경고 메시지가 여기에 표시됩니다 -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="modalConfirmButton">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
 </html>

@@ -3,19 +3,14 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
-
-  <style>
+ <style>
     .login_btn {
       margin-top: 20px;
       justify-content: center;
       display: flex;
       gap: 10px; /* 버튼 간격 추가 */
-      
     }
-    .title_line {
-      text-align: center; /* 제목 가운데 정렬 */
-      margin-bottom: 20px; /* 제목과 폼 간격 조정 */
-    }
+
 
     .list_text {
       font-size: 16px; /* 리스트 아이템 글꼴 크기 조정 */
@@ -27,16 +22,30 @@
       align-items: center; /* 수직 가운데 정렬 */
       width: 100%;
       min-height: 60vh; /* 최소 높이 설정 */
+
     }
     .form-group {
+      background-color: #ffffff;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 99%;
+      margin: 0 auto;
+      text-align: center;
+      margin-top:20px;
+
+    }
+    .form-group2 {
       position: relative;
-      width: 100%;
+      background-color: #ffffff;
+
     }
     #btn_checkID {
       position: absolute;
       right: 0;
-      top: 0;
-      height: 100%;
+      top: 3px;
+      height: 90%;
     }
     
     .small-form {
@@ -86,7 +95,17 @@
     .small-form .registration-button img {
       margin-right: 5px; /* 아이콘과 텍스트 간격 */
     }
-  </style>
+    
+        .text-center a {
+      font-size: 11px; /* 원하는 글자 크기로 설정 */
+      color: #007bff; /* 링크 색상 */
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    .text-center a:hover {
+      color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
   </style>
   <script>
     window.onload = () => { // 각 요소 enter를 하면 다음 커서로 넘어감
@@ -196,7 +215,7 @@
             btn_checkID.disabled = true; // 버튼 비활성화
             btn_checkID.innerHTML = '확인'
             id.readOnly  = true; // 아이디 입력창 비활성화
-            check_mark.style.display = 'inline'; // 체크 표시 보이기
+            //check_mark.style.display = 'inline'; // 체크 표시 보이기
             isIdChecked = true; // 중복확인 완료 플래그 설정
             document.getElementById('passwd').focus(); 
           }
@@ -327,8 +346,6 @@
               tel_msg.remove(); // 경고문 삭제
             }
           
-alert('tel_pass')
-          
           // 주소 유효성 검사 **  
           let address1 = document.getElementById('address1');
           let address1_msg = document.getElementById('address1_msg');
@@ -343,7 +360,7 @@ alert('tel_pass')
           if (address1_msg) {
             address1_msg.remove(); // 경고문 삭제
           }
-  alert('address_pass')        
+     
           // 년도 유효성 검사 **  
           let year = document.getElementById('year');
           let birth_msg = document.getElementById('birth_msg');
@@ -363,7 +380,7 @@ alert('tel_pass')
             birth_msg.innerHTML = '월은 필수입니다.';
             birth_msg.classList.add('span_warning');    // class 적용
             month.focus();
-            alert(month.value)
+
             return false;  // 회원 가입 진행 중지
           }
           
@@ -377,31 +394,31 @@ alert('tel_pass')
 
             return false;  // 회원 가입 진행 중지
           } 
-                   alert(day.value)
+
           
           let years = year.value;
           let months = month.value;
           let days = day.value;
-          alert(years + '-' + months + '-' + days);
+
           let birth = years + '-' + months + '-' + days;
           document.getElementById('birth').value = birth;
-          alert(document.getElementById('birth').value);
+
           
           //birth_msg.innerHTML = '';
-          alert('---')
+
           // 날짜 형식 유효성 검사
           if (!validateDate(years, months, days)) {
               birth_msg.innerHTML = '유효한 날짜를 입력하세요.';
               birth_msg.classList.add('span_warning');
-              alert('validateDate')
+
               return false;
           } 
-          alert('validateDate_if')
+
           if (birth_msg) {
             birth_msg.remove(); // 경고문 삭제
           }
           
-          alert(1)
+
        
         
           // 성별 유효성 검사 **  
@@ -418,10 +435,9 @@ alert('tel_pass')
           if (sex_msg) {
             sex_msg.remove(); // 경고문 삭제
           }
-          
-          alert(2);
+
         } // passwd2_msg else 끝
-        alert(3);
+
         document.getElementById('frm').submit(); // 등록폼 전달  
         //if (!id.value || !passwd.value || !passwd2.value || !mname.vlaue || !nickname.value || !tel.value || !address1.value || !year.value || !month.value || !day.value || !sex.value){
           
@@ -470,49 +486,49 @@ alert('tel_pass')
   
   <div class="form-wrapper">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
-      <div class="form-group" style="text-align:center">회원가입</div>
+      <div class="form-group" style="text-align:center">회원가입
       
-      <div class="form-group">
+      <div class="form-group2">
         <input style="margin-top: 5px; width:70%; font-size:medium " type="text" name="id" id="id" th:field="*{id}" placeholder="아이디(이메일)*" class="form-control form-control-sm">
         <button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm" style="margin-left:20px; font-size:small">확인</button>        
       </div>
       
-      <div class="form-group">
+      <div >
         <input style=" margin-top: 5px;width:100%; font-size:medium" type="password" name="passwd" id="passwd" required="required"
              placeholder="패스워드" class="form-control form-control-sm">
       </div>
-      <div class="form-group">
+      <div >
         <input style="margin-top: 5px; width:100%; font-size:medium" type="password" name="passwd2" id="passwd2" required="required"
         placeholder="패스워드 확인" class="form-control form-control-sm">
-        <span id='passwd2_msg'></span>
+
       </div>
       
-      <div class="form-group">
+      <div>
         <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="mname" id="mname" required="required"
           placeholder="성명" class="form-control form-control-sm">
-        <span id='mname_msg'></span>
+
       </div>
       
-      <div class="form-group">
+      <div >
         <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="nickname" id="nickname" required="required"
           placeholder="닉네임" class="form-control form-control-sm">
-        <span id='nickname_msg'></span>
+
       </div>  
   
-      <div class="form-group">
+      <div>
         <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="tel" id="tel" required="required"
         placeholder="전화번호" class="form-control form-control-sm">
       </div>
   
-      <div class="form-group">
+      <div>
         <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address1" id="address1" placeholder="주소" class="form-control form-control-sm">
       </div> 
   
-      <div class="form-group">
+      <div>
         <input style="margin-top: 5px; width:100%; font-size:medium" type="text" name="address2" id="address2" placeholder="상세 주소" class="form-control form-control-sm">
       </div>
       
-      <div class="form-group">     
+      <div>     
         <div class="container text-center">
           <div class="row">
             <div class="col px-1">
@@ -531,7 +547,7 @@ alert('tel_pass')
       </div>
 
     
-      <div class="form-group">   
+      <div>   
         <select style="margin-top: 5px; width:100%; font-size:medium" class="form-control form-control-sm"  id="sex" name="sex" aria-label="Default select example" required>
           <option value="">성별</option>
           <option value="남자">남자</option>
@@ -539,10 +555,16 @@ alert('tel_pass')
         </select>
         <span id="sex_msg"></span>          
       </div>
-
+      
+      <div class="text-center">
+          <a href="/member/login">로그인 |</a>
+          <a href="/member/find_id_form">아이디 찾기 |</a>
+          <a href="/member/find_passwd_form">비밀번호 찾기</a>
+      </div>
+      
       <div class="login_btn">
-        <button type="button" onclick="send();" class="registration-button">가입</button>
-        <button type="button" onclick="history.back();" class="registration-button">취소</button>
+        <button type="button" onclick="send();" class="registration-button">가 입</button>
+        <button type="button" onclick="history.back();" class="registration-button">취 소</button>
       </div>
 
 <script>
@@ -575,7 +597,7 @@ alert('tel_pass')
       </div>
     </div>
     <!-- 모달창 x -->
-
+      </div>
     </form>
   </div>
     

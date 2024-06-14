@@ -1,9 +1,92 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: rgb(255, 255, 255);
+    }
 
-<div layout:fragment="content">
 
+
+    .form-wrapper {
+      display: flex;
+      justify-content: center; /* 수평 가운데 정렬 */
+      align-items: center; /* 수직 가운데 정렬 */
+      width: 100%;
+      min-height: 45vh; /* 최소 높이 설정 */
+
+    }
+    .form-group {
+      background-color: #ffffff;
+      border: 1px solid rgb(255, 255, 255);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 99%;
+      margin: 0 auto;
+      text-align: center;
+      margin-top:20px;
+
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #dee2e6;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      font-size: medium;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+
+    .fieldset_basic {
+      background-color: #ffffff;
+      border: 3px solid #dee2e6; /* Increased border size */
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .login_btn {
+      margin-top: 10px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+      margin-bottom: 10px;
+    }
+
+    .text-center a {
+      font-size: 11px; /* 원하는 글자 크기로 설정 */
+      color: #007bff; /* 링크 색상 */
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    .text-center a:hover {
+      color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
+
+    .span_warning {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+  </style>
+  
 
 
      <script>
@@ -51,35 +134,38 @@
         document.getElementById('frm').submit();
       }
     </script>
-    <h2>아이디 찾기</h2>
-    <div class="title_line"></div>
-    <aside class="aside_right">
-      <a href='/'>홈</a>
-      <span class='menu_divide' >│</span> 
-      <a href='./login'>로그인</a>
-      <span class='menu_divide' >│</span> 
-      <a href="./create">회원가입</a>
-    </aside> 
-    <div style="width: 60%; margin: 0px auto; margin-top: 70px;">
-      <form name="frm" id="frm" method="post" action="/member/find_id">
-        <div>
-          <label for="mname">이름</label>
-          <input type="text" name="mname" id="mname" autofocus="autofocus" placeholder="이름을 입력하시오"
-                 class="form-control fom-control-sm" style="width: 100%;">
-          <span id='mname_msg'></span>
-        </div>
-        
-        <div class="form-group">
-          <label for="tel">전화번호*</label>
-          <input type='text' name='tel' id='tel' required="required"
-                    placeholder="전화번호을 입력하시오" class="form-control form-control-sm" style="width: 100%;">
-          <span id='tel_msg'></span>
-        </div>
+</head>
+<body>
+<div layout:fragment="content">
 
-        <div class="content_body_bottom">
-          <button type="button" onclick="send();" class="btn btn-secondary btn-sm">ID 찾기</button>
-          <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
-        </div>
+    <div class="title_line">아이디 찾기</div>
+
+    <div class="form-wrapper">
+      <form name="frm" id="frm" method="post" action="/member/find_id">
+         <div class="form-group">아이디 찾기
+          <div>
+            <input type="text" name="mname" id="mname" autofocus="autofocus" placeholder="이름을 입력하시오"
+                   class="form-control" >
+            <span id='mname_msg'></span>
+          </div>
+        
+          <div>
+            <input  type='text' name='tel' id='tel' required="required"
+                      placeholder="전화번호을 입력하시오" class="form-control" >
+            <span id='tel_msg'></span>
+          </div>
+
+
+          <div class="text-center">
+                <a href="/member/create" class="mr-3">회원 가입 |</a>
+                <a href="/member/login" class="mr-3">로그인 |</a>
+                <a href="/member/find_passwd_form">비밀번호 찾기</a>
+          </div>
+          <div class="login_btn" >
+          <button type="button" onclick="send();" class="registration-button">찾기</button>
+          <button type="button" onclick="history.back();" class="registration-button">취소</button>
+
+        </div></div>
       </form>
     </div>
     

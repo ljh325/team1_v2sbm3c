@@ -1,104 +1,181 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: rgb(255, 255, 255);
+    }
 
-<div layout:fragment="content">
+
+
+    .form-wrapper {
+      display: flex;
+      justify-content: center; /* 수평 가운데 정렬 */
+      align-items: center; /* 수직 가운데 정렬 */
+      width: 100%;
+      min-height: 60vh; /* 최소 높이 설정 */
+
+    }
+    .form-group {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 99%;
+      margin: 0 auto;
+      text-align: center;
+      margin-top:20px;
+      font-size:20px;
+
+    }
+
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      font-size: medium;
+    }
 
 
 
-     <script>
-      window.onload = () => {
-        document.querySelector('#id').addEventListener('keypress', (event) => {
-          if(event.key === 'Enter') {
-            document.getElementById('btn_checkID').focus();
-          }
-        });
+    .fieldset_basic {
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
 
-        document.querySelector('#passwd').addEventListener('keypress', (event) => {
-          if(event.key === 'Enter') {
-            document.getElementById('btn_send').focus();
-          }
-        });
+    .login_btn {
+      margin-top: 10px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+      margin-bottom: 10px;
+    }
 
-        // 모달 확인 버튼에 이벤트 리스너 추가
-        document.getElementById('modalConfirmButton').addEventListener('click', () => {
-          document.getElementById('frm').submit();
-        });
+    .text-center a {
+      font-size: 11px; /* 원하는 글자 크기로 설정 */
+      color: #007bff; /* 링크 색상 */
+      text-decoration: none; /* 밑줄 제거 */
+
+    }
+
+    .text-center a:hover {
+      color: #0056b3; /* 링크에 마우스를 올렸을 때 색상 */
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
+
+    .span_warning {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+  </style>
+
+  <script>
+    window.onload = () => {
+      document.querySelector('#id').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+          document.getElementById('btn_checkID').focus();
+        }
+      });
+
+      document.querySelector('#passwd').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+          document.getElementById('btn_send').focus();
+        }
+      });
+
+      // 모달 확인 버튼에 이벤트 리스너 추가
+      document.getElementById('modalConfirmButton').addEventListener('click', () => {
+        document.getElementById('frm').submit();
+      });
+    }
+    
+
+    function send() { // 회원 가입 처리
+      let id = document.getElementById('id');
+      let id_msg = document.getElementById('id_msg');
+
+      if (id.value.trim().length == 0) {
+        id_msg.innerHTML= '아이디 입력은 필수 입니다.';
+        id_msg.classList.add('span_warning');    // class 적용
+        id.focus();
+        return false;  // 로그인 진행 중지
+      }
+      let mname = document.getElementById('mname');
+      let mname_msg = document.getElementById('mname_msg');
+
+      if (mname.value.trim().length == 0) {
+        mname_msg.innerHTML= '이름 입력은 필수 입니다.';
+        mname_msg.classList.add('span_warning');    // class 적용
+        mname.focus();
+        return false;  // 로그인 진행 중지
+      }
+
+      let tel = document.getElementById('tel');
+      let tel_msg = document.getElementById('tel_msg');
+
+      if (tel.value.trim().length == 0) {
+        tel_msg.innerHTML= '전화번호 입력은 필수 입니다.';
+        tel_msg.classList.add('span_warning');    // class 적용
+        tel.focus();
+        return false;  // 로그인 진행 중지
       }
       
+      document.getElementById('frm').submit();
+    }
+  </script>
+</head>
+<body>
+  <div layout:fragment="content">
 
-      function send() { // 회원 가입 처리
-        let id = document.getElementById('id');
-        let id_msg = document.getElementById('id_msg');
-
-        if (id.value.trim().length == 0) {
-          id_msg.innerHTML= '아이디 입력은 필수 입니다.';
-          id_msg.classList.add('span_warning');    // class 적용
-          id.focus();
-          return false;  // 로그인 진행 중지
-        }
-        let mname = document.getElementById('mname');
-        let mname_msg = document.getElementById('mname_msg');
-
-        if (mname.value.trim().length == 0) {
-          mname_msg.innerHTML= '이름 입력은 필수 입니다.';
-          mname_msg.classList.add('span_warning');    // class 적용
-          mname.focus();
-          return false;  // 로그인 진행 중지
-        }
-
-        let tel = document.getElementById('tel');
-        let tel_msg = document.getElementById('tel_msg');
-
-        if (tel.value.trim().length == 0) {
-          tel_msg.innerHTML= '전화번호 입력은 필수 입니다.';
-          tel_msg.classList.add('span_warning');    // class 적용
-          tel.focus();
-          return false;  // 로그인 진행 중지
-        }
-        
-        document.getElementById('frm').submit();
-      }
-    </script>
-    <h2>비밀번호 찾기</h2>
     <div class="title_line"></div>
-    <aside class="aside_right">
-      <a href='/'>홈</a>
-      <span class='menu_divide' >│</span> 
-      <a href='./login'>로그인</a>
-      <span class='menu_divide' >│</span> 
-      <a href="./create">회원가입</a>
-    </aside> 
-    <div style="width: 60%; margin: 0px auto; margin-top: 70px;">
+
+    <div class="form-wrapper">
       <form name="frm" id="frm" method="post" action="/member/find_passwd">
+      <div class="form-group">비밀번호 찾기
         <div>
-          <label for="id">아이디</label>
           <input type="text" name="id" id="id" autofocus="autofocus" placeholder="아이디를 입력하시오"
-                 class="form-control fom-control-sm" style="width: 100%;">
+                 class="form-control fom-control-sm">
           <span id='id_msg'></span>
         </div>
         <div>
-          <label for="mname">이름</label>
           <input type="text" name="mname" id="mname" autofocus="autofocus" placeholder="이름을 입력하시오"
-                 class="form-control fom-control-sm" style="width: 100%;">
+                 class="form-control fom-control-sm" >
           <span id='mname_msg'></span>
         </div>
         
-        <div class="form-group">
-          <label for="tel">전화번호*</label>
+        <div>
           <input type='text' name='tel' id='tel' required="required"
-                    placeholder="전화번호을 입력하시오" class="form-control form-control-sm" style="width: 100%;">
+                    placeholder="전화번호을 입력하시오" class="form-control form-control-sm">
           <span id='tel_msg'></span>
         </div>
 
-        <div class="content_body_bottom">
-          <button type="button" onclick="send();" class="btn btn-secondary btn-sm">비밀번호 찾기</button>
-          <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+          <div class="text-center">
+              <a href="/member/create" >회원 가입 |</a>
+              <a href="/member/login">로그인 |</a>
+              <a href="/member/find_id_form">아이디 찾기</a>
+          </div>
+
+        <div class="login_btn">
+          <button type="button" onclick="send();" class="registration-button">찾기</button>
+          <button type="button" onclick="history.back();" class="registration-button">취소</button>
         </div>
+      </div>
       </form>
     </div>
     
 
     
 </div>
+</body>
 </html>
