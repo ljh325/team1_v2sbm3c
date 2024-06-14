@@ -19,7 +19,6 @@
       margin-bottom: 10px;
     }
     .aside_right a {
-
       text-decoration: none;
     }
 
@@ -31,13 +30,12 @@
       background-color: #ffffff;
       border: 1px solid #dee2e6;
       border-radius: 5px;
-
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .li_none {
       list-style: none;
       font-size: 16px;
-      color:aqua;
+      color: aqua;
     }
     .li_none img {
       max-width: 100%;
@@ -45,7 +43,6 @@
       border-radius: 5px;
     }
     .li_none span {
-
       margin-top: 10px;
     }
     .li_none div[style*="white-space: pre-wrap"] {
@@ -55,16 +52,14 @@
       color: #007bff;
       text-decoration: none;
     }
-        .video-container {
+    .video-container {
       position: relative;
       padding-bottom: 56.25%;
-      /* 16:9 aspect ratio */
       height: 0;
       overflow: hidden;
       max-width: 100%;
       background: #000;
     }
-
     .video-container iframe {
       position: absolute;
       top: 0;
@@ -80,108 +75,103 @@
     }
     .explan {
       font-size: 18px;
-      letter-spacing: -0.5px; /* Reduces space between letters */
-      line-height: 1.2; /* Reduces space between lines */
+      letter-spacing: -0.5px;
+      line-height: 1.2;
     }
-   .fieldset_basic {
-    width: 95%; 
-    margin: 0px auto; 
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    border-left: none;
-
-  }
+    .fieldset_basic {
+      width: 95%;
+      margin: 0px auto;
+      border: none;
+    }
     .menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
 </head>
 <body>
 <div layout:fragment="content">
   <div class="title_line" style="font-size: 20px;">
-    <span th:text="${htcVO.name }" class="title_line_text"></span> 
-    > <span th:text="${htcVO.namesub}" class="title_line_text"></span> 
+    <span th:text="${htcVO.name}" class="title_line_text"></span>
+    > <span th:text="${htcVO.namesub}" class="title_line_text"></span>
     > 글 조회
   </div>
-  
+
   <div class="menu_line" style="justify-content: end;">
-    <a class="menu-item" th:href="@{|./create?htcno=${htcVO.htcno }|}">
-        <img src="/home/insert.png" class="icon" title="등록">
-        <span>등록</span>
+    <a class="menu-item" th:href="@{|./create?htcno=${htcVO.htcno}|}">
+      <img src="/home/insert.png" class="icon" title="등록">
+      <span>등록</span>
     </a>
     <span class="menu_divide">│</span>
     <a th:href="@{/health/list_all?now_page=1}" class="menu-item">
       <img src="/home/all.png" class="icon" title="전체">
       <span>전체</span>
     </a>
-    
+
     <span class="menu_divide">│</span>
     <a class="menu-item" th:href="@{/health/list_by_htcno(htcno=${htcVO.htcno})}">
       <img src="/home/list1.png" class="icon" title="목록">
       <span>목록</span>
     </a>
-    
+
     <span class="menu_divide">│</span>
-    <a class="menu-item" th:href="@{|/health/update_text?healthno=${healthVO.healthno}&now_page=${now_page}&word=${word }|}">
+    <a class="menu-item" th:href="@{|/health/update_text?healthno=${healthVO.healthno}&now_page=${now_page}&word=${word}|}">
       <img src="/home/change.png" class="icon" title="글 수정">
       <span>글</span>
     </a>
-    
+
     <span class="menu_divide">│</span>
     <a class="menu-item" th:href="@{|./update_file?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}|}">
       <img src="/home/file_change.png" class="icon" title="파일 수정">
       <span>파일</span>
     </a>
-    
+
     <span class="menu_divide">│</span>
     <a class="menu-item" th:href="@{|./delete?healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}&htcno=${healthVO.htcno}|}">
       <img src="/home/delete.png" class="icon" title="삭제">
       <span>삭제</span>
     </a>
-    
+
     <span class="menu_divide">│</span>
     <a th:href="@{|/health/youtube?htcno=${healthVO.htcno}&healthno=${healthVO.healthno}&word=${word}&now_page=${now_page}|}">
-      <img src="/home/youtube.png" class="icon" title="유뷰트">
+      <img src="/home/youtube.png" class="icon" title="유튜브">
     </a>
-
   </div>
-  
+
   <fieldset class="fieldset_basic">
-
-      <li class="li_none">
-        <div style="width: 100%; word-break: break-all;">
-          <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png') or healthVO.file1.endsWith('gif')}">
-            <img th:src="@{|/health/storage/${healthVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-          </div>
-          <span style="font-size: 20px;" th:text="${healthVO.title}"></span>
-          <br>
-          <span style="font-size: 14px;" th:text="${healthVO.rdate}"></span><br><br><br>
-          <span  class="explan" th:text="${healthVO.explan}"></span>
-        </div>
-      </li>
-      
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
-        th:if="${contentsVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;' class="video-container"
-          th:utext="${contentsVO.youtube}">
+    <li class="li_none">
+      <div style="width: 100%; word-break: break-all;">
+              <span style="font-size: 20px;" th:text="${healthVO.title}"></span>
+        <br>
+        <span style="font-size: 14px;" th:text="${healthVO.rdate}"></span>
+        
+        <div th:if="${healthVO.file1.endsWith('jpg') or healthVO.file1.endsWith('png') or healthVO.file1.endsWith('gif')}">
+          <img th:src="@{|/health/storage/${healthVO.file1saved}|}" style="width: 97%; float: center; margin-top: 0.5%; margin-right: 1%;">
         </div>
 
-      </li>
-      
-      
-      <li class="li_none" th:text="|검색어(키워드): ${healthVO.word}|"></li>
-      
-      <li class="li_none" th:if="${healthVO.size1 > 0}">
-        <div style="font-size: 16px;">
-          첨부 파일: 
-          <a style="font-size: 14px;" th:href='@{|/download?dir=/health/storage&filename=${healthVO.file1saved}&downname=${healthVO.file1}|}' th:text='|${healthVO.file1}|'></a> 
-          <span style="font-size: 12px;" th:text="|(${healthVO.size1_label})|"></span>
-        </div>
-      </li>
+      </div>
+    </li>
+    <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
+        <span class="explan" th:text="${healthVO.explan}"></span>
+    </li>
+    <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
+      th:if="${healthVO.youtube.length() > 0}">
+      <div style='text-align: center; width:640px; margin: 0px auto;' class="video-container"
+        th:utext="${healthVO.youtube}">
+      </div>
 
+    </li>
+      <br>
+    <li class="li_none" th:text="|검색어(키워드): ${healthVO.word}|"></li>
+
+    <li class="li_none" th:if="${healthVO.size1 > 0}">
+      <div style="font-size: 16px;">
+        첨부 파일: 
+        <a style="font-size: 14px;" th:href='@{|/download?dir=/health/storage&filename=${healthVO.file1saved}&downname=${healthVO.file1}|}' th:text='|${healthVO.file1}|'></a>
+        <span style="font-size: 12px;" th:text="|(${healthVO.size1_label})|"></span>
+      </div>
+    </li>
   </fieldset>
 </div>
 </body>

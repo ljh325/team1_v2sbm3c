@@ -61,7 +61,8 @@ public class HtcCont {
    * @return
    */
   @PostMapping(value="/create") // http://localhost:9091/htc/create
-  public String create(Model model, @Valid HtcVO htcVO, BindingResult bindingResult, 
+  public String create(Model model, 
+      @Valid HtcVO htcVO, BindingResult bindingResult, 
       @RequestParam(name="word", defaultValue="") String word,
       @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
