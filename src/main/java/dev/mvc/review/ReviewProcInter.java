@@ -33,6 +33,12 @@ public interface ReviewProcInter {
   public int review_cnt();
   
   /**
+   * 리뷰 최대 번호
+   * @return
+   */
+  public int reviewno_max();
+  
+  /**
    * 회원 리뷰 조회
    * @param hashmap
    * @return

@@ -26,9 +26,9 @@ public class ReviewImageProc implements ReviewImageProcInter {
   }
 
   @Override
-  public ReviewImageVO read_image(int reviewno) {
-    ReviewImageVO reviewImageVO = this.reviewImageDAO.read_image(reviewno);
-    return reviewImageVO;
+  public ArrayList<ReviewImageVO> read_image(int reviewno) {
+    ArrayList<ReviewImageVO> list = this.reviewImageDAO.read_image(reviewno);
+    return list;
   }
 
   @Override

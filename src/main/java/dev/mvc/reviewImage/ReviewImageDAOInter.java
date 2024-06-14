@@ -23,7 +23,7 @@ public interface ReviewImageDAOInter {
    * @param reviewno
    * @return
    */
-  public ReviewImageVO read_image(int reviewno);
+  public ArrayList<ReviewImageVO> read_image(int reviewno);
   
   /**
    * 이미지 파일 수정

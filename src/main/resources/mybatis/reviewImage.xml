@@ -17,7 +17,7 @@
   <!-- 이미지 파일 추가  -->
   <insert id="insert_image" parameterType="dev.mvc.reviewImage.ReviewImageVO">
     INSERT INTO reviewImage(imageno, profile, profilesaved, thumbs, sizes, reviewno)
-    VALUES (reviewImage_seq.nextval, #{profile}, #{profilesaved}, #{thumbs}, #{sizes}, #{reviewno}
+    VALUES (reviewImage_seq.nextval, #{profile}, #{profilesaved}, #{thumbs}, #{sizes}, #{reviewno})
   </insert>
 
 
@@ -25,13 +25,13 @@
   <!-- 이미지파일 전체 조회 -->
   <select id="list_image" resultType="dev.mvc.reviewImage.ReviewImageVO">
     SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno
-    FROM member
+    FROM reviewImage
   </select>
   
   <!-- 리뷰별 이미지파일 조회 -->
   <select id="read_image" resultType="dev.mvc.reviewImage.ReviewImageVO" parameterType="int">
     SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno
-    FROM member
+    FROM reviewImage
     WHERE reviewno = #{reviewno}
   </select>    
 

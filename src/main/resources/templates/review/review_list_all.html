@@ -170,11 +170,31 @@
               const star = reviewVO.star;  // 별점
               const rdate = reviewVO.rdate.substring(0, 10);  // 작성일자
               const contents = reviewVO.contents;  // 리뷰 내용
-
-              const memberno = document.getElementById("memberno").value;
-              const sessionId = document.getElementById("id").value;
-
               const reviewno = reviewVO.reviewno;
+              //const memberno = document.getElementById("memberno").value;
+              //const sessionId = document.getElementById("id").value;
+
+              
+              
+              let imageHtml = '';
+              if (reviewVO.images) {
+                reviewVO.images.forEach(image => {
+                  const profilesaved = image.profilesaved;
+                  const profile = image.profile;
+                  const sizes = image.sizes;
+      
+                  if (profile.endsWith('jpg') || profile.endsWith('png') || profile.endsWith('gif')) {
+                    imageHtml += `<img src="/reviewImage/storage/${profilesaved}" class="profile-img" style="width: 30px; height: 30px;">`;
+                  } else if (sizes > 0) {
+                    imageHtml += `<span>${profile}</span>`;
+                  } else {
+                    imageHtml += `<img src="/images/none.jpg" class="default-img">`;
+                  }
+                });
+              } else {
+                imageHtml = `<img src="/images/none.jpg" class="default-img">`;
+              }
+              
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
                 <div class="review-item">
@@ -193,6 +213,7 @@
                     </div>
                     <div class="contents">
                         <div class="review-content">${contents}</div>
+                        ${imageHtml}
                     </div>
                 </div>
             `;
@@ -246,6 +267,7 @@
             return response.json();
           })
           .then(data => {
+            console.log(bootstrap.Version);
             const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
             deleteModal.hide();
             loadReviews('recent'); // 삭제 후 리뷰 목록을 다시 로드
