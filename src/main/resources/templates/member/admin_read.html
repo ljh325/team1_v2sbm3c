@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" style="background-color: black;"> <!-- layout.html 상속-->
+  <script>
+    window.onload = () => {
+      
+      function sendFormData() {
+        let memberno = document.getElementById("memberno").value;
+        let grade = document.querySelector('select[name="grade"]').value;
+        if (grade === "등급 변경") {
+            alert("등급을 선택해주세요.");
+            return;
+        }
+        document.getElementById("roleChangeForm").submit();
+      }
+    } // window.onload() 끝
+  </script>
+
+       
+
+
+<div layout:fragment="content" >
+   
+  <div class="container" style="background-color: white;">
+      <header class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <a href="#" onclick="event.preventDefault(); location.href='/member/list';" class="btn btn-link">
+            <i class="bi bi-caret-left-fill" style="font-size: 1.3rem;"></i>
+          </a>
+          <h1 class="h5 mb-0">회원 정보</h1>
+          <a href="/member/update_form" class="btn btn-link">수정</a>
+      </header>
+      <section class="profile mt-3">
+              
+      <style>
+        .text-success {
+          color: #28a745 !important;
+        }
+      
+        .profile-img {
+          width: 95px;
+          height: 95px;
+          border-radius: 30%;
+          /* 둥근 모서리 */
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          /* 그림자 */
+          /*margin-right: 10px;*/
+          /* 오른쪽 여백 */
+          margin-bottom: 30px;
+        }
+      
+        .default-img {
+          width: 95px;
+          height: 95px;
+          border-radius: 30%;
+          /* 원형 모서리 */
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          /* 그림자 */
+          margin-bottom: 30px;
+        }
+      </style>
+          
+        <div class="d-flex justify-content-center py-2 border-bottom">
+            <div th:Object="${memberVO}">
+                <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
+                    <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img">
+                </div>
+        
+                <div th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+                    <span th:text="${memberVO.profile}"></span>
+                </div>
+        
+                <div th:if="${memberVO.sizes == 0}">
+                    <img src="/images/none.jpg" class="default-img">
+                </div>
+            </div>
+        </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>아이디</span>
+              <span class="profile-value" th:text="${memberVO.id}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>이름</span>
+              <span class="profile-value" th:text="${memberVO.mname}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>닉네임</span>
+              <span class="profile-value" th:text="${memberVO.nickname}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>휴대폰 번호</span>
+              <span class="profile-value" th:text="${memberVO.tel}"></span>
+          </div>
+
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>주소</span>
+              <span class="profile-value" th:text="${memberVO.address1}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>상세주소</span>
+              <span class="profile-value" th:text="${memberVO.address2}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>가입일</span>
+              <span class="profile-value" th:text="${memberVO.mdate.substring(0, 10)}"></span>
+          </div>
+      </section>
+      <section class="add mt-3">
+          <h2 class="h6"></h2>
+          <div style="display: flex;">
+            <form id="roleChangeForm" style="display: flex;" method="post" action="/member/admin_update">
+                <input type="hidden" id="memberno" name="memberno" th:value="${memberVO.memberno}">
+                <select name="grade" class="form-select" aria-label="Default select example" style="height: 40px; margin: 3px; width: 250px;">
+                    <option value="" selected>등급 변경</option>
+                    <option value="0">관리자</option>
+                    <option value="1">일반 회원</option>
+                    <option value="2">블랙리스트</option>
+                    <option value="3">탈퇴회원</option>
+                </select>
+                <button type="button" class="btn btn-dark" style="width: 80px; font-size: 13px; margin: 10px;" onclick="sendFormData()">권한변경</button>
+            </form>
+          </div>
+          
+          <script>
+              function sendFormData() {
+                let memberno = document.getElementById("memberno").value;
+                let grade = document.querySelector('select[name="grade"]').value;
+                alert(memberno);
+                alert(grade);
+                if (grade === "등급 변경") {
+                    alert("등급을 선택해주세요.");
+                    return;
+                }
+                document.getElementById("roleChangeForm").submit();
+/*
+            fetch('/member/admin_update', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  memberno: memberno,
+                  grade: grade
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('권한이 성공적으로 변경되었습니다.');
+                } else {
+                    alert('권한 변경에 실패했습니다.');
+                }
+            })
+            .then(data => {
+              alert(data);
+              //const grades = document.getElementById("grades")
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('권한 변경 중 오류가 발생했습니다.');
+            }); */
+        }
+          </script>
+               
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>등급</span>
+              <span id="grades" class="add-value">
+                <span th:if="${memberVO.grade == 0}" th:text="'관리자'"></span>
+                <span th:if="${memberVO.grade == 1}" th:text="'일반회원'"></span>
+                <span th:if="${memberVO.grade == 2}" th:text="'블랙리스트'"></span>
+                <span th:if="${memberVO.grade == 3}" th:text="'탈퇴회원'"></span>
+              </span>
+          </div>
+
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>포인트</span>
+              <span class="add-value" th:text="|${memberVO.point} P|"></span>
+          </div> 
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>생년월일</span>
+              <span class="add-value" th:text="${memberVO.birth}"></span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+              <span>성별</span>
+              <span th:text="${memberVO.sex}">남자</span>
+          </div>
+
+      </section>
+      
+  </div>
+
+</div>
+
+</html>

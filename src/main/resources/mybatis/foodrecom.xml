@@ -58,7 +58,7 @@
                     UPPER(frecom) LIKE '%' || UPPER(#{word}) || '%'
                 </if>
             </where>
-            ORDER BY foodrecomno ASC
+            ORDER BY foodrecomno DESC
         )
     )
     WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}

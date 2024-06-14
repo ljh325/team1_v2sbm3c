@@ -21,10 +21,8 @@
 <script>
 $(document).ready(function(){
     $("#dictionaryBtn").click(function(){
-        $("#communityMenuBar").addClass("hidden");
         $("#mainMenuBar").removeClass("hidden");
         $("#foodMenuBar").addClass("hidden");
-        $("#analysisMenuBar").addClass("hidden");
 
         // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
         setTimeout(function(){
@@ -33,10 +31,8 @@ $(document).ready(function(){
     });
     
     $("#foodBtn").click(function(){
-        $("#communityMenuBar").addClass("hidden");
-        $("#mainMenuBar").addClass("hidden");
         $("#foodMenuBar").removeClass("hidden");
-        $("#analysisMenuBar").addClass("hidden");
+        $("#mainMenuBar").addClass("hidden");
 
         // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
         setTimeout(function(){
@@ -48,23 +44,10 @@ $(document).ready(function(){
         $("#communityMenuBar").removeClass("hidden");
         $("#mainMenuBar").addClass("hidden");
         $("#foodMenuBar").addClass("hidden");
-        $("#analysisMenuBar").addClass("hidden");
 
         // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
         setTimeout(function(){
             $("#communityMenuBar").addClass("hidden");
-        }, 4000); // 10000 밀리초 = 4초
-    });
-    
-    $("#analysisBtn").click(function(){
-        $("#communityMenuBar").addClass("hidden");
-        $("#mainMenuBar").addClass("hidden");
-        $("#foodMenuBar").addClass("hidden");
-        $("#analysisMenuBar").removeClass("hidden");
-
-        // 10초 후에 hidden 클래스를 다시 추가하여 메뉴 바를 숨김
-        setTimeout(function(){
-            $("#analysisMenuBar").addClass("hidden");
         }, 4000); // 10000 밀리초 = 4초
     });
     
@@ -112,7 +95,7 @@ $(document).ready(function(){
               <img src="/home/eat.png" class="icon">
               <span>추천</span>
             </a>
-            <a id="analysisBtn" aria-label="분석">
+            <a href="/analysis" aria-label="분석">
               <img src="/home/chart.png" class="icon">
               <span>분석</span>
             </a>
@@ -183,28 +166,14 @@ $(document).ready(function(){
         <div class="community_menu">
             <div class="main_navigation">
                 <a href="/contents/list_cate?cateno=1&word=&now_page=1" aria-label="메뉴">
-                    <span>자유게시판</span>
+                    <span>테스트</span>
                 </a>
                 <a href="/adcontents/list_cate?cateno=10&word=&now_page=1" aria-label="메뉴">
-                    <span>공지사항</span>
+                    <span>관리자테스트</span>
                 </a>
             </div>
         </div>
     </div>
-    
-    <!-- 분석 메뉴 -->
-    <div id="analysisMenuBar" class="container_main hidden">
-        <div class="analysis_menu">
-            <div class="main_navigation">
-                <a href="/exdata/" aria-label="메뉴">
-                    <span>운동 데이터 분석</span>
-                </a>
-                
-            </div>
-        </div>
-    </div>
-    
-    
 </body>
 </html>
 

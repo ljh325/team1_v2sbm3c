@@ -47,9 +47,15 @@ public class MhProc implements MhProcInter {
     int cnt = this.mhDAO.delete(mhno);
     return cnt;
   }
+  
+
 
  
-
+  @Override
+  public MhVO read_n() {
+    MhVO mhVO = this.mhDAO.read_n();
+    return mhVO;
+  }
 
     
 

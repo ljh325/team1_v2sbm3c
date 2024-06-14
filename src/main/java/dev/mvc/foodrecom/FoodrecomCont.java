@@ -72,16 +72,32 @@ public class FoodrecomCont {
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
+    
+    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+    model.addAttribute("list", list);
+    
+
+    int search_count = this.foodrecomProc.list_search_count(word);
+    String paging = this.foodrecomProc.pagingBox(now_page, 
+        word, "list_all", search_count, this.record_per_page, this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
+    
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    
     FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
 
     model.addAttribute("foodrecomVO", foodrecomVO);
     String frecom = foodrecomVO.getFrecom();
  
-    System.out.println(frecom);
+
     model.addAttribute("frecom", frecom);
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
-    model.addAttribute("list", list);
-    
+//    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
+//    model.addAttribute("list", list);
+//    
     
     return "foodrecom/read";
     }
@@ -104,16 +120,39 @@ public class FoodrecomCont {
    * @return
    */
   // create 폼 출력
-  @GetMapping(value="/create") // http://localhost:9091/foodrecom/create
-  public String create(HttpSession session,Model model) {
+  @GetMapping(value="/create/{goalsno}/{mhno}") // http://localhost:9091/foodrecom/create
+  public String create(HttpSession session,Model model,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @PathVariable(name="goalsno") int goalsno,
+      @PathVariable(name="mhno") int mhno,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    model.addAttribute("goalsno", goalsno);
+    model.addAttribute("mhno", mhno);
+    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+    model.addAttribute("list", list);
+    
+
+    int search_count = this.foodrecomProc.list_search_count(word);
+    String paging = this.foodrecomProc.pagingBox(now_page, 
+        word, "list_all", search_count, this.record_per_page, this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
+    
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+
     
    
   if (this.memberProc.isMember(session)) {
   int memberno = (int)session.getAttribute("memberno");
+  
+  
   FoodrecomVO foodrecomVO = new FoodrecomVO();
   model.addAttribute("foodrecomVO", foodrecomVO);
-  ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
-  model.addAttribute("list", list);
+
+
 
   return "/foodrecom/create"; // /foodrecom/list_all.html
   }else {
@@ -194,8 +233,7 @@ public class FoodrecomCont {
    
     ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
     model.addAttribute("list", list);
-    
-    
+   
     int search_count = this.foodrecomProc.list_search_count(word);
     String paging = this.foodrecomProc.pagingBox(now_page, 
         word, "list_all", search_count, this.record_per_page, this.page_per_block);
@@ -205,6 +243,7 @@ public class FoodrecomCont {
     
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
+    
     return "/foodrecom/list_all"; // /foodrecom/list_all.html
     }else
     {
@@ -214,18 +253,31 @@ public class FoodrecomCont {
   
   @GetMapping(value="/delete")
   public String delete(HttpSession session,Model model, 
-                             
-                               @RequestParam("foodrecomno") int foodrecomno) {
+      @RequestParam("foodrecomno") int foodrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     if (this.memberProc.isMember(session)) {
 
-    
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
-    model.addAttribute("list", list);
-    FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
-//  foodrecomVO.setMemberno(memberno);  
-  model.addAttribute("foodrecomVO", foodrecomVO);
+      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+   
+      
+
+      int search_count = this.foodrecomProc.list_search_count(word);
+      String paging = this.foodrecomProc.pagingBox(now_page, 
+          word, "list_all", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("word", word);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
+
+      model.addAttribute("foodrecomVO", foodrecomVO);
+      String frecom = foodrecomVO.getFrecom();
     
  
     }
@@ -240,17 +292,33 @@ public class FoodrecomCont {
    
   
   @PostMapping(value="/delete")
-  public String delete_process(HttpSession session,Model model, 
-                             
-                               @RequestParam("foodrecomno") int foodrecomno) {
+  public String delete_process(HttpSession session,Model model,@RequestParam("foodrecomno") int foodrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page
+                              ) {
     
     if (this.memberProc.isMember(session)) {
+      
+      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+   
+      
 
-    
-    
+      int search_count = this.foodrecomProc.list_search_count(word);
+      String paging = this.foodrecomProc.pagingBox(now_page, 
+          word, "list_all", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("word", word);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
 
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(foodrecomno);
-    model.addAttribute("list", list);
+      model.addAttribute("foodrecomVO", foodrecomVO);
+      String frecom = foodrecomVO.getFrecom();
+  
     
     
     int cnt = this.foodrecomProc.delete(foodrecomno);

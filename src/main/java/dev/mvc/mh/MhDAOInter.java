@@ -43,6 +43,7 @@ public interface MhDAOInter {
    */
   public int delete(int mhno);
 
+
   /**
    * 관리자용 검색 목록
    * select id="list_search" resultType="dev.mvc.mh.MhVO" parameterType="String"
@@ -66,6 +67,7 @@ public interface MhDAOInter {
    */
   public int list_search_count(String word);
   
+  public MhVO read_n();
 }
 
 

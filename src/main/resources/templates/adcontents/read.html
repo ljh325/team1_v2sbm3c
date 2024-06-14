@@ -1,6 +1,64 @@
 <!DOCTYPE html> 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <style>
+    .title_line_text {
+      font-size: 14px;
+    }
+    ul {
+      padding-left: 0;
+      list-style-type: none;
+    }
+
+    li {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    span,div {
+      font-size: 14px;
+    }
+
+    .table-striped img {
+      width: 60px;
+      height: 45px;
+    }
+
+    .table-striped .td_left {
+      font-size: 14px;
+    }
+
+    .table-striped th,
+    .table-striped td {
+      padding: 5px;
+    }
+
+    .table-striped th {
+      font-size: 14px;
+    }
+
+    .table-striped .td_basic {
+      vertical-align: top;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
   <script>
     
     function checkID() {
@@ -76,19 +134,34 @@
     <ul>
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
-          
-          <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
-          <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-        </div>
-             
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${adcontentsVO.title}"></span>
-          <span style="font-size: 1em;" th:text="${adcontentsVO.rdate}"></span><br><br>         
+          <span style="font-size: 1em; float:right; margin-top:7px;" th:text="${adcontentsVO.rdate}"></span><br>
+      
+            <img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
+
+
+
+
+            <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
+              th:text="${adcontentsVO.id}"></span>
+
+          <span style="color:darkgray">&nbsp;조회수&nbsp;</span><span th:text="${adcontentsVO.viewcnt}"></span>
+          <span style="color:darkgray">&nbsp;추천수&nbsp;</span><span th:text="${adcontentsVO.recom}"></span>
+          
+          <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
+          
+        </div>
+        <div style="width: 100%; word-break: break-all;">
+          <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
+          <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}" style="width: 100%; height: auto; display: block; margin-top: 0.5%; margin-bottom: 1%;">
+        </div>
+
           <div style="white-space: pre-wrap;"><span th:text="${adcontentsVO.content}"></span></div>
         </div>
       </li>     
       
       <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;" th:if="${adcontentsVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${adcontentsVO.youtube}">
+        <div style='text-align: center; width:640px; margin: 0px auto;' class ="video-container" th:utext="${adcontentsVO.youtube}">
         </div>
 
       </li>
@@ -103,7 +176,8 @@
         </span>
       </li>
       
-      <li class="li_none" style="clear: both;" th:text="|태그(키워드): ${adcontentsVO.tag}|">
+      <li class="li_none" style="clear: both;">
+        <span style="color:dimgray" th:text="|태그(키워드): ${adcontentsVO.tag}|"></span>
       </li>
       
       <li class="li_none" th:if="${adcontentsVO.size1 > 0}">
@@ -113,14 +187,12 @@
                               th:text="|${adcontentsVO.file1}|"></a> <span th:text="|(${adcontentsVO.size1_label})|"></span>  
         </div>
       </li>   
+      <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
     </ul>
   </fieldset>
-  <div class='title_line'>
-    
-  </div>
+  
   <!--<div th:replace="~{comments/comm::comments_fragment}"></div>-->
   </div>
-</div>
 
 </body>
  

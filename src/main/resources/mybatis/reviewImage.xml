@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 주찬 xml   -->
+<!--
+    IMAGENO                           NUMBER(10)     NOT NULL PRIMARY KEY,
+    PROFILE                           VARCHAR2(100)    NULL ,
+    PROFILESAVED                      VARCHAR2(100)    NULL ,
+    THUMBS                            VARCHAR2(100)    NULL ,
+    SIZES                             NUMBER(10)     NULL ,
+    REVIEWNO                          NUMBER(10)     NOT NULL,
+-->
+<mapper namespace="dev.mvc.reviewImage.ReviewImageDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+
+  
+  <!-- 이미지 파일 추가  -->
+  <insert id="insert_image" parameterType="dev.mvc.reviewImage.ReviewImageVO">
+    INSERT INTO reviewImage(imageno, profile, profilesaved, thumbs, sizes, reviewno)
+    VALUES (reviewImage_seq.nextval, #{profile}, #{profilesaved}, #{thumbs}, #{sizes}, #{reviewno}
+  </insert>
+
+
+  
+  <!-- 이미지파일 전체 조회 -->
+  <select id="list_image" resultType="dev.mvc.reviewImage.ReviewImageVO">
+    SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno
+    FROM member
+  </select>
+  
+  <!-- 리뷰별 이미지파일 조회 -->
+  <select id="read_image" resultType="dev.mvc.reviewImage.ReviewImageVO" parameterType="int">
+    SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno
+    FROM member
+    WHERE reviewno = #{reviewno}
+  </select>    
+
+  
+  <!-- 이미지 파일 수정 -->
+  <update id="update_image" parameterType="dev.mvc.reviewImage.ReviewImageVO">
+    UPDATE reviewImage
+    SET profile=#{profile}, profilesaved=#{profilesaved}, thumbs=#{thumbs}, sizes=#{sizes}
+    WHERE reviewno = #{reviewno}
+  </update>  
+  
+
+  <!-- 이미지 파일 삭제 -->
+  <update id="delete_image" parameterType="int">
+    DELETE from reviewImage
+    where reviewno = #{reviewno}
+  </update>
+
+
+
+  
+</mapper>
+

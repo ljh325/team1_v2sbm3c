@@ -8,13 +8,7 @@
   </div>
   
   <aside class="aside_right">
-    <a href="/foodrecom/list_all">목록</a>
-    <span class="menu_devide">│</span>
-    <a th:href="@{|/foodrecom/update?foodrecomno=${foodrecomVO.foodrecomno}|}">수정</a>
-    <span class="menu_devide">│</span>
-    <a href="/foodrecom/create">등록</a>
-    <span class="menu_devide">│</span>
-    <a href="javascript: location.reload();">새로 고침</a>
+    
   </aside>
   <div class="menu_line"></div>
   
@@ -35,12 +29,13 @@
         <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
         <button type="button" th:attr="onclick=|location.href='/foodrecom/list_all'|" class="btn btn-secondary btn-sm">취소</button>
       </div>
+   
     </form>  
  
   </div>  
 
-  <!-- /templates/foodrecom/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{foodrecom/list_all_component::list_all_fragment}"></div>
+
+     <div th:replace="~{foodrecom/list_all_component::list_all_fragment}"></div>
     
 </div>
 </html>

@@ -18,12 +18,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.keyword.KeywordDAOInter;
 import dev.mvc.keyword.KeywordProc;
 import dev.mvc.keyword.KeywordVO;
+import dev.mvc.member.Member;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
+import dev.mvc.reviewImage.ReviewImage;
+import dev.mvc.reviewImage.ReviewImageProc;
+import dev.mvc.reviewImage.ReviewImageVO;
+import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -42,6 +50,10 @@ public class ReviewCont {
   @Autowired
   @Qualifier("dev.mvc.keyword.KeywordProc") 
   private KeywordProc keywordProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.reviewImage.ReviewImageProc") 
+  private ReviewImageProc reviewImageProc;
   /***************************************************************************************/  
   /**
    * 리뷰 등록 폼
@@ -74,7 +86,11 @@ public class ReviewCont {
    * @return
    */
   @PostMapping(value="/review_insert")
-  public String review_insert(HttpSession session, Model model, ReviewVO reviewVO) {
+  public String review_insert(HttpSession session, 
+                                    Model model, 
+                                    ReviewVO reviewVO, 
+                                    ReviewImageVO reviewImageVO, 
+                                    RedirectAttributes ra) {
     int memberno = (int) session.getAttribute("memberno"); 
     reviewVO.setMemberno(memberno);
     System.out.println("starstarstarstar---->" + reviewVO.getStar());
@@ -83,6 +99,59 @@ public class ReviewCont {
     
     model.addAttribute(reviewVO.getReviewno());
     System.out.println("reviewVO.getReviewno() -> " + reviewVO.getReviewno());
+    
+    
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 시작
+    // ------------------------------------------------------------------------------
+    String profile = "";          // 원본 파일명 image
+    String profilesaved = "";   // 저장된 파일명, image
+    String thumbs = "";     // preview image
+
+    String upDir =  ReviewImage.getUploadDir(); // 파일을 업로드할 폴더 준비
+    System.out.println("-> upDir: " + upDir);
+    
+    // 전송 파일이 없어도 files1MF 객체가 생성됨.
+    // <input type='file' class="form-control" name='files1MF' id='files1MF' 
+    //           value='' placeholder="파일 선택">
+    MultipartFile mf = reviewImageVO.getFiles1MF();
+    
+    profile = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+    System.out.println("-> 원본 파일명 산출 file1: " + profile);
+    
+    long sizes = mf.getSize();  // 파일 크기
+    if (sizes > 0) { // 파일 크기 체크, 파일을 올리는 경우
+      if (Tool.checkUploadFile(profile) == true) { // 업로드 가능한 파일인지 검사
+        // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+        profilesaved = Upload.saveFileSpring(mf, upDir); 
+        
+        if (Tool.isImage(profilesaved)) { // 이미지인지 검사
+          // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+          thumbs = Tool.preview(upDir, profilesaved, 200, 150); 
+        }
+
+        reviewImageVO.setProfile(profile);   // 순수 원본 파일명
+        reviewImageVO.setProfilesaved(profilesaved); // 저장된 파일명(파일명 중복 처리)
+        reviewImageVO.setThumbs(thumbs);      // 원본이미지 축소판
+        reviewImageVO.setSizes(sizes);  // 파일 크기
+
+      } else { // 전송 못하는 파일 형식
+        ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+        ra.addFlashAttribute("cnt", 0); // 업로드 실패
+        ra.addFlashAttribute("url", "/member/msg"); // msg.html, redirect parameter 적용
+         // Post -> Get - param...
+      }
+    } else { // 글만 등록하는 경우
+      System.out.println("-> 글만 등록");
+    }
+    
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 종료
+    // ------------------------------------------------------------------------------
+    
+    
+    
+    
     
 
     return "redirect:/review/review_list_form"; // /templates/index.html 일단 메인화면

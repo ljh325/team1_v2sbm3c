@@ -32,8 +32,7 @@ public class ReviewVO {
   private int memberno;
   /** 회원 아이디 */
   private String id;
-  /** 음식카테고리번호 */
-  //private int foodcateno;
+
 
   
   

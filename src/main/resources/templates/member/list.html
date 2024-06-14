@@ -3,72 +3,148 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
-  <div class='title_line'>회원(관리자 전용)</div>
+  <script>
+    window.onload = () => {
+      let buttons = document.querySelectorAll('#manager_btn');
+    
+      buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          let tr = this.closest('tr'); // 자기 자신이 속한 부모 태그
+          let memberno = tr.querySelector('#memberno').value; // 부모에 속한 자식 찾기
+          window.location.href = "/member/admin_read_form?memberno=" + memberno;
+  
+        // 추가적인 로직을 여기에 작성하세요.
+        });
+      });
+    }
+  </script>
+  <div class='title_line' style="color: white; border-color: white;">회원목록(관리자 전용)
+    
+    <!-- 검색창 -->  
+    <div style="text-align: right; clear: both;">
+      <form name="frm_search" method="get" action="/member/list"> 
+        <input type="text" name="word" id="word"  th:value="${word}" style="width:150px;" >
+        <button type='submit' class='btn btn-secondary btn-sm' 
+                     style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
+        <span th:if="${word != null and word != ''}">
+          <button type='button' class='btn btn-secondary btn-sm' 
+                       style="padding: 2px 8px 3px 8px; margin: 0px 0px 0px 0px;"
+                       th:onclick="|location.href='/member/list'|">검색 취소</button>
+        </span>
+      </form>
+    </div>  
+  </div>
+  
+ 
 
-  <aside class="aside_right">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./list'>목록</a>
+<style>
+ body{
+   background-color: black;
+ }
+
+</style>
+  <aside class="aside_right"  style="display: flex;">
+    <!-- 셀렉트 바 -->
+    
+    <select id="select_bar"style="width: 80px; margin-left: 10px; margin: 3px;" onchange="grades()">
+      <option selected>회원 등급</option>
+      <option value="grade__1">일반 회원</option>
+      <option value="grade__2">블랙리스트 회원</option>
+      <option value="grade__3">탈퇴 회원</option>
+    </select>
+    <script>
+      // select에서 선택될때마다 실시간으로 값을 바꿔서 서버로 보내는 함수
+      function grades() {
+        var select = document.getElementById("select_bar");
+        var selectValue = select.options[select.selectedIndex].value;
+        if(select){
+          window.location.href = "/member/list?word=" + selectValue;
+        }
+      }
+    </script>
+    <!-- 셀렉트 바 -->
+    <span class='menu_divide' style="color: white;" >│</span>
+    <a href="/member/list" style="color: white; margin-top: 5px;">새로고침</a>
+    <span class='menu_divide' style="color: white;" >│</span> 
   </aside> 
    
-  <div class='menu_line'></div>
+  <div class='menu_line' style="border-color: white;"></div>
        
   <table class="table table-striped" style='width: 100%;'>
-    <colgroup>
-      <col style='width: 5%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 30%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-    </colgroup>
+
     <tr>
-      <yH class='th_bs'> </th>
-      <th class='th_bs'>ID</th>
-      <th class='th_bs'>성명</th>
-      <th class='th_bs'>닉네임</th>
-      <th class='th_bs'>전화번호</th>
-      <th class='th_bs'>주소</th>
-      <th class='th_bs'>등록일</th>
-      <th class='th_bs'>생년월일</th>
-      <th class='th_bs'>성별</th>
-      <th class='th_bs'>회원등급</th>
-      <th class='th_bs'> </th>
+      <th class='th_bs' style="font-size: 14px;">ICON </th>
+      <th class='th_bs' style="font-size: 14px;">ID</th>
+      <th class='th_bs' style="font-size: 14px;">성명</th>
+      <th class='th_bs' style="font-size: 14px;">회원등급</th>
+      <th class='th_bs' style="font-size: 14px;">회원관리</th>
     </tr>
    
     <tr th:each="memberVO, status:${list}">
       <td class='td_basic'>
         <div>
-          <div th:if="${memberVO.grade == 0}"><img src='/member/images/admin.png' title="관리자" class="icon"></div>
-          <div th:if="${memberVO.grade >= 11 and memberVO.grade <= 20}"><img src='/member/images/user.png' title="회원" class="icon"></div>
-          <div th:if="${memberVO.grade >= 30 and memberVO.grade <= 39}"><img src='/member/images/pause.png' title="정지 회원" class="icon"></div>
-          <div th:if="${memberVO.grade >= 40 and memberVO.grade <= 49}"><img src='/member/images/x.png' title="탈퇴 회원" class="icon"></div>
+          <div th:if="${memberVO.grade == 0}"><img src='/member/images/admin.png' title="관리자" class="icon" style="font-size: 12px;"></div>
+          <div th:if="${memberVO.grade == 1}"><img src='/member/images/user.png' title="회원" class="icon" style="font-size: 12px;"></div>
+          <div th:if="${memberVO.grade == 2}"><img src='/member/images/pause.png' title="정지 회원" class="icon" style="font-size: 12px;"></div>
+          <div th:if="${memberVO.grade == 3}"><img src='/member/images/x.png' title="탈퇴 회원" class="icon" style="font-size: 12px;"></div>
         </div>
       </td>
-      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.id}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.mname}"></a></td>
-      <td class='td_basic' th:text="${memberVO.tel}"></td>
+       
       <td class='td_left'>
-        <span th:if="${memberVO.address1.length() > 15 }" th:text="|${memberVO.address1.substring(0, 15) }...|"></span>
-        <span th:unless="${memberVO.address1.length() > 15 }" th:text="${memberVO.address1}"></span>
+        <a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.id}" style="font-size: 14px;"></a>
+        <input id="memberno" type="hidden" th:value="${memberVO.memberno}">
       </td>
-      <td class='td_basic' th:text="${memberVO.mdate.substring(0, 10)}"></td>
+      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}|}" th:text="${memberVO.mname}" style="font-size: 14px;"></a></td>
+      <td class='td_basic' th:switch="${memberVO.grade}" style="font-size: 14px; padding-top: 15px;">
+        <span th:case="0">관리자</span>
+        <span th:case="1">일반회원</span>
+        <span th:case="2">블랙리스트</span>
+        <span th:case="3">탈퇴 회원</span>
+      </td>
       <td class='td_basic'>
-        <a th:href="@{|./read?memberno=${memberVO.memberno}|}"><img src='/member/images/update.png' title='수정' class="icon"></a>
-        <a th:href="@{|./delete?memberno=${memberVO.memberno}|}"><img src='/member/images/delete.png' title='삭제' class="icon"></a>
+        <!--<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"  style="font-size: 14px; width: 60px; height: 25px; padding:3px;">회원 관리</button>-->
+        <button id="manager_btn" class="btn btn-dark" style="font-size: 14px; width: 60px; height: 25px; padding:3px;">회원 관리</button>
       </td>
       
     </tr>
+    <tr th:if="${list.size() == 0}">
+      <td colspan="5" style="text-align: center;">회원 목록이 등록되지 않았습니다.</td>
+    </tr> 
   </table>
-   
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}" style="color: white;"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+
+  <!-- 회원 관리 모달창 -->
+  <!--
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">회원 관리</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Recipient:</label>
+              <input type="text" class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Message:</label>
+              <textarea class="form-control" id="message-text"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id = "manager_btn" class="btn btn-primary">Send message</button>
+        </div>
+      </div>
+    </div>
   </div>
+  -->
 
 </div>
 </html>

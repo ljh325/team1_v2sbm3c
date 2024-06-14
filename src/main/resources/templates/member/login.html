@@ -156,6 +156,7 @@
       });
     }
 
+<<<<<<< HEAD
     function send() { // 회원 가입 처리
       let id = document.getElementById('id');
       let id_msg = document.getElementById('id_msg');
@@ -165,6 +166,29 @@
         id_msg.classList.add('span_warning');    // class 적용
         id.focus();
         return false;  // 로그인 진행 중지
+=======
+        fetch('/member/logins', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, passwd })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.cnt === 1) {
+            // 로그인 성공
+            showModal("로그인 성공!");
+          } else {
+            // 로그인 실패 메시지 표시
+            showModal("로그인 실패! 아이디와 패스워드를 확인해주세요.");
+          }
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+          showModal("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        });
+>>>>>>> d65f157ade62dea996a24d2def99a279bfdacf35
       }
 
       let passwd = document.getElementById('passwd');
