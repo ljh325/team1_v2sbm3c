@@ -20,20 +20,25 @@
   
   
  <div class="menu_line"></div>
-  <h4>가장 최근 건강 정보</h4>
+   
+   <div th:if="${mhVO != null}">
+  <div style ="text-align: center"> 최근 건강정보</div>
   <div class="container mt-3" style="width: 50%; margin: 5px auto;">
     <ul class="list-group list-group-flush">
       <li class="list-group-item">번호: <span th:text="${mhVO.mhno}"></span></li>
-      <li class="list-group-item">체중: <span th:text="${mhVO.kg}"></span></li>
-      <li class="list-group-item">체지방:<span th:text="${mhVO.ckg}"></span></li>
+      <li class="list-group-item">체중: <span th:text="${mhVO.kg}">kg</span></li>
+      <li class="list-group-item">키:<span th:text="${mhVO.cm}">cm</span></li>
+      <li class="list-group-item">골격근량:<span th:text="${mhVO.muscle}">kg</span></li>
       <li class="list-group-item">입력 날짜: <span th:text="${mhVO.insertdate}"></span></li>
     
     </ul>  
     <a th:href="@{|/mh/choose?mhno=${mhVO.mhno}|}">선택하기 </a>
   </div>
-
+   </div>
   
-    
+    <div th:unless="${mhVO != null}">
+    <h3>저장된 정보가 없습니다 </h3>
+  </div>
   <!-- /mh/list_all_component.html 파일의 list_all_fragment import -->
   <div th:replace="~{mh/list_all_component::list_all_fragment}"></div>
   

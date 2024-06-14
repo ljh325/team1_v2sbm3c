@@ -112,9 +112,9 @@
           <img src="/goals/images/delete.png" class="icon" th:onclick="'javascript:deleteGoals(' + ${goalsVO.goalsno} + ')'">
         </td>
         <td class="td_basic">
-         <a th:href="@{http://localhost:5000/healthrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">운동</a>
+         <a th:href="@{http://192.168.12.147:5000/healthrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">운동</a>
          |
-         <a th:href="@{http://localhost:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">식단</a>
+         <a th:href="@{http://192.168.12.147:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">식단</a>
          
         </td>
       </tr>

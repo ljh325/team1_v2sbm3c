@@ -285,6 +285,39 @@ def populate_prompt(prompt, member_info, goal_info):
 def foodrecom_create_form(goalsno, mhno):
     return render_template('foodrecom/create.html', goalsno=goalsno, mhno=mhno)
 
+@app.route('/healthrecom/create/<int:goalsno>/<int:mhno>')
+def healthrecom_create_form(goalsno, mhno):
+    return render_template('healthrecom/create.html', goalsno=goalsno, mhno=mhno)
+
+@app.route('/healthrecom/create', methods=['POST'])
+def healthrecom_create_proc():
+    
+    goalsno = request.form.get('goalsno')
+    mhno = request.form.get('mhno')
+    #데이터 베이스에 연결
+    conn = cx.connect("team1", "69017000", "3.39.75.85:1521/xe")
+    cursor = conn.cursor()
+
+    
+    select_mh = '''
+    SELECT kg,ckg,cm,muscle from mh
+    where mhno = :mhno
+    '''
+    
+    cursor.execute(select_mh, {'mhno': mhno})
+    mh = cursor.fetchall()
+    
+    select_goals = '''
+    SELECT kg,ckg,cm,muscle from goals
+    where goalsno = :goalsno
+    '''
+    cursor.execute(select_goals, {'goalsno': goalsno})
+    goals = cursor.fetchall()
+   
+    filled_prompt = populate_prompt(prompt, mh[0], goals[0])
+    print(filled_prompt)
+    
+
 @app.route('/foodrecom/create', methods=['POST'])
 def foodrecom_create_proc():
 

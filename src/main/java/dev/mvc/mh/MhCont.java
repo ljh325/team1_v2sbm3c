@@ -302,6 +302,8 @@ public class MhCont {
     int memberno = (int)session.getAttribute("memberno");  
     MhVO mhVO = this.mhProc.read(mhno);
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
+    GoalsVO goalsVO = this.goalsProc.read_n(memberno);
+    model.addAttribute("goalsVO", goalsVO);
     mhVO.setMemberno(memberno);  
     model.addAttribute("mhVO", mhVO);
 

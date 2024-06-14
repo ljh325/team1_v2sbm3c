@@ -48,8 +48,11 @@ public class GoalsProc implements GoalsProcInter {
     return cnt;
   }
 
- 
-
+  @Override
+  public GoalsVO read_n(int memberno) {
+    GoalsVO goalsVO = this.goalsDAO.read_n(memberno);
+    return goalsVO;
+    }
 
     
 

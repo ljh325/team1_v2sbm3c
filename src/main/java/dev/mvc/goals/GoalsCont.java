@@ -191,6 +191,8 @@ public class GoalsCont {
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
     model.addAttribute("list", list);
+    GoalsVO goalsVO = this.goalsProc.read_n(memberno);
+    model.addAttribute("goalsVO", goalsVO);
     return "/goals/list_all"; // /goals/list_all.html
     }else
     {
