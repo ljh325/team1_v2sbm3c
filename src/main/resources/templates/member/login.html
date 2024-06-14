@@ -122,7 +122,7 @@
         id = id.value;
         passwd = passwd.value;
 
-        fetch('http://localhost:9093/member/logins', {
+        fetch('/member/logins', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
