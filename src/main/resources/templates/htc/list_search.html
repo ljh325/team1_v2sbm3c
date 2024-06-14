@@ -94,37 +94,33 @@
 
   <!-- 등록 시작-->
   <div class="form-wrapper" id="insertDropdown">
-    <form name="frm" th:object="${htcVO}" method="post" action="/htc/create" class="small-form">
-      <!--대분류-->
-      <div class="form-group">
-        <input type="text" name="name" value="" th:field="*{namesub}" placeholder="메인 테이블 입력." class="form-control small">
-        <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert">
-          <div th:each="err : ${#lists.sort(#fields.errors('namesub'))}" th:text="${err}"></div>
-        </div>
+    <form name="frm" th:object="${htcVO}" method="post" action="/htc/create">
+      <div  class="form-group">
+        <input type="text" name="name" value="" autofocus="autofocus"
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{name}" placeholder="중분류">
+        <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('name'))}" th:text="${err}"></div>
+        </div>  
       </div>
-      <!--중분류-->
-      <div class="form-group">
-        <input type="text" name="name" value="" th:field="*{namesub}" placeholder="테이블 입력." class="form-control small">
-        <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert">
+      <div  class="form-group">
+        <input type="text" name="namesub" value="" 
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{namesub}" placeholder="소분류, '-' 중분류로 등록">
+        <div th:if="${#fields.hasErrors('namesub')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err : ${#lists.sort(#fields.errors('namesub'))}" th:text="${err}"></div>
-        </div>
+        </div>             
       </div>
-      <!--출력 순서 입력-->
       <div class="form-group">
-        <input type="text" name="seqno" value="" class="form-control fom-control-sm" th:field="*{seqno}" required="required" placeholder="순서">
-        <div th:if="${#fields.hasErrors('seqno')}" class="alert alert-danger" role="alert">
+        <input type="text" name="seqno" value="" 
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{seqno}" placeholder="출력순서">
+        <div th:if="${#fields.hasErrors('seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err : ${#lists.sort(#fields.errors('seqno'))}" th:text="${err}"></div>
-        </div>
+        </div>             
       </div>
-
       <div class="login_btn">
-        <!--등록-->
         <button type="submit" class="registration-button">등록</button>
-          
-        <!--취소-->
-        <button type="button" class="registration-button" onclick="location.href='/htc/list_search'">취소</button>
+        <button type="button" onclick="location.href='/htc/list_search'" class="registration-button">취소</button>
       </div>
-    </form>
+    </form> 
   </div>
   
   <div class="title_line"></div>
