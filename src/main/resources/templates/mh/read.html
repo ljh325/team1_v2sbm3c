@@ -31,7 +31,11 @@
       <li class="list-group-item">입력 날짜: <span th:text="${mhVO.insertdate}"></span></li>
  
     </ul>  
+ 
+          <a th:href="@{|/mh/choose?mhno=${mhVO.mhno}|}">선택</a>
+
   </div>
+  
 
   <!-- /templates/mh/list_all_component.html 파일의 list_all_fragment import -->
   <div th:replace="~{mh/list_all_component::list_all_fragment}"></div>

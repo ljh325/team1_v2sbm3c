@@ -100,7 +100,7 @@
           meal.items.forEach(item => {
             const mealItem = document.createElement('p');
             mealItem.classList.add('meal-item');
-            if (item.food.toLowerCase().includes(word)) {
+            if (item.food.toLowerCase().includes(word) && word != "") {
                                 mealItem.classList.add('highlight'); // highlight 클래스 추가
                             }
             mealItem.textContent = `${item.food} (${item.amount_g}g)`;

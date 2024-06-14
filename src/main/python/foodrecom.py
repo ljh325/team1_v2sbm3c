@@ -23,6 +23,159 @@ import tool # tool.py
 app = Flask(__name__)  # __name__ == '__main__'
 CORS(app)
 
+prompt2 = '''
+    아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [운동 목록]에서 운동 목표를 달성하기 위해 필요한 3일의 운동 스케줄을 적절한 운동 시간을 포함해서 출력해줘
+    출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘
+
+    [회원 건강정보]
+    체중: kg
+    체지방: %
+    신장: cm
+    골격근량: kg
+    
+
+    [운동 목표]
+    체중: kg
+    체지방: %
+    신장: cm
+    골격근량: kg
+    
+    
+
+    [운동 목록]
+    벤치 프레스
+    덤벨 플라이
+    푸시업
+    숄더 프레스
+    레터럴 레이즈
+    프론트 레이즈
+    덤벨 컬
+    해머 컬
+    트라이셉스 딥스
+    트라이셉스 익스텐션
+    랫 풀다운
+    바벨 로우
+    시티드 로우
+    풀업
+    페이스 풀
+    벤트오버 덤벨 로우
+    디클라인 벤치 프레스
+    인클라인 벤치 프레스
+    스쿼트
+    레그 프레스
+    런지
+    레그 컬
+    레그 익스텐션
+    카프 레이즈
+    데드리프트
+    굿모닝
+    바이시클 크런치
+    플랭크
+    행잉 레그 레이즈
+    시티드 크런치
+    
+ 
+  
+    
+    [출력 형식1]
+    {
+    "res": [
+        {
+            "day": 1,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                     {"health": 운동명, "time_h": 시간(분) },
+                    {"health": 운동명, "time_h": 시간(분) },
+                    {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 3,
+            "meals": [
+                {
+                    "meal": "breakfast",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "lunch",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                },
+                {
+                    "meal": "dinner",
+                    "items": [
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) },
+                        {"health": 운동명, "time_h": 시간(분) }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+    [출력 형식2]
+    {
+    "res": 추천 운동 목록
+    }
+
+    '''
 prompt = '''
     아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [식단 목록]에서 운동 목표를 달성하기 위해 필요한 하루의 식단을 식단의 섭취량(g)을 포함해서 출력해줘 식품 코드 또한 출력
     출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘
@@ -314,8 +467,36 @@ def healthrecom_create_proc():
     cursor.execute(select_goals, {'goalsno': goalsno})
     goals = cursor.fetchall()
    
-    filled_prompt = populate_prompt(prompt, mh[0], goals[0])
+    filled_prompt = populate_prompt(prompt2, mh[0], goals[0])
     print(filled_prompt)
+    response = tool.answer(role='헬스트레이너야', prompt=filled_prompt, output='json', 
+                        format='{"health": "값"}', llm='gpt-4o') 
+    
+    
+    
+    hrecom = str(response)
+   
+    
+    insert_query = """
+    INSERT INTO HEALTHRECOM (HEALTHRECOMNO, HRECOM, GOALSNO, MHNO, RDATE)
+    VALUES (FOODRECOM_SEQ.nextval, :hrecom, :goalsno, :mhno, sysdate)
+    """
+
+    # 바인드 변수 사용하여 JSON 문자열 삽입
+    cursor.execute(insert_query, {'hrecom': hrecom,'goalsno' : goalsno,'mhno' : mhno})
+
+    # 커밋
+    conn.commit()
+
+    print("JSON 문자열이 데이터베이스에 저장되었습니다.")
+
+    # 연결 종료
+    cursor.close()
+    conn.close()
+    return response
+    
+    
+    
     
 
 @app.route('/foodrecom/create', methods=['POST'])
