@@ -65,7 +65,13 @@ public interface GoalsDAOInter {
    * @return
    */
   public int list_search_count(String word);
-  
+  /**
+   * 최근 값 조회
+   * select id="read" resultType="dev.mvc.goals.GoalsVO" parameterType="int"
+   * @param goalsno
+   * @return
+   */
+  public GoalsVO read_n(int memberno);
 }
 
 

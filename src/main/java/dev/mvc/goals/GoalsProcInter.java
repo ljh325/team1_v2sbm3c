@@ -27,6 +27,8 @@ public interface GoalsProcInter {
    */
   public GoalsVO read(int mhno);
   
+  
+  public GoalsVO read_n(int memberno);
   /**
    * 수정
    * update id="update" parameterType="dev.goalsc.mh.GoalsVO"    
@@ -83,6 +85,8 @@ public interface GoalsProcInter {
    */ 
   public String pagingBox(int now_page, String word, String list_file, int search_count, 
                                       int record_per_page, int page_per_block);   
+  
+  
   
 }
 

@@ -17,6 +17,18 @@
     WHERE goalsno = #{goalsno}
   </select>
   
+<select id="read_n" resultType="dev.mvc.goals.GoalsVO" parameterType="int">
+    <![CDATA[
+    SELECT goalsno, kg, ckg, cm, muscle, memberno, gdate
+    FROM (
+        SELECT goalsno, kg, ckg, cm, muscle, memberno, gdate
+        FROM goals
+        WHERE memberno = #{memberno}  -- memberno 파라미터와 일치하는 값
+        ORDER BY gdate DESC
+    )
+    WHERE ROWNUM <= 1
+    ]]>
+</select>
   <!-- 운동 목표 수정 -->
   <update id = 'update' parameterType="dev.mvc.goals.GoalsVO">
     UPDATE goals

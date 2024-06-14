@@ -9,17 +9,33 @@
   </div>
   
   <aside class="aside_right">
-    <a href="/mh/create">등록</a>
+    <a href="/goals/create">등록</a>
+     <span class="menu_devide">│</span>
+     <a href="/mh/list_all">새로운 추천</a>
     
-    <span class="menu_devide">│</span>
-    <a href="javascript: location.reload();">새로 고침</a>
+
   </aside>
-  
-
-  <div style="width: 100%; margin: 0px auto;">
-
+  <div th:if="${goalsVO != null}">
+  <div style ="text-align: center"> 최근 목표</div>
+  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
+      <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
+      <li class="list-group-item">키:<span th:text="${goalsVO.cm}"></span></li>
+       <li class="list-group-item">골격근량:<span th:text="${goalsVO.cm}"></span></li>
+      <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
+    
+    </ul>  
+    <a th:href="@{http://localhost:5000/healthrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">운동 추천</a>
+         |
+         <a th:href="@{http://localhost:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}">식단 추천</a>
+         
   </div>
   
+  </div>
+  <div th:unless="${goalsVO != null}">
+   <h3>저장된 목표가 없습니다 </h3>
+  </div>
   <div th:replace="~{/mh/goals_list::list_all_fragment}"></div>
 
 </div>

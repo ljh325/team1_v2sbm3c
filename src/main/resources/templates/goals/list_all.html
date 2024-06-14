@@ -98,15 +98,30 @@ document.addEventListener("DOMContentLoaded", function() {
    
   </aside>
 
-
-  <div style="width: 100%">
-
-  </div>
+<div th:if="${goalsVO != null}">
+  <div style ="text-align: center"> 최근 목표</div>
+  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
+      <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
+      <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
+      <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
     
+    </ul>  
+    
+  </div>
+
+  
   <!-- /mh/list_all_component.html 파일의 list_all_fragment import -->
   <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
   
 </div>
+<div th:unless="${goalsVO != null}">
+  
+    <h3>저장된 목표가 없습니다 </h3>
+      <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
+  </div>
+
 </html>
 
 
