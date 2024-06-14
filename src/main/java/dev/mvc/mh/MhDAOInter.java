@@ -67,7 +67,7 @@ public interface MhDAOInter {
    */
   public int list_search_count(String word);
   
-  public MhVO read_n();
+  public MhVO read_n(int memberno);
 }
 
 

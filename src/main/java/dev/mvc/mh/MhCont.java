@@ -274,13 +274,13 @@ public class MhCont {
     */
   
   @GetMapping(value="/list_all")
-  public String list_all(HttpSession session,Model model,
-      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+  public String list_all(HttpSession session,Model model
+      ) {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
     model.addAttribute("list", list);
-    MhVO mhVO = this.mhProc.read_n();
+    MhVO mhVO = this.mhProc.read_n(memberno);
     model.addAttribute("mhVO",mhVO );
     return "/mh/list_all"; // /mh/list_all.html
     }else
@@ -446,8 +446,10 @@ public class MhCont {
 //   
 ////    this.healthrecomProc.delete(mhno);
 ////    this.mhProc.delete(mhno);
-//    this.mhProc.delete_h(mhno); //자식 테이블에 있는 값을 삭제하기 위한코드1
+//    this.mhProc.delete_h(mhno); //
+   
     int cnt = this.mhProc.delete(mhno); //부모 테이블에 
+    
   
     if (cnt == 1) {
       

@@ -327,8 +327,8 @@ public class GoalsCont {
     model.addAttribute("list", list);
     
    
-    this.healthrecomProc.delete_g(goalsno);
-    this.foodrecomProc.delete_g(goalsno); 
+//    this.healthrecomProc.delete_g(goalsno);
+//    this.foodrecomProc.delete_g(goalsno); 
     int cnt = this.goalsProc.delete(goalsno);
     
    

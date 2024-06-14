@@ -52,8 +52,8 @@ public class MhProc implements MhProcInter {
 
  
   @Override
-  public MhVO read_n() {
-    MhVO mhVO = this.mhDAO.read_n();
+  public MhVO read_n(int memberno) {
+    MhVO mhVO = this.mhDAO.read_n(memberno);
     return mhVO;
   }
 
