@@ -108,7 +108,7 @@
     </style>
 
     <form name='frm' method='post' action='/review/review_insert' th:action="@{/review/review_insert}"
-      onsubmit='return validateForm()'>
+      enctype="multipart/form-data" onsubmit='return validateForm()'>
 
 
 
@@ -124,13 +124,17 @@
           <input type="radio" id="star2" name="star" value="2"><label for="star2">★</label>
           <input type="radio" id="star1" name="star" value="1"><label for="star1">★</label>
         </div>
-
+        <div class="form-group">
+          <div class="col-md-12">
+            <input type='file' class="form-control" name='files1MF' value='' placeholder="파일 선택" multiple="multiple">
+          </div>
+        </div>
         <textarea id="comments" name="contents" class="comments-input" rows="4"
           placeholder="여기에 리뷰를 입력하세요..."></textarea>
         <button id="button_tag" type="submit" class="submit-button">리뷰 작성</button>
       </div>
     </form>
-
+    
     <!-- 모달창 -->
     <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
       aria-hidden="true">
@@ -174,7 +178,7 @@
           showModal("리뷰를 남겨주세요."); // 경고 모달창 표시
           return false; // 폼 제출 중단
         }else{
-
+        //var formData = new FormData(document.forms['frm']);
         
         fetch("http://127.0.0.1:5000/emotion", {
           method: "post",

@@ -54,6 +54,12 @@ public class ReviewProc implements ReviewProcInter {
     int cnt = this.reviewDAO.review_cnt();
     return cnt;
   }
+  
+  @Override
+  public int reviewno_max() {
+    int cnt = this.reviewDAO.reviewno_max();
+    return cnt;
+  }
 
   @Override
   public int review_update(ReviewVO reviewVO) {
@@ -108,5 +114,7 @@ public class ReviewProc implements ReviewProcInter {
     int cnt = this.reviewDAO.star_cnt(star);
     return cnt;
   }
+
+
 
 }

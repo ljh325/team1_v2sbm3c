@@ -58,6 +58,12 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
     FROM review
   </select>
   
+  <!-- 전체 리뷰 수 -->
+  <select id="reviewno_max" resultType="int">
+    SELECT MAX(reviewno) as cnt
+    FROM review
+  </select>
+  
   <!-- 회원 리뷰 조회 -->
   <select id="review_read" resultType="dev.mvc.review.ReviewVO" parameterType="map">
     SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno

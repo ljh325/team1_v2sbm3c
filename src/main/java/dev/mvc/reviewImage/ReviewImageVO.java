@@ -1,5 +1,7 @@
 package dev.mvc.reviewImage;
 
+import java.util.ArrayList;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -23,7 +25,7 @@ public class ReviewImageVO {
   <input type='file' class="form-control" name='file1MF' id='file1MF' 
              value='' placeholder="파일 선택">
   */
-  private MultipartFile files1MF;
+  private ArrayList<MultipartFile> files1MF;
 
   
   /** 메인 이미지 크기 단위, 파일 크기 */

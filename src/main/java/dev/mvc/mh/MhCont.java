@@ -76,7 +76,7 @@ public class MhCont {
    * @param 조회할 mhno
    * @return
    */
-  @PostMapping(value = "/read")
+  @GetMapping(value = "/read")
   public String read(HttpSession session,Model model,@RequestParam("mhno") int mhno ) {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");  
