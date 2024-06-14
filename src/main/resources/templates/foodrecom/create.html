@@ -1,53 +1,144 @@
+
+
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  
+
+  
+  
 <head>
-    <title>운동 추천</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>목표를 위한 3일간의 식단 추천</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="title_line">운동 추천</div>
-    <form id="healthForm" method="post">
-        <!-- 폼 입력 필드들 (예시로 텍스트 필드 추가) -->
-        <input type="text" id="healthInput" name="healthInput" placeholder="운동 이름" required />
-        <div class="content_body_bottom">
-            <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-            <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
-        </div>
+  <div style="margin: 10px auto; width: 90%;">
+    <h3>목표를 위한 3일간의 식단 추천</h3>
+     <div class="calendar" id="calendar" th:data-frecom=""></div>
+    <form id="recomForm" action="/foodrecom/create" method="POST">
+      <input type="hidden" id="goalsno" name="goalsno" th:value="${goalsno}">
+      <input type="hidden" id="mhno" name="mhno" th:value="${mhno}">
+      <button type="button" id="register" class="btn btn-primary btn-sm">생성</button>
+      <button type="button" id="list" onclick="window.location.href='http://localhost:9093/foodrecom/list_all'" class="btn btn-primary btn-sm">목록</button>
     </form>
+    <div id="result_animation" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;">
+      <img id="progress" src="/images/progress.gif" style="width: 50px; height: 50px;" alt="progress">
+    </div>
+    <textarea id="result" style="margin-top: 10px; width: 100%; height: 300px; display: none;"></textarea>
+  </div>
+    <style>
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .day {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .meal {
+      margin-bottom: 10px;
+    }
+    .meal h3 {
+      margin: 0 0 5px 0;
+      display: flex;
+      align-items: center;
+    }
+    .meal-item {
+      margin: 0 0 5px 0;
+    }
+    .meal img {
+      margin-left: 10px;
+      width: 30px;
+      height: 30px;
+    }
+  </style>
 
-    <!-- /goals/list_all_component.html 파일의 list_all_fragment import -->
-    <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
-</div>
+  <script>
+    
+    
+    
+    window.onload = () => {
+      const registerButton = document.getElementById('register');
+      const resultAnimationTag = document.getElementById('result_animation');
+      const resultTag = document.getElementById('calendar');
 
-<script>
-$(document).ready(function() {
-    $('#healthForm').on('submit', function(e) {
-        e.preventDefault(); // 폼의 기본 제출 동작 방지
+      registerButton.addEventListener("click", function() {
+        // 결과 표시 영역 초기화
+        resultTag.style.display = 'none';
 
-        let mh_kg = document.getElementById('mh_kg');
-        let mh_ckg = document.getElementById('mh_ckg');
-        let mh_cm = document.getElementById('mh_cm');
-        let mh_muscle = document.getElementById('mh_muscle');
-      
+        // 진행 중 애니메이션을 표시합니다.
+        resultAnimationTag.style.display = 'block';
 
-        var healthInput = $('#healthInput').val(); // 폼 데이터 가져오기
+        // 폼 데이터를 가져옵니다.
+        const formData = new FormData(document.getElementById('recomForm'));
 
-        // Flask 서버에 AJAX 요청 보내기
+        // 데이터를 POST 요청으로 서버에 보냅니다.
         $.ajax({
-            url: 'http://localhost:5000/foodrecom/create', // Flask 서버 URL
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ input: healthInput }),
-            success: function(response) {
-                alert('Flask 서버 응답: ' + response.response);
-            },
-            error: function(error) {
-                alert('Flask 서버 호출 중 오류 발생');
-            }
+          //url: "http://localhost:5000/foodrecom/create", cors정책에 맞지 않음
+          url: "/foodrecom/create",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function(data) {
+            // 결과 데이터를 표시합니다.
+            
+            data.res.forEach(dayData => {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+            dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+            dayData.meals.forEach(meal => {
+            const mealDiv = document.createElement('div');
+            mealDiv.classList.add('meal');
+          
+          // Add image if the first item exists
+            if (meal.items.length > 0) {
+              const firstItem = meal.items[0];
+              const mealTitle = document.createElement('h3');
+              mealTitle.textContent = meal.meal;
+              const mealImage = document.createElement('img'); //${firstItem.code}
+              mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+              mealImage.alt = firstItem.food;
+              
+              mealImage.onerror = function() { //이미지가 없으면 표시하지 않게하는 코드
+                  this.style.display = 'none';
+              };
+            
+            mealTitle.appendChild(mealImage);
+            mealDiv.appendChild(mealTitle);
+          } else {
+            mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+          }
+
+          meal.items.forEach(item => {
+            const mealItem = document.createElement('p');
+            mealItem.classList.add('meal-item');
+            mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+            mealDiv.appendChild(mealItem);
+          });
+          dayDiv.appendChild(mealDiv);
         });
-    });
-});
-</script>
+        calendarDiv.appendChild(dayDiv);
+      });
+            
+            
+           
+            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨깁니다.
+            resultTag.style.display = 'block'; // 결과를 표시합니다.
+          },
+          error: function(error) {
+            console.error('Error:', error);
+            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨깁니다.
+          }
+        });
+      });
+    }
+  </script>
 </body>
+ <div th:replace="~{foodrecom/list_all_component::list_all_fragment}"></div>
+</div>
 </html>

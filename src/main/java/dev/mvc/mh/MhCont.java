@@ -280,6 +280,8 @@ public class MhCont {
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
     model.addAttribute("list", list);
+    MhVO mhVO = this.mhProc.read_n();
+    model.addAttribute("mhVO",mhVO );
     return "/mh/list_all"; // /mh/list_all.html
     }else
     {
@@ -428,20 +430,23 @@ public class MhCont {
   public String delete_process(HttpSession session,Model model, 
                              
                                @RequestParam("mhno") int mhno) {
-    
+
     if (this.memberProc.isMember(session)) {
 
-    
-    
+
+      
     int memberno = (int)session.getAttribute("memberno");
     ArrayList<MhVO> list = this.mhProc.list_all(memberno);
     model.addAttribute("list", list);
-    
-//    this.healthrecomProc.delete(mhno);
-//    this.mhProc.delete(mhno);
-    this.healthrecomProc.delete_m(mhno);
-    this.foodrecomProc.delete_m(mhno); 
-    int cnt = this.mhProc.delete(mhno);
+//
+//    this.mhProc.delete_f(mhno); //자식 테이블에 있는 값을 삭제하기 위한코드2
+//
+//   
+////    this.healthrecomProc.delete(mhno);
+////    this.mhProc.delete(mhno);
+//    this.mhProc.delete_h(mhno); //자식 테이블에 있는 값을 삭제하기 위한코드1
+    int cnt = this.mhProc.delete(mhno); //부모 테이블에 
+  
     if (cnt == 1) {
       
       return "redirect:/mh/list_all";
@@ -452,7 +457,7 @@ public class MhCont {
        }
     }
     else {
-      return "list_all";
+      return "redirect:/mh/list_all";
     }
 
   

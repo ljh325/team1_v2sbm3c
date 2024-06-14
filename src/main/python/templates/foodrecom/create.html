@@ -3,33 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>운동 목표 설정 및 식단 추천</title>
+  <title>목표를 위한 3일간의 식단 추천</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 90%;
+      margin: 10px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #result_animation {
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    #progress {
+      width: 50px;
+      height: 50px;
+    }
+
+    #calendar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      justify-items: center; /* 그리드 내에서 가운데 정렬 */
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .day {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center; /* 가운데 정렬 */
+      width: 90%;
+    }
+
+    .meal {
+      margin-bottom: 10px;
+    }
+
+    .meal h3 {
+      margin-bottom: 5px;
+      text-align: center; /* 가운데 정렬 */
+    }
+
+    .meal-item {
+      margin-bottom: 3px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px;
+      font-size: 16px;
+      text-align: center;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
-  <div style="margin: 10px auto; width: 90%;">
-    <h3>운동 목표 설정 및 식단 추천</h3>
+  <div class="container">
+    <h3>목표를 위한 3일간의 식단 추천</h3>
     <form id="recomForm" action="/foodrecom/create" method="POST">
       <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
       <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
-      <button type="button" id="register" class="btn btn-primary btn-sm">등록</button>
-      <button type="button" id="list" onclick="window.location.href='http://localhost:9093/foodrecom/list_all'" class="btn btn-primary btn-sm">목록</button>
+      <button type="button" id="register" class="btn">생성</button>
+      <button type="button" id="list" onclick="window.location.href='http://localhost:9093/foodrecom/list_all'" class="btn">목록</button>
     </form>
-    <div id="result_animation" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;">
-      <img id="progress" src="/static/images/progress.gif" style="width: 50px; height: 50px;" alt="progress">
+    <div id="result_animation">
+      <img id="progress" src="/static/images/progress.gif" alt="progress">
     </div>
-    <textarea id="result" style="margin-top: 10px; width: 100%; height: 300px; display: none;"></textarea>
+    
+    <div id="calendar"></div>
   </div>
 
   <script>
-    window.onload = () => {
+    $(document).ready(() => {
       const registerButton = document.getElementById('register');
       const resultAnimationTag = document.getElementById('result_animation');
-      const resultTag = document.getElementById('result');
+      const calendarDiv = document.getElementById('calendar');
 
       registerButton.addEventListener("click", function() {
         // 결과 표시 영역 초기화
-        resultTag.style.display = 'none';
+        calendarDiv.innerHTML = '';
 
         // 진행 중 애니메이션을 표시합니다.
         resultAnimationTag.style.display = 'block';
@@ -45,18 +131,53 @@
           contentType: false,
           processData: false,
           success: function(data) {
-            // 결과 데이터를 표시합니다.
-            resultTag.value = JSON.stringify(data, null, 2); // JSON 데이터를 보기 좋게 출력
-            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨깁니다.
-            resultTag.style.display = 'block'; // 결과를 표시합니다.
+            const mealData2 = JSON.parse(data);
+            mealData2.res.forEach(dayData => {
+              const dayDiv = document.createElement('div');
+              dayDiv.classList.add('day');
+              dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+              dayData.meals.forEach(meal => {
+                const mealDiv = document.createElement('div');
+                mealDiv.classList.add('meal');
+                
+                // Add image if the first item exists
+                if (meal.items.length > 0) {
+                  const firstItem = meal.items[0];
+                  const mealTitle = document.createElement('h3');
+                  mealTitle.textContent = meal.meal;
+                  const mealImage = document.createElement('img');
+                  mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+                  mealImage.alt = firstItem.food;
+                  
+                  mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
+                      this.style.display = 'none';
+                  };
+                  
+                  mealTitle.appendChild(mealImage);
+                  mealDiv.appendChild(mealTitle);
+                } else {
+                  mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+                }
+
+                meal.items.forEach(item => {
+                  const mealItem = document.createElement('p');
+                  mealItem.classList.add('meal-item');
+                  mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                  mealDiv.appendChild(mealItem);
+                });
+                dayDiv.appendChild(mealDiv);
+              });
+              calendarDiv.appendChild(dayDiv);
+            });
+            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
           },
           error: function(error) {
             console.error('Error:', error);
-            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨깁니다.
+            resultAnimationTag.style.display = 'none';
           }
         });
       });
-    }
+    });
   </script>
 </body>
 </html>

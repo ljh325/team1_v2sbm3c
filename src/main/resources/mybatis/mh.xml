@@ -17,6 +17,22 @@
     WHERE mhno=#{mhno}
   </delete>
   
+
+ 
+
+<select id="read_n" resultType="dev.mvc.mh.MhVO" parameterType="int">
+    <![CDATA[
+    SELECT mhno, kg, ckg, cm, muscle, memberno, insertdate
+    FROM (
+        SELECT mhno, kg, ckg, cm, muscle, memberno, insertdate
+        FROM mh
+        ORDER BY insertdate DESC
+    )
+    WHERE ROWNUM <= 1
+    ]]>
+</select>
+
+
    <select id="list_all" resultType="dev.mvc.mh.MhVO" parameterType="int">
     SELECT mhno, kg, ckg, cm, muscle, memberno,insertdate
     FROM mh
