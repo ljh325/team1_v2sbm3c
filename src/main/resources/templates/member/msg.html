@@ -1,16 +1,63 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+
+
+    .fieldset_basic {
+      background-color: #ffffff;
+      border: 3px solid #dee2e6; /* Increased border size */
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+
+    }
+
+
+
+    .span_success {
+      color: #28a745;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .span_fail {
+      color: #dc3545;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .login_btn {
+      margin-top: 5px;
+      justify-content: center;
+      display: flex;
+      gap: 10px; /* 버튼 간격 추가 */
+    }
+
+
+
+
+    ul {
+      padding-left: 0;
+    }
+
+    ul ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
 <div layout:fragment="content">
   <div class="title_line">회원 가입 > 알림</div>
-    <aside class="aside_right">
-      <a href='/'>홈</a>
-      <span class='menu_divide' >│</span> 
-      <a href='./login'>로그인</a>
-      <span class='menu_divide' >│</span> 
-      <a href="./create">회원가입</a>
-    </aside> 
-  <div class="message">
+  
     <fieldset class="fieldset_basic">
       <ul>
         <li th:switch="${code}" class="li_none">
@@ -59,6 +106,11 @@
             <span class="span_fail">패스워드 변경을 실패했습니다.</span><br>
           </div>
           
+           <div th:case="grade_change_cnt">
+              <span class="span_success">회원 등급 수정에 성공했습니다.</span><br>
+              수정된 회원 정보: <span th:text="${memberno}"></span>
+            </div>
+          
           <div th:case="'find_id_success'">
             <span class="span_success">현재 고객님의 아이디입니다.</span><br><br>
             <ul>
@@ -83,21 +135,27 @@
 
         </li>
         
-        <li class="li_none">
+        <li class="login_btn">
           <div th:if="${log == 1}">
-            <br><button type="button" onclick="location.href='/member/login'" class="btn btn-secondary btn-sm">로그인</button>
+            <br><button type="button" onclick="location.href='/member/login'" class="registration-button">로그인</button>
           </div>
+          
+          <div th:if="${log == 1}">
+            <br><button type="button" onclick="location.href='/member/create'" class="registration-button">회원가입</button>
+          </div>
+          
           <div th:if="${cnt == 0}">
-            <button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>
+            <button type="button" onclick="history.back()" class="registration-button">다시 시도</button>
           </div>
           <div th:if="${cnt == 1}">
-            <button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">닫기</button>
+            <button type="button" onclick="location.href='/'" class="registration-button">닫기</button>
           </div>
         </li>
       </ul>
     </fieldset>
-  </div>
+
 </div>
+</body>
 </html>
 
 

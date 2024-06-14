@@ -72,6 +72,7 @@ public class HealthCont {
   // http://localhost:9091/health/create?htcno=5
   @GetMapping(value = "/create")
   public String create(Model model, HealthVO healthVO, int htcno) {
+    
     ArrayList<HtcVOMenu> menu = this.htcProc.menu();
     model.addAttribute("menu", menu);
 
