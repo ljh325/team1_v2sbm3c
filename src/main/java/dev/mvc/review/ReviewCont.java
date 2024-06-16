@@ -400,12 +400,80 @@ public class ReviewCont {
    * @return
    */
   @PostMapping(value="/review_update_proc")
-  public String review_update_proc(Model model, ReviewVO reviewVO) {
+  public String review_update_proc(Model model, 
+                                   ReviewVO reviewVO,
+                                   ReviewImageVO reviewImageVO, 
+                                   RedirectAttributes ra) {
     
     //highlightKeywords("contents", reviewVO.getContents());
     int cnt = this.reviewProc.review_update(reviewVO);
     model.addAttribute("cnt", cnt);
 
+    System.out.println("reviewno" + reviewVO.getReviewno());
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 시작
+    // ------------------------------------------------------------------------------
+    String profile = "";          // 원본 파일명 image
+    String profilesaved = "";   // 저장된 파일명, image
+    String thumbs = "";     // preview image
+
+    String upDir =  ReviewImage.getUploadDir(); // 파일을 업로드할 폴더 준비
+    System.out.println("-> upDir: " + upDir);
+    
+    // 전송 파일이 없어도 files1MF 객체가 생성됨.
+    // <input type='file' class="form-control" name='files1MF' id='files1MF' 
+    //           value='' placeholder="파일 선택">
+    ArrayList<MultipartFile> mf = reviewImageVO.getFiles1MF();
+    
+    int count = mf.size(); // 전송 파일 갯수
+    
+    if(count > 0) {
+      for (MultipartFile multipartFile:mf) { // 파일 추출, 1개이상 파일 처리
+        profile = multipartFile.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+        System.out.println("-> 원본 파일명 산출 file1: " + profile);
+        long sizes = multipartFile.getSize(); // 파일 크기
+        if (sizes > 0) { // 파일 크기 체크, 파일을 올리는 경우
+          if (Tool.checkUploadFile(profile) == true) { // 업로드 가능한 파일인지 검사
+            // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+            profilesaved = Upload.saveFileSpring(multipartFile, upDir); 
+            
+            if (Tool.isImage(profilesaved)) { // 이미지인지 검사
+              // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+              thumbs = Tool.preview(upDir, profilesaved, 200, 150); 
+            }
+
+            reviewImageVO.setProfile(profile);   // 순수 원본 파일명
+            reviewImageVO.setProfilesaved(profilesaved); // 저장된 파일명(파일명 중복 처리)
+            reviewImageVO.setThumbs(thumbs);      // 원본이미지 축소판
+            reviewImageVO.setSizes(sizes);  // 파일 크기
+            
+            
+            int reviewno = reviewVO.getReviewno();
+            System.out.println("reviewno" + reviewno);
+            reviewImageVO.setReviewno(reviewno);
+            this.reviewImageProc.delete_image(reviewno);
+            int image_cnt = this.reviewImageProc.insert_image(reviewImageVO);
+            model.addAttribute("image_cnt", image_cnt);
+            if (image_cnt == 1) { // 성공: 1 했을 경우
+              System.out.println("이미지 등록 성공");
+            } else { // 실패: 0 
+              System.out.println("이미지 등록 실패");
+            }
+          }else { // 전송 못하는 파일 형식
+            ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+            ra.addFlashAttribute("cnt", 0); // 업로드 실패
+            ra.addFlashAttribute("url", "/member/msg"); // msg.html, redirect parameter 적용
+             // Post -> Get - param...
+          }
+        } else { // 글만 등록하는 경우
+          System.out.println("-> 글만 등록");
+        }
+      }
+    }
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 종료
+    // ------------------------------------------------------------------------------
+  
     return "redirect:/review/review_list_form"; // http://localhost:9093/review/review_list_form
   }
  /***************************************************************************************/
@@ -443,6 +511,7 @@ public class ReviewCont {
 
     try {
         int reviewno = Integer.parseInt(reviewnoStr);
+        this.reviewImageProc.delete_image(reviewno); // 자식삭제
         this.keywordProc.keyword_delete(reviewno); // 자식 삭제
         int cnt = this.reviewProc.review_delete(reviewno); // 부모 삭제
         

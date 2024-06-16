@@ -55,6 +55,9 @@ def receive_comments():
         WHERE reviewno = (SELECT MAX(reviewno) FROM review)
     '''
 
+    sql3 = '''
+    SELECT * FROM EXDATA
+    '''
     sql2 = '''
         INSERT INTO keyword(keywordno, keywordname, word, reviewno)
         VALUES(keyword_seq.nextval, :keywordname , :word,  (SELECT MAX(reviewno) FROM review))

@@ -145,7 +145,7 @@
       
       // 서버에서 리뷰 목록을 가져와서 표시하는 함수
       function loadReviews(sort) {
-        let url = 'http://localhost:9093/review/review_list_all?sort=' + sort;
+        let url = '/review/review_list_all?sort=' + sort;
         fetch(url, {
           method: 'GET',
           headers: {

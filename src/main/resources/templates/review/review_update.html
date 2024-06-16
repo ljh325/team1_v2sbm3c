@@ -107,7 +107,8 @@
       }
     </style>
 
-    <form name='frm' method='post' action='/review/review_update_proc' onsubmit="return validateForm()">
+    <form name='frm' method='post' action='/review/review_update_proc' 
+     enctype="multipart/form-data">
       <div class="comment-section">
           <h4>리뷰 수정</h4> <span th:text="|${memberVO.mname}  님|"></span>
           <input type="hidden" id="reviewno" name="reviewno" th:value="${reviewVO.reviewno }">
@@ -120,6 +121,11 @@
             <input type="radio" id="star1" name="star" value="1"><label for="star1">★</label>
           </div>
   
+          <div class="form-group">
+            <div class="col-md-12">
+              <input type='file' class="form-control" name='files1MF' value='' placeholder="파일 선택" multiple="multiple">
+            </div>
+          </div>
           <textarea id="comments" name="contents" class="comments-input" rows="4"
             placeholder="여기에 리뷰를 입력하세요..." th:text="${reviewVO.contents}"></textarea>
           <button type="submit" class="submit-button">리뷰 작성</button>
@@ -149,59 +155,65 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('form[name="frm"]').addEventListener('submit', function (event) {
+          event.preventDefault(); // 폼 제출 기본 동작 중단
+          validateForm();
+        });
 
-      // 폼 유효성 검사 함수
-      function validateForm() {
-        var rating = document.querySelector('input[name="star"]:checked'); // 선택된 별점 가져오기
-        var comments = document.getElementById("comments").value.trim(); // 입력된 리뷰 내용 가져오기
-        var reviewno = document.getElementById("reviewno").value;
-        if (!rating) { // 별점이 선택되지 않은 경우
-          showModal("별점을 넣어주세요."); // 경고 모달창 표시
-          return false; // 폼 제출 중단
+        // 폼 유효성 검사 함수
+        function validateForm() {
+          var rating = document.querySelector('input[name="star"]:checked'); // 선택된 별점 가져오기
+          var comments = document.getElementById("comments").value.trim(); // 입력된 리뷰 내용 가져오기
+          var reviewno = document.getElementById("reviewno").value;
+          if (!rating) { // 별점이 선택되지 않은 경우
+            showModal("별점을 넣어주세요."); // 경고 모달창 표시
+            return false; // 폼 제출 중단
+          }
+
+          if (comments === "") { // 리뷰 내용이 입력되지 않은 경우
+            showModal("리뷰를 남겨주세요."); // 경고 모달창 표시
+            return false; // 폼 제출 중단
+          }
+
+          //  6월6일
+          document.forms['frm'].submit(); // 폼 제출
+
+          showModal("등록이 완료되었습니다.");
+
+          fetch("http://127.0.0.1:5000/update_emotion", {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({comments, reviewno})
+          })
+            .then(response => response.json())
+            .then(data => {
+              alert(2)
+              let res = data['res']; // flask에서  1이면 긍정 0이면 부정의 값을 받아 res에 저장
+              let word = data['word']; // 긍부정 단어 
+              let keywordname = data['keywordname']; // 핵심 키워드       
+            })
+            .catch(error => {
+              // 에러 발생 시 경고 모달창 표시
+              showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+              console.error("Error:", error);
+            });
+
+
+          return true; // 폼 제출 허용
         }
 
-        if (comments === "") { // 리뷰 내용이 입력되지 않은 경우
-          showModal("리뷰를 남겨주세요."); // 경고 모달창 표시
-          return false; // 폼 제출 중단
+        // 경고 모달창 표시 함수
+        function showModal(message) {
+          document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
+          $('#warningModal').modal('show'); // 모달창 표시
         }
 
-        //  6월6일
-        document.forms['frm'].submit(); // 폼 제출
-        
-        showModal("등록이 완료되었습니다.");
-          
-        fetch("http://127.0.0.1:5000/update_emotion", {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ comments, reviewno })
-        })
-        .then(response => response.json())
-        .then(data => {
-        alert(2)
-        let res = data['res']; // flask에서  1이면 긍정 0이면 부정의 값을 받아 res에 저장
-        let word = data['word']; // 긍부정 단어 
-        let keywordname= data['keywordname']; // 핵심 키워드       
-        })
-        .catch(error => {
-        // 에러 발생 시 경고 모달창 표시
-        showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
-        console.error("Error:", error);
+        // 리뷰 작성 폼으로 포커스 이동 함수
+        function focusForm() {
+          document.getElementById("comments").focus(); // 리뷰 작성 폼으로 포커스 이동
+        }
       });
-      
-      
-        return true; // 폼 제출 허용
-      }
-
-      // 경고 모달창 표시 함수
-      function showModal(message) {
-        document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
-        $('#warningModal').modal('show'); // 모달창 표시
-      }
-
-      // 리뷰 작성 폼으로 포커스 이동 함수
-      function focusForm() {
-        document.getElementById("comments").focus(); // 리뷰 작성 폼으로 포커스 이동
-      }
 
     </script>
     <!-- /cate/list_all_component.html 파일의 list_all_fragment import -->

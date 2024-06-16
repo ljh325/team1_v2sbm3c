@@ -1,5 +1,5 @@
 /**********************************/
-/* Table Name: ¸®ºäÀÌ¹ÌÁö */
+/* Table Name: ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½ */
 /**********************************/
 
 
@@ -19,28 +19,28 @@ CREATE TABLE REVIEWIMAGE(
         FOREIGN KEY (REVIEWNO) REFERENCES REVIEW (REVIEWNO)
 );
 
-COMMENT ON TABLE REVIEWIMAGE is '¸®ºäÀÌ¹ÌÁö';
-COMMENT ON COLUMN REVIEWIMAGE.IMAGENO is 'ÀÌ¹ÌÁöÆÄÀÏ¹øÈ£';
-COMMENT ON COLUMN REVIEWIMAGE.PROFILE is '¸ŞÀÎ ÀÌ¹ÌÁö';
-COMMENT ON COLUMN REVIEWIMAGE.PROFILESAVED is '½ÇÁ¦ ÀúÀåµÈ ÀÌ¹ÌÁö';
-COMMENT ON COLUMN REVIEWIMAGE.THUMBS is '¸ŞÀÎ ÀÌ¹ÌÁö Preview';
-COMMENT ON COLUMN REVIEWIMAGE.SIZES is '¸ŞÀÎ ÀÌ¹ÌÁö Å©±â';
-COMMENT ON COLUMN REVIEWIMAGE.REVIEWNO is '¸®ºä¹øÈ£';
+COMMENT ON TABLE REVIEWIMAGE is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½';
+COMMENT ON COLUMN REVIEWIMAGE.IMAGENO is 'ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¹ï¿½È£';
+COMMENT ON COLUMN REVIEWIMAGE.PROFILE is 'ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½';
+COMMENT ON COLUMN REVIEWIMAGE.PROFILESAVED is 'ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½';
+COMMENT ON COLUMN REVIEWIMAGE.THUMBS is 'ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ Preview';
+COMMENT ON COLUMN REVIEWIMAGE.SIZES is 'ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ Å©ï¿½ï¿½';
+COMMENT ON COLUMN REVIEWIMAGE.REVIEWNO is 'ï¿½ï¿½ï¿½ï¿½ï¿½È£';
 
 
 
 DROP SEQUENCE REVIEWIMAGE_SEQ;
 
 CREATE SEQUENCE REVIEWIMAGE_SEQ
-    START WITH 1         -- ?‹œ?‘ ë²ˆí˜¸
-    INCREMENT BY 1       -- ì¦ê?ê°?
-    MAXVALUE 9999999999  -- ìµœë?ê°?: 9999999999 --> NUMBER(10) ???‘
-    CACHE 2              -- 2ë²ˆì? ë©”ëª¨ë¦¬ì—?„œë§? ê³„ì‚°
+    START WITH 1         -- ?ï¿½ï¿½?ï¿½ï¿½ ë²ˆí˜¸
+    INCREMENT BY 1       -- ì¦ï¿½?ï¿½?
+    MAXVALUE 9999999999  -- ìµœï¿½?ï¿½?: 9999999999 --> NUMBER(10) ???ï¿½ï¿½
+    CACHE 2              -- 2ë²ˆï¿½? ë©”ëª¨ë¦¬ì—?ï¿½ï¿½ï¿½? ê³„ì‚°
     NOCYCLE;  
     
     
     
--- ÀÌ¹ÌÁö »ı¼º C
+-- ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ C
 INSERT INTO reviewImage(imageno, profile, profilesaved, thumbs, sizes, reviewno)
 VALUES (reviewImage_seq.nextval, 't1.jpg', 't1.jpg', 't1_t.jpg', '3232', 2);
 
@@ -50,12 +50,17 @@ VALUES (reviewImage_seq.nextval, 't1.jpg', 't1.jpg', 't1_t.jpg', '3232', 2);
 INSERT INTO reviewImage(imageno, profile, profilesaved, thumbs, sizes, reviewno)
 VALUES (reviewImage_seq.nextval, 't1.jpg', 't1.jpg', 't1_t.jpg', '3232', 2);
 
--- Á¶È¸
+-- ï¿½ï¿½È¸
 SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno 
 FROM reviewImage
 WHERE reviewno = 2;
 
--- ÀÌ¹ÌÁö ¼öÁ¤
+-- ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 UPDATE member
 SET profile=#{profile}, profilesaved=#{profilesaved}, thumbs=#{thumbs}, sizes=#{sizes}
-WHERE memberno = #{memberno}
+WHERE memberno = #{memberno};
+
+
+SELECT imageno, profile, profilesaved, thumbs, sizes, reviewno
+FROM reviewImage
+WHERE reviewno = 51;
