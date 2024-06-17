@@ -38,7 +38,7 @@
       height: 50px;
     }
 
-    #calendar {
+    #exercise_routine {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
@@ -120,7 +120,10 @@
       </select>
       <button type="button" id="register" class="btn">생성</button>
       <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
-    </form>
+   
+   
+   
+      </form>
     <div id="result_animation">
       <img id="progress" src="/static/images/progress.gif" alt="progress">
     </div>
@@ -167,9 +170,10 @@
                 
                 const exerciseTitle = document.createElement('h3');
                 exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
-                const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=13&word=${exercise.exname}`;
-            exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
-
+                
+                //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=13&word=${exercise.exname}`;
+                //exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+                
 
                 const exerciseDetails = document.createElement('p');
                 exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
