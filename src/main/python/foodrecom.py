@@ -24,15 +24,24 @@ app = Flask(__name__)  # __name__ == '__main__'
 CORS(app)
 
 prompt3 ='''
-운동표에 있는 데이터를 바탕으로 대략적인 예상 운동시간과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시하여 일주일 간 운동 루틴을 신체 정보에 기반하여 추천해줘.
-출력 형식은 [출력 형식1]과 같은 형식으로 
-[신체정보]
-성별: 여자
-나이: 21
-체중: 58
-운동목적: 체중감량
-숙련도: 초급
+[회원 건강정보]에 해당하는 사람이 [운동 목표]의 값을 목표로 운동계획을 세우고자한다 운동 기간은 무제한으로 하나 대신 [난이도]에 있는 난이도를 고려하고 일주일간의 운동 루틴을 출력한다 루틴에는 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시한다 신체 정보에 기반하여 추천해줘.
+출력 형식은 [출력 형식1]과 같은 형식으로 운동목표의 신장이 회원 건강 정보의 신장 보다 클 경우 키성장과 키교정에 도움이 되는 운동도 고려 
 
+ [회원 건강정보]
+    체중: kg
+    체지방: %
+    신장: cm
+    골격근량: kg
+    
+
+    [운동 목표]
+    체중: kg
+    체지방: %
+    신장: cm
+    골격근량: kg
+    
+    [난이도]
+    난이도:
 
  [출력 형식1]
     {"healths": {
@@ -522,6 +531,18 @@ def populate_prompt(prompt, member_info, goal_info):
     
     return filled_prompt
 
+def level_prompt(prompt, level):
+    """
+    주어진 prompt에 level 값을 채워넣는 함수
+    :param prompt: 원본 프롬프트 문자열
+    :param level: 난이도
+    :return: 채워진 새로운 프롬프트 문자열
+    """
+    filled_prompt = prompt.replace("난이도:", f"난이도: {level}", 1)
+    return filled_prompt
+
+
+    
 # http://localhost:5000/foodrecom/create.html
 @app.route('/foodrecom/create/<int:goalsno>/<int:mhno>')
 def foodrecom_create_form(goalsno, mhno):
@@ -533,13 +554,16 @@ def healthrecom_create_form(goalsno, mhno):
 
 @app.route('/healthrecom/create', methods=['POST'])
 def healthrecom_create_proc():
-    
+    level = request.form.get('level')
     goalsno = request.form.get('goalsno')
     mhno = request.form.get('mhno')
+    
+    
+    
     #데이터 베이스에 연결
     conn = cx.connect("team1", "69017000", "3.39.75.85:1521/xe")
     cursor = conn.cursor()
-
+    
     
     select_ex = '''
     SELECT *
@@ -566,9 +590,13 @@ def healthrecom_create_proc():
     cursor.execute(select_goals, {'goalsno': goalsno})
     goals = cursor.fetchall()
     
-    filled_prompt = prompt3 + result_str
-    print(filled_prompt)
-    response = tool.answer(role='헬스트레이너야', prompt=filled_prompt, output='json', 
+    filled_prompt = populate_prompt(prompt3, mh[0], goals[0]) + result_str
+    
+    
+    final_prompt = level_prompt(filled_prompt,level) 
+    
+    print(final_prompt)
+    response = tool.answer(role='헬스트레이너야', prompt=final_prompt, output='json', 
                         format='{"health": "값"}', llm='gpt-4o') 
     
     

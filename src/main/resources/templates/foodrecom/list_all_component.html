@@ -61,7 +61,7 @@
     <thead>
       <tr>
         <th class="th_bs">번호</th>
-        <th class="th_bs">등록일</th>
+        <th class="th_bs">생성시간</th>
         <th class="th_bs">기타</th>
         
 
@@ -70,7 +70,7 @@
     <tbody>
       <tr th:each="foodrecomVO, status:${list}">
         <td class="td_basic" th:text="|${no - status.index}|"></td>
-        <td class="td_basic" th:text="${foodrecomVO.rdate.substring(5, 10)}"></td>
+        <td class="td_basic" th:text="${foodrecomVO.rdate.substring(0, 10)}"></td>
   
         <td class="td_basic">
           <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"><img src="/images/read.png" class="icon"></a>

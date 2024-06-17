@@ -21,32 +21,66 @@
 
   
   
-  <style>
-    
+<style>
+  
+
+    .container {
+      width: 90%;
+      margin: 10px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #result_animation {
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    #progress {
+      width: 50px;
+      height: 50px;
+    }
      .highlight {  
       background-color: yellow; /* 검색한 단어를 강조하기 위한 스타일 */
       font-weight: bold; /* 강조할 글자 굵기 */
     }
  
-    .calendar {
+    #calendar {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      justify-items: center; /* 그리드 내에서 가운데 정렬 */
+      margin-top: 20px;
+      width: 100%;
     }
     .day {
+      margin-bottom: 20px;
       border: 1px solid #ccc;
       padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center; /* 가운데 정렬 */
+      width: 90%;
     }
     .meal {
       margin-bottom: 10px;
     }
     .meal h3 {
-      margin: 0 0 5px 0;
-      display: flex;
-      align-items: center;
+      margin-bottom: 5px;
+      text-align: center; /* 가운데 정렬 */
     }
-    .meal-item {
-      margin: 0 0 5px 0;
+    
+   .meal-item {
+      margin-bottom: 3px;
     }
     .meal img {
       margin-left: 10px;
@@ -56,13 +90,15 @@
   </style>
 
 <div>
-  <h1>식단 추천</h1>
+  <div style="text-align: center;">
+    <h1>식단 추천</h1>
+  </div>
   <div class="calendar" id="calendar" th:data-frecom="${frecom}"></div>
  <input type="hidden" id="word" name="word" th:value="${ goalsno }">
       
-
-  <a href="/foodrecom/list_all" class="btn btn-secondary btn-sm">확인</a>
-  
+  <div style="text-align: center;">
+    <a href="/foodrecom/list_all" class="btn btn-secondary btn-sm">확인</a>
+  </div>
   <script>
     window.onload = () => {
       const calendarDiv = document.getElementById('calendar');

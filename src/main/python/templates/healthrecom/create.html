@@ -70,6 +70,18 @@
     .meal-item {
       margin-bottom: 3px;
     }
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      appearance: none; /* 기본 스타일링 제거 (크로스 브라우징) */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
 
     .btn {
       display: block;
@@ -88,15 +100,24 @@
     .btn:hover {
       background-color: #0056b3;
     }
+
+    #recomForm select {
+      margin-bottom: 10px; /* 원하는 간격 값 설정 */
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
   <div class="container">
-    <h3>목표를 위한 3일간의 운동 추천</h3>
+    <h3>목표를 위한 일주일간의 운동 추천</h3>
     <form id="recomForm" action="/healthrecom/create" method="POST">
       <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
       <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
+      <select id="level" name="level">
+        <option value="beginner">초급</option>
+        <option value="intermediate">중급</option>
+        <option value="advanced">상급</option>
+      </select>
       <button type="button" id="register" class="btn">생성</button>
       <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
     </form>
@@ -146,7 +167,10 @@
                 
                 const exerciseTitle = document.createElement('h3');
                 exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
-                
+                const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=13&word=${exercise.exname}`;
+            exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+
+
                 const exerciseDetails = document.createElement('p');
                 exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
                 
