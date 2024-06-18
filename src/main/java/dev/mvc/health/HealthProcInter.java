@@ -145,5 +145,19 @@ public interface HealthProcInter {
    */
   public int delete_by_adminsno(int adminsno);
   
+
   
+  /**
+   * 추천수 증가
+   * @param healthno
+   * @return 추천수 증가 여부
+   */
+  public int recom(int healthno);
+  
+  /**
+   * 추천수 감소
+   * @param healthno
+   * @return 추천수 감소 여부
+   */
+  public int recom_cancel(int healthno);
 }

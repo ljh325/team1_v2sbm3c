@@ -167,7 +167,19 @@
     DELETE FROM health
     WHERE adminsno=#{adminsno}
   </delete>
-            
+    <!-- 추천수 -->
+  <update id="recom" parameterType="int">
+    UPDATE health
+    SET recom = recom + 1
+    WHERE healthno = #{healthno}
+  </update>
+  
+  <!-- 추천수 감소 -->
+  <update id="recom_cancel" parameterType="int">
+    UPDATE health
+    SET recom = recom - 1
+    WHERE healthno = #{healthno}
+  </update>          
 </mapper> 
 
 
