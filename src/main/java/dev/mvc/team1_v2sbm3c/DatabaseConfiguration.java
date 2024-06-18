@@ -38,7 +38,8 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.foodcate",
                                          "dev.mvc.keyword",
                                          "dev.mvc.exdata",
-                                         "dev.mvc.reviewImage"
+                                         "dev.mvc.reviewImage",
+                                         "dev.mvc.recom"
                                          }) // 개발 package(테이블)
 public class DatabaseConfiguration {
     

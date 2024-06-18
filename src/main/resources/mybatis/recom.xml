@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.recom.RecomDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 최초 추천 시도 -->
+  <insert id="create" parameterType="dev.mvc.recom.RecomVO">
+    INSERT INTO recom (recomno, recom, contentsno, memberno)
+    VALUES (recom_seq.nextval, 1, #{contentsno}, #{memberno})
+  </insert>
+  
+  <!-- 최초 추천 시도 여부 -->
+  <select id = "recom_read" parameterType="HashMap">
+    SELECT COUNT(memberno)
+    FROM recom
+    WHERE contentsno = #{contentsno} AND memberno = #{memberno}
+  </select>
+  
+  <!-- 추천 상태 조회 -->
+  <select id ="recom_check" resultType="dev.mvc.recom.RecomVO" parameterType="HashMap">
+    SELECT recomno, contentsno, memberno, recom
+    FROM recom
+    WHERE contentsno = #{contentsno} and memberno = #{memberno}
+  </select>
+  
+  <!-- 회원이 누른 추천 게시글 조회 -->
+  <select id="member_read" resultType="dev.mvc.recom.RecomVO" parameterType="int">
+    SELECT recomno, recom, contentsno, memberno
+    FROM recom
+    WHERE memberno = #{memberno}
+    ORDER BY recomno DESC
+  </select>
+  
+  <!-- 게시글 추천 누른 회원 목록 -->
+  <select id="contents_read" resultType="dev.mvc.recom.RecomVO" parameterType="int">
+    SELECT recomno, recom, contentsno, memberno
+    FROM recom
+    WHERE contentsno = #{contentsno}
+    ORDER BY recomno DESC
+  </select>
+  
+  <!-- 추천 수 증가 -->
+  <update id="recom" parameterType="HashMap">
+    UPDATE recom
+    SET recom = 1
+    WHERE contentsno = #{contentsno} AND memberno = #{memberno}
+  </update>
+  
+  <!-- 추천 수 감소 -->
+  <update id="recom_cancel" parameterType="HashMap">
+    UPDATE recom
+    SET recom = 0
+    WHERE contentsno = #{contentsno} AND memberno = #{memberno}
+  </update>
+  
+  
+</mapper>

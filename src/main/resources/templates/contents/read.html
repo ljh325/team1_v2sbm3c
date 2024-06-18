@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<html layout:decorate="~{layout}">
 <div layout:fragment="content">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
     .title_line_text {
       font-size: 14px;
@@ -60,9 +63,63 @@
       width: 100%;
       height: 100%;
     }
+
+    .author-label {
+      background-color: #007bff;
+      /* Blue background for author label */
+      color: white;
+      /* White text color for author label */
+      padding: 3px 8px;
+      /* Padding to make the label larger */
+      padding-bottom: 1px;
+      border-radius: 15px;
+      /* Large border-radius for rounded shape */
+      font-size: 0.9em;
+      margin-left: 5px;
+      display: inline-block;
+    }
+
+    .like-button {
+      text-align: center;
+    }
+
+    .button-like {
+      background-color: transparent;
+      border: none;
+      color: black;
+      font-size: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s;
+      /* 아이콘에 적용할 transition */
+    }
+
+    .button-like:focus {
+      outline: none;
+    }
+
+    .button-like.liked #likeIcon {
+      color: #e03e4b;
+    }
+
+    #likeIcon {
+      transition: color 0.3s;
+      /* 아이콘에 직접 transition 적용 */
+    }
+
+    #likeText {
+      margin-left: 10px;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    .button-like.liked #likeText {
+      color: #e03e4b;
+    }
   </style>
   <script>
-
     function checkID() {
 
       let url = './check_login'
@@ -83,14 +140,7 @@
           console.error('Error:', error);
         });
 
-      // ---------------------------------------------------------------------------------------
-      // fetch 관련 종료
-      // ---------------------------------------------------------------------------------------
-
     }
-
-
-
 
 
 
@@ -189,6 +239,7 @@
 
       </li>
 
+      <!--
       <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
         <span th:if="${session.memberno != null}">
           <button id="recom" type="button"
@@ -200,10 +251,18 @@
           <button id="recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
         </span>
       </li>
-
+-->
       <li class="li_none" style="clear: both;">
         <span style="color:dimgray" th:text="|태그(키워드): ${contentsVO.tag}|"></span>
+
+        <div class="like-button">
+          <button id="likeButton" class="button-like">
+            <i id="likeIcon" class="far fa-heart"></i>
+            <span id="likeText">추천</span>
+          </button>
+        </div>
       </li>
+
 
 
       <li class="li_none" th:if="${contentsVO.size1 > 0}">
@@ -218,6 +277,7 @@
         <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
         <script>
           window.onload = () => {
+
             let contents_tag = document.getElementById('contents');
             let btn_create_tag = document.getElementById('btn_create');
 
@@ -257,11 +317,138 @@
 
             });
 
+//---------------------------------------------- 추천 기능 부분 -------------------------------------------------------
+            document.getElementById('likeButton').addEventListener('click', function () {
+              const button = document.getElementById('likeButton');
+              const icon = document.getElementById('likeIcon');
+
+              let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
+              //alert('Click: ' + id);
+              if (id == '') {
+                alert('로그인 후 추천 가능합니다.');
+                location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+              }
+
+                fetch("/recom/read?contentsno=[[${contentsVO.contentsno}]]", {
+                  "method": "get" // get 방식은 header 와 body 불필요
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    let row = data['res'];
+
+                    if (row == 0) {
+                      button.classList.add('liked');
+                      icon.classList.remove('far');
+                      icon.classList.add('fas');
+
+                      fetch("/recom/create", {
+                        "method": "post",
+                        "headers": {"Content-Type": "application/json"},
+                        body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"}),
+                        credentials: "include"
+                      })
+                        .then((response) => response.json())
+                        .then((data) => {
+
+                        });
+
+                    } else if (row != 0) {
+
+                      fetch("/recom/check?contentsno=[[${contentsVO.contentsno}]]", {
+                        "method": "get" // get 방식은 header 와 body 불필요
+                      })
+                        .then((response) => response.json())
+                        .then((data) => {
+
+                          let recom = data['res']['recom'];
+
+                          if (recom == 1) {
+                            button.classList.remove('liked');
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+
+                            fetch("/recom/decrease", {
+                              "method": "post",
+                              "headers": {"Content-Type": "application/json"},
+                              body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                              credentials: "include"
+                            })
+                              .then((response) => response.json())
+                              .then((data) => {
+                                let decrease_row = data['res'];
+
+
+                              });
+                          } else if (recom == 0) {
+                            button.classList.add('liked');
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+
+                            fetch("/recom/increase", {
+                              "method": "post",
+                              "headers": {"Content-Type": "application/json"},
+                              body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                              credentials: "include"
+                            })
+                              .then((response) => response.json())
+                              .then((data) => {
+
+                              });
+                          }
+
+                        });
+                    }
+
+                  });             
+
+            });
+//---------------------------------------------- 추천 기능 부분 종료 -------------------------------------------------------
+
             list_by_contentsno_join(); // 목록 출력
+            
+             let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
+              if (id != '') {  
+                recom_form();
+              }
+         
+            
 
           } //----------------------- window.onload() 종료 -----------------------------
 
+          function recom_form() { // 추천 폼
+            const button = document.getElementById('likeButton');
+            const icon = document.getElementById('likeIcon');
+            fetch("/recom/read?contentsno=[[${contentsVO.contentsno}]]", {
+              "method": "get" // get 방식은 header 와 body 불필요
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                let row = data['res'];
 
+                if (row != 0) {
+                  fetch("/recom/check?contentsno=[[${contentsVO.contentsno}]]", {
+                    "method": "get" // get 방식은 header 와 body 불필요
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+                      let recom = data['res']['recom'];
+
+                      if (recom == 1) {
+
+                        button.classList.add('liked');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+
+                      } else if (recom == 0) {
+                        button.classList.remove('liked');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+
+                      }
+                    });
+                }
+              });
+          }
 
           //------------------------------------------ 댓글 관련 함수 시작---------------------------------------------------
 
@@ -282,10 +469,10 @@
                 let comments_data = data['res'];
                 if (comments_data.length > 5) {
                   cnt = 5;
-                  btn_add_tag.style.display='';
+                  btn_add_tag.style.display = '';
                 } else {
                   cnt = comments_data.length;
-                  btn_add_tag.style.display='none';
+                  btn_add_tag.style.display = 'none';
                 }
 
                 for (let i = 0; i < cnt; i++) {
@@ -313,6 +500,10 @@
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
                   } else {
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                  }
+
+                  if ("[[${contentsVO.memberno}]]" == row.memberno) {
+                    msg += "<span class='author-label'>작성자" + "</span>";
                   }
 
                   msg += "<span id='comments_date" + row.commentsno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
@@ -351,7 +542,7 @@
                     let page_div = document.createElement('div'); // 글내용
                     for (let i = start_num; i < end_num; i++) { // 5 ~ 9, 10 탈출
                       if (i == comments_data.length) { // 모든 태그를 출력한 이후인지 검사
-                        btn_add_tag.style.display='none';
+                        btn_add_tag.style.display = 'none';
                         break;
                       }
 
@@ -379,6 +570,10 @@
                         msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
                       } else {
                         msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                      }
+
+                      if ("[[${contentsVO.memberno}]]" == row.memberno) {
+                        msg += "<span class='author-label'>작성자" + "</span>";
                       }
 
                       msg += "<span id='comments_date" + row.commentsno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
@@ -525,8 +720,8 @@
                   alert('삭제를 취소 했습니다.');
                 }
               });
-              
-              location.reload();
+
+            location.reload();
           }
 
           function timeSince(date) { // 작성일자 표시 함수
@@ -600,13 +795,17 @@
                   }
 
                   if (row.thumbs == null) {
-                    msg += "<img src='/member/storage/basicprofile.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
+                    msg += "<img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>";
                   }
 
                   if (row.nickname == null) {
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.id + "</span>";
                   } else {
                     msg += "<span style='font-weight: bold;'>&nbsp;&nbsp;" + row.nickname + "</span>";
+                  }
+
+                  if ("[[${contentsVO.memberno}]]" == row.memberno) {
+                    msg += "<span class='author-label'>작성자" + "</span>";
                   }
 
                   msg += "<span id='reply_date" + row.replyno + "'>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
@@ -687,7 +886,7 @@
                 });
 
             }
-            
+
             location.reload();
 
           }
@@ -778,7 +977,7 @@
                 });
 
             }
-            
+
             location.reload();
 
           }
@@ -819,8 +1018,8 @@
                   alert('삭제를 취소 했습니다.');
                 }
               });
-              
-              location.reload();
+
+            location.reload();
           }
 
 
