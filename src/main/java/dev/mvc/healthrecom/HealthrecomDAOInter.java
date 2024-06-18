@@ -3,6 +3,8 @@ package dev.mvc.healthrecom;
 import java.util.ArrayList;
 import java.util.Map;
 
+import dev.mvc.foodrecom.FoodrecomVO;
+
 public interface HealthrecomDAOInter {
   /**
    * 등록
@@ -38,9 +40,15 @@ public interface HealthrecomDAOInter {
   public int delete(int healthrecomno);
 
   
-  public int delete_g(int goalsno);
+//  public int delete_g(int goalsno);
+//  
+//  public int delete_m(int mhno);
   
-  public int delete_m(int mhno);
+  public ArrayList<HealthrecomVO> list_search_paging(Map<String, Object> map);
+  
+  public int list_search_count(String word);
+  
+
 }
 
 

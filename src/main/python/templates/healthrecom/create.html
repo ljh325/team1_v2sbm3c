@@ -182,7 +182,9 @@
                 const exerciseTitle = document.createElement('h3');
                 exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
                 
-                const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+
+                const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
                 exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
                 
 
