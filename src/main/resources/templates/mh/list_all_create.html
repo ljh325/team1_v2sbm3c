@@ -1,0 +1,173 @@
+<div th:fragment="list_all_fragment">
+
+
+    <style>
+        .invalid-feedback {
+            color: red;
+            display: none;
+        }
+    </style>
+
+
+  <form name="frm" th:object="${mhVO}" method="post" action="/mh/create">
+    <input id="memberno" type="hidden" th:value="${session.memberno}">
+    <div class="mb-3" style="display: flex;">
+      <span style="padding: 10px;font-size: 15px;">체중(kg): </span>
+      <input type="text" class="form-control" value="" id="kg" name="kg" placeholder="체중(kg)" style="width: auto; margin-right: auto;">
+    </div>
+    <div id="kg_msg"class="invalid-feedback">dd</div>
+    
+    <div class="mb-3" style="display: flex;">
+      <span style="padding: 10px; font-size: 15px;" >키(cm): </span>
+      <input type="text" class="form-control" value="" id="cm" name="cm" placeholder="키(cm)" style="width: auto;">
+    </div>
+    <div id="cm_msg"class="invalid-feedback">dd</div>
+    
+    <div class="mb-3" style="display: flex;">
+      <span style="padding: 10px; font-size: 15px;">체지방률(%): </span>
+      <input type="text" class="form-control" value="" id="ckg" name="ckg" placeholder="체지방률(%)"style="width: auto;">
+      
+    </div>
+    <div id="ckg_msg"class="invalid-feedback">dd</div>
+    <div class="mb-3" style="display: flex;">
+      <span style="padding: 10px; font-size: 14px;">골격근량(kg): </span>
+      <input type="text" class="form-control" value="" id="muscle" name="muscle" placeholder="골격근량(kg)" style="width: auto;">
+    </div>
+    <div id="muscle_msg"class="invalid-feedback">dd</div>
+   
+    
+    
+    <div class="mb-3" style="margin-top: 10px;">
+      <button type="button" id="create_id" class="btn btn-primary" style="width: 100%;">Primary</button>
+    </div>
+    
+
+      
+  </form>
+  <!-- 모달창 -->
+  <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="warningModalLabel">경고</h5>
+        </div>
+        <div class="modal-body" id="modalBody" style="text-align: center;">
+          <!-- 경고 메시지가 여기에 표시됩니다 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+             
+        // 경고 모달창 표시 함수
+        function showModal(message) {
+          document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
+          $('#warningModal').modal('show'); // 모달창 표시
+        }
+        
+        document.getElementById("create_id").addEventListener("click", () => {
+
+          let kg = document.getElementById("kg").value;
+          let cm = document.getElementById("cm").value;
+          let ckg = document.getElementById("ckg").value;
+          let muscle = document.getElementById("muscle").value;
+          let memberno = document.getElementById("memberno").value;
+          
+          let isValid = true;
+                 
+          if (!kg || isNaN(kg)) {
+            document.getElementById("kg_msg").innerHTML = "유효한 체중을 입력하세요.";
+            document.getElementById("kg_msg").style.display = "block";
+            isValid = false;
+          } else if (kg.length > 4){
+            document.getElementById("kg_msg").innerHTML = "소숫점 포함 4째자리 이하로 입력해주세요.";
+            document.getElementById("kg_msg").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("kg_msg").style.display = "none";
+          }
+      
+          if (!cm || isNaN(cm)) {
+            document.getElementById("cm_msg").innerHTML = "유효한 신장을 입력하세요.";
+            document.getElementById("cm_msg").style.display = "block";
+            isValid = false;
+          } else if (cm.length > 5){
+            document.getElementById("cm_msg").innerHTML = "소숫점 포함 4째자리 이하로 입력해주세요.";
+            document.getElementById("cm_msg").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("cm_msg").style.display = "none";
+          }
+      
+          if (!ckg || isNaN(ckg)) {
+            document.getElementById("ckg_msg").innerHTML = "유효한 체지방을 입력하세요.";
+            document.getElementById("ckg_msg").style.display = "block";
+            isValid = false;
+          } else if(ckg.length > 3){
+            document.getElementById("ckg_msg").innerHTML = "3자리 이하로 입력해주세요.";
+            document.getElementById("ckg_msg").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("ckg_msg").style.display = "none";
+          }
+      
+          if (!muscle) {
+            document.getElementById("muscle_msg").innerHTML = "유효한 골격근량을 입력하세요.";
+            document.getElementById("muscle_msg").style.display = "block";
+            isValid = false;
+          } else if(muscle.length > 5){
+            document.getElementById("muscle_msg").innerHTML = "소숫점 포함 4째자리 이하로 입력해주세요.";
+            document.getElementById("muscle_msg").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("muscle_msg").style.display = "none";
+          }
+          
+          
+          
+          fetch("/mh/create", {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              kg:kg,
+              ckg:ckg,
+              cm:cm,
+              muscle:muscle,
+              memberno:memberno
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success === "success") {
+              
+              showModal("등록이 완료되었습니다.");
+              $('#warningModal').on('hidden.bs.modal', function () {
+                location.reload()  
+              }); 
+            } else {
+              showModal("등록에 실패했습니다.");
+            }
+          })
+          .catch(error => {
+            // 에러 발생 시 경고 모달창 표시
+            showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+            console.error("Error:", error);
+          });
+          
+          
+
+            //showModal("등록이 완료되었습니다."); // 경고 모달창 표시\
+            //$('#warningModal').on('hidden.bs.modal', function () {
+            //  document.forms['frm'].submit(); // 모달이 닫힌 후 폼 제출
+            //});  
+
+          
+        });
+</script>
+</div>
+

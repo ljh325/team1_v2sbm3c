@@ -121,7 +121,7 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
   
     <!-- 리뷰 총 평균 평점 -->
-  <select id="avg_cnt" resultType="int">
+  <select id="avg_cnt" resultType="float">
     SELECT COALESCE(ROUND(AVG(star), 1) , 0) as avg
     FROM review
   </select>
