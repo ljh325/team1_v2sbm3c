@@ -26,7 +26,7 @@ CORS(app)
 prompt3 ='''
 [회원 건강정보]에 해당하는 사람이 [운동 목표]의 값을 목표로 운동계획을 세우고자한다 운동 기간은 무제한으로 하나 대신 [난이도]에 있는 난이도를 고려하고 일주일간의 운동 루틴을 출력한다 루틴에는 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시한다 신체 정보에 기반하여 추천해줘.
 출력 형식은 [출력 형식1]과 같은 형식으로 운동목표의 신장이 회원 건강 정보의 신장 보다 클 경우 키성장과 키교정에 도움이 되는 운동도 고려 
-
+상체운동이면 body에 13,하체면 body에 14를 할당할것
  [회원 건강정보]
     체중: kg
     체지방: %
@@ -49,63 +49,63 @@ prompt3 ='''
     {
       "day": "월요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
     },
     {
       "day": "화요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
       ]
     },
     {
       "day": "수요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
       ]
     },
     {
       "day": "목요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
       ]
     },
     {
       "day": "금요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
       ]
     },
     {
       "day": "토요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
       ]
     },
     {
       "day": "일요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": },
-        {"exname": , "musclesub": , "cal": , "time": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": },
+        {"exname": , "musclesub": , "cal": , "time": ,"body": }
     }
   ]
 }}

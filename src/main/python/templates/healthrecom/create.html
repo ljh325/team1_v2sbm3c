@@ -104,6 +104,16 @@
     #recomForm select {
       margin-bottom: 10px; /* 원하는 간격 값 설정 */
     }
+
+
+    a {
+      color: black;
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    a:hover {
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
@@ -168,11 +178,12 @@
                 const exerciseDiv = document.createElement('div');
                 exerciseDiv.classList.add('exercise');
                 
+                
                 const exerciseTitle = document.createElement('h3');
                 exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
                 
-                //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=13&word=${exercise.exname}`;
-                //exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+                const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
                 
 
                 const exerciseDetails = document.createElement('p');
