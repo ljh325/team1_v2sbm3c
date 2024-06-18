@@ -101,7 +101,7 @@
     }
 
     .button-like.liked #likeIcon {
-      color: #e03e4b;
+      color: dodgerblue;
     }
 
     #likeIcon {
@@ -116,7 +116,7 @@
     }
 
     .button-like.liked #likeText {
-      color: #e03e4b;
+      color: dodgerblue;
     }
   </style>
   <script>
@@ -257,7 +257,7 @@
 
         <div class="like-button">
           <button id="likeButton" class="button-like">
-            <i id="likeIcon" class="far fa-heart"></i>
+            <i id="likeIcon" class="far fa-thumbs-up"></i>
             <span id="likeText">추천</span>
           </button>
         </div>
@@ -317,7 +317,7 @@
 
             });
 
-//---------------------------------------------- 추천 기능 부분 -------------------------------------------------------
+            //---------------------------------------------- 추천 기능 부분 -------------------------------------------------------
             document.getElementById('likeButton').addEventListener('click', function () {
               const button = document.getElementById('likeButton');
               const icon = document.getElementById('likeIcon');
@@ -329,89 +329,89 @@
                 location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
               }
 
-                fetch("/recom/read?contentsno=[[${contentsVO.contentsno}]]", {
-                  "method": "get" // get 방식은 header 와 body 불필요
-                })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    let row = data['res'];
+              fetch("/recom/read?contentsno=[[${contentsVO.contentsno}]]", {
+                "method": "get" // get 방식은 header 와 body 불필요
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  let row = data['res'];
 
-                    if (row == 0) {
-                      button.classList.add('liked');
-                      icon.classList.remove('far');
-                      icon.classList.add('fas');
+                  if (row == 0) {
+                    button.classList.add('liked');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
 
-                      fetch("/recom/create", {
-                        "method": "post",
-                        "headers": {"Content-Type": "application/json"},
-                        body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"}),
-                        credentials: "include"
-                      })
-                        .then((response) => response.json())
-                        .then((data) => {
+                    fetch("/recom/create", {
+                      "method": "post",
+                      "headers": {"Content-Type": "application/json"},
+                      body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"}),
+                      credentials: "include"
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
 
-                        });
+                      });
 
-                    } else if (row != 0) {
+                  } else if (row != 0) {
 
-                      fetch("/recom/check?contentsno=[[${contentsVO.contentsno}]]", {
-                        "method": "get" // get 방식은 header 와 body 불필요
-                      })
-                        .then((response) => response.json())
-                        .then((data) => {
+                    fetch("/recom/check?contentsno=[[${contentsVO.contentsno}]]", {
+                      "method": "get" // get 방식은 header 와 body 불필요
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
 
-                          let recom = data['res']['recom'];
+                        let recom = data['res']['recom'];
 
-                          if (recom == 1) {
-                            button.classList.remove('liked');
-                            icon.classList.remove('fas');
-                            icon.classList.add('far');
+                        if (recom == 1) {
+                          button.classList.remove('liked');
+                          icon.classList.remove('fas');
+                          icon.classList.add('far');
 
-                            fetch("/recom/decrease", {
-                              "method": "post",
-                              "headers": {"Content-Type": "application/json"},
-                              body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
-                              credentials: "include"
-                            })
-                              .then((response) => response.json())
-                              .then((data) => {
-                                let decrease_row = data['res'];
+                          fetch("/recom/decrease", {
+                            "method": "post",
+                            "headers": {"Content-Type": "application/json"},
+                            body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                            credentials: "include"
+                          })
+                            .then((response) => response.json())
+                            .then((data) => {
+                              let decrease_row = data['res'];
 
 
-                              });
-                          } else if (recom == 0) {
-                            button.classList.add('liked');
-                            icon.classList.remove('far');
-                            icon.classList.add('fas');
+                            });
+                        } else if (recom == 0) {
+                          button.classList.add('liked');
+                          icon.classList.remove('far');
+                          icon.classList.add('fas');
 
-                            fetch("/recom/increase", {
-                              "method": "post",
-                              "headers": {"Content-Type": "application/json"},
-                              body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
-                              credentials: "include"
-                            })
-                              .then((response) => response.json())
-                              .then((data) => {
+                          fetch("/recom/increase", {
+                            "method": "post",
+                            "headers": {"Content-Type": "application/json"},
+                            body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                            credentials: "include"
+                          })
+                            .then((response) => response.json())
+                            .then((data) => {
 
-                              });
-                          }
+                            });
+                        }
 
-                        });
-                    }
+                      });
+                  }
 
-                  });             
+                });
 
             });
-//---------------------------------------------- 추천 기능 부분 종료 -------------------------------------------------------
+            //---------------------------------------------- 추천 기능 부분 종료 -------------------------------------------------------
 
             list_by_contentsno_join(); // 목록 출력
-            
-             let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
-              if (id != '') {  
-                recom_form();
-              }
-         
-            
+
+            let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
+            if (id != '') {
+              recom_form();
+            }
+
+
 
           } //----------------------- window.onload() 종료 -----------------------------
 
