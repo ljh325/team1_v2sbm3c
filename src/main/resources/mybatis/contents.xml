@@ -273,6 +273,13 @@
     WHERE contentsno = #{contentsno}
   </update>
   
+  <!-- 추천수 감소 -->
+  <update id="recom_cancel" parameterType="int">
+    UPDATE contents
+    SET recom = recom - 1
+    WHERE contentsno = #{contentsno}
+  </update>
+  
   <!-- 댓글 수 증가 -->
   <update id = "increase_commentcnt" parameterType="int">
     UPDATE contents

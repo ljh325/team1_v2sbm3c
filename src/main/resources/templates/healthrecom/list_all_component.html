@@ -86,11 +86,11 @@
     </thead>
     <tbody>
       <tr th:each="healthrecomVO, status:${list}">
-        <td class="td_bs" th:text="${status.index + 1}"></td>
+        <td class="td_basic" th:text="${status.index + 1}"></td>
     
-        <td class="td_bs" th:text="${healthrecomVO.rdate.substring(5, 10)}"></td>
+        <td class="td_basic" th:text="${healthrecomVO.rdate.substring(5, 10)}"></td>
   
-        <td class="td_bs">
+        <td class="td_basic">
           
           <img src="/images/read.png" class="icon" th:onclick="'javascript:readHealthrecom(' + ${healthrecomVO.healthrecomno} + ')'">    
           

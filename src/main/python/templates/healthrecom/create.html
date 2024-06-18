@@ -38,7 +38,7 @@
       height: 50px;
     }
 
-    #calendar {
+    #exercise_routine {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
@@ -70,6 +70,18 @@
     .meal-item {
       margin-bottom: 3px;
     }
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      appearance: none; /* 기본 스타일링 제거 (크로스 브라우징) */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
 
     .btn {
       display: block;
@@ -88,30 +100,52 @@
     .btn:hover {
       background-color: #0056b3;
     }
+
+    #recomForm select {
+      margin-bottom: 10px; /* 원하는 간격 값 설정 */
+    }
+
+
+    a {
+      color: black;
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    a:hover {
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
   <div class="container">
-    <h3>목표를 위한 3일간의 운동 추천</h3>
+    <h3>목표를 위한 일주일간의 운동 추천</h3>
     <form id="recomForm" action="/healthrecom/create" method="POST">
       <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
       <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
+      <select id="level" name="level">
+        <option value="beginner">초급</option>
+        <option value="intermediate">중급</option>
+        <option value="advanced">상급</option>
+      </select>
       <button type="button" id="register" class="btn">생성</button>
       <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
-    </form>
+   
+   
+   
+      </form>
     <div id="result_animation">
       <img id="progress" src="/static/images/progress.gif" alt="progress">
     </div>
     
-    <div id="calendar"></div>
+    <div id="exercise_routine"></div>
   </div>
 
   <script>
     $(document).ready(() => {
       const registerButton = document.getElementById('register');
       const resultAnimationTag = document.getElementById('result_animation');
-      const calendarDiv = document.getElementById('calendar');
+      const calendarDiv = document.getElementById('exercise_routine');
 
       registerButton.addEventListener("click", function() {
         // 결과 표시 영역 초기화
@@ -131,42 +165,36 @@
           contentType: false,
           processData: false,
           success: function(data) {
-            const mealData2 = JSON.parse(data);
-            mealData2.res.forEach(dayData => {
+            // 서버에서 받은 JSON 데이터를 파싱합니다.
+            const exerciseData = JSON.parse(data);
+
+            // 요일별 운동 루틴을 출력
+            exerciseData.healths["rutin"].forEach(dayData => {
               const dayDiv = document.createElement('div');
               dayDiv.classList.add('day');
-              dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
-              dayData.meals.forEach(meal => {
-                const mealDiv = document.createElement('div');
-                mealDiv.classList.add('meal');
+              dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
+              
+              dayData.health.forEach(exercise => {
+                const exerciseDiv = document.createElement('div');
+                exerciseDiv.classList.add('exercise');
                 
-                // Add image if the first item exists
-                if (meal.items.length > 0) {
-                  const firstItem = meal.items[0];
-                  const mealTitle = document.createElement('h3');
-                  mealTitle.textContent = meal.meal;
-                  const mealImage = document.createElement('img');
-                  mealImage.src = `/healthrecom/images/f${firstItem.code}.png`; // Assuming image file name matches the code
-                  mealImage.alt = firstItem.food;
-                  
-                  mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
-                      this.style.display = 'none';
-                  };
-                  
-                  mealTitle.appendChild(mealImage);
-                  mealDiv.appendChild(mealTitle);
-                } else {
-                  mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
-                }
+                
+                const exerciseTitle = document.createElement('h3');
+                exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
+                
+                const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+                
 
-                meal.items.forEach(item => {
-                  const mealItem = document.createElement('p');
-                  mealItem.classList.add('meal-item');
-                  mealItem.textContent = `${item.food} (${item.amount_g}g)`;
-                  mealDiv.appendChild(mealItem);
-                });
-                dayDiv.appendChild(mealDiv);
+                const exerciseDetails = document.createElement('p');
+                exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
+                
+                exerciseDiv.appendChild(exerciseTitle);
+                exerciseDiv.appendChild(exerciseDetails);
+                
+                dayDiv.appendChild(exerciseDiv);
               });
+              
               calendarDiv.appendChild(dayDiv);
             });
             resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
