@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.adrecom.AdrecomDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 최초 추천 시도 -->
+  <insert id="create" parameterType="dev.mvc.adrecom.AdrecomVO">
+    INSERT INTO adrecom (adrecomno, adrecom, adcontentsno, memberno)
+    VALUES (adrecom_seq.nextval, 1, #{adcontentsno}, #{memberno})
+  </insert>
+  
+  <!-- 최초 추천 시도 여부 -->
+  <select id = "adrecom_read" parameterType="HashMap">
+    SELECT COUNT(memberno)
+    FROM adrecom
+    WHERE adcontentsno = #{adcontentsno} AND memberno = #{memberno}
+  </select>
+  
+  <!-- 추천 상태 조회 -->
+  <select id ="adrecom_check" resultType="dev.mvc.adrecom.AdrecomVO" parameterType="HashMap">
+    SELECT adrecomno, adrecom, adcontentsno, memberno
+    FROM adrecom
+    WHERE adcontentsno = #{adcontentsno} and memberno = #{memberno}
+  </select>
+  
+  <!-- 회원이 누른 추천 게시글 조회 -->
+  <select id="member_read" resultType="dev.mvc.adrecom.AdrecomVO" parameterType="int">
+    SELECT adrecomno, adrecom, adcontentsno, memberno
+    FROM adrecom
+    WHERE memberno = #{memberno}
+    ORDER BY adrecomno DESC
+  </select>
+  
+  <!-- 게시글 추천 누른 회원 목록 -->
+  <select id="adcontents_read" resultType="dev.mvc.adrecom.AdrecomVO" parameterType="int">
+    SELECT adrecomno, adrecom, adcontentsno, memberno
+    FROM adrecom
+    WHERE adcontentsno = #{adcontentsno}
+    ORDER BY adrecomno DESC
+  </select>
+  
+  <!-- 추천 수 증가 -->
+  <update id="adrecom" parameterType="HashMap">
+    UPDATE adrecom
+    SET adrecom = 1
+    WHERE adcontentsno = #{adcontentsno} AND memberno = #{memberno}
+  </update>
+  
+  <!-- 추천 수 감소 -->
+  <update id="adrecom_cancel" parameterType="HashMap">
+    UPDATE adrecom
+    SET adrecom = 0
+    WHERE adcontentsno = #{adcontentsno} AND memberno = #{memberno}
+  </update>
+  
+  
+</mapper>
