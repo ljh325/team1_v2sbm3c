@@ -688,11 +688,7 @@ public class HealthCont {
     return "redirect:/health/list_by_htcno";    
     
   }   
-<<<<<<< HEAD
-   
-=======
- 
->>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
+
   /**
    * 추천 기능
    * 
@@ -711,11 +707,10 @@ public class HealthCont {
 
     return "redirect:/health/read";
 
-<<<<<<< HEAD
+
   } 
-=======
-  }
->>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
+
+
 }
 
 

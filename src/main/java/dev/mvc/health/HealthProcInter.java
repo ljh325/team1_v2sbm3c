@@ -145,20 +145,14 @@ public interface HealthProcInter {
    */
   public int delete_by_adminsno(int adminsno);
   
-<<<<<<< HEAD
-=======
 
-  
->>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
   /**
    * 추천수 증가
    * @param healthno
    * @return 추천수 증가 여부
    */
   public int recom(int healthno);
-<<<<<<< HEAD
-   
-=======
+
   
   /**
    * 추천수 감소
@@ -166,5 +160,5 @@ public interface HealthProcInter {
    * @return 추천수 감소 여부
    */
   public int recom_cancel(int healthno);
->>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
+
 }
