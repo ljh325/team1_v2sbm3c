@@ -28,8 +28,8 @@ CREATE SEQUENCE recom_seq
 -- CREATE
 -- 최초 누르면 INSERT, 이후 추천 취소 시 추천여부 1에서 0, 0에서 다시 누를 시 0에서 1 반복, 최초 누를 때, 0에서 다시 누를 때 추천 + 1, 1에서 다시 누를 때 추천 - 1
 INSERT INTO recom (recomno, recom, contentsno, memberno)
-       VALUES (recom_seq.nextval, 1, 69, 61);
-
+       VALUES (recom_seq.nextval, 1, 61, 61);
+commit;
 -- READ
 SELECT recomno, recom, contentsno, memberno
 FROM recom
@@ -38,6 +38,14 @@ WHERE memberno = 61;
 SELECT recomno, recom, contentsno, memberno
 FROM recom
 WHERE contentsno = 69;
+
+SELECT COUNT(memberno)
+FROM recom
+WHERE contentsno = 69 and memberno = 61;
+
+SELECT recomno, contentsno, memberno, recom
+FROM recom
+WHERE contentsno = 61 and memberno = 61;
 
 -- UPDATE
 UPDATE recom
