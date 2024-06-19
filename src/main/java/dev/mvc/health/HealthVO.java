@@ -31,7 +31,7 @@ public class HealthVO {
   /** 내용 */
   private String explan = "";
   /** 추천수 */
-  private int recom;
+  private int recom = 0;
   /** 조회수 */
   private int cnt = 0;
   /** 댓글수 */

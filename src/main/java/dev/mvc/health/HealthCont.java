@@ -686,7 +686,25 @@ public class HealthCont {
     
   }   
    
-  
+  /**
+   * 추천 기능
+   * 
+   * @param model
+   * @param contentsno
+   * @param ra
+   * @return
+   */
+  @GetMapping(value = "/recom")
+  public String recom(HttpSession session, Model model, int healthno, RedirectAttributes ra, String word,
+      int now_page) {
+    this.healthProc.recom(healthno);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
+    ra.addAttribute("healthno", healthno);
+
+    return "redirect:/health/read";
+
+  } 
 }
 
 
