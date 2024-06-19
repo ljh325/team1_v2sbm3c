@@ -1,22 +1,20 @@
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속 -->
-<div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
-  <div th:fragment="reply_list_fragment">
+<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+
     <!-- <div th:replace=... -->
 
     <style>
       /* 별점 기호 스타일 */
       .star-rating {
         display: inline-block;
-        font-size: 1.2rem;
+        font-size: 1.0rem;
         /* 별 크기 설정 */
         color: #f5b301;
         /* 별 색상 설정 */
+        margin-left:14%;
       }
-      *{
-        font-size:13px;
-      }
-
+      
       .empty-star {
         color: #ddd;
         /* 빈 별 색상 */
@@ -28,11 +26,11 @@
         /* 텍스트 왼쪽 정렬 */
         padding: 10px;
         /* 안쪽 여백 설정 */
-        background-color: #f9f9f9;
+        /*background-color: #f9f9f9; */
         /* 배경색 설정 */
         border-radius: 5px;
         /* 모서리 둥글게 */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
         /* 그림자 효과 */
         margin-bottom: 20px;
         /* 아래쪽 여백 설정 */
@@ -83,19 +81,53 @@
         text-decoration: underline;
         /* 밑줄 추가 */
       }
+      .profile-img{
+        border-radius: 44%;
+        margin: 10px 13px 5px 0px;
+      }
+      .review-img{
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      /* styles.css */
+      .review-rating {
+          display: inline-block;
+          font-size: 1.3rem;
+          font-family: Arial, sans-serif;
+          
+      }
+      
+      .review-rating::before {
+          content: "★★★★★";
+          letter-spacing: 3px;
+          background: linear-gradient(90deg, gold var(--rating, 0%), lightgray var(--rating, 0%));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
     </style>
 
 
 
 
-    <h2>리뷰 목록</h2><span th:text="|전체 리뷰수 ${review_cnt} |"></span>
+    <h2>리뷰 목록</h2>
+    <div style="background-color: #E6E6E6; height: auto; border-radius: 10px; padding: 10px;">
+      <div style="text-align: left; margin-left:65px;">
+        <span th:text="|평점: ${avg_cnt}|" style="font-size: 17px;"></span>
+        <span th:text="|전체 리뷰수 ${review_cnt} |" style="margin-left: 30%;"></span>
+      </div>
+      <div style="text-align: left; margin-left:40px;">
+        <span class="review-rating" th:data-rating="${avg_cnt}"></span>
+        <span style="margin-left: 30%;"><img src="/review/images/pong.png" style="width: 26px; height: 26px;"></span>
+      </div>
+      
+    </div>
 
     <!-- 리뷰 목록을 정렬할 수 있는 버튼들 -->
-    <div class="d-flex justify-content-end mb-3">
-      <a href="#" class="btn btn-link" onclick="loadReviews('recent')">최신순 /</a>
-      <a href="#" class="btn btn-link" onclick="loadReviews('old')">오래된순 /</a>
-      <a href="#" class="btn btn-link" onclick="loadReviews('star_high')">별점 높은순 /</a>
-      <a href="#" class="btn btn-link" onclick="loadReviews('star_low')">별점 낮은순 /</a>
+    <div class="d-flex justify-content-center mb-3">
+      <a href="#" class="btn btn-link" onclick="loadReviews('recent')" style="font-size: 12px;">최신순 |</a>&nbsp;
+      <a href="#" class="btn btn-link" onclick="loadReviews('old')" style="font-size: 12px;">오래된순 |</a>
+      <a href="#" class="btn btn-link" onclick="loadReviews('star_high')" style="font-size: 12px;">별점 높은순 |</a>
+      <a href="#" class="btn btn-link" onclick="loadReviews('star_low')" style="font-size: 12px;">별점 낮은순 </a>
     </div>
     <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
     <input type="hidden" id="id" name="id" th:value="${session.id}">
@@ -134,13 +166,26 @@
     
     <!-- JavaScript 코드 -->
     <script>
-    
-            // 페이지 로드 후 2초 후에 새로고침
-      window.onload = function() {
-        setTimeout(function() {
-          location.reload();
-        }, 2000); // 500 밀리초 = 0.5초
-      };
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          locale: 'ko',
+          events: '/mh/api/events'
+        });
+        calendar.render();
+      });
+      
+      // script.js
+      document.addEventListener('DOMContentLoaded', function () {
+        const ratingElement = document.querySelector('.review-rating');
+        const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+        
+        if (ratingElement && rating) {
+          ratingElement.style.setProperty('--rating', `${(rating / 5) * 100}%`);
+        }
+      });
+
       let deleteReviewNo = null;  // 삭제할 리뷰 번호를 저장할 변수
       
       // 서버에서 리뷰 목록을 가져와서 표시하는 함수
@@ -171,6 +216,11 @@
               const rdate = reviewVO.rdate.substring(0, 10);  // 작성일자
               const contents = reviewVO.contents;  // 리뷰 내용
               const reviewno = reviewVO.reviewno;
+              const nickname = reviewVO.nickname;
+              const profile = reviewVO.profile;
+              const profilesaved = reviewVO.profilesaved;
+              const thumbs = reviewVO.thumbs;
+              const sizes = reviewVO.sizes;
               //const memberno = document.getElementById("memberno").value;
               //const sessionId = document.getElementById("id").value;
 
@@ -184,7 +234,7 @@
                   const sizes = image.sizes;
       
                   if (profile.endsWith('jpg') || profile.endsWith('png') || profile.endsWith('gif')) {
-                    imageHtml += `<img src="/reviewImage/storage/${profilesaved}" class="profile-img" style="width: 30px; height: 30px;">`;
+                    imageHtml += `<img src="/reviewImage/storage/${profilesaved}" class="review-img" style="width: 100px; height: 100px; margin-top:5px;">`;
                   } else if (sizes > 0) {
                     imageHtml += `<span>${profile}</span>`;
                   } else {
@@ -195,11 +245,25 @@
                 imageHtml = `<img src="/images/none.jpg" class="default-img">`;
               }
               
+              
+              let profileHTML = '';
+              if (profile.endsWith('jpg') || profile.endsWith('png') || profile.endsWith('gif')) {
+                profileHTML += `<img src="/member/storage/${profilesaved}" class="profile-img" style="width: 40px; height: 40px; margin-top:5px;">`;
+              } else if (sizes > 0) {
+                profileHTML += `<span>${profile}</span>`;
+              } else {
+                profileHTML += `<img src="/images/none.jpg" class="default-img">`;
+              }
+              
+              let adreplyHTML = '';
+              
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
                 <div class="review-item">
                     <div class="review-header">
-                        <span class="review-id">${id}</span>
+                        <span>${profileHTML}</span>
+                        <span class="review-id">${nickname}</span>
+                        <span class="review-id">${id} ></span>
                     </div>
                     <div>
                         <div class="star-rating">
@@ -215,11 +279,26 @@
                         <div class="review-content">${contents}</div>
                         ${imageHtml}
                     </div>
+                    <div>
+                      <span class="adreply" style="font-size:14px;">아</span>
+                      <span class="adreply_cancel" style="font-size:14px;">모</span>
+                    </div>
                 </div>
             `;
               reviewList.innerHTML += reviewItem;
             });
             //th:href="@{|/review/review_update_form?memberno=${memberno}?reviewno=${reviewno}|}"
+            
+            const adreply_create = document.querySelectorAll('.adreply');
+            adreply_create.forEach(button => {
+              button.addEventListener('click', (event) => {
+                event.preventDefault(); // 기본 동작을 악음
+                alert("클릭스")
+                adreply_create.innerHTML = "댓글 등록"
+              });
+            });
+            
+            
 
             const updateButtons = document.querySelectorAll('.update_review');
             updateButtons.forEach(button => {
@@ -252,7 +331,7 @@
       document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
 
         if (deleteReviewNo) {
-          fetch('http://localhost:9093/review/review_delete', {
+          fetch('/review/review_delete', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -297,7 +376,7 @@
         loadReviews('recent');
       };
     </script>
-  </div>
+
 </div>
 
 </html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.adreply.AdreplyDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 주찬 xml -->
+  
+  <!-- 관리자 댓글 생성 -->
+  <insert id='create' parameterType="dev.mvc.adreply.AdreplyVO">
+    INSERT INTO adreply(adreplyno, adcontents, addate, reviewno)
+    VALUES (adreply_seq.nextval, #{adcontents}, sysdate, #{reviewno})
+  </insert>
+  
+  <!-- 관리자 댓글 조회 -->
+  <select id="list_all" resultType="dev.mvc.adreply.AdreplyVO" parameterType="int">
+    SELECT ad.adreplyno, ad.adcontents, ad.addate, ad.adupdate, ad.reviewno
+    FROM adreply ad, review r
+    WHERE ad.reviewno = r.reviewno
+  </select>
+  
+  
+  <!-- 총 관리자 댓글 갯수 -->
+  <select id = "all_count" resultType="int" parameterType="int">
+    SELECT COUNT(*) 
+    FROM adreply;
+  </select>
+  
+
+  
+  <!-- 관리자 댓글 수정 -->
+  <update id="update" parameterType="dev.mvc.reply.ReplyVO">
+    UPDATE adreply
+    SET adcontents = #{adcontents}, adupdate=sysdate
+    WHERE reviewno = #{reviewno}
+  </update>
+  
+  <!-- 관리자 댓글 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM adreply
+    WHERE reviewno = #{reviewno};
+  </delete>
+  
+
+</mapper>

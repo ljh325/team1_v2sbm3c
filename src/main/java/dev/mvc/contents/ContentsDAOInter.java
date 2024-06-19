@@ -158,6 +158,13 @@ public interface ContentsDAOInter {
   public int recom(int contentsno);
   
   /**
+   * 추천수 감소
+   * @param contentsno
+   * @return 추천수 감소 여부
+   */
+  public int recom_cancel(int contentsno);
+  
+  /**
    * 댓글수 증가
    * @param contentsno
    * @return

@@ -94,7 +94,7 @@ public interface ReviewDAOInter {
    * 리뷰 총 평균 평점
    * @return
    */
-  public int avg_cnt();
+  public float avg_cnt();
 
   /**
    * 별점당 갯수

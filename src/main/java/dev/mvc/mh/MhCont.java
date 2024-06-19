@@ -4,8 +4,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -142,35 +145,24 @@ public class MhCont {
    * @return
    */
   @PostMapping(value="/create") // http://localhost:9091/mh/create
-  public String create_process(HttpSession session,Model model, @Valid MhVO mhVO,BindingResult bindingResult) {
+  @ResponseBody
+  public String create_process(@RequestBody MhVO mhVO, HttpSession session,Model model) {
+
     
-    if (bindingResult.hasErrors())
-    {
-      return "mh/create";
-      
-    }
     if (this.memberProc.isMember(session)) {
-      
-    int memberno = (int) session.getAttribute("memberno");
-    mhVO.setMemberno(memberno);
-
     
-
+    JSONObject obj = new JSONObject();
     
     int cnt = this.mhProc.create(mhVO);
-    
+    obj.put("cnt", cnt);
     System.out.println("-> cnt: " + cnt);
 
-    model.addAttribute("cnt", cnt);
     if (cnt == 1) {
-      
-      return "redirect:/mh/list_all";
-      
+      obj.put("success", "success");
+      return obj.toString();
     } else {
-      model.addAttribute("code", "create_fail");
-      return "mh/msg"; // /templates/mh/msg.html
-      
-      
+      obj.put("fail", "fail");
+      return obj.toString();
     }
    }else {
      return "index";
@@ -274,20 +266,119 @@ public class MhCont {
     */
   
   @GetMapping(value="/list_all")
-  public String list_all(HttpSession session,Model model
-      ) {
-    if (this.memberProc.isMember(session)) {
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
-    model.addAttribute("list", list);
-    MhVO mhVO = this.mhProc.read_n(memberno);
+  public String list_all(HttpSession session,Model model, MhVO mhVO) {
+    
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+      
+    int memberno = (int)session.getAttribute("memberno"); 
+    ArrayList<MhVO> list = this.mhProc.list_all(memberno); // 로그인한 계정에 대한 건강정보 리스트 전부 출력
+    model.addAttribute("list", list); 
+    
+
+    
+    
+    mhVO = this.mhProc.read_n(memberno);  // 최근 건강정보 출력
     model.addAttribute("mhVO",mhVO );
+    
+    
+    if (mhVO != null) {
+      float kg = mhVO.getKg();
+      float cm = mhVO.getCm() / 100;
+      float bmi_float = kg / (cm * cm); // 소수점 제한 안한 값
+      String bmi = String.format("%.2f", bmi_float); //소숫점 2째자리까지
+      
+      System.out.println("kg -> " + kg);
+      System.out.println("cm -> " + cm);
+      System.out.println("bmi -> " + bmi);
+      
+      
+        String result = "";
+        String risk = "";
+        String exercise_recommendation = "";
+        String diet_recommendation = "";
+        
+        if (bmi_float < 18.5) {
+            result += " 저체중";
+            risk += "영양 결핍, 빈혈 위험이 있습니다.";
+            exercise_recommendation += "근육을 증가시키기 위한 저강도 운동과 단백질 섭취를 권장합니다.";
+            diet_recommendation += "고단백 식품과 영양가 있는 식사를 권장합니다.";
+        } else if (bmi_float < 23) {
+            result += "정상";
+            risk = "건강한 상태입니다.";
+            exercise_recommendation += "유산소 운동과 근력 운동을 균형 있게 하십시오.";
+            diet_recommendation += "균형 잡힌 식단을 유지하십시오.";
+        } else if (bmi_float < 25) {
+            result += "과체중";
+            risk = "심혈관 질환 및 당뇨병 위험이 있습니다.";
+            exercise_recommendation += "체중 감량을 위한 유산소 운동을 권장합니다.";
+            diet_recommendation += "저칼로리 식단과 적절한 영양 섭취를 권장합니다.";
+        } else {
+            result += "비만";
+            risk = "고혈압, 당뇨병, 심혈관 질환 및 관절염 위험이 있습니다.";
+            exercise_recommendation += "체중 감량을 위한 저강도 유산소 운동과 식이 조절을 권장합니다.";
+            diet_recommendation += "저칼로리 식단과 함께 식사량을 조절하십시오.";
+        }
+        //if (gender == 'male' and waist >= 102) or (gender == 'female' and waist >= 88):
+        //  risk += " 또한, 복부비만으로 심혈관 질환 위험이 증가합니다."
+
+        //if (gender == 'male' and muscle_mass <= 34) or (gender == 'female' and muscle_mass <= 24):
+        //  risk += " 근감소증 위험이 있습니다."
+      
+        
+        model.addAttribute("bmi", bmi);
+        model.addAttribute("result" ,result);
+        model.addAttribute("risk" ,risk);
+        model.addAttribute("exercise_recommendation" ,exercise_recommendation);
+        model.addAttribute("diet_recommendation" ,diet_recommendation);   
+    } else {
+      model.addAttribute("nulls","등록된 건강정보가 없습니다.");
+    }
+    
+
+      
     return "/mh/list_all"; // /mh/list_all.html
-    }else
-    {
+    
+    }else{
+      
     return "index"; // /mh/list_all.html
+    
     }
   }
+  
+  //-------------주찬 수정------------------------------------
+  @GetMapping(value="/test") // http:localhost:9093/mh/test
+  public String test( ) {
+  
+    return "/mh/test"; // /mh/list_all.html
+
+  }
+  
+  // 달력 불러오기
+  @GetMapping("/calendar")
+  public String getCalendarPage() {
+      return "mh/calendar";
+  }
+
+  // 이벤트 값
+  @GetMapping("/api/events")
+  @ResponseBody
+  public List<Map<String, Object>> getEvents() {
+      List<Map<String, Object>> events = new ArrayList<>();
+      
+      Map<String, Object> event1 = new HashMap<>();
+      event1.put("title", "Event 1");
+      event1.put("start", "2024-06-10");
+      
+      Map<String, Object> event2 = new HashMap<>();
+      event2.put("title", "Event 2");
+      event2.put("start", "2024-06-15");
+
+      events.add(event1);
+      events.add(event2);
+      
+      return events;
+  }
+  //-------------주찬 수정------------------------------------
   
   /**
    * 조회폼
@@ -395,7 +486,7 @@ public class MhCont {
    * @param mhno Mhgory number to delete.
    * @return
    */
-  @GetMapping(value="/delete")
+  @GetMapping(value="/delete_form")
   public String delete(HttpSession session,Model model, 
                              
                                @RequestParam("mhno") int mhno) {
@@ -429,43 +520,26 @@ public class MhCont {
    * @return
    */
   @PostMapping(value="/delete")
-  public String delete_process(HttpSession session,Model model, 
-                             
-                               @RequestParam("mhno") int mhno) {
-
+  @ResponseBody
+  public String delete_process(@RequestBody MhVO mhVO,HttpSession session,Model model) {
+    int mhno = mhVO.getMhno();
+    System.out.println("mhno--->" + mhno);
     if (this.memberProc.isMember(session)) {
-
-
       
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<MhVO> list = this.mhProc.list_all(memberno);
-    model.addAttribute("list", list);
-//
-//    this.mhProc.delete_f(mhno); //자식 테이블에 있는 값을 삭제하기 위한코드2
-//
-//   
-////    this.healthrecomProc.delete(mhno);
-////    this.mhProc.delete(mhno);
-//    this.mhProc.delete_h(mhno); //
-   
-    int cnt = this.mhProc.delete(mhno); //부모 테이블에 
+      JSONObject obj = new JSONObject();
     
-  
-    if (cnt == 1) {
-      
-      return "redirect:/mh/list_all";
-      
+      int cnt = this.mhProc.delete(mhno); //부모 테이블에 
+      obj.put("cnt", cnt);
+      System.out.println("cnt" + cnt);
+      if (cnt == 1) {
+        obj.put("success", "success");
+      } else {
+        obj.put("errors", "errors");
+      }
+      return obj.toString();
     } else {
-      model.addAttribute("code", "delete_fail");
-      return "mh/msg"; // /templates/mh/msg.html
-       }
-    }
-    else {
       return "redirect:/mh/list_all";
     }
-
-  
-    
   }
   
 //  /**

@@ -234,18 +234,25 @@ public class FoodrecomProc implements FoodrecomProcInter {
   }
 
 
+//  @Override
+//  public int delete_m(int mhno) {
+//    int cnt = this.foodrecomDAO.delete_m(mhno);
+//    return cnt;
+//  }
+//  
+//   @Override
+//   public int delete_g(int goalsno) {
+//     int cnt = this.foodrecomDAO.delete_g(goalsno);
+//     return cnt;
+//   }
 
-  @Override
-  public int delete_m(int mhno) {
-    int cnt = this.foodrecomDAO.delete_m(mhno);
-    return cnt;
-  }
+
+
+ 
   
-   @Override
-   public int delete_g(int goalsno) {
-     int cnt = this.foodrecomDAO.delete_g(goalsno);
-     return cnt;
-   }
+  
+  
+  
 
   
 }

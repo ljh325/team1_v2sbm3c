@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.admin.AdminProcInter;
-
+import dev.mvc.cate.CateVO;
+import dev.mvc.cate.CateVOMenu;
+import dev.mvc.contents.ContentsMemberVO;
 import dev.mvc.htc.HtcProcInter;
 import dev.mvc.htc.HtcVO;
 import dev.mvc.htc.HtcVOMenu;
@@ -322,6 +324,7 @@ public class HealthCont {
 
     model.addAttribute("word", word);
     model.addAttribute("now_page", now_page);
+    
     return "health/read";
   }
 
@@ -685,7 +688,11 @@ public class HealthCont {
     return "redirect:/health/list_by_htcno";    
     
   }   
+<<<<<<< HEAD
    
+=======
+ 
+>>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
   /**
    * 추천 기능
    * 
@@ -704,7 +711,11 @@ public class HealthCont {
 
     return "redirect:/health/read";
 
+<<<<<<< HEAD
   } 
+=======
+  }
+>>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
 }
 
 

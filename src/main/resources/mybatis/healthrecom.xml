@@ -36,15 +36,36 @@
   </delete>
   
  
-   <delete id = 'delete_m' parameterType="int">
-   DELETE FROM HEALTHRECOM
-   WHERE mhno = #{mhno}
-  </delete>
-  
-  <delete id = 'delete_g' parameterType="int">
-   DELETE FROM HEALTHRECOM
-   WHERE goalsno = #{goalsno}
-  </delete>
-  
+
+  <!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+  <!-- SQL -> CateVO -> ArrayList<CateVO> return -->
+ <select id="list_search_paging" resultType="dev.mvc.healthrecom.HealthrecomVO" parameterType="map">
+    SELECT healthrecomno, hrecom, goalsno, mhno, rdate
+    FROM (
+        SELECT healthrecomno, hrecom, goalsno, mhno, rdate, rownum AS r
+        FROM (
+            SELECT healthrecomno, hrecom, goalsno, mhno, rdate
+            FROM healthrecom
+            <where>
+                <if test="word != null and word != ''">
+                    UPPER(hrecom) LIKE '%' || UPPER(#{word}) || '%'
+                </if>
+            </where>
+            ORDER BY healthrecomno DESC
+        )
+    )
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+</select>
+  <!-- 검색된 레코드 수 -->
+  <select id="list_search_count" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM healthrecom
+    
+    <if test="word != null and word != ''">
+      WHERE UPPER(hrecom) LIKE '%' || UPPER(#{word}) || '%' 
+    </if>
+        
+    ORDER BY healthrecomno ASC
+  </select>
   
 </mapper>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Google Charts 라이브러리 로드 -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    // Google Charts 라이브러리 로드 완료 후 실행
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+      // 차트 1 - 세로 막대 그래프
+      var data1 = google.visualization.arrayToDataTable([
+        ['도시', '인구'],
+        ['서울', 9720846],
+        ['부산', 3404423],
+        ['인천', 2922274],
+        ['대구', 2459744],
+        ['대전', 1539470]
+      ]);
+
+      var options1 = {
+        title: '대한민국 주요 도시의 인구',
+        width: 400,
+        height: 300
+      };
+
+      var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+      chart1.draw(data1, options1);
+
+      // 차트 2 - 파이 차트
+      var data2 = google.visualization.arrayToDataTable([
+        ['과일', '판매량'],
+        ['사과', 30],
+        ['바나나', 50],
+        ['딸기', 20],
+        ['오렌지', 40]
+      ]);
+
+      var options2 = {
+        title: '과일 판매 비율',
+        width: 400,
+        height: 300
+      };
+
+      var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
+      chart2.draw(data2, options2);
+
+      // 차트 3 - 라인 차트
+      var data3 = google.visualization.arrayToDataTable([
+        ['연도', '매출', '비용'],
+        ['2019', 1000, 600],
+        ['2020', 1200, 700],
+        ['2021', 1400, 800],
+        ['2022', 1600, 900]
+      ]);
+
+      var options3 = {
+        title: '매출과 비용 추이',
+        width: 400,
+        height: 300
+      };
+
+      var chart3 = new google.visualization.LineChart(document.getElementById('chart_div3'));
+      chart3.draw(data3, options3);
+
+    // 차트 4 - 가로 막대 그래프
+      var data4 = google.visualization.arrayToDataTable([
+        ['도시', '인구'],
+        ['서울', 9720846],
+        ['부산', 3404423],
+        ['인천', 2922274],
+        ['대구', 2459744],
+        ['대전', 1539470]
+      ]);
+
+      var options4 = {
+        title: '대한민국 주요 도시의 인구',
+        width: 400,
+        height: 300,
+        hAxis: { title: '인구' }
+      };
+
+      var chart4 = new google.visualization.BarChart(document.getElementById('chart_div4'));
+      chart4.draw(data4, options4);
+
+    // 차트 5 - 영역 차트
+      var data5 = google.visualization.arrayToDataTable([
+        ['연도', '매출', '비용'],
+        ['2019', 1000, 600],
+        ['2020', 1200, 700],
+        ['2021', 1400, 800],
+        ['2022', 1600, 900]
+      ]);
+
+      var options5 = {
+        title: '매출과 비용 추이',
+        width: 400,
+        height: 300,
+        isStacked: true
+      };
+
+      var chart5 = new google.visualization.AreaChart(document.getElementById('chart_div5'));
+      chart5.draw(data2, options5);
+
+     // 차트 6 - 스택된 세로 막대 그래프
+      var data6 = google.visualization.arrayToDataTable([
+        ['연도', '매출', '비용', '이익'],
+        ['2019', 1000, 600, 400],
+        ['2020', 1200, 700, 500],
+        ['2021', 1400, 800, 600],
+        ['2022', 1600, 900, 700]
+      ]);
+
+      var options6 = {
+        title: '매출, 비용, 이익 추이',
+        width: 400,
+        height: 300,
+        isStacked: true
+      };
+
+      var chart6 = new google.visualization.ColumnChart(document.getElementById('chart_div6'));
+      chart6.draw(data6, options6);
+
+
+  // 차트 7 - 산점도 그래프
+      var data7 = google.visualization.arrayToDataTable([
+        ['키', '몸무게'],
+        [165, 68],
+        [170, 75],
+        [175, 80],
+        [180, 88],
+        [185, 95]
+      ]);
+
+      var options7 = {
+        title: '키와 몸무게의 관계',
+        width: 400,
+        height: 300,
+        hAxis: { title: '키 (cm)' },
+        vAxis: { title: '몸무게 (kg)' }
+      };
+
+      var chart7 = new google.visualization.ScatterChart(document.getElementById('chart_div7'));
+      chart7.draw(data7, options7);
+    }
+  </script>
+</head>
+<body>
+  <!-- 그래프를 그릴 요소들 -->
+  <div id="chart_div1" style="float: left;"></div>
+  <div id="chart_div2" style="float: left;"></div>
+  <div id="chart_div3" style="float: left;"></div>
+  <div id="chart_div4" style="float: left;"></div>
+  <div id="chart_div5" style="float: left;"></div>
+  <div id="chart_div6" style="float: left;"></div>
+  <div id="chart_div7" style="float: left;"></div>
+</body>
+</html>

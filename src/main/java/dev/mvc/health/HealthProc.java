@@ -305,9 +305,25 @@ public class HealthProc implements HealthProcInter {
     int cnt = this.healthDAO.delete_by_adminsno(adminsno);
     return cnt;
   }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
   @Override
   public int recom(int healthno) {
     int cnt = this.healthDAO.recom(healthno);
     return cnt;
   }
+<<<<<<< HEAD
+=======
+  
+  
+
+  @Override
+  public int recom_cancel(int healthno) {
+    int cnt = this.healthDAO.recom_cancel(healthno);
+    return cnt;
+  }
+>>>>>>> 0db4d14c6f210ac66857e390ab8db75bc4e33e72
 }

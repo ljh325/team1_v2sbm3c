@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FullCalendar with Spring Boot and Thymeleaf</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        /* styles.css */
+        .review-rating {
+            display: inline-block;
+            font-size: 2rem;
+            font-family: Arial, sans-serif;
+        }
+        
+        .review-rating::before {
+            content: "★★★★★";
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, gold var(--rating, 0%), lightgray var(--rating, 0%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendar</h1>
+    <div id="calendar"></div>
+    
+    
+    
+    
+    <div class="review-rating" data-rating="3.5"></div><br>
+    <div class="review-rating" data-rating="4.5"></div><br>
+    <div class="review-rating" data-rating="5.0"></div><br>
+    
+    
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ko',
+                events: '/mh/api/events'
+            });
+            calendar.render();
+        });
+        
+        
+        // script.js
+        document.addEventListener('DOMContentLoaded', function () {
+            const ratingElement = document.querySelector('.review-rating');
+            const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+            
+            if (ratingElement && rating) {
+                ratingElement.style.setProperty('--rating', `${(rating / 5) * 100}%`);
+            }
+        });
+    </script>
+</body>
+</html>

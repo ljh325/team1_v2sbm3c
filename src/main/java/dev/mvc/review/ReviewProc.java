@@ -104,8 +104,8 @@ public class ReviewProc implements ReviewProcInter {
   }
 
   @Override
-  public int avg_cnt() {
-    int cnt = this.reviewDAO.avg_cnt();
+  public float avg_cnt() {
+    float cnt = this.reviewDAO.avg_cnt();
     return cnt;
   }
 

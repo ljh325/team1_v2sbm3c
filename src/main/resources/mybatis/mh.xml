@@ -39,7 +39,7 @@
     SELECT mhno, kg, ckg, cm, muscle, memberno,insertdate
     FROM mh
     WHERE memberno = #{memberno}
-    ORDER BY mhno ASC
+    ORDER BY insertdate DESC
   </select>
   
 

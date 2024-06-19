@@ -1,156 +1,157 @@
-<div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
-  
+<div th:fragment="list_all_fragment">
+  <!-- <div th:replace=... -->
+  <style>
+  .row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .column {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .column span {
+            display: block;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+  </style>
   <script th:inline="javascript">
-    
-    
-    
-    
-    
-     function chooseMh(mhno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/mh/choose';
-        
-        // input 엘리먼트 생성하여 mhno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "mhno";
-        input.value = mhno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-    
     function updateMh(mhno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/mh/update';
-        
-        // input 엘리먼트 생성하여 mhno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "mhno";
-        input.value = mhno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
+      // 새 form 엘리먼트 생성
+      var form = document.createElement("form");
+      form.method = "GET";
+      form.action = '/mh/update';
+
+      // input 엘리먼트 생성하여 mhno 값 추가
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "mhno";
+      input.value = mhno;
+
+      // form에 input 엘리먼트 추가 후 form을 body에 추가
+      form.appendChild(input);
+      document.body.appendChild(form);
+
+      // form submit
+      form.submit();
     }
 
-    function deleteMh(mhno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/mh/delete';
-        
-        // input 엘리먼트 생성하여 mhno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "mhno";
-        input.value = mhno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-    
-   
-    function readMh(mhno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/mh/read';
-        
-        // input 엘리먼트 생성하여 mhno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "mhno";
-        input.value = mhno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-</script>
- <div class='menu_line'></div>
- <div style="margin: 1em;">
-  <table class="table table-striped" style='width: 100%;'>
-    
-    
-    <colgroup>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 15%;'/>    
-      <col style='width: 15%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 10%;'/>
- 
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="th_bs">번호</th>
-        <th class="th_bs">체중</th>
-        <th class="th_bs">신장</th>
-        <th class="th_bs">체지방</th>
-        <th class="th_bs">골격근량</th>
-        
-        <th class="th_bs">등록일</th>
-        <th class="th_bs">기타</th>
-        <th class="th_bs">추천 받기</th>
-        
+  </script>
 
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="mhVO, status:${list}">
-        <td class="td_basic"  th:text="${status.index + 1}"></td>
-        <td class="td_basic" th:text="${mhVO.kg + ' kg'}"></td>
-        <td class="td_basic" th:text="${mhVO.cm + ' cm'}"></td>
-        <td class="td_basic" th:text="${mhVO.ckg + ' %'}"></td>
-        <td class="td_basic" th:text="${mhVO.muscle + 'kg'}"></td>
-       
-        <td class="td_basic" th:text="${mhVO.insertdate.substring(5, 10)}"></td>
   
-        <td class="td_basic">
+  <div class='menu_line'></div>
+  <br>
+  <div style="margin: 1em;">
+    
+    <!-- 신체 정보 등록 -->
+    <div style="text-align: right; margin-bottom: 14px;">
+      <p class="d-inline-flex gap-1">
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          신체 정보 등록
+        </button>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <!-- 신체 정보 등록하는 fragment -->
+          <div th:replace="~{mh/list_all_create::list_all_fragment}"></div>
+          <!-- 신체 정보 등록하는 fragment -->
+        </div>
+      </div>
+    </div>
+    <!-- 신체 정보 등록 -->
+    
+    <!-- 신체 정보 목록 -->
+    <h3>기록</h3>
+    <div th:each="mhVO, status:${list}">
+      <div style="display: flex;">
+        <span th:text="${mhVO.insertdate.substring(0, 10)}"></span>
+        <div style=" display: block; margin-left: auto; margin-bottom:3px;">
+          <span th:onclick="'javascript:updateMh(' + ${mhVO.mhno} + ')'"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">수정</span>&nbsp;&nbsp;
+          <span class="delete" id="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+          <input id="mhno" type="hidden" th:value="${mhVO.mhno}">
+        </div>
+      </div>
+
+
+      <div style="background-color: #E6E6E6; border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>체중</span></div>
+          <div class="column"><span>신장</span></div>
+          <div class="column"><span>체지방</span></div>
+          <div class="column"><span>골격근량</span></div>
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${mhVO.kg + ' kg'}"></span></div>
+          <div class="column"><span th:text="${mhVO.cm + ' cm'}"></span></div>
+          <div class="column"><span th:text="${mhVO.ckg + ' %'}"></span></div>
+          <div class="column"><span th:text="${mhVO.muscle + ' kg'}"></span></div>
+        </div>
+      </div><br>
+
+    </div>
+    <!-- 신체 정보 목록 -->
+    
+    <!-- 신체 정보 가 없을 경우 -->
+    <div th:if="${mhVO == null}" style="text-align: center;">
+      <br>
+      <br>
+      <span th:text="${nulls}"></span>
+    </div>
+    <!-- 신체 정보 가 없을 경우 -->
+
+    <script>
+        window.onload = () => {
           
-          <img src="/mh/images/read.png" class="icon" th:onclick="'javascript:readMh(' + ${mhVO.mhno} + ')'">    
-          <img src="/mh/images/update.png" class="icon" th:onclick="'javascript:updateMh(' + ${mhVO.mhno} + ')'">
-          <img src="/mh/images/delete.png" class="icon" th:onclick="'javascript:deleteMh(' + ${mhVO.mhno} + ')'">
-        </td>
-        <td class="td_basic">
-          <a th:href="@{|/mh/choose?mhno=${mhVO.mhno}|}">선택</a>
+          let buttons = document.querySelectorAll('#delete');
+          buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+ 
+                let div = this.closest('div'); // 자기 자신이 속한 부모 태그
+                let mhno = div.querySelector('#mhno').value; // 부모에 속한 자식 찾기
 
-        </td>
-      </tr>
-    </tbody>
-  </table>
- </div>
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="Bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
-  
+                fetch("/mh/delete", {
+                  method: "post",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify({mhno:mhno})
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success === "success") {
+                    location.reload()
+                    //div.parentElement.remove(); // 해당 요소 삭제
+                  } else {
+                  }
+                })
+                .catch(error => {
+                  // 에러 발생 시 경고 모달창 표시
+                  //showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+                  console.error("Error:", error);
+                });            
+
+    
+      
+            // 추가적인 로직을 여기에 작성하세요.
+            });
+          });
+        };
+
+
+
+    </script>
+    
+
+
+  </div>
 </div>
-
-
-
-
 
 
 

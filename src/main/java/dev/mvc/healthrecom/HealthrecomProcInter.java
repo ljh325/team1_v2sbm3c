@@ -3,6 +3,7 @@ package dev.mvc.healthrecom;
 import java.util.ArrayList;
 import java.util.Map;
 
+import dev.mvc.foodrecom.FoodrecomVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.mh.MhVO;
 
@@ -39,12 +40,16 @@ public interface HealthrecomProcInter {
    */
   public int delete(int healthrecomno);
   
-  public int delete_g(int goalsno);
-  
-  public int delete_m(int mhno);
-  
 
+  
+  public ArrayList<HealthrecomVO> list_search_paging(String word, int now_page, int record_per_page);
 
+  
+  
+  public String pagingBox(int now_page, String word, String list_file, int search_count, 
+      int record_per_page, int page_per_block);
+  
+  public int list_search_count(String word);
 
   
 

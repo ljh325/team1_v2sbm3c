@@ -186,7 +186,10 @@ public class ReviewCont {
    */
   @GetMapping(value="/review_list_all", produces = MediaType.APPLICATION_JSON_VALUE) // 비동기 통신 코드
   @ResponseBody
-  public String review_list_all(@RequestParam(required = false, defaultValue = "recent") String sort, Model model, ReviewImageVO reviewImageVO) {
+  public String review_list_all(@RequestParam(required = false, defaultValue = "recent") String sort, Model model, ReviewImageVO reviewImageVO, HttpSession session) {
+
+      int memberno = (int)session.getAttribute("memberno");
+      System.out.println("memberno-->-->" + memberno);
       // 리뷰 목록 정렬을 위한 JSONArray 객체 생성
       JSONArray array = new JSONArray();
       
@@ -210,12 +213,21 @@ public class ReviewCont {
       }
       for (ReviewVO review : reviewList) {
         ArrayList<ReviewImageVO> images = this.reviewImageProc.read_image(review.getReviewno());
+        MemberVO memberVO = this.memberProc.read(memberno);
         JSONObject reviewJson = new JSONObject();
         reviewJson.put("reviewno", review.getReviewno());
         reviewJson.put("id", review.getId());
         reviewJson.put("star", review.getStar());
         reviewJson.put("rdate", review.getRdate());
         reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
+        
+        reviewJson.put("nickname", memberVO.getNickname());
+        reviewJson.put("profile", memberVO.getProfile());
+        reviewJson.put("profilesaved", memberVO.getProfilesaved());
+        reviewJson.put("thumbs", memberVO.getThumbs());
+        reviewJson.put("sizes", memberVO.getSizes());
+        
+        
 
         JSONArray imageArray = new JSONArray();
         for (ReviewImageVO image : images) {
@@ -347,7 +359,7 @@ public class ReviewCont {
     
     // 리뷰 총 수를 모델에 추가
     int review_cnt = this.reviewProc.review_cnt();
-    int avg_cnt =this.reviewProc.avg_cnt();
+    float avg_cnt =this.reviewProc.avg_cnt();
    
     
    
@@ -404,7 +416,7 @@ public class ReviewCont {
                                    ReviewVO reviewVO,
                                    ReviewImageVO reviewImageVO, 
                                    RedirectAttributes ra) {
-    
+    this.reviewImageProc.delete_image(reviewVO.getReviewno());
     //highlightKeywords("contents", reviewVO.getContents());
     int cnt = this.reviewProc.review_update(reviewVO);
     model.addAttribute("cnt", cnt);
@@ -451,7 +463,6 @@ public class ReviewCont {
             int reviewno = reviewVO.getReviewno();
             System.out.println("reviewno" + reviewno);
             reviewImageVO.setReviewno(reviewno);
-            this.reviewImageProc.delete_image(reviewno);
             int image_cnt = this.reviewImageProc.insert_image(reviewImageVO);
             model.addAttribute("image_cnt", image_cnt);
             if (image_cnt == 1) { // 성공: 1 했을 경우

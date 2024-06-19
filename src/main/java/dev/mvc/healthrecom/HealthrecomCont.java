@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
+import dev.mvc.foodrecom.FoodrecomVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.mh.MhVO;
@@ -44,7 +45,7 @@ public class HealthrecomCont {
   
   
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
-  public int record_per_page = 3;
+  public int record_per_page = 10;
 
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
   public int page_per_block = 10;
@@ -63,28 +64,69 @@ public class HealthrecomCont {
    * @param 조회할 healthrecomno
    * @return
    */
-  @PostMapping(value = "/read")
-  public String read(HttpSession session,Model model,@RequestParam("healthrecomno") int healthrecomno ) {
+//  @GetMapping(value = "/read")
+//  public String read(HttpSession session,Model model,@RequestParam("healthrecomno") int healthrecomno ) {
+//    if (this.memberProc.isMember(session) ) {
+//    int memberno = (int)session.getAttribute("memberno");  
+//    HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
+////    healthrecomVO.setMemberno(memberno);  
+//    model.addAttribute("healthrecomVO", healthrecomVO);
+//    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
+//    model.addAttribute("list", list);
+//    
+//    
+//    return "healthrecom/read";
+//    }
+//    else {
+//      return "index";
+//    }
+// 
+//
+//     // /templates/cate/read.html
+//  }
+//  
+//  
+  
+  @GetMapping(value = "/read")
+  public String read(HttpSession session,Model model,@RequestParam("healthrecomno") int healthrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
-    HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
-//    healthrecomVO.setMemberno(memberno);  
-    model.addAttribute("healthrecomVO", healthrecomVO);
-    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
+    
+    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
     model.addAttribute("list", list);
     
+
+    int search_count = this.healthrecomProc.list_search_count(word);
+    String paging = this.healthrecomProc.pagingBox(now_page, 
+        word, "list_all", search_count, this.record_per_page, this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("word", word);
+    
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    
+    HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
+
+    model.addAttribute("healthrecomVO", healthrecomVO);
+    String hrecom = healthrecomVO.getHrecom();
+ 
+
+    model.addAttribute("hrecom", hrecom);
+//    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
+//    model.addAttribute("list", list);
+//    
     
     return "healthrecom/read";
     }
     else {
       return "index";
     }
- 
-
-     // /templates/cate/read.html
+  
   }
-  
-  
   /**
    * 
    * 생성 폼 
@@ -165,42 +207,122 @@ public class HealthrecomCont {
    }
   
    
-   /**
-   * list_all 폼,목록
-   * http://localhost:9091/healthrecom/list_all
-   * @param model
-   * @param m
-   * @param bindingResult
-   * @return
-    */
+//   /**
+//   * list_all 폼,목록
+//   * http://localhost:9091/healthrecom/list_all
+//   * @param model
+//   * @param m
+//   * @param bindingResult
+//   * @return
+//    */
+//  
+//  @GetMapping(value="/list_all")
+//  public String list_all(HttpSession session,Model model) {
+//    if (this.memberProc.isMember(session)) {
+//    int memberno = (int)session.getAttribute("memberno");
+//    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
+//    model.addAttribute("list", list);
+//    return "/healthrecom/list_all"; // /healthrecom/list_all.html
+//    }else
+//    {
+//    return "index"; // /healthrecom/list_all.html
+//    }
+//  }
+//  
+
+  /**
+  * list_all 폼,목록
+  * http://localhost:9093/healthrecom/list_all
+  * @param model
+  * @param m
+  * @param bindingResult
+  * @return
+   */
+ 
+ @GetMapping(value="/list_all")
+ public String list_all(HttpSession session,Model model,
+   @RequestParam(name="word", defaultValue = "") String word,
+   @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   if (this.memberProc.isMember(session)) {
+     
+   int memberno = (int)session.getAttribute("memberno");
   
-  @GetMapping(value="/list_all")
-  public String list_all(HttpSession session,Model model) {
-    if (this.memberProc.isMember(session)) {
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
-    model.addAttribute("list", list);
-    return "/healthrecom/list_all"; // /healthrecom/list_all.html
-    }else
-    {
-    return "index"; // /healthrecom/list_all.html
-    }
-  }
+   ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+   model.addAttribute("list", list);
+  
+   int search_count = this.healthrecomProc.list_search_count(word);
+   String paging = this.healthrecomProc.pagingBox(now_page, 
+       word, "list_all", search_count, this.record_per_page, this.page_per_block);
+   model.addAttribute("paging", paging);
+   model.addAttribute("now_page", now_page);
+   model.addAttribute("word", word);
+   
+   int no = search_count - ((now_page - 1) * this.record_per_page);
+   model.addAttribute("no", no);
+   
+   return "/healthrecom/list_all"; // /healthrecom/list_all.html
+   }else
+   {
+   return "index"; // /healthrecom/list_all.html
+   }
+ }
+  
+//  @GetMapping(value="/delete")
+//  public String delete(HttpSession session,Model model, 
+//                             
+//                               @RequestParam("healthrecomno") int healthrecomno) {
+//    
+//    if (this.memberProc.isMember(session)) {
+//
+//    
+//    int memberno = (int)session.getAttribute("memberno");
+//    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
+//    model.addAttribute("list", list);
+//    HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
+////  healthrecomVO.setMemberno(memberno);  
+//  model.addAttribute("healthrecomVO", healthrecomVO);
+//    
+// 
+//    }
+//    else {
+//      return "index";
+//    }
+//
+//   
+//    return "healthrecom/delete";  // /templates/mh/delete.html
+//    
+//  }
+//  
+  
+  
   
   @GetMapping(value="/delete")
   public String delete(HttpSession session,Model model, 
-                             
-                               @RequestParam("healthrecomno") int healthrecomno) {
+      @RequestParam("healthrecomno") int healthrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     if (this.memberProc.isMember(session)) {
 
-    
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
-    model.addAttribute("list", list);
-    HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
-//  healthrecomVO.setMemberno(memberno);  
-  model.addAttribute("healthrecomVO", healthrecomVO);
+      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+   
+      
+
+      int search_count = this.healthrecomProc.list_search_count(word);
+      String paging = this.healthrecomProc.pagingBox(now_page, 
+          word, "list_all", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("word", word);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
+
+      model.addAttribute("healthrecomVO", healthrecomVO);
+      String hrecom = healthrecomVO.getHrecom();
     
  
     }
@@ -212,20 +334,72 @@ public class HealthrecomCont {
     return "healthrecom/delete";  // /templates/mh/delete.html
     
   }
+  
+  
+  
    
   
+//  @PostMapping(value="/delete")
+//  public String delete_process(HttpSession session,Model model, 
+//                             
+//                               @RequestParam("healthrecomno") int healthrecomno) {
+//    
+//    if (this.memberProc.isMember(session)) {
+//
+//    
+//    
+//
+//    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(healthrecomno);
+//    model.addAttribute("list", list);
+//    
+//    
+//    int cnt = this.healthrecomProc.delete(healthrecomno);
+//    if (cnt == 1) {
+//      
+//      return "redirect:/healthrecom/list_all";
+//      
+//    } else {
+//      model.addAttribute("code", "delete_fail");
+//      return "mh/msg"; // /templates/mh/msg.html
+//       }
+//    }
+//    else {
+//      return "index";
+//    }
+//
+//  
+//    
+//  }
+  
+  
   @PostMapping(value="/delete")
-  public String delete_process(HttpSession session,Model model, 
-                             
-                               @RequestParam("healthrecomno") int healthrecomno) {
+  public String delete_process(HttpSession session,Model model,@RequestParam("healthrecomno") int healthrecomno,
+      @RequestParam(name="word", defaultValue = "") String word,
+      @RequestParam(name="now_page", defaultValue = "1") int now_page
+                              ) {
     
     if (this.memberProc.isMember(session)) {
+      
+      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+   
+      
 
-    
-    
+      int search_count = this.healthrecomProc.list_search_count(word);
+      String paging = this.healthrecomProc.pagingBox(now_page, 
+          word, "list_all", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("word", word);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      HealthrecomVO healthrecomVO = this.healthrecomProc.read(healthrecomno);
 
-    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(healthrecomno);
-    model.addAttribute("list", list);
+      model.addAttribute("healthrecomVO", healthrecomVO);
+      String frecom = healthrecomVO.getHrecom();
+  
     
     
     int cnt = this.healthrecomProc.delete(healthrecomno);
@@ -245,7 +419,6 @@ public class HealthrecomCont {
   
     
   }
-  
   
 }
 
