@@ -22,9 +22,9 @@ public class AdreplyProc implements AdreplyProcInter {
   }
 
   @Override
-  public ArrayList<AdreplyVO> list_all() {
-    ArrayList<AdreplyVO> list = this.adreplyDAO.list_all();
-    return list;
+  public AdreplyVO admin_read(int reviewno) {
+    AdreplyVO adreplyVO = this.adreplyDAO.admin_read(reviewno);
+    return adreplyVO;
   }
 
   @Override

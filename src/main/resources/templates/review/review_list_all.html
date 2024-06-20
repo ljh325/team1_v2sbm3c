@@ -85,7 +85,15 @@
         border-radius: 44%;
         margin: 10px 13px 5px 0px;
       }
+      .profile_default-img{
+        border-radius: 44%;
+        margin: 10px 13px 5px 0px;
+      }
       .review-img{
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .review_default_img{
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
@@ -129,8 +137,6 @@
       <a href="#" class="btn btn-link" onclick="loadReviews('star_high')" style="font-size: 12px;">별점 높은순 |</a>
       <a href="#" class="btn btn-link" onclick="loadReviews('star_low')" style="font-size: 12px;">별점 낮은순 </a>
     </div>
-    <input type="hidden" id="memberno" name="memberno" th:value="${session.memberno}">
-    <input type="hidden" id="id" name="id" th:value="${session.id}">
     <!-- 리뷰 목록을 표시할 공간 -->
     <div id="review" class="review">
       <!-- 리뷰 목록이 여기에 표시됩니다 -->
@@ -166,17 +172,13 @@
     
     <!-- JavaScript 코드 -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'ko',
-          events: '/mh/api/events'
-        });
-        calendar.render();
-      });
+      // 페이지 로드 시 최신순으로 리뷰 목록을 불러오도록 설정
+      window.onload = () => {
+        
+        loadReviews('recent');
+      }; // window.onload() close 끝
       
-      // script.js
+      // 평점 별점 계산 
       document.addEventListener('DOMContentLoaded', function () {
         const ratingElement = document.querySelector('.review-rating');
         const rating = parseFloat(ratingElement.getAttribute('data-rating'));
@@ -184,7 +186,7 @@
         if (ratingElement && rating) {
           ratingElement.style.setProperty('--rating', `${(rating / 5) * 100}%`);
         }
-      });
+      }); // 평점 별점 계산
 
       let deleteReviewNo = null;  // 삭제할 리뷰 번호를 저장할 변수
       
@@ -204,101 +206,155 @@
             return response.json();  // 응답 본문을 JSON으로 변환하여 반환
           })
           .then(data => {
-            const reviewList = document.getElementById('review');
+            let reviewList = document.getElementById('review');
             reviewList.innerHTML = '';  // 기존 리뷰 목록을 초기화
 
-            const memberno = document.getElementById("memberno").value;
-            const sessionId = document.getElementById("id").value;
+            let memberno = '[[${session.memberno}]]';
+            let sessionId = '[[${session.id}]]';
             
             data.forEach(reviewVO => {
-              const id = reviewVO.id;  // 리뷰 ID
-              const star = reviewVO.star;  // 별점
-              const rdate = reviewVO.rdate.substring(0, 10);  // 작성일자
-              const contents = reviewVO.contents;  // 리뷰 내용
+              // 리뷰
+              let id = reviewVO.id;  // 리뷰 ID
+              let star = reviewVO.star;  // 별점
+              //let rdate = reviewVO.rdate.substring(0, 10);  // 작성일자
+              let rdate = reviewVO.rdate
+              let contents = reviewVO.contents;  // 리뷰 내용
               const reviewno = reviewVO.reviewno;
-              const nickname = reviewVO.nickname;
-              const profile = reviewVO.profile;
-              const profilesaved = reviewVO.profilesaved;
-              const thumbs = reviewVO.thumbs;
-              const sizes = reviewVO.sizes;
-              //const memberno = document.getElementById("memberno").value;
-              //const sessionId = document.getElementById("id").value;
+              let nickname = reviewVO.nickname;
+              
+              // 리뷰 이미지 
+              let profile = reviewVO.profile;
+              let profilesaved = reviewVO.profilesaved;
+              let thumbs = reviewVO.thumbs;
+              let sizes = reviewVO.sizes;
+
+              // 리뷰 관리자 댓글
+              //let adcontents = reviewVO.adcontents;
+              //let addate = reviewVO.addate;
+              //let adupdate = reviewVO.adupdate;
 
               
-              
+              // 리뷰 이미지
               let imageHtml = '';
               if (reviewVO.images) {
                 reviewVO.images.forEach(image => {
-                  const profilesaved = image.profilesaved;
-                  const profile = image.profile;
-                  const sizes = image.sizes;
+                  let profilesaved = image.profilesaved;
+                  let profile = image.profile;
+                  let sizes = image.sizes;
       
                   if (profile.endsWith('jpg') || profile.endsWith('png') || profile.endsWith('gif')) {
                     imageHtml += `<img src="/reviewImage/storage/${profilesaved}" class="review-img" style="width: 100px; height: 100px; margin-top:5px;">`;
                   } else if (sizes > 0) {
                     imageHtml += `<span>${profile}</span>`;
                   } else {
-                    imageHtml += `<img src="/images/none.jpg" class="default-img">`;
+                    imageHtml += `<img src="/images/none.jpg" class="review_default-img" style="width: 100px; height: 100px; margin-top:5px;">`;
                   }
                 });
               } else {
-                imageHtml = `<img src="/images/none.jpg" class="default-img">`;
+                imageHtml = `<img src="/images/none.jpg" class="default-img" style="width: 100px; height: 100px; margin-top:5px;">`;
               }
               
-              
+              // 프로필 이미지
               let profileHTML = '';
               if (profile.endsWith('jpg') || profile.endsWith('png') || profile.endsWith('gif')) {
                 profileHTML += `<img src="/member/storage/${profilesaved}" class="profile-img" style="width: 40px; height: 40px; margin-top:5px;">`;
               } else if (sizes > 0) {
                 profileHTML += `<span>${profile}</span>`;
               } else {
-                profileHTML += `<img src="/images/none.jpg" class="default-img">`;
+                profileHTML += `<img src="/images/none.jpg" class="profile_default-img" style="width: 40px; height: 40px; margin-top:5px;">`;
               }
               
-              let adreplyHTML = '';
+              
+              
+              // 세션이 존재할 경우 수정 삭제 버튼을 표시함
+              let updateDeleteHTML = '';
+              if (sessionId === id) {
+                updateDeleteHTML = `
+                  <div class="update_delete">
+                    <span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>
+                    <span class="delete_review" data-reviewno="${reviewno}">삭제</span>
+                  </div>
+                `;
+              }
+              
+              
+              // 닉네임이 없을 경우 id로 표시
+              let idNicknameHTML = '';
+              if (nickname){
+                idNicknameHTML = `
+                  <span class="review-id">${nickname}</span>
+                `;
+              }else{
+                idNicknameHTML = `
+                  <span class="review-id">${id}</span>
+                `;
+              }
+              
+
+              list_by_contentsno_join(reviewno, (adminReplyHTML) => { 
+                
+                // adminReplyHTML 관리자 댓글이 조회가 될 경우 버튼 숨김
+                let replyControlsDisplay = adminReplyHTML ? 'none' : 'inline';
+              
+              // 관리자 댓글 조회 표시
+              //let adminReplyHTML = ''; // 초기화
+              //if (adcontents && addate){
+              //  adminReplyHTML = `
+              //    <div style=" padding: 7px;">
+              //      <div style="margin-left: 17px; margin-bottom: 5px;">
+              //        <span style="font-size: 16px;">개발자 답변 </span>&nbsp;&nbsp;<span style="font-size: 12px;">${timeSince(addate)}</span>
+              //      </div>
+              //     <div style="margin-left: 30px; background-color:#e6e6e6; padding: 3px 0px 5px 10px; border-radius: 9px; margin-right:20px;" >
+              //        <div>
+              //          <span style="font-size: 13px;">${adcontents}</span>
+              //       </div>
+              //      </div>  
+              //    </div>
+              //  `;
+              //}
               
               // 각 리뷰 항목을 HTML로 생성
               const reviewItem = `
-                <div class="review-item">
+                <div class="review-item" id="review-item-${reviewno}">
                     <div class="review-header">
                         <span>${profileHTML}</span>
-                        <span class="review-id">${nickname}</span>
-                        <span class="review-id">${id} ></span>
+                        ${idNicknameHTML}
                     </div>
                     <div>
                         <div class="star-rating">
                             ${generateStars(star)}
                         </div>
-                        <span class="review-date">${rdate}</span>
-                        <div class="update_delete">
-                            ${sessionId === id ? `<span class="update_review" data-url="/review/review_update_form?memberno=${memberno}&reviewno=${reviewno}">수정</span>` : ''}
-                            ${sessionId === id ? `<span class="delete_review" data-reviewno="${reviewno}">삭제</span>` : ''}
-                        </div>
+                        <span class="review-date" style="font-size: 12px;">${timeSince(rdate)}</span>
+                        ${updateDeleteHTML}
                     </div>
                     <div class="contents">
                         <div class="review-content">${contents}</div>
                         ${imageHtml}
                     </div>
-                    <div>
-                      <span class="adreply" style="font-size:14px;">아</span>
-                      <span class="adreply_cancel" style="font-size:14px;">모</span>
+                    <div style="display: ${replyControlsDisplay};">
+                      <span style="font-size:14px;">
+                        <button type="button" id="adreply-${reviewno}" class="adreply" style="border: none;">보여</button>
+                      </span>
+                      <span style="font-size:14px;">
+                        <button type="button" id="adreply_cancel-${reviewno}" class="adreply_cancel" style="border: none; display: none;">숨겨</button>
+                      </span>
                     </div>
+                    <div id="textarea-container-${reviewno}" style="display: none;">
+                      <div class="mb-3">
+                        <label for="textarea-${reviewno}" class="form-label">답글 입력</label>
+                        <textarea class="form-control" id="textarea-${reviewno}" name="adcontents" placeholder="댓글을 입력해주세요." rows="3"></textarea>
+                        <button type="button" class="btn btn-primary submit-reply" data-reviewno="${reviewno}" style="width: 100%; margin-top: 5px;">등록</button>
+                      </div>
+                    </div>
+                    ${adminReplyHTML}                
                 </div>
             `;
               reviewList.innerHTML += reviewItem;
-            });
+              }); //list_by_contentsno_join
+            }); // forEach()
+            
             //th:href="@{|/review/review_update_form?memberno=${memberno}?reviewno=${reviewno}|}"
-            
-            const adreply_create = document.querySelectorAll('.adreply');
-            adreply_create.forEach(button => {
-              button.addEventListener('click', (event) => {
-                event.preventDefault(); // 기본 동작을 악음
-                alert("클릭스")
-                adreply_create.innerHTML = "댓글 등록"
-              });
-            });
-            
-            
+
 
             const updateButtons = document.querySelectorAll('.update_review');
             updateButtons.forEach(button => {
@@ -319,6 +375,86 @@
                 deleteModal.show();
               });
             });
+            
+            
+            // 이벤트 위임을 사용하여 클릭 이벤트 처리
+             reviewList.addEventListener('click', (event) => {
+              let target = event.target; // 클릭된 요소를 가져옵니다.
+
+              if (target.classList.contains('adreply')) { // 클릭된 요소가 'adreply' 클래스를 가지고 있는지 확인합니다.
+                  // 'adreply' 버튼이 클릭된 경우
+                  
+                  let reviewno = target.id.split('-')[1]; // 'adreply' 버튼의 ID에서 리뷰 번호를 추출합니다. 예를 들어 'adreply-123'에서 '123'을 가져옵니다.
+                  target.style.display = 'none'; // 'adreply' 버튼을 숨깁니다.
+                  document.getElementById(`adreply_cancel-${reviewno}`).style.display = 'inline'; // 해당 리뷰 번호의 'adreply_cancel' 버튼을 표시합니다.
+                  document.getElementById(`textarea-container-${reviewno}`).style.display = 'block'; // 해당 리뷰 번호의 'textarea-container'를 표시합니다.
+              } else if (target.classList.contains('adreply_cancel')) { // 클릭된 요소가 'adreply_cancel' 클래스를 가지고 있는지 확인합니다.
+                  // 'adreply_cancel' 버튼이 클릭된 경우
+                  
+                  let reviewno = target.id.split('-')[1]; // 'adreply_cancel' 버튼의 ID에서 리뷰 번호를 추출합니다.
+                  target.style.display = 'none'; // 'adreply_cancel' 버튼을 숨깁니다.
+                  document.getElementById(`adreply-${reviewno}`).style.display = 'inline'; // 해당 리뷰 번호의 'adreply' 버튼을 다시 표시합니다.
+                  document.getElementById(`textarea-container-${reviewno}`).style.display = 'none'; // 해당 리뷰 번호의 'textarea-container'를 숨깁니다.
+              } else if (target.classList.contains('submit-reply')) { // 리뷰 댓글 클릭 시
+                  let reviewno = target.dataset.reviewno;
+                  let adcontents = document.getElementById(`textarea-${reviewno}`).value;
+                  alert(reviewno);
+          
+                  fetch ('/adreply/create', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      reviewno: reviewno,
+                      adcontents: adcontents  
+                    })
+                  })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                  })
+                  .then(data => {
+                    alert("데이터 받기 성공");
+                    alert(data['cnt']);
+                    if(data['cnt'] === 1){
+                      
+                      // 댓글 등록에 성공하면 새로운 댓글을 화면에 출력
+                      const adminReplyHTML = `
+                          <div style=" padding: 7px;">
+                              <div style="margin-left: 17px; margin-bottom: 5px;">
+                                  <span style="font-size: 16px;">개발자 답변 </span>&nbsp;&nbsp;<span style="font-size: 12px;">${timeSince(new Date())}</span>
+                              </div>
+                              <div style="margin-left: 30px; background-color:#e6e6e6; padding: 3px 0px 5px 10px; border-radius: 9px; margin-right:20px;" >
+                                  <div>
+                                      <span style="font-size: 13px;">${adcontents}</span>
+                                  </div>
+                              </div>  
+                          </div>
+                      `;
+                      document.getElementById(`textarea-container-${reviewno}`).style.display = 'none';
+                      document.getElementById(`adreply_cancel-${reviewno}`).style.display = 'none';
+                      document.getElementById(`adreply-${reviewno}`).style.display = 'none';
+                      document.querySelector(`#review-item-${reviewno}`).insertAdjacentHTML('beforeend', adminReplyHTML);
+
+                      
+                    }else{
+                      alert("댓글 등록에 실패했습니다.")
+                    }
+             
+                  })
+                  .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                  });
+                 
+                  
+                };
+          });
+            
+          
+            
             
             
           })
@@ -356,7 +492,19 @@
           });
         }
       });
+      
+      
+   
 
+
+     
+      //---------------------------------------------------------------------------
+      
+      
+      
+      
+      
+      
       // 별점 HTML을 생성하는 함수
       function generateStars(star) {
         let stars = '';
@@ -369,12 +517,108 @@
         }
         return stars;
       }
+      
+      
+      
+     // 작성일자 표시 함수
+      function timeSince(date) { 
+          const parsedDate = new Date(date);
+          if (isNaN(parsedDate)) {
+              return "잘못된 날짜";
+          }
+          const seconds = Math.floor((new Date() - parsedDate) / 1000);
+          let interval = seconds / 31536000;
+      
+          if (interval > 1) {
+              return Math.floor(interval) + "년 전";
+          }
+          interval = seconds / 2592000;
+          if (interval > 1) {
+              return Math.floor(interval) + "달 전";
+          }
+          interval = seconds / 86400;
+          if (interval > 1) {
+              return Math.floor(interval) + "일 전";
+          }
+          interval = seconds / 3600;
+          if (interval > 1) {
+              return Math.floor(interval) + "시간 전";
+          }
+          interval = seconds / 60;
+          if (interval > 1) {
+              return Math.floor(interval) + "분 전";
+          }
+          return Math.floor(seconds) + "초 전";
+      }
 
-      // 페이지 로드 시 최신순으로 리뷰 목록을 불러오도록 설정
-      window.onload = function () {
-        
-        loadReviews('recent');
-      };
+
+      
+                
+          // 목록 출력
+          // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+          function list_by_contentsno_join(reviewno, callback) { // 목록 출력
+            
+            
+            // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+            fetch("/adreply/admin_read?reviewno=" + reviewno , {
+              "method": "get" 
+            })
+            .then((response) => response.json())
+            .then((data) => {
+              let adminReplyHTML = '';
+              if (data['adcontents'] == undefined){
+                console.log("실패");
+               // alert('실패')
+              } else {
+                
+                let adcontents = data['adcontents']
+                let addate = data['addate'];
+                let adupdate = data['adupdate'];
+
+       
+                // 관리자 댓글 조회 표시
+                
+                  adminReplyHTML = `
+                    <div style=" padding: 7px;">
+                      <div style="margin-left: 17px; margin-bottom: 5px;">
+                        <span style="font-size: 16px;">개발자 답변 </span>&nbsp;&nbsp;<span style="font-size: 12px;">${timeSince(addate)}</span>
+                      </div>
+                      <div style="margin-left: 30px; background-color:#e6e6e6; padding: 3px 0px 5px 10px; border-radius: 9px; margin-right:20px;" >
+                        <div>
+                          <span style="font-size: 13px;">${adcontents}</span>
+                        </div>
+                      </div>  
+                    </div>
+                  `;
+              
+              }
+              callback(adminReplyHTML);
+  
+              
+
+              // result_tag.value = data['res'];
+              // result_animation_tag.innerHTML = '';
+              //let msg = '';
+              //for (let i=0; i < cnt; i++) {
+                // let row = data['res'][i];
+              //  let row = reply_data[i];
+              //  msg += "<div id='"+row.replyno+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+              //  msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+              //  msg += "  " + row.rdate;
+          
+              //  if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+              //    msg += " <a href='javascript:reply_update("+row.replyno+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+              //    msg += " <a href='javascript:reply_delete("+row.replyno+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+              //  }
+              //  msg += "  " + "<br>";
+              //  msg += row.content;
+              // msg += "</div>";
+              //}
+             //document.getElementById("reply_list").innerHTML = msg;               
+              
+            });
+
+          }
     </script>
 
 </div>

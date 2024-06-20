@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.adreply.AdreplyProcInter;
+import dev.mvc.adreply.AdreplyVO;
 import dev.mvc.keyword.KeywordDAOInter;
 import dev.mvc.keyword.KeywordProc;
 import dev.mvc.keyword.KeywordProcInter;
@@ -56,6 +58,10 @@ public class ReviewCont {
   @Autowired
   @Qualifier("dev.mvc.reviewImage.ReviewImageProc") 
   private ReviewImageProcInter reviewImageProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.adreply.AdreplyProc")
+  private AdreplyProcInter adreplyProc;
   /***************************************************************************************/  
   /**
    * 리뷰 등록 폼
@@ -186,10 +192,12 @@ public class ReviewCont {
    */
   @GetMapping(value="/review_list_all", produces = MediaType.APPLICATION_JSON_VALUE) // 비동기 통신 코드
   @ResponseBody
-  public String review_list_all(@RequestParam(required = false, defaultValue = "recent") String sort, Model model, ReviewImageVO reviewImageVO, HttpSession session) {
+  public String review_list_all(@RequestParam(required = false, defaultValue = "recent") 
+                                String sort, Model model, ReviewImageVO reviewImageVO, 
+                                HttpSession session) {
 
-      int memberno = (int)session.getAttribute("memberno");
-      System.out.println("memberno-->-->" + memberno);
+      
+      
       // 리뷰 목록 정렬을 위한 JSONArray 객체 생성
       JSONArray array = new JSONArray();
       
@@ -213,7 +221,8 @@ public class ReviewCont {
       }
       for (ReviewVO review : reviewList) {
         ArrayList<ReviewImageVO> images = this.reviewImageProc.read_image(review.getReviewno());
-        MemberVO memberVO = this.memberProc.read(memberno);
+        MemberVO members = this.memberProc.read(review.getMemberno());
+        AdreplyVO adreply = this.adreplyProc.admin_read(review.getReviewno());
         JSONObject reviewJson = new JSONObject();
         reviewJson.put("reviewno", review.getReviewno());
         reviewJson.put("id", review.getId());
@@ -221,13 +230,18 @@ public class ReviewCont {
         reviewJson.put("rdate", review.getRdate());
         reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
         
-        reviewJson.put("nickname", memberVO.getNickname());
-        reviewJson.put("profile", memberVO.getProfile());
-        reviewJson.put("profilesaved", memberVO.getProfilesaved());
-        reviewJson.put("thumbs", memberVO.getThumbs());
-        reviewJson.put("sizes", memberVO.getSizes());
+        reviewJson.put("nickname", members.getNickname());
+        reviewJson.put("profile", members.getProfile());
+        reviewJson.put("profilesaved", members.getProfilesaved());
+        reviewJson.put("thumbs", members.getThumbs());
+        reviewJson.put("sizes", members.getSizes());
         
-        
+        if(adreply != null) {
+          reviewJson.put("adcontents", adreply.getAdcontents());
+          reviewJson.put("addate", adreply.getAddate());
+          reviewJson.put("adupdate", adreply.getAdupdate());
+        } 
+
 
         JSONArray imageArray = new JSONArray();
         for (ReviewImageVO image : images) {
@@ -340,6 +354,7 @@ public class ReviewCont {
   /***************************************************************************************/
   /***************************************************************************************/
   /***************************************************************************************/
+  // 긍정 또는 부정의 리뷰 키워드 색깔 입히기
   private String highlightKeywords(String content, ArrayList<KeywordVO> keywords) {
     for (KeywordVO keyword : keywords) {
         content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#81F79F;'>" + keyword.getWord() + "</span>");

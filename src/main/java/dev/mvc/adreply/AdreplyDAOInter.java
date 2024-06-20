@@ -13,9 +13,10 @@ public interface AdreplyDAOInter {
   
   /**
    * 관리자 댓글 조회
+   * @param reviewno
    * @return
    */
-  public ArrayList<AdreplyVO> list_all();
+  public AdreplyVO admin_read(int reviewno);
   
   /**
    * 총 관리자 댓글 갯수

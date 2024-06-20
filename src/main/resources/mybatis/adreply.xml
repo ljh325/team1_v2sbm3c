@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 주찬 xml   (o)표시: 수정 완료  -->
+<!--
+  ADREPLYNO       NUMBER(10)      NOT NULL  PRIMARY KEY, (관리자리뷰댓글번호)
+  ADCONTENTS      VARCHAR2(1000)  NOT NULL, (댓글내용)
+  ADDATE          DATE            NOT NULL, (등록일)
+  ADUPDATE        DATE            NULL,
+  REVIEWNO        NUMBER(10)      NOT NULL, (리뷰번호)
+  FOREIGN KEY (REVIEWNO) REFERENCES REVIEW (REVIEWNO)
+  ADMINSNO                          NUMBER(10)     NOT NULL, (관리자 번호)
+-->
+  
 <mapper namespace="dev.mvc.adreply.AdreplyDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   <!-- 주찬 xml -->
   
   <!-- 관리자 댓글 생성 -->
-  <insert id='create' parameterType="dev.mvc.adreply.AdreplyVO">
+  <insert id="create" parameterType="dev.mvc.adreply.AdreplyVO">
     INSERT INTO adreply(adreplyno, adcontents, addate, reviewno)
-    VALUES (adreply_seq.nextval, #{adcontents}, sysdate, #{reviewno})
+    VALUES (adreply_seq.nextval, #{adcontents}, sysdate, #{reviewno} )
   </insert>
   
   <!-- 관리자 댓글 조회 -->
-  <select id="list_all" resultType="dev.mvc.adreply.AdreplyVO" parameterType="int">
+  <select id="admin_read" resultType="dev.mvc.adreply.AdreplyVO" parameterType="int">
     SELECT ad.adreplyno, ad.adcontents, ad.addate, ad.adupdate, ad.reviewno
     FROM adreply ad, review r
-    WHERE ad.reviewno = r.reviewno
+    WHERE ad.reviewno = r.reviewno AND ad.reviewno=#{reviewno}
   </select>
   
   
