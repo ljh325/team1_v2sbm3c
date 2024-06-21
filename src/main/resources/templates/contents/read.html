@@ -120,6 +120,10 @@
     }
   </style>
   <script>
+    function showModal(message) {
+        document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
+        $('#warningModal').modal('show'); // 모달창 표시
+      }
     function checkID() {
 
       let url = './check_login'
@@ -285,8 +289,8 @@
               let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
               //alert('Click: ' + id);
               if (id == '') {
-                alert('로그인 후 댓글 입력 가능합니다.');
-                location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+                showModal('로그인 후 댓글 입력 가능합니다.');
+                
               } else {
 
               }
@@ -1055,6 +1059,22 @@
       </li>
     </ul>
   </fieldset>
+  
+  <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel">경고</h5>
+          </div>
+          <div class="modal-body" id="modalBody">
+            <!-- 경고 메시지가 여기에 표시됩니다 -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="modalConfirmButton">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 </div>
 

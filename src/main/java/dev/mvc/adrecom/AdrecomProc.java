@@ -27,7 +27,7 @@ public class AdrecomProc implements AdrecomProcInter {
 
   @Override
   public AdrecomVO adrecom_check(HashMap<String, Object> hashmap) {
-    AdrecomVO adrecomVO = this.adrecom_check(hashmap);
+    AdrecomVO adrecomVO = this.adrecomDAO.adrecom_check(hashmap);
     return adrecomVO;
   }
 

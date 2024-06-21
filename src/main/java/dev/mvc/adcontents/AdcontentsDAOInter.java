@@ -149,4 +149,11 @@ public interface AdcontentsDAOInter {
    */
   public int recom(int adcontentsno);
   
+  /**
+   * 추천수 감소
+   * @param adcontentsno
+   * @return
+   */
+  public int recom_cancel(int adcontentsno);
+  
 }

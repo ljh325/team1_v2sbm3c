@@ -260,4 +260,11 @@
     WHERE adcontentsno = #{adcontentsno}
   </update>
   
+  <!-- 추천수 감소 -->
+  <update id="recom_cancel" parameterType="int">
+    UPDATE adcontents
+    SET recom = recom - 1
+    WHERE adcontentsno = #{adcontentsno}
+  </update>
+  
 </mapper>

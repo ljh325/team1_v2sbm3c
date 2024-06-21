@@ -1,10 +1,12 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     .title_line_text {
       font-size: 14px;
     }
+
     ul {
       padding-left: 0;
       list-style-type: none;
@@ -15,7 +17,8 @@
       padding-left: 0;
     }
 
-    span,div {
+    span,
+    div {
       font-size: 14px;
     }
 
@@ -58,65 +61,252 @@
       width: 100%;
       height: 100%;
     }
+
+    .author-label {
+      background-color: #007bff;
+      /* Blue background for author label */
+      color: white;
+      /* White text color for author label */
+      padding: 3px 8px;
+      /* Padding to make the label larger */
+      padding-bottom: 1px;
+      border-radius: 15px;
+      /* Large border-radius for rounded shape */
+      font-size: 0.9em;
+      margin-left: 5px;
+      display: inline-block;
+    }
+
+    .like-button {
+      text-align: center;
+    }
+
+    .button-like {
+      background-color: transparent;
+      border: none;
+      color: black;
+      font-size: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s;
+      /* 아이콘에 적용할 transition */
+    }
+
+    .button-like:focus {
+      outline: none;
+    }
+
+    .button-like.liked #likeIcon {
+      color: dodgerblue;
+    }
+
+    #likeIcon {
+      transition: color 0.3s;
+      /* 아이콘에 직접 transition 적용 */
+    }
+
+    #likeText {
+      margin-left: 10px;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    .button-like.liked #likeText {
+      color: dodgerblue;
+    }
   </style>
   <script>
-    
+
     function checkID() {
-      
-        let url = './check_login'
-        fetch(url, {
-            method: 'GET',
-            // headers: {
-            //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
-            // },
-            // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
-        })
+
+      let url = './check_login'
+      fetch(url, {
+        method: 'GET',
+        // headers: {
+        //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+        // },
+        // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
+      })
         .then(response => response.json())
         .then(rdata => {
           if (rdata.check == 0) { // 로그인 X
-            alert("로그인 후 추천 가능합니다.")              
-          } 
+            alert("로그인 후 추천 가능합니다.")
+          }
         })
         .catch(error => { // 서버 다운등 통신 에러
-            console.error('Error:', error);
-        });                  
+          console.error('Error:', error);
+        });
 
-       // ---------------------------------------------------------------------------------------
-       // fetch 관련 종료
-       // ---------------------------------------------------------------------------------------
-        
+      // ---------------------------------------------------------------------------------------
+      // fetch 관련 종료
+      // ---------------------------------------------------------------------------------------
+
+    }
+
+    //---------------------------------------------- 추천 기능 부분 -------------------------------------------------------
+    window.onload = () => {
+      document.getElementById('likeButton').addEventListener('click', () => {
+        const button = document.getElementById('likeButton');
+        const icon = document.getElementById('likeIcon');
+
+        let id = '[[${session.memberno}]]'; //  JavaScript -> Thymeleaf -> Session
+        //alert('Click: ' + id);
+        if (id == '') {
+          alert('로그인 후 추천 가능합니다.');
+          location.href = "/member/login?url=adcontents/read?adcontentsno=[[${adcontentsVO.adcontentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+        }
+
+        fetch("/adrecom/read?adcontentsno=[[${adcontentsVO.adcontentsno}]]", {
+          "method": "get" // get 방식은 header 와 body 불필요
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            let row = data['res'];
+
+            if (row == 0) {
+              button.classList.add('liked');
+              icon.classList.remove('far');
+              icon.classList.add('fas');
+
+              fetch("/adrecom/create", {
+                "method": "post",
+                "headers": {"Content-Type": "application/json"},
+                body: JSON.stringify({"adcontentsno": "[[${adcontentsVO.adcontentsno}]]"}),
+                credentials: "include"
+              })
+                .then((response) => response.json())
+                .then((data) => {
+
+                });
+
+            } else if (row != 0) {
+
+              fetch("/adrecom/check?adcontentsno=[[${adcontentsVO.adcontentsno}]]", {
+                "method": "get" // get 방식은 header 와 body 불필요
+              })
+                .then((response) => response.json())
+                .then((data) => {
+
+                  let recom = data['res']['adrecom'];
+
+                  if (recom == 1) {
+                    button.classList.remove('liked');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+
+                    fetch("/adrecom/decrease", {
+                      "method": "post",
+                      "headers": {"Content-Type": "application/json"},
+                      body: JSON.stringify({"adcontentsno": "[[${adcontentsVO.adcontentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                      credentials: "include"
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        let decrease_row = data['res'];
+
+
+                      });
+                  } else if (recom == 0) {
+                    button.classList.add('liked');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+
+                    fetch("/adrecom/increase", {
+                      "method": "post",
+                      "headers": {"Content-Type": "application/json"},
+                      body: JSON.stringify({"adcontentsno": "[[${adcontentsVO.adcontentsno}]]", "memberno": "[[${session.memberno}]]"}),
+                      credentials: "include"
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+
+                      });
+                  }
+
+                });
+            }
+
+          });
+
+      });
+
+      let id = '[[${session.memberno}]]'; //  JavaScript -> Thymeleaf -> Session
+      if (id != '') {
+        adrecom_form();
       }
-      
-      
-      
-     
-   
-   
+    }
+    //---------------------------------------------- 추천 기능 부분 종료 -------------------------------------------------------
+    function adrecom_form() { // 추천 폼
+      const button = document.getElementById('likeButton');
+      const icon = document.getElementById('likeIcon');
+      fetch("/adrecom/read?adcontentsno=[[${adcontentsVO.adcontentsno}]]", {
+        "method": "get" // get 방식은 header 와 body 불필요
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let row = data['res'];
+
+          if (row != 0) {
+            fetch("/adrecom/check?adcontentsno=[[${adcontentsVO.adcontentsno}]]", {
+              "method": "get" // get 방식은 header 와 body 불필요
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                let recom = data['res']['adrecom'];
+
+                if (recom == 1) {
+
+                  button.classList.add('liked');
+                  icon.classList.remove('far');
+                  icon.classList.add('fas');
+
+                } else if (recom == 0) {
+                  button.classList.remove('liked');
+                  icon.classList.remove('fas');
+                  icon.classList.add('far');
+
+                }
+              });
+          }
+        });
+    }
+
+
+
+
   </script>
   <div class='title_line'>
-    <span th:text="${cateVO.name }" class="title_line_text"></span > 
-    > <span th:text="${cateVO.namesub}" class="title_line_text"></span > 
+    <span th:text="${cateVO.name }" class="title_line_text"></span>
+    > <span th:text="${cateVO.namesub}" class="title_line_text"></span>
     > 글 조회
-  </div> 
- <aside class="aside_right" >
-      <a th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">목록</a>
-      <span class='menu_divide' >│</span>
-      <span th:if="${session.grade == 'admin'}">
-        <a th:href="@{|/adcontents/create?cateno=${cateVO.cateno}|}">등록</a>
-        <span class='menu_divide' >│</span>
-        <a th:href="@{|/adcontents/youtube?cateno=${cateVO.cateno }&adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
-        <span class='menu_divide' >│</span>
-        <a th:href="@{|/adcontents/update_text?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">글 수정</a>
-        <span class='menu_divide' >│</span>
-        <a th:href="@{|/adcontents/update_file?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
-        <span class='menu_divide' >│</span>
-        <a th:href="@{|/adcontents/delete?adcontentsno=${adcontentsVO.adcontentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>  
-        <span class='menu_divide' >│</span>
-      </span>
-      <a href="javascript:location.reload();">새로고침</a>
-      <span class='menu_divide' >│</span>    
- </aside>
- <!-- 
+  </div>
+  <aside class="aside_right">
+    <a th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">목록</a>
+    <span class='menu_divide'>│</span>
+    <span th:if="${session.grade == 'admin'}">
+      <a th:href="@{|/adcontents/create?cateno=${cateVO.cateno}|}">등록</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/adcontents/youtube?cateno=${cateVO.cateno }&adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/adcontents/update_text?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">글
+        수정</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/adcontents/update_file?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}|}">파일
+        수정</a>
+      <span class='menu_divide'>│</span>
+      <a
+        th:href="@{|/adcontents/delete?adcontentsno=${adcontentsVO.adcontentsno}&cateno=${cateVO.cateno}&word=${word}&now_page=${now_page}|}">삭제</a>
+      <span class='menu_divide'>│</span>
+    </span>
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+  </aside>
+  <!-- 
   <aside class="aside_right" th:if="${session.grade != 'admin'}">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide' >│</span>    
@@ -124,10 +314,10 @@
     <span class='menu_divide' >│</span>
     <a th:href="@{|/contents/list_by_cateno_grid?cateno=${cateVO.cateno }&now_page=${now_page}&word=${word }|}">갤러리형</a>
   </aside> -->
-  
 
-  
-  
+
+
+
   <div class='menu_line'></div>
 
   <fieldset class="fieldset_basic">
@@ -136,36 +326,40 @@
         <div style="width: 100%; word-break: break-all;">
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${adcontentsVO.title}"></span>
           <span style="font-size: 1em; float:right; margin-top:7px;" th:text="${adcontentsVO.rdate}"></span><br>
-      
-            <img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
+
+          <img src='/images/none.jpg ' style='width: 25px; height: 25px; border-radius: 50%;'>
 
 
 
 
-            <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
-              th:text="${adcontentsVO.id}"></span>
+          <span style="font-size: 1em; margin-top: 10px; margin-bottom: 7px; display: inline-block;"
+            th:text="${adcontentsVO.id}"></span>
 
           <span style="color:darkgray">&nbsp;조회수&nbsp;</span><span th:text="${adcontentsVO.viewcnt}"></span>
           <span style="color:darkgray">&nbsp;추천수&nbsp;</span><span th:text="${adcontentsVO.recom}"></span>
-          
+
           <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
-          
+
         </div>
         <div style="width: 100%; word-break: break-all;">
-          <div th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
-          <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}" style="width: 100%; height: auto; display: block; margin-top: 0.5%; margin-bottom: 1%;">
-        </div>
+          <div
+            th:if="${adcontentsVO.file1.endsWith('jpg') or adcontentsVO.file1.endsWith('png') or adcontentsVO.file1.endsWith('gif')}">
+            <img th:src="@{|/adcontents/storage/${adcontentsVO.file1saved}|}"
+              style="width: 100%; height: auto; display: block; margin-top: 0.5%; margin-bottom: 1%;">
+          </div>
 
           <div style="white-space: pre-wrap;"><span th:text="${adcontentsVO.content}"></span></div>
         </div>
-      </li>     
-      
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;" th:if="${adcontentsVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;' class ="video-container" th:utext="${adcontentsVO.youtube}">
+      </li>
+
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
+        th:if="${adcontentsVO.youtube.length() > 0}">
+        <div style='text-align: center; width:640px; margin: 0px auto;' class="video-container"
+          th:utext="${adcontentsVO.youtube}">
         </div>
 
       </li>
-      
+      <!--
       <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
         <span th:if="${session.memberno != null}">
           <button id = "recom" type="button" th:attr="onclick=|location.href='/adcontents/recom?adcontentsno=${adcontentsVO.adcontentsno}&word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">추천</button>
@@ -175,25 +369,38 @@
           <button id = "recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
         </span>
       </li>
-      
+      -->
+      <li class="li_none" style="clear: both;">
+        <span style="color:dimgray" th:text="|태그(키워드): ${adcontentsVO.tag}|"></span>
+
+        <div class="like-button">
+          <button id="likeButton" class="button-like">
+            <i id="likeIcon" class="far fa-thumbs-up"></i>
+            <span id="likeText">추천</span>
+          </button>
+        </div>
+      </li>
+
+
       <li class="li_none" style="clear: both;">
         <span style="color:dimgray" th:text="|태그(키워드): ${adcontentsVO.tag}|"></span>
       </li>
-      
+
       <li class="li_none" th:if="${adcontentsVO.size1 > 0}">
         <div>
-         <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
-            첨부 파일: <a th:href='@{|/download?dir=/adcontents/storage&filename=${adcontentsVO.file1saved}&downname=${adcontentsVO.file1}|}'
-                              th:text="|${adcontentsVO.file1}|"></a> <span th:text="|(${adcontentsVO.size1_label})|"></span>  
+          <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
+          첨부 파일: <a
+            th:href='@{|/download?dir=/adcontents/storage&filename=${adcontentsVO.file1saved}&downname=${adcontentsVO.file1}|}'
+            th:text="|${adcontentsVO.file1}|"></a> <span th:text="|(${adcontentsVO.size1_label})|"></span>
         </div>
-      </li>   
+      </li>
       <hr style="border: 0; border-top: 1px solid black; margin-top:5px;"> <!-- 글 제목/내용 나누는 부분 -->
     </ul>
   </fieldset>
-  
+
   <!--<div th:replace="~{comments/comm::comments_fragment}"></div>-->
-  </div>
+</div>
 
 </body>
- 
+
 </html>

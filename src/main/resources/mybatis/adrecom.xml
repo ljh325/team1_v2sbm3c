@@ -21,7 +21,7 @@
   <select id ="adrecom_check" resultType="dev.mvc.adrecom.AdrecomVO" parameterType="HashMap">
     SELECT adrecomno, adrecom, adcontentsno, memberno
     FROM adrecom
-    WHERE adcontentsno = #{adcontentsno} and memberno = #{memberno}
+    WHERE adcontentsno = #{adcontentsno} AND memberno = #{memberno}
   </select>
   
   <!-- 회원이 누른 추천 게시글 조회 -->

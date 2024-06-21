@@ -149,6 +149,13 @@ public interface AdcontentsProcInter {
    */
   public int recom(int adcontentsno);
   
+  /**
+   * 추천수 감소
+   * @param adcontentsno
+   * @return
+   */
+  public int recom_cancel(int adcontentsno);
+  
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
    * 현재 페이지: 11 / 22   [이전] 11 12 13 14 15 16 17 18 19 20 [다음] 
