@@ -44,18 +44,22 @@
     FROM (
         SELECT healthrecomno, hrecom, goalsno, mhno, rdate, rownum AS r
         FROM (
-            SELECT healthrecomno, hrecom, goalsno, mhno, rdate
-            FROM healthrecom
+            SELECT hr.healthrecomno, hr.hrecom, hr.goalsno, hr.mhno, hr.rdate
+            FROM healthrecom hr
+             JOIN mh mh ON hr.mhno = mh.mhno
+            JOIN member m ON mh.memberno = m.memberno
             <where>
                 <if test="word != null and word != ''">
-                    UPPER(hrecom) LIKE '%' || UPPER(#{word}) || '%'
+                    UPPER(hr.hrecom) LIKE '%' || UPPER(#{word}) || '%'
                 </if>
             </where>
-            ORDER BY healthrecomno DESC
+            ORDER BY hr.healthrecomno DESC
         )
     )
     WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
 </select>
+
+
   <!-- 검색된 레코드 수 -->
   <select id="list_search_count" resultType="int" parameterType="String">
     SELECT COUNT(*) as cnt

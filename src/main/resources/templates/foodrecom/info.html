@@ -1,0 +1,33 @@
+<div th:fragment="info_list"> <!-- <div th:replace=... -->
+    
+  <div  class="container mt-3 d-flex justify-content-around" style="width: 100%; margin: 5px auto;">
+  <div style="width: 45%;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><h4>건강 정보</h4></li>
+      <li class="list-group-item">체중: <span th:text="${foodrecomVO.kg}"></span>kg</li>
+      <li class="list-group-item">체지방: <span th:text="${foodrecomVO.ckg}"></span>%</li>
+      <li class="list-group-item">신장:<span th:text="${foodrecomVO.cm}"></span>cm</li>
+      <li class="list-group-item">골격근량: <span th:text="${foodrecomVO.muscle}"></span>kg</li>
+    </ul>
+  </div>
+
+  <div style="width: 45%;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><h4>사용된 목표</h4></li>
+      <li class="list-group-item">체중: <span th:text="${foodrecomVO.g_kg}"></span>kg</li>
+      <li class="list-group-item">체지방: <span th:text="${foodrecomVO.g_ckg}"></span>%</li>
+      <li class="list-group-item">신장:<span th:text="${foodrecomVO.g_cm}"></span>cm</li>
+      <li class="list-group-item">골격근량: <span th:text="${foodrecomVO.g_muscle}"></span>kg</li>
+    </ul>
+  </div>
+</div>
+ 
+
+  
+  
+  
+  
+
+  
+  
+  </div>

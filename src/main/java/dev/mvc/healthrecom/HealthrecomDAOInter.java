@@ -46,7 +46,7 @@ public interface HealthrecomDAOInter {
   
   public ArrayList<HealthrecomVO> list_search_paging(Map<String, Object> map);
   
-  public int list_search_count(String word);
+  public int list_search_count(Map<String, Object> map);
   
 
 }

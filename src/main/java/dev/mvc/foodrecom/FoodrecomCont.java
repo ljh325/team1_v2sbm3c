@@ -73,11 +73,11 @@ public class FoodrecomCont {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
     
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
     
 
-    int search_count = this.foodrecomProc.list_search_count(word);
+    int search_count = this.foodrecomProc.list_search_count(word,memberno);
     String paging = this.foodrecomProc.pagingBox(now_page, 
         word, "list_all", search_count, this.record_per_page, this.page_per_block);
     model.addAttribute("paging", paging);
@@ -126,41 +126,41 @@ public class FoodrecomCont {
       @PathVariable(name="goalsno") int goalsno,
       @PathVariable(name="mhno") int mhno,
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    model.addAttribute("goalsno", goalsno);
-    model.addAttribute("mhno", mhno);
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
-    model.addAttribute("list", list);
     
-
-    int search_count = this.foodrecomProc.list_search_count(word);
-    String paging = this.foodrecomProc.pagingBox(now_page, 
-        word, "list_all", search_count, this.record_per_page, this.page_per_block);
-    model.addAttribute("paging", paging);
-    model.addAttribute("now_page", now_page);
-    model.addAttribute("word", word);
+    if (this.memberProc.isMember(session) ) {
+      
+      int memberno = (int)session.getAttribute("memberno");  
+      model.addAttribute("goalsno", goalsno);
+      model.addAttribute("mhno", mhno);
+      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+      
+  
+      int search_count = this.foodrecomProc.list_search_count(word,memberno);
+      String paging = this.foodrecomProc.pagingBox(now_page, 
+          word, "list_all", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("word", word);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+     
     
-    int no = search_count - ((now_page - 1) * this.record_per_page);
-    model.addAttribute("no", no);
     
-
-    
-   
-  if (this.memberProc.isMember(session)) {
-  int memberno = (int)session.getAttribute("memberno");
+    FoodrecomVO foodrecomVO = new FoodrecomVO();
+    model.addAttribute("foodrecomVO", foodrecomVO);
   
   
-  FoodrecomVO foodrecomVO = new FoodrecomVO();
-  model.addAttribute("foodrecomVO", foodrecomVO);
-
-
-
-  return "/foodrecom/create"; // /foodrecom/list_all.html
-  }else {
-    return "index";
+  
+    return "/foodrecom/create"; // /foodrecom/list_all.html
+ 
+  
+    }else {
+      return "index";
+    }
   }
-
-  }
-    
+  
 
 
 //  
@@ -231,10 +231,10 @@ public class FoodrecomCont {
       
     int memberno = (int)session.getAttribute("memberno");
    
-    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
    
-    int search_count = this.foodrecomProc.list_search_count(word);
+    int search_count = this.foodrecomProc.list_search_count(word,memberno);
     String paging = this.foodrecomProc.pagingBox(now_page, 
         word, "list_all", search_count, this.record_per_page, this.page_per_block);
     model.addAttribute("paging", paging);
@@ -258,13 +258,13 @@ public class FoodrecomCont {
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     if (this.memberProc.isMember(session)) {
-
-      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      int memberno = (int)session.getAttribute("memberno");
+      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
       model.addAttribute("list", list);
    
       
 
-      int search_count = this.foodrecomProc.list_search_count(word);
+      int search_count = this.foodrecomProc.list_search_count(word,memberno);
       String paging = this.foodrecomProc.pagingBox(now_page, 
           word, "list_all", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);
@@ -298,13 +298,13 @@ public class FoodrecomCont {
                               ) {
     
     if (this.memberProc.isMember(session)) {
-      
-      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      int memberno = (int)session.getAttribute("memberno");
+      ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, memberno,now_page, this.record_per_page);    
       model.addAttribute("list", list);
    
       
 
-      int search_count = this.foodrecomProc.list_search_count(word);
+      int search_count = this.foodrecomProc.list_search_count(word,memberno);
       String paging = this.foodrecomProc.pagingBox(now_page, 
           word, "list_all", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);
