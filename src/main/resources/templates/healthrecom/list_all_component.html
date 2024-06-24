@@ -1,117 +1,109 @@
-<div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
-  
+<div th:fragment="list_all_fragment">
   <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+      const exercise_routine = document.getElementById('exercise_routine');
+      if (!exercise_routine) {
+        console.error('exercise_routine element not found');
+        return;
+      }
 
-    
-    function updateHealthrecom(healthrecomno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/healthrecom/update';
-        
-        // input 엘리먼트 생성하여 healthrecomno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "healthrecomno";
-        input.value = healthrecomno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
+      const hrecom = exercise_routine.dataset.hrecom;
+      if (!hrecom) {
+        console.error('hrecom data not found');
+        return;
+      }
 
-    function deleteHealthrecom(healthrecomno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/healthrecom/delete';
-        
-        // input 엘리먼트 생성하여 healthrecomno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "healthrecomno";
-        input.value = healthrecomno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-    
-   
-    function readHealthrecom(healthrecomno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "POST";
-        form.action ='/healthrecom/read';
-        
-        // input 엘리먼트 생성하여 healthrecomno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "healthrecomno";
-        input.value = healthrecomno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-</script>
- <div class='menu_line'></div>
- <div style="margin: 1em;">
-  <table class="table table-striped" style='width: 100%;'>
-    
-    <colgroup>
-      <col style='width: 10%;'/>
-      <col style='width: 60%;'/>
-      <col style='width: 20%;'/>
-     
- 
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="th_bs">번호</th>
-        <th class="th_bs">생성시간</th>
-        <th class="th_bs">기타</th>
-        
+      const word = document.getElementById('word').value.toLowerCase();
+      let mealData2;
+      try {
+        mealData2 = JSON.parse(hrecom);
+      } catch (e) {
+        console.error('Failed to parse hrecom data:', e);
+        return;
+      }
 
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="healthrecomVO, status:${list}">
-        <td class="td_basic" th:text="|${no - status.index}|"></td>
-    
-        <td class="td_basic" th:text="${healthrecomVO.rdate.substring(0, 10)}"></td>
-  
-        <td class="td_basic">
-        <a th:href="@{|/healthrecom/read?healthrecomno=${healthrecomVO.healthrecomno}&word=${word}&now_page=${now_page}|}"><img src="/images/read.png" class="icon"></a>
-          <a th:href="@{|/healthrecom/delete?healthrecomno=${healthrecomVO.healthrecomno}&word=${word}&now_page=${now_page}|}"><img src="/images/delete.png" class="icon"></a>
+      // 요일별 운동 루틴을 출력
+      mealData2.healths["rutin"].forEach(dayData => {
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('day');
+        dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
+        
+        dayData.health.forEach(exercise => {
+          const exerciseDiv = document.createElement('div');
+          exerciseDiv.classList.add('exercise');
+       
+          const exerciseTitle = document.createElement('h3');
+          if (exercise.exname.toLowerCase().includes(word) && word !== "") {
+            exerciseTitle.classList.add('highlight'); // highlight 클래스 추가
+          }
+          exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
+
+          const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+          exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+
+          const exerciseDetails = document.createElement('p');
+          exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
           
-        </td>
-      </tr>
-    </tbody>
-  </table>
- </div>
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="Bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
-  
+          exerciseDiv.appendChild(exerciseTitle);
+          exerciseDiv.appendChild(exerciseDetails);
+          
+          dayDiv.appendChild(exerciseDiv);
+        });
+        
+        exercise_routine.appendChild(dayDiv);
+      });
+
+      // 이벤트 위임을 사용하여 삭제 버튼 처리
+     
+    });
+    
+     document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete')) {
+          let div = event.target.closest('.delete-container');
+          let healthrecomno = div.querySelector('.healthrecomno').value;
+
+          fetch("/healthrecom/delete", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ healthrecomno: healthrecomno })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success === "success") {
+              location.reload(); // 성공 시 페이지 리로드
+            } else {
+              console.error("Delete failed");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+        }
+      });
+  </script>
+  <div class='menu_line'></div>
+  <br>
+  <div style="margin: 1em;">
+    <div th:each="healthrecomVO, status:${list}">
+      <div class="delete-container" style="display: flex;">
+        <span th:text="${healthrecomVO.rdate.substring(0, 10)}"></span>
+        <div style="display: block; margin-left: auto; margin-bottom:3px;">
+          <a th:href="@{|/healthrecom/read?healthrecomno=${healthrecomVO.healthrecomno}&word=${word}&now_page=${now_page}|}"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">확인</a>&nbsp;&nbsp;
+          <span class="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+          <input class="healthrecomno" type="hidden" th:value="${healthrecomVO.healthrecomno}">
+        </div>
+      </div>
+      <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>번호</span></div>
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${healthrecomVO.healthrecomno + '번'}"></span></div>
+        </div>
+      </div><br>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-

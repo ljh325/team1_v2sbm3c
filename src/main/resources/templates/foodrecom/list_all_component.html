@@ -1,169 +1,105 @@
-<div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
-  
-  <script th:inline="javascript">
+<div th:fragment="list_all_fragment">
 
-        window.onload = () => {
-          
-          let buttons = document.querySelectorAll('#delete');
-          buttons.forEach(function(button) {
-            button.addEventListener('click', function() {
- 
-                let div = this.closest('div'); // 자기 자신이 속한 부모 태그
-                let mhno = div.querySelector('#foodrecomno').value; // 부모에 속한 자식 찾기
+ <script th:inline="javascript">
+      window.onload = () => {
+        // 이벤트 위임을 사용하여 삭제 버튼 처리
+        document.addEventListener('click', function(event) {
+          if (event.target.classList.contains('delete')) {
+            let div = event.target.closest('.delete-container');
+            let foodrecomno = div.querySelector('.foodrecomno').value;
 
-                fetch("/foodrecom/delete", {
-                  method: "post",
-                  headers: {"Content-Type": "application/json"},
-                  body: JSON.stringify({foodrecom:foodrecomno})
-                })
-                .then(response => response.json())
-                .then(data => {
-                  if (data.success === "success") {
-                    location.reload()
-                    //div.parentElement.remove(); // 해당 요소 삭제
-                  } else {
-                  }
-                })
-                .catch(error => {
-                  // 에러 발생 시 경고 모달창 표시
-                  //showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
-                  console.error("Error:", error);
-                });            
-
-    
-      
-            // 추가적인 로직을 여기에 작성하세요.
+            fetch("/foodrecom/delete", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ foodrecomno: foodrecomno })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success === "success") {
+                location.reload(); // 성공 시 페이지 리로드
+              } else {
+                console.error("Delete failed");
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
             });
+          }
+        });
+
+        // 캘린더 초기화
+        const calendarDiv = document.getElementById('calendar');
+        const frecom = calendarDiv.dataset.frecom;
+        const word = document.getElementById('word').value.toLowerCase();
+        const mealData2 = JSON.parse(frecom);
+
+        // Create calendar for each day
+        mealData2.res.forEach(dayData => {
+          const dayDiv = document.createElement('div');
+          dayDiv.classList.add('day');
+          dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+          dayData.meals.forEach(meal => {
+            const mealDiv = document.createElement('div');
+            mealDiv.classList.add('meal');
+
+            // Add image if the first item exists
+            if (meal.items.length > 0) {
+              const firstItem = meal.items[0];
+              const mealTitle = document.createElement('h3');
+              mealTitle.textContent = meal.meal;
+              const mealImage = document.createElement('img');
+              mealImage.src = `/foodcate/images/f${firstItem.code}.png`;
+              mealImage.alt = firstItem.food;
+
+              mealImage.onerror = function() { // 이미지가 없으면 표시하지 않게 하는 코드
+                this.style.display = 'none';
+              };
+
+              mealTitle.appendChild(mealImage);
+              mealDiv.appendChild(mealTitle);
+            } else {
+              mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+            }
+
+            meal.items.forEach(item => {
+              const mealItem = document.createElement('p');
+              mealItem.classList.add('meal-item');
+              if (item.food.toLowerCase().includes(word) && word !== "") {
+                mealItem.classList.add('highlight'); // highlight 클래스 추가
+              }
+              mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+              mealDiv.appendChild(mealItem);
+            });
+            dayDiv.appendChild(mealDiv);
           });
-        };
+          calendarDiv.appendChild(dayDiv);
+        });
+      }
+    </script>
 
+    <div class='menu_line'></div>
+    <br>
+    <div style="margin: 1em;">
+        <div th:each="foodrecomVO, status:${list}">
+            <div class="delete-container" style="display: flex;">
+                <span th:text="${foodrecomVO.rdate.substring(0, 10)}"></span>
+                <div style=" display: block; margin-left: auto; margin-bottom:3px;">
+                    <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"
+                        style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">확인</a>&nbsp;&nbsp;
+                    <span class="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+                   <input class="foodrecomno" type="hidden" th:value="${foodrecomVO.foodrecomno}">
+                </div>
+            </div>
 
-
-
-    
-    
-    function updateFoodrecom(foodrecomno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/foodrecom/update';
-        
-        // input 엘리먼트 생성하여 foodrecomno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "foodrecomno";
-        input.value = foodrecomno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-
-  
-    
-   
-    function readFoodrecom(foodrecomno) {
-        // 새 form 엘리먼트 생성
-        var form = document.createElement("form");
-        form.method = "GET";
-        form.action ='/foodrecom/read';
-        
-        // input 엘리먼트 생성하여 foodrecomno 값 추가
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "foodrecomno";
-        input.value = foodrecomno;
-        
-        // form에 input 엘리먼트 추가 후 form을 body에 추가
-        form.appendChild(input);
-        document.body.appendChild(form);
-        
-        // form submit
-        form.submit();
-    }
-</script>
- <div class='menu_line'></div>
- <div style="margin: 1em;">
-    <div th:each="foodrecomVO, status:${list}">
-      <div style="display: flex;">
-        <span th:text="${foodrecomVO.rdate.substring(0, 10)}"></span>
-        <div style=" display: block; margin-left: auto; margin-bottom:3px;">
-          <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"
-            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">수정</span>&nbsp;&nbsp;</a>
-          <span class="delete" id="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
-          <input id="foodrecomno" type="hidden" th:value="${foodrecomVO.foodrecomno}">
+            <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+                <div class="row title">
+                    <div class="column"><span>번호</span></div>
+                </div>
+                <div class="row">
+                    <div class="column"><span th:text="${foodrecomVO.foodrecomno + '번'}"></span></div>
+                </div>
+            </div><br>
         </div>
-      </div>
-
-
-      <div style="background-color: #E6E6E6; border-radius: 10px; height: auto; padding: 15px;">
-        <div class="row title">
-          <div class="column"><span>번호</span></div>
-    
-        </div>
-        <div class="row">
-          <div class="column"><span th:text="${foodrecomVO.foodrecomno + '번'}"></span></div>
-          
-        </div>
-      </div><br>
-
     </div>
-   
-   
-   
-   
-  <table class="table table-striped" style='width: 100%;'>
-    
-    
-    <colgroup>
-      <col style='width: 10%;'/>
-      <col style='width: 70%;'/>
-      <col style='width: 20%;'/>
-     
- 
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="th_bs">번호</th>
-        <th class="th_bs">생성시간</th>
-        <th class="th_bs">선택</th>
-        
-
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="foodrecomVO, status:${list}">
-        <td class="td_basic" th:text="|${no - status.index}|"></td>
-        <td class="td_basic" th:text="${foodrecomVO.rdate.substring(0, 10)}"></td>
-  
-        <td class="td_basic">
-          <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"><img src="/images/read.png" class="icon"></a>
-          <a th:href="@{|/foodrecom/delete?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"><img src="/images/delete.png" class="icon"></a>
-          
-     
-          
-        </td>
-      </tr>
-    </tbody>
-  </table>
- </div>
-  
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="Bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
- 
-</div>
-
-
-
-
-
-
-
-
-
-
-

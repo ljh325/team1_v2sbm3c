@@ -24,8 +24,8 @@ app = Flask(__name__)  # __name__ == '__main__'
 CORS(app)
 
 prompt3 ='''
-[회원 건강정보]에 해당하는 사람이 [운동 목표]의 값을 목표로 운동계획을 세우고자한다 운동 기간은 무제한으로 하나 대신 [난이도]에 있는 난이도를 고려하고 일주일간의 운동 루틴을 출력한다 루틴에는 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시한다 신체 정보에 기반하여 추천해줘.
-출력 형식은 [출력 형식1]과 같은 형식으로 운동목표의 신장이 회원 건강 정보의 신장 보다 클 경우 키성장과 키교정에 도움이 되는 운동도 고려 
+[회원 건강정보]에 해당하는 사람이 [운동 목표]의 값을 목표로 운동계획을 세우고자한다 [운동표]에 있는 값을 기준으로 운동 기간은 무제한으로 하나 대신 [난이도]에 있는 난이도를 고려하고 일주일간의 운동 루틴을 출력한다 하루루틴에는 그 날 필요한 운동들의 각각의 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시한다 필요 세트는 set에, 일주일간 자극 될 근육 부위의 효율도 생각한다 신체 정보에 기반하여 추천해줘.
+출력 형식은 [출력 형식1]과 같은 형식으로  
 상체운동이면 body에 13,하체면 body에 14를 할당할것
  [회원 건강정보]
     체중: kg
@@ -49,63 +49,63 @@ prompt3 ='''
     {
       "day": "월요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
     },
     {
       "day": "화요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+    {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
       ]
     },
     {
       "day": "수요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
       ]
     },
     {
       "day": "목요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+       {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
       ]
     },
     {
       "day": "금요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+     {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
       ]
     },
     {
       "day": "토요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+       {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
       ]
     },
     {
       "day": "일요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": },
-        {"exname": , "musclesub": , "cal": , "time": ,"body": }
+     {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
     }
   ]
 }}

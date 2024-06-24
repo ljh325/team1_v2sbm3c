@@ -98,13 +98,9 @@
       </div><br>
 
     </div>
-    <!-- 신체 정보 목록 -->
-    
-    <!-- 신체 정보 가 없을 경우 -->
-    <div th:if="${mhVO == null}" style="text-align: center;">
-      <br>
-      <br>
-      <span th:text="${nulls}"></span>
+ 
+    <div th:if="${foodrecomVO == null}" style="text-align: center;">
+   
     </div>
     <!-- 신체 정보 가 없을 경우 -->
 
@@ -142,9 +138,9 @@
             // 추가적인 로직을 여기에 작성하세요.
             });
           });
-        };
-
-
+        }
+ 
+   
 
     </script>
     

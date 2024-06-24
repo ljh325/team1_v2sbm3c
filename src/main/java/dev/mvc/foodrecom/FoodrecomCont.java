@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,18 +91,27 @@ public class FoodrecomCont {
     
     
     FoodrecomVO foodrecomVO = this.foodrecomProc.read(foodrecomno);
-
-    model.addAttribute("foodrecomVO", foodrecomVO);
-    String frecom = foodrecomVO.getFrecom();
- 
-
-    model.addAttribute("frecom", frecom);
-//    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
-//    model.addAttribute("list", list);
-//    
     
-    return "foodrecom/read";
+    if (foodrecomVO ==null) {
+      return "redirect:list_all";
+    } else {
+        model.addAttribute("foodrecomVO", foodrecomVO);
+        String frecom = foodrecomVO.getFrecom();
+     
+    
+        model.addAttribute("frecom", frecom);
+    //    ArrayList<FoodrecomVO> list = this.foodrecomProc.list_all(memberno);
+    //    model.addAttribute("list", list);
+    //    
+        
+        return "foodrecom/read";
+        }
+        
     }
+    
+    
+    
+    
     else {
       return "index";
     }
@@ -292,13 +303,15 @@ public class FoodrecomCont {
    
   
   @PostMapping(value="/delete")
-  public String delete_process(HttpSession session,Model model,@RequestParam("foodrecomno") int foodrecomno,
+  @ResponseBody
+  public String delete_process(HttpSession session,Model model, @RequestBody Map<String, Integer> requestBody,
       @RequestParam(name="word", defaultValue = "") String word,
       @RequestParam(name="now_page", defaultValue = "1") int now_page
                               ) {
     
     if (this.memberProc.isMember(session)) {
       int memberno = (int)session.getAttribute("memberno");
+      int foodrecomno = requestBody.get("foodrecomno");
       ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word, memberno,now_page, this.record_per_page);    
       model.addAttribute("list", list);
    
@@ -318,28 +331,37 @@ public class FoodrecomCont {
 
       model.addAttribute("foodrecomVO", foodrecomVO);
       String frecom = foodrecomVO.getFrecom();
-  
-    
-    
-    int cnt = this.foodrecomProc.delete(foodrecomno);
-    if (cnt == 1) {
       
-      return "redirect:/foodrecom/list_all";
+      JSONObject obj = new JSONObject();
       
-    } else {
-      model.addAttribute("code", "delete_fail");
-      return "mh/msg"; // /templates/mh/msg.html
-       }
-    }
-    else {
+      int cnt = this.foodrecomProc.delete(foodrecomno); //부모 테이블에 
+      obj.put("cnt", cnt);
+      System.out.println("cnt" + cnt);
+      if (cnt == 1) {
+        obj.put("success", "success");
+      } else {
+        obj.put("errors", "errors");
+      }
+      return obj.toString();
+      } else {
       return "index";
-    }
-
+      }
   
-    
   }
-  
-  
-}
+//    
+//    int cnt = this.foodrecomProc.delete(foodrecomno);
+//    if (cnt == 1) {
+//      
+//      return "redirect:/foodrecom/list_all";
+//      
+//    } else {
+//      model.addAttribute("code", "delete_fail");
+//      return "mh/msg"; // /templates/mh/msg.html
+//       }
+//    }
+//    else {
+//      return "index";
+//    }
 
-
+  
+  }

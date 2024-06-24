@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
 <div layout:fragment="content">
   <style>
-   
-
     .container {
       width: 90%;
       margin: 10px auto;
@@ -50,129 +47,30 @@
       width: 90%;
     }
 
-    .meal {
-      margin-bottom: 10px;
+    .highlight {
+      background-color: skyblue; /* 검색한 단어를 강조하기 위한 스타일 */
+      font-weight: bold; /* 강조할 글자 굵기 */
     }
-
-    .meal h3 {
-      margin-bottom: 5px;
-      text-align: center; /* 가운데 정렬 */
-    }
-
-    .meal-item {
-      margin-bottom: 3px;
-    }
-
-    .highlight {  
-          background-color: skyblue; /* 검색한 단어를 강조하기 위한 스타일 */
-          font-weight: bold; /* 강조할 글자 굵기 */
-        }
-    
-    
-
-    #recomForm select {
-      margin-bottom: 10px; /* 원하는 간격 값 설정 */
-    }
-
-
-    a {
-      color: black;
-      text-decoration: none; /* 밑줄 제거 */
-    }
-
-    a:hover {
-      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
-    }
-  </style> 
+  </style>
   
-<script>
-      window.onload = () => {
-      const exercise_routine = document.getElementById('exercise_routine');
-
-      const hrecom = exercise_routine.dataset.hrecom;
-    
-       const word = document.getElementById('word').value.toLowerCase();
-       const mealData2 = JSON.parse(hrecom)
-      
-
-
-      // 요일별 운동 루틴을 출력
-      mealData2.healths["rutin"].forEach(dayData => {
-        const dayDiv = document.createElement('div');
-        dayDiv.classList.add('day');
-        dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
-        
-        dayData.health.forEach(exercise => {
-          const exerciseDiv = document.createElement('div');
-          exerciseDiv.classList.add('exercise');
-       
-          
-          const exerciseTitle = document.createElement('h3');
-          if (exercise.exname.toLowerCase().includes(word) && word != "") {
-                            exerciseTitle.classList.add('highlight'); // highlight 클래스 추가
-                        }
-          exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
-          
-
-          const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-          //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-          exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
-          
-
-          const exerciseDetails = document.createElement('p');
-          exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
-          
-          exerciseDiv.appendChild(exerciseTitle);
-          exerciseDiv.appendChild(exerciseDetails);
-          
-          dayDiv.appendChild(exerciseDiv);
-        });
-        
-        exercise_routine.appendChild(dayDiv);
-      });
- 
-    }
-  </script>
-   
-   
-   
-   
-
   <div class="title_line">운동 추천 조회</div>
   
-  
-  
-   <aside class="aside_right">
+  <aside class="aside_right">
     <a href="/healthrecom/list_all">목록</a>
-  
     <span class="menu_devide">│</span>
     <a href="/mh/list_all">새로운 추천</a>
   </aside>
 
   <div th:replace="~{healthrecom/search::list_all_fragment}"></div>
-  <div style="width: 100%">
 
-  </div>
-
- <div class="menu_line"></div>
-  
-  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-    <ul class="list-group list-group-flush">
-       
-       
-       
-      <li class="list-group-item">추천 날짜: <span th:text="${healthrecomVO.rdate}"></span></li>
-      <div class="exercise_routine" id="exercise_routine" th:data-hrecom="${hrecom}"></div>
+  <div style="text-align: center; margin-bottom: 14px;">
    
-      <input type="hidden" id="word" name="word" th:value="${word }">
-    </ul>  
+      <div style="text-align: center;">추천 날짜: </div><span th:text="${healthrecomVO.rdate}"></span>
+      <div class="exercise_routine" id="exercise_routine" th:data-hrecom="${hrecom}"></div>
+      <input type="hidden" id="word" name="word" th:value="${word}">
+  
   </div>
 
-  <!-- /templates/healthrecom/list_all_component.html 파일의 list_all_fragment import -->
   <div th:replace="~{healthrecom/list_all_component::list_all_fragment}"></div>
- 
 </div>
 </html>
-
-
-
