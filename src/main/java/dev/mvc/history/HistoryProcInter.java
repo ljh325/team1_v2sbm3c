@@ -1,5 +1,6 @@
 package dev.mvc.history;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface HistoryProcInter {
@@ -30,7 +31,7 @@ public interface HistoryProcInter {
    * @param memberno
    * @return
    */
-  public HistoryVO count_history(int memberno);
+  public ArrayList<HistoryVO> count_history(int memberno);
   
   /**
    * 회원 운동 기록 전체 시간

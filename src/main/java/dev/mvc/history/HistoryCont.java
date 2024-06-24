@@ -309,8 +309,14 @@ public class HistoryCont {
   // 이벤트 값
   @GetMapping("/api/events")
   @ResponseBody
-  public List<Map<String, Object>> getEvents() {
+  public List<Map<String, Object>> getEvents(HttpSession session) {
+    
+      int memberno = (int)session.getAttribute("memberno");
+      ArrayList<HistoryVO> historyVO = this.historyProc.count_history(memberno);
       List<Map<String, Object>> events = new ArrayList<>();
+      
+      
+      
       
       Map<String, Object> event1 = new HashMap<>();
       event1.put("title", "Event 1");

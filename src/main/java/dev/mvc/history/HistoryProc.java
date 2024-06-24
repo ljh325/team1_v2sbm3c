@@ -1,5 +1,6 @@
 package dev.mvc.history;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class HistoryProc implements HistoryProcInter{
   }
 
   @Override
-  public HistoryVO count_history(int memberno) {
-    HistoryVO historyVO = this.historyDAO.count_history(memberno);
+  public ArrayList<HistoryVO> count_history(int memberno) {
+    ArrayList<HistoryVO> historyVO = this.historyDAO.count_history(memberno);
     return historyVO;
   }
 

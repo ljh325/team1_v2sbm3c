@@ -34,6 +34,15 @@
       height: 450px;
       font-size: 14px;
     }
+    
+    
+     /* 현재 날짜의 스타일을 지정하는 CSS 클래스 */
+    .fc-day-today {
+      background-color: #ffcccc; /* 배경색을 연한 빨강색으로 설정 */
+      color: #683ffc; /* 텍스트 색상을 빨강색으로 설정 */
+      font-weight: bold; /* 텍스트를 굵게 설정 */
+      font-size: 15px;
+    }
   </style>
 </head>
 
@@ -45,7 +54,14 @@
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'ko',
-        events: '/mh/api/events'
+        events: '/history/api/events',
+        eventClick: function(info) {
+          // 클릭된 이벤트의 타이틀을 확인하고 alert 창을 띄움
+          if (info.event.title === 'Event 1') {
+            alert('1');
+          }
+        }
+        
       });
       calendar.render();
     });
