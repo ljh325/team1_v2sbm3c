@@ -1,0 +1,55 @@
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+
+<style>
+    body{
+      background-color: black;
+    }
+    /* =========기록 활동 버튼=============== */
+    .button-container {
+        width: 100%;
+        margin-bottom: 10px;
+        display: flex;
+    }
+
+    .button {
+        width: 50%;
+        background-color: gray;
+        padding: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .button span {
+        font-size: 17px;
+        color: white;
+    }
+
+    .button:hover {
+        background-color: lightgray;
+        transform: scale(1.05);
+    }
+    /* ===============기록 활동 버튼=============== */
+  </style>
+  
+  <div style="text-align: left;">
+  <span id="history_back" style="font-size: 25px; color: white;" onclick="history.back()">◀</span>
+
+</div>
+
+
+    <div class="button-container">
+        <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
+            <span style="color: #E6E6E6;">기록</span>
+        </div>
+        <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'" style="background-color: #E6E6E6;">
+            <span style="color: black;">활동</span>
+        </div>
+    </div>
+    
+    
+</div>
+</html>

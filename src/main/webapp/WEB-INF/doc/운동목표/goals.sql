@@ -96,3 +96,15 @@ WHERE memberno = 4;
     WHERE goalsno = #{goalsno}
 
 commit;
+
+--가장 최근에 만들어진 목표 회원별 조회기능
+----------------------------------------------
+SELECT GOALSNO, KG, CKG, CM, MUSCLE, MEMBERNO, GDATE
+FROM GOALS
+WHERE MEMBERNO = 1
+  AND GDATE = (
+    SELECT MAX(GDATE) 
+    FROM GOALS
+    WHERE MEMBERNO = 1
+);
+----------------------------------------------

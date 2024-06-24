@@ -1,0 +1,875 @@
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    body {
+      background-color: black;
+    }
+  
+    .row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+    }
+  
+    .column {
+      flex: 1;
+      text-align: center;
+      font-size: 14px;
+    }
+  
+    .column span {
+      display: block;
+    }
+  
+    .title {
+      font-weight: bold;
+    }
+    
+    
+/* ---------------- 아코디언 css------------------------------- */
+
+  
+.que:first-child{
+    border-top: 1px solid black;
+  }
+  
+.que{
+  position: relative;
+  padding: 17px 0;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 2px solid #dddddd;
+  
+}
+  
+
+
+.que.on>span{
+  font-weight: bold;
+  color: #006633; 
+
+ padding: px;
+}
+  
+.anw {
+  display: none;
+    overflow: hidden;
+  font-size: 14px;
+  background-color: #ffffff;
+  
+}
+  
+
+
+.arrow-wrap {
+  position: absolute;
+  top:50%; right: 10px;
+  transform: translate(0, -50%);
+}
+
+.que .arrow-top {
+  display: none;
+}
+.que .arrow-bottom {
+  display: block;
+}
+.que.on .arrow-bottom {
+  display: none;
+}
+.que.on .arrow-top {
+  display: block; 
+}
+/* ---------------- 아코디언 css------------------------------- */
+  </style>
+    <!-- 뒤로가기 와 기록추가버튼 -->
+    <div style="float:left">
+      <span id="history_back" style="font-size: 15px; color: white;" onclick="history.back()">◀ 뒤로가기</span>
+    </div>
+    <div style="float:right; ">
+      <span style=" font-size: 17px; color: #58FAAC;" onclick="location.href='/mh/list_all'">신체정보 추가</span>
+    </div>
+    <div style="clear: both;">
+    </div>
+    <!-- 뒤로가기 와 기록추가버튼 -->
+   
+    
+    <div style="text-align: left;">
+      <span style=" font-size: 30px; color: #D8D8D8;">신체</span>
+    </div>
+    <div style="text-align: left;">
+      <span style="color: #D8D8D8;"><i style="color:white; font-size: 20px;" class="bi bi-bar-chart-line"></i>&nbsp;&nbsp;그래프를 표시합니다.</span>
+    </div>
+    <br>
+    
+     <!-- 아코디언 시작 -->
+     <div id="Accordion_wrap">
+       <!-- 현재 체중 분석 -->
+       <div class="que">
+          <span style="font-size: 17px; color: #E6E6E6;" th:if="${mhVO != null and mhVO.kg != null}" th:text="|현재 체중 분석:&nbsp;&nbsp;&nbsp;&nbsp; ${mhVO.kg}kg|">현재 체중 분석: ${mhVO.kg}kg</span>
+          <span style="font-size: 17px; color: #E6E6E6;" th:unless="${mhVO != null and mhVO.kg != null}">신체정보를 등록해주세요</span>
+          &nbsp;&nbsp;<i class="bi bi-graph-up-arrow" style="color: white; font-size: 17px;  font-weight: bold;"></i>
+         </span>
+         <div class="arrow-wrap">
+           <span class="arrow-top">↑</span>
+           <span class="arrow-bottom">↓</span>
+         </div>
+       </div>
+       <!-- 아코디언 1번 현재 체중 분석 차트와 목표 체중 -->
+       <div class="anw" style="background-color: white;">
+          
+           <!-- 차트 시작 -->
+           <div id="chart_div" style="width: 100%; height: 100%">
+            
+           </div>
+           <!-- 차트 종료 -->
+           
+           <!-- 목표 체중 현재 체중  -->
+           <div style="padding: 10px;">
+             <div class="d-flex justify-content-around" style="background-color: white; padding: 15px; border-radius: 7px;">
+               <div>
+                 <span>현재 체중</span><br>
+                 <span th:text="|${mhVO.kg}|" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+               <div>  
+                 <span>목표 체중 까지</span><br>
+                 <span id="charts" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+               <div>
+                 <span>목표 체중</span><br>
+                 <span th:text="|${goalsVO.kg}|" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+             </div>
+           </div>
+           <!-- 목표 체중 현재 체중  --> 
+       </div>
+       <!-- 아코디언 1번 현재 체중 분석 차트와 목표 체중 -->
+       
+       <!-- 현재 체지방 분석 -->
+       <div class="que">
+         <span style="font-size: 17px; color: #E6E6E6;" th:if="${mhVO != null and mhVO.ckg != null}" th:text="|현재 체지방 분석:&nbsp;&nbsp;&nbsp;&nbsp; ${mhVO.ckg} %|">현재 체지방 분석: ${mhVO.ckg} %</span>
+         <span style="font-size: 17px; color: #E6E6E6;" th:unless="${mhVO != null and mhVO.ckg != null}">신체정보를 등록해주세요</span>
+         &nbsp;&nbsp;<i class="bi bi-graph-up-arrow" style="color: white; font-size: 17px;  font-weight: bold;"></i>
+       </div>
+       
+       <!-- 아코디언 2번 현재 체중 분석 차트와 목표 체중 -->
+       <div class="anw">
+          
+           <!-- 차트 시작 -->
+           <div id="chart_div2" style="width: 100%; height: 100%">
+            ㅇㄹㅇㄹ
+           </div>
+           <!-- 차트 종료 -->
+           
+           <!-- 목표 체중 현재 체중  -->
+           <div style="padding: 10px;">
+             <div class="d-flex justify-content-around" style="background-color: white; padding: 15px; border-radius: 7px;">
+               <div>
+                 <span>현재 체지방</span><br>
+                 <span th:text="|${mhVO.ckg}|" style="color: #58FAAC;"></span>&nbsp;%
+               </div>
+               <div>  
+                 <span>목표 체지방 까지</span><br>
+                 <span id="charts2" style="color: #58FAAC;"></span>&nbsp;%
+               </div>
+               <div>
+                 <span>목표 체지방</span><br>
+                 <span th:text="|${goalsVO.ckg}|" style="color: #58FAAC;"></span>&nbsp;%
+               </div>
+             </div>
+           </div>
+           <!-- 목표 체중 현재 체중  --> 
+       </div>
+       <!-- 아코디언 2번 현재 체중 분석 차트와 목표 체중 -->
+        
+        
+       <!-- 현재 골격근량 분석 -->
+       <div class="que">
+         <span style="font-size: 17px; color: #E6E6E6;" th:if="${mhVO != null and mhVO.muscle != null}" th:text="|현재 골격근 분석:&nbsp;&nbsp;&nbsp;&nbsp; ${mhVO.muscle} kg|">현재 골격근 분석: ${mhVO.muscle} kg</span>
+         <span style="font-size: 17px; color: #E6E6E6;" th:unless="${mhVO != null and mhVO.muscle != null}">신체정보를 등록해주세요</span>
+         &nbsp;&nbsp;<i class="bi bi-graph-up-arrow" style="color: white; font-size: 17px;  font-weight: bold;"></i>
+       </div>
+       
+       <!-- 아코디언 3번 현재 체중 분석 차트와 목표 체중 -->
+       <div class="anw">
+          
+           <!-- 차트 시작 -->
+           <div id="chart_div3" style="width: 100%; height: 100%">
+            
+           </div>
+           <!-- 차트 종료 -->
+           
+           <!-- 목표 체중 현재 체중  -->
+           <div style="padding: 10px;">
+             <div class="d-flex justify-content-around" style="background-color: white; padding: 15px; border-radius: 7px;">
+               <div>
+                 <span>현재 골격근량</span><br>
+                 <span th:text="|${mhVO.muscle}|" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+               <div>  
+                 <span>목표 골격근량 까지</span><br>
+                 <span id="charts3" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+               <div>
+                 <span>목표 골격근량</span><br>
+                 <span th:text="|${goalsVO.muscle}|" style="color: #58FAAC;"></span>&nbsp;kg
+               </div>
+             </div>
+           </div>
+           <!-- 목표 체중 현재 체중  --> 
+       </div>
+       <!-- 아코디언 3번 현재 체중 분석 차트와 목표 체중 -->
+       
+     </div>
+     <!-- 아코디언 종료 -->
+      
+      
+      
+      
+      <!-- 신체 정보 목록 -->
+      <br>
+      <br>
+      <div style="background-color: white; padding: 13px 0px 7px 0px; margin-bottom: 25px;">
+        <h3 style="color: black;">신체 정보</h3>
+      </div>
+      
+      <div th:each="mhVO, status:${list}">
+        <div style="float:left; margin-left: 17px;">
+          <span th:text="${mhVO.insertdate.substring(0, 10)}" style="color: #D8D8D8;"></span>
+        </div>
+        <div style=" float:right; margin-right: 17px; margin-bottom:3px;">
+          <span th:onclick="'javascript:updateMh(' + ${mhVO.mhno} + ')'"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">수정</span>&nbsp;&nbsp;
+          <span class="delete" id="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+          <input id="mhno" type="hidden" th:value="${mhVO.mhno}">
+        </div>
+        <div style="clear:both;">
+        </div>
+     
+  
+  
+        <div style="background-color: #E6E6E6; border-radius: 10px; height: auto; padding: 15px;">
+          <div class="row title">
+            <div class="column"><span>체중</span></div>
+            <div class="column"><span>신장</span></div>
+            <div class="column"><span>체지방</span></div>
+            <div class="column"><span>골격근량</span></div>
+          </div>
+          <div class="row">
+            <div class="column"><span th:text="${mhVO.kg + ' kg'}"></span></div>
+            <div class="column"><span th:text="${mhVO.cm + ' cm'}"></span></div>
+            <div class="column"><span th:text="${mhVO.ckg + ' %'}"></span></div>
+            <div class="column"><span th:text="${mhVO.muscle + ' kg'}"></span></div>
+          </div>
+        </div><br>
+  
+      </div>
+      <!-- 신체 정보 목록 -->
+      
+      <!-- 신체 정보 가 없을 경우 -->
+      <div th:if="${mhVO == null}" style="text-align: center;">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <span  style="font-size: 25px;">신체 정보가 없습니다.</span>
+      </div>
+      <!-- 신체 정보 가 없을 경우 -->
+
+       <script>
+       // 아코디언 자바스크립트
+       $(".que").click(function() {
+         $(this).next(".anw").stop().slideToggle(300);
+         $(this).toggleClass('on').siblings().removeClass('on');
+         $(this).next(".anw").siblings(".anw").slideUp(300); // 1개씩 펼치기
+       });
+       // 아코디언 자바스크립트
+       
+        window.onload = () => {
+          let buttons = document.querySelectorAll('#delete');
+          buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+ 
+                let div = this.closest('div'); // 자기 자신이 속한 부모 태그
+                let mhno = div.querySelector('#mhno').value; // 부모에 속한 자식 찾기
+
+                fetch("/mh/delete", {
+                  method: "post",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify({mhno:mhno})
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success === "success") {
+                    location.reload()
+                    //div.parentElement.remove(); // 해당 요소 삭제
+                  } else {
+                  }
+                })
+                .catch(error => {
+                  // 에러 발생 시 경고 모달창 표시
+                  //showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+                  console.error("Error:", error);
+                });            
+            // 추가적인 로직을 여기에 작성하세요.
+            });
+          });
+        };
+        
+        
+      chart()// 차트에 데이터 가져오는 함수
+
+
+      //==================================================================================================
+      // 차트 1번 시작 (현재 체중 분석)
+      function drawChart(parsedList, goalsVO) {
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(() => {
+          
+          var data = new google.visualization.DataTable();
+          
+          // 날짜를 표시하기 위해 'date' 타입의 열을 추가
+          data.addColumn('date', 'Date');
+          data.addColumn('number', 'Current Weight (kg)');
+          data.addColumn({type: 'string', role: 'annotation'}); // 현재 체중에 대한 annotation 열 추가
+          data.addColumn('number', 'Target Weight (kg)');
+          data.addColumn({type: 'string', role: 'annotation'}); // 목표 체중에 대한 annotation 열 추가
+  
+          // 데이터 추가
+          //data.addRows([
+          //  [new Date(2024, 5, 12), 68, '68kg', 60, '60kg 목표'],  // 2024년 6월 12일
+          //  [new Date(2024, 5, 19), 67, '67kg', 60, '60kg 목표'],  // 2024년 6월 19일
+          //  [new Date(2024, 5, 26), 65, '65kg', 60, '60kg 목표'],  // 2024년 6월 26일
+          //  [new Date(2024, 6, 2), 63, '63kg', 60, '60kg 목표'],   // 2024년 7월 2일
+          //  [new Date(2024, 6, 9), null, null, 60, '60kg 목표'],   // 2024년 7월 9일 (현재 체중 없음)
+          //]);
+          
+          
+          // 목표 테이블
+          let goalskg = parseFloat(goalsVO.kg); // 목표 체중
+          let ckg = parseFloat(goalsVO.ckg); // 체지방 체중
+          let muscle = parseFloat(goalsVO.muscle); // 골격근량         
+          //console.log("kg 목표값이다: ->>> " + kg)
+          
+          
+          // 데이터 추가
+          if (parsedList && Array.isArray(parsedList)) {
+            var chartData = parsedList.map(item => {
+              let date = new Date(item.insertdate);
+              return [date, item.kg, item.kg + 'kg', goalskg, goalskg+'목표'];
+            });
+    
+            data.addRows(chartData);
+          } else {
+            console.error("유효한 데이터가 아닙니다.");
+          }
+          
+          // kg 리스트의 최댓값과 최솟값을 계산
+          let weights = parsedList.map(item => item.kg);
+          let maxWeight = Math.max(...weights);
+          let minWeight = Math.min(...weights);
+    
+          // 목표값을 최대값과 최소값 사이로 설정
+          if (goalskg > maxWeight) {
+            maxWeight = goalskg ;
+          }
+          if (goalskg  < minWeight) {
+            minWeight = goalskg ;
+          }
+          // y축 최대값과 최솟값 설정
+          let yAxisMax = maxWeight + 1;
+          let yAxisMin = minWeight - 1;
+          
+          // 날짜 리스트의 최댓값(가장 나중 날짜) 계산
+          let dates = parsedList.map(item => new Date(item.insertdate));
+          let minDate = new Date(Math.min(...dates));
+          
+          // 현재 날짜에서 하루 더한 날짜 계산
+          let currentDate = new Date();
+          let nextDay = new Date(currentDate);
+          nextDay.setDate(currentDate.getDate() + 1);
+  
+          // 현재 체중과 목표 체중의 차이를 계산하여 메시지 변수에 저장
+          // 현재 체중과 목표 체중의 차이를 배열로 저장
+          var differences = [];
+          for (var i = 0; i < data.getNumberOfRows(); i++) {
+              var date = data.getValue(i, 0);
+              console.log("date:: " + date)
+              var currentWeight = data.getValue(i, 1);
+              if (currentWeight != null) {
+                  var targetWeight = data.getValue(i, 3);
+                  var difference = currentWeight - targetWeight;
+                  differences.push({ date: date.toDateString(), difference: difference}); // 저장 + "kg 차이" 
+              }
+          }
+  
+          console.log(differences[0]['date']);
+          console.log(differences[0]['difference']);
+          //console.log(msg)
+          
+          let charts = document.getElementById("charts").innerHTML =  differences[0]['difference'];
+          //console.log("charts::: " + charts)
+          // 차트의 옵션 설정
+          var options = {
+            title: '',
+            backgroundColor: '#000000', // 차트의 배경색을 검정색으로 설정
+            hAxis: {
+              title: '',
+              format: 'MM/dd',  // x축의 날짜 형식 설정
+              gridlines: {count: -1, color: '#333333'},  // 날짜 축의 그리드 라인 수를 자동으로 설정하고 색상을 회색으로 설정
+              textStyle: {color: '#ffffff'}, // x축 텍스트 색상을 흰색으로 설정
+              viewWindow: {
+                min: minDate,  // x축 최소값 설정
+                max: nextDay        // x축 최대값 설정
+              },
+              showTextEvery: 2  // 모든 레이블을 표시하지 않고, 2번째마다 하나씩 표시
+              //slantedText: true,  // 레이블을 기울이도록 설정
+              //slantedTextAngle: 45  // 레이블 기울기 각도 설정
+            },
+            vAxis: {
+              title: '',
+              viewWindow: {
+                min: yAxisMin,  // y축 최소값 설정
+                max: yAxisMax      // y축 최대값 설정
+              },
+              gridlines: {color: '#333333'}, // y축 그리드 라인 색상 설정
+              textStyle: {color: '#ffffff'},  // y축 텍스트 색상을 흰색으로 설정
+              
+            },
+            series: {
+              0: {lineWidth: 3, 
+                  pointSize: 6,  // 현재 체중의 점 크기 설정
+                  annotations: 
+                    {style: 'point', textStyle: {color: '#ffffff'}
+                  }
+                },  // 현재 체중의 선 너비 및 annotation 스타일 설정
+              1: {
+                lineWidth: 0.7,  // 목표 체중의 선 제거 0.4
+                pointSize: 9,  // 목표 체중의 점 크기 설정
+                color: 'red',  // 목표 체중의 점 색상 설정
+                annotations: {style: 'point', textStyle: {color: '#ffffff'}} // 목표 체중의 annotation 스타일 설정
+              }
+            },
+            legend: { position: 'none' },  // 범례를 숨김
+              chartArea: {
+              width: '90%',  // 차트 영역 너비
+              height: '80%',  // 차트 영역 높이
+              top: 20,  // 차트 영역 상단 여백
+              left: 30,  // 차트 영역 좌측 여백
+              bottom: 30,  // 차트 영역 하단 여백
+              right: 35  // 차트 영역 우측 여백
+            }
+          };
+          
+          
+          // LineChart 객체를 생성하고 지정된 div에 차트를 그리기
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+          chart.draw(data, options);  // 데이터와 옵션을 사용하여 차트를 그림
+        });
+      }
+      // 차트 1번 끝
+      //==============================================================================================
+      
+      //==================================================================================================
+      // 차트 2번 시작 (현재 체지방 분석)
+      function drawChart2(parsedList, goalsVO) {
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(() => {
+          
+          var data = new google.visualization.DataTable();
+          
+          // 날짜를 표시하기 위해 'date' 타입의 열을 추가
+          data.addColumn('date', 'Date');
+          data.addColumn('number', 'Current Body Fat (%)');
+          data.addColumn({type: 'string', role: 'annotation'}); // 현재 체지방에 대한 annotation 열 추가
+          data.addColumn('number', 'Target Body Fat (%)');
+          data.addColumn({type: 'string', role: 'annotation'}); // 목표 체지방에 대한 annotation 열 추가
+          
+          // 목표 테이블
+          let goalskg = parseFloat(goalsVO.kg); // 목표 체중
+          let goalsckg = parseFloat(goalsVO.ckg); // 체지방 체중
+          let muscle = parseFloat(goalsVO.muscle); // 골격근량         
+          //console.log("kg 목표값이다: ->>> " + kg)
+          
+          
+          // 데이터 추가
+          if (parsedList && Array.isArray(parsedList)) {
+            var chartData = parsedList.map(item => {
+              let date = new Date(item.insertdate);
+              let currentBodyFat = parseFloat(item.ckg); // 현재 체지방량을 숫자형으로 변환
+              return [date, currentBodyFat, currentBodyFat + '%', goalsckg, goalsckg+'% 목표'];
+            });
+    
+            data.addRows(chartData);
+          } else {
+            console.error("유효한 데이터가 아닙니다.");
+          }
+          
+          // 체지방량 리스트의 최댓값과 최솟값을 계산
+          let bodyFat = parsedList.map(item => parseFloat(item.ckg)); // 현재 체지방량을 숫자형으로 변환
+          console.log("bodyFat:---->" + bodyFat)
+          let maxBodyFat = Math.max(...bodyFat);          
+          let minBodyFat = Math.min(...bodyFat);
+          console.log("maxBodyFat:---->" + maxBodyFat)
+          console.log("minBodyFat:---->" + minBodyFat)
+    
+          // 목표값을 최대값과 최소값 사이로 설정
+          if (goalsckg > maxBodyFat) {
+              maxBodyFat = goalsckg;
+          }
+          if (goalsckg < minBodyFat) {
+              minBodyFat = goalsckg;
+          }
+          // y축 최대값과 최솟값 설정
+          let yAxisMax = maxBodyFat + 1;
+          let yAxisMin = minBodyFat - 1;
+          
+          // 날짜 리스트의 최댓값(가장 나중 날짜) 계산
+          let dates = parsedList.map(item => new Date(item.insertdate));
+          let minDate = new Date(Math.min(...dates));
+          
+          // 현재 날짜에서 하루 더한 날짜 계산
+          let currentDate = new Date();
+          let nextDay = new Date(currentDate);
+          nextDay.setDate(currentDate.getDate() + 1);
+  
+          // 현재 체중과 목표 체중의 차이를 계산하여 메시지 변수에 저장
+          // 현재 체중과 목표 체중의 차이를 배열로 저장
+          var differences = [];
+          for (var i = 0; i < data.getNumberOfRows(); i++) {
+              var date = data.getValue(i, 0);
+              console.log("date:: " + date)
+              var currentWeight = data.getValue(i, 1);
+              if (currentWeight != null) {
+                  var targetWeight = data.getValue(i, 3);
+                  var difference = currentWeight - targetWeight;
+                  differences.push({ date: date.toDateString(), difference: difference}); // 저장 + "kg 차이" 
+              }
+          }
+  
+          console.log(differences[0]['date']);
+          console.log(differences[0]['difference']);
+          //console.log(msg)
+          
+          let charts2 = document.getElementById("charts2").innerHTML =  differences[0]['difference'];
+          //console.log("charts::: " + charts)
+          // 차트의 옵션 설정
+          var options = {
+            title: '',
+            backgroundColor: '#000000', // 차트의 배경색을 검정색으로 설정
+            hAxis: {
+              title: '',
+              format: 'MM/dd',  // x축의 날짜 형식 설정
+              gridlines: {count: -1, color: '#333333'},  // 날짜 축의 그리드 라인 수를 자동으로 설정하고 색상을 회색으로 설정
+              textStyle: {color: '#ffffff'}, // x축 텍스트 색상을 흰색으로 설정
+              viewWindow: {
+                min: minDate,  // x축 최소값 설정
+                max: nextDay        // x축 최대값 설정
+              },
+              showTextEvery: 2  // 모든 레이블을 표시하지 않고, 2번째마다 하나씩 표시
+              //slantedText: true,  // 레이블을 기울이도록 설정
+              //slantedTextAngle: 45  // 레이블 기울기 각도 설정
+            },
+            vAxis: {
+              title: '',
+              viewWindow: {
+                min: yAxisMin,  // y축 최소값 설정
+                max: yAxisMax      // y축 최대값 설정
+              },
+              gridlines: {color: '#333333'}, // y축 그리드 라인 색상 설정
+              textStyle: {color: '#ffffff'},  // y축 텍스트 색상을 흰색으로 설정
+              
+            },
+            series: {
+              0: {lineWidth: 3, 
+                  pointSize: 6,  // 현재 체중의 점 크기 설정
+                  annotations: 
+                    {style: 'point', textStyle: {color: '#ffffff'}
+                  }
+                },  // 현재 체중의 선 너비 및 annotation 스타일 설정
+              1: {
+                lineWidth: 0.7,  // 목표 체중의 선 제거 0.4
+                pointSize: 9,  // 목표 체중의 점 크기 설정
+                color: 'red',  // 목표 체중의 점 색상 설정
+                annotations: {style: 'point', textStyle: {color: '#ffffff'}} // 목표 체중의 annotation 스타일 설정
+              }
+            },
+            legend: { position: 'none' },  // 범례를 숨김
+              chartArea: {
+              width: '90%',  // 차트 영역 너비
+              height: '80%',  // 차트 영역 높이
+              top: 20,  // 차트 영역 상단 여백
+              left: 30,  // 차트 영역 좌측 여백
+              bottom: 30,  // 차트 영역 하단 여백
+              right: 35  // 차트 영역 우측 여백
+            }
+          };
+          
+          
+          // LineChart 객체를 생성하고 지정된 div에 차트를 그리기
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+          chart.draw(data, options);  // 데이터와 옵션을 사용하여 차트를 그림
+        });
+      }
+      // 차트 2번 끝
+      //==============================================================================================
+      
+  //==================================================================================================
+// 차트 3번 시작 (현재 골격근량 분석)
+function drawChart3(parsedList, goalsVO) {
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(() => {
+        
+        var data = new google.visualization.DataTable();
+        
+        // 날짜를 표시하기 위해 'date' 타입의 열을 추가
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Current Muscle Mass (kg)');
+        data.addColumn({type: 'string', role: 'annotation'}); // 현재 골격근량에 대한 annotation 열 추가
+        data.addColumn('number', 'Target Muscle Mass (kg)');
+        data.addColumn({type: 'string', role: 'annotation'}); // 목표 골격근량에 대한 annotation 열 추가
+        
+        // 목표 테이블
+        let goalskg = parseFloat(goalsVO.kg); // 목표 체중
+        let goalsckg = parseFloat(goalsVO.ckg); // 체지방 체중
+        let muscle = parseFloat(goalsVO.muscle); // 목표 골격근량
+        
+        // 데이터 추가
+        if (parsedList && Array.isArray(parsedList)) {
+            var chartData = parsedList.map(item => {
+                let date = new Date(item.insertdate);
+                let currentMuscle = parseFloat(item.muscle); // 현재 골격근량을 숫자형으로 변환
+                return [date, currentMuscle, currentMuscle + 'kg', muscle, muscle + 'kg 목표'];
+            });
+
+            data.addRows(chartData);
+        } else {
+            console.error("유효한 데이터가 아닙니다.");
+        }
+        
+        // 골격근량 리스트의 최댓값과 최솟값을 계산
+        let muscleMass = parsedList.map(item => parseFloat(item.muscle)); // 현재 골격근량을 숫자형으로 변환
+        console.log("muscleMass:---->" + muscleMass)
+        let maxMuscleMass = Math.max(...muscleMass);          
+        let minMuscleMass = Math.min(...muscleMass);
+        console.log("maxMuscleMass:---->" + maxMuscleMass)
+        console.log("minMuscleMass:---->" + minMuscleMass)
+  
+        // 목표값을 최대값과 최소값 사이로 설정
+        if (muscle > maxMuscleMass) {
+            maxMuscleMass = muscle;
+        }
+        if (muscle < minMuscleMass) {
+            minMuscleMass = muscle;
+        }
+        // y축 최대값과 최솟값 설정
+        let yAxisMax = maxMuscleMass + 1;
+        let yAxisMin = minMuscleMass - 1;
+        
+        // 날짜 리스트의 최댓값(가장 나중 날짜) 계산
+        let dates = parsedList.map(item => new Date(item.insertdate));
+        let minDate = new Date(Math.min(...dates));
+        
+        // 현재 날짜에서 하루 더한 날짜 계산
+        let currentDate = new Date();
+        let nextDay = new Date(currentDate);
+        nextDay.setDate(currentDate.getDate() + 1);
+
+        // 현재 골격근량과 목표 골격근량의 차이를 배열로 저장
+        var differences = [];
+        for (var i = 0; i < data.getNumberOfRows(); i++) {
+            var date = data.getValue(i, 0);
+            console.log("date:: " + date)
+            var currentMuscle = data.getValue(i, 1);
+            if (currentMuscle != null) {
+                var targetMuscle = data.getValue(i, 3);
+                var difference = currentMuscle - targetMuscle;
+                differences.push({ date: date.toDateString(), difference: difference}); // 저장
+            }
+        }
+
+        console.log(differences[0]['date']);
+        console.log(differences[0]['difference']);
+        
+        let charts3 = document.getElementById("charts3").innerHTML =  differences[0]['difference'];
+
+        // 차트의 옵션 설정
+        var options = {
+            title: '',
+            backgroundColor: '#000000', // 차트의 배경색을 검정색으로 설정
+            hAxis: {
+                title: '',
+                format: 'MM/dd',  // x축의 날짜 형식 설정
+                gridlines: {count: -1, color: '#333333'},  // 날짜 축의 그리드 라인 수를 자동으로 설정하고 색상을 회색으로 설정
+                textStyle: {color: '#ffffff'}, // x축 텍스트 색상을 흰색으로 설정
+                viewWindow: {
+                    min: minDate,  // x축 최소값 설정
+                    max: nextDay        // x축 최대값 설정
+                },
+                showTextEvery: 2  // 모든 레이블을 표시하지 않고, 2번째마다 하나씩 표시
+                //slantedText: true,  // 레이블을 기울이도록 설정
+                //slantedTextAngle: 45  // 레이블 기울기 각도 설정
+            },
+            vAxis: {
+                title: '',
+                viewWindow: {
+                    min: yAxisMin,  // y축 최소값 설정
+                    max: yAxisMax      // y축 최대값 설정
+                },
+                gridlines: {color: '#333333'}, // y축 그리드 라인 색상 설정
+                textStyle: {color: '#ffffff'},  // y축 텍스트 색상을 흰색으로 설정
+            },
+            series: {
+                0: {lineWidth: 3, 
+                    pointSize: 6,  // 현재 골격근량의 점 크기 설정
+                    annotations: 
+                        {style: 'point', textStyle: {color: '#ffffff'}
+                    }
+                },  // 현재 골격근량의 선 너비 및 annotation 스타일 설정
+                1: {
+                    lineWidth: 0.7,  // 목표 골격근량의 선 너비 설정
+                    pointSize: 9,  // 목표 골격근량의 점 크기 설정
+                    color: 'red',  // 목표 골격근량의 점 색상 설정
+                    annotations: {style: 'point', textStyle: {color: '#ffffff'}} // 목표 골격근량의 annotation 스타일 설정
+                }
+            },
+            legend: { position: 'none' },  // 범례를 숨김
+            chartArea: {
+                width: '90%',  // 차트 영역 너비
+                height: '80%',  // 차트 영역 높이
+                top: 20,  // 차트 영역 상단 여백
+                left: 30,  // 차트 영역 좌측 여백
+                bottom: 30,  // 차트 영역 하단 여백
+                right: 35  // 차트 영역 우측 여백
+            }
+        };
+        
+        // LineChart 객체를 생성하고 지정된 div에 차트를 그리기
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div3'));
+        chart.draw(data, options);  // 데이터와 옵션을 사용하여 차트를 그림
+    });
+}
+// 차트 3번 끝
+//==============================================================================================
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      function chart(){
+        
+        fetch('/history/history_analyze_json', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+          } 
+        })
+        .then(response => response.json())  // 응답 본문을 JSON으로 변환하여 반환
+        .then(data => {
+          console.log("fetch 함수 데이터: ", data);
+          
+          let parsedList;
+          let list = data.list;  // JSON 응답에서 리스트를 추출
+          let goalsVO = data.goalsVO;
+    
+          //goalsVO가 존재하는지 검사
+          if (goalsVO) {
+            console.log("Goal Weight (kg): " + goalsVO.kg);
+          } else {
+            console.log("No goal data available");
+          }
+ 
+          try {
+            // 데이터는 이미 JSON이므로 파싱할 필요가 없습니다.
+            parsedList = list;
+            //alert(JSON.stringify(parsedList));
+          } catch (error) {
+            console.error("JSON 파싱 오류: ", error);
+          }
+            // 만약 신체정보 값이 없을 경우
+            if (parsedList && parsedList.length > 0) {
+              drawChart(parsedList, goalsVO);
+              drawChart2(parsedList, goalsVO);
+              drawChart3(parsedList, goalsVO);
+            } else {
+              console.warn("데이터가 없습니다.");
+              document.getElementById('chart_div').innerText = "데이터가 없습니다.";
+              document.getElementById('chart_div2').innerText = "데이터가 없습니다.";
+              document.getElementById('chart_div3').innerText = "데이터가 없습니다.";
+            }
+        })
+        .catch(error => console.error('Fetch 에러:', error));
+      }
+      
+      
+      //----------------------------------------------------------------------------
+
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    <script th:inline="javascript">
+    function updateMh(mhno) {
+      // 새 form 엘리먼트 생성
+      var form = document.createElement("form");
+      form.method = "GET";
+      form.action = '/mh/update';
+
+      // input 엘리먼트 생성하여 mhno 값 추가
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "mhno";
+      input.value = mhno;
+
+      // form에 input 엘리먼트 추가 후 form을 body에 추가
+      form.appendChild(input);
+      document.body.appendChild(form);
+
+      // form submit
+      form.submit();
+    }
+
+    </script>
+
+    
+
+  </div>
+</html>

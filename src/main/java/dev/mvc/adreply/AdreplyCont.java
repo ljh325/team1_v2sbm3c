@@ -55,7 +55,7 @@ public class AdreplyCont {
     
     // 등록한 댓글 조회
     AdreplyVO adminRead = this.adreplyProc.admin_read(reviewno);
-    System.out.println("adminRead-=--->" + adminRead.getAdcontents());
+
     obj.put("adminRead", adminRead);
     
     
@@ -71,7 +71,7 @@ public class AdreplyCont {
   @GetMapping(value = "/admin_read")
   @ResponseBody
   public String admin_read(int reviewno) {
-    System.out.println("reviewno:  관리자 댓글 컨트롤러: -> " + reviewno);
+
     AdreplyVO list = adreplyProc.admin_read(reviewno);
     
     JSONObject obj = new JSONObject();
@@ -86,7 +86,7 @@ public class AdreplyCont {
       obj.put("addate", addate); // hmtl로 보내기
       obj.put("adupdate", adupdate); // hmtl로 보내기
       
-      System.out.println("list:  관리자 댓글 컨트롤러: -> " + list);
+
     } else {
       obj.put("res", "0"); // hmtl로 보내기
     }
@@ -100,7 +100,46 @@ public class AdreplyCont {
   }
   
   
+  /**
+   * 관리자 댓글 삭제 처리
+   * @param model
+   * @param adreplyVO
+   * @return
+   */
+  @PostMapping(value="admin_reply_delete")
+  @ResponseBody
+  public String admin_reply_delete(Model model, @RequestBody AdreplyVO adreplyVO) {
+    
+    JSONObject obj = new JSONObject();
+    
+    int cnt = this.adreplyProc.delete(adreplyVO);
+    obj.put("cnt", cnt);
+    
+    
+    return obj.toString();
+  }
   
+  /**
+   * 관리자 댓글 수정 처리
+   * @param model
+   * @param adreplyVO
+   * @return
+   */
+  @PostMapping(value="admin_reply_update")
+  @ResponseBody
+  public String admin_reply_update(Model model, @RequestBody AdreplyVO adreplyVO) {
+    
+    JSONObject obj = new JSONObject();
+    System.out.println("adcontents--->" + adreplyVO.getAdcontents());
+    System.out.println("session.adminsno" + adreplyVO.getAdminsno());
+    System.out.println("reviewno ___???? : " + adreplyVO.getReviewno());
+    int cnt = this.adreplyProc.update(adreplyVO);
+    System.out.println("cnt--> update::::" + cnt);
+    obj.put("cnt", cnt);
+    
+    
+    return obj.toString();
+  }
   
 
 }

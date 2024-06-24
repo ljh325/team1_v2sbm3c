@@ -33,10 +33,10 @@ public interface AdreplyProcInter {
   
   /**
    * 관리자 댓글 삭제
-   * @param reviewno
+   * @param adreplyVO
    * @return
    */
-  public int delete(int reviewno);
+  public int delete(AdreplyVO adreplyVO);
   
   
 }

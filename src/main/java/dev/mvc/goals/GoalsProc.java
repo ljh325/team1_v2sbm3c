@@ -221,7 +221,22 @@ public class GoalsProc implements GoalsProcInter {
      
     return str.toString(); 
   }
+
   
+  
+  
+  
+ 
+
+//-------------------------주찬 추가------------------------------
+  
+  @Override
+  public GoalsVO recent_read(int memberno) {
+    GoalsVO goalsVO = this.goalsDAO.recent_read(memberno);
+    return goalsVO;
+  }
+  
+//-------------------------주찬 추가------------------------------  
 }
 
 

@@ -10,24 +10,30 @@ public class HistoryVO {
 /**********************************/
 /* Table Name: 운동기록 */
 /**********************************/
-//  CREATE TABLE HISTORY(
-//      HISTORYNO   NUMBER(10)   NOT NULL  PRIMARY KEY,  //운동기록
-//      START_TIME  DATE         NULL,                   //운동기록번호
-//      LAST_TIME   DATE         NULL,                   //운동시작시간
-//      MEMBERNO    NUMBER(10)   NOT NULL                //회원 번호
-//  );
+//  EXRECORDNO                        NUMBER(10)     NOT NULL    PRIMARY KEY,  (운동기록번호)
+//  EXNAME                            VARCHAR2(100)    NOT NULL,    (운동명)
+//  EXTYPE                            VARCHAR2(100)    NOT NULL,    (운동유형)
+//  HISCALORIE                        NUMBER(10)     NULL ,         (소모칼로리)
+//  DURATION                          VARCHAR2(100)    NULL ,       (운동시간)
+//  NOTES                             VARCHAR2(1000)     NULL ,     (메모)
+//  STARTDATE                         DATE     NOT NULL,            (등록날짜)
+//  MEMBERNO                          NUMBER(10)     NOT NULL (FK)  (회원번호)
   
-  /** 운동기록 */
-  private int historyno;
   /** 운동기록번호 */
-  private String start_time = "";
-  /** 운동시작시간 */
-  private String last_time = "";
-  /** 회원 번호 */
-  private int memberno; 
-  /** 총 운동 시간 */
-  private int totalt; 
-  
-  
-  
+  private int exrecordno;
+  /** 운동명 */
+  private String exname;
+  /** 운동유형 */
+  private String extype;
+  /** 소모칼로리 */
+  private int hiscalorie; 
+  /** 운동시간 */
+  private int duration;
+  /** 메모 */
+  private String notes;
+  /** 등록날짜 */
+  private String startdate;
+  /** 회원번호 */
+  private String memberno;
+
 }

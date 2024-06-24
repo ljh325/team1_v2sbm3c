@@ -4,20 +4,34 @@
  -- TOTALT    DATE           NULL,
 DROP TABLE HISTORY;
 DROP TABLE HISTORY CASCADE CONSTRAINTS;
+
+/**********************************/
+/* Table Name: 운동기록 */
+/**********************************/
 CREATE TABLE HISTORY(
-    HISTORYNO    NUMBER(10)     NOT NULL PRIMARY KEY,
-    STARTT    DATE           NULL,
-    ENDT     DATE           NULL,
-    MEMBERNO  NUMBER(10)     NOT NULL,
-    CONSTRAINT fk_member FOREIGN KEY (MEMBERNO) REFERENCES MEMBER(memberno)
+		EXRECORDNO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+		EXNAME                        		VARCHAR2(100)		 NOT NULL,
+		EXTYPE                        		VARCHAR2(100)		 NOT NULL,
+		HISCALORIE                    		NUMBER(10)		 NULL ,
+		DURATION                      		NUMBER(10)		 NULL ,
+		NOTES                         		VARCHAR2(1000)		 NULL ,
+		STARTDATE                     		DATE		 NOT NULL,
+        EXUPDATEDATE
+		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+  FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
 );
 
 COMMENT ON TABLE HISTORY is '운동기록';
-COMMENT ON COLUMN HISTORY.HISTORYNO is '운동기록번호';
-COMMENT ON COLUMN HISTORY.STARTT is '운동시작시간';
-COMMENT ON COLUMN HISTORY.ENDT is '운동종료시간';
---COMMENT ON COLUMN HISTORY.TOTALT is '운동총시간';
-COMMENT ON COLUMN HISTORY.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN HISTORY.EXRECORDNO is '운동기록번호';
+COMMENT ON COLUMN HISTORY.EXNAME is '운동명';
+COMMENT ON COLUMN HISTORY.EXTYPE is '운동유형';
+COMMENT ON COLUMN HISTORY.HISCALORIE is '소모칼로리';
+COMMENT ON COLUMN HISTORY.DURATION is '운동시간';
+COMMENT ON COLUMN HISTORY.NOTES is '메모';
+COMMENT ON COLUMN HISTORY.STARTDATE is '등록날짜';
+COMMENT ON COLUMN HISTORY.EXUPDATEDATE is '수정날짜';
+COMMENT ON COLUMN HISTORY.MEMBERNO is '회원번호';
+
 
 -- 시퀀스 삭제
 DROP SEQUENCE history_seq;
@@ -33,22 +47,65 @@ CREATE SEQUENCE history_seq
 SELECT * FROM history;
 commit;
 
--- 운동 시작 체크  
-INSERT INTO history(historyno, startt, endt, memberno)
-VALUES (history_seq.nextval, sysdate, null, 1);
+--		EXRECORDNO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+--		EXNAME                        		VARCHAR2(100)		 NOT NULL,
+--		EXTYPE                        		VARCHAR2(100)		 NOT NULL,
+--		HISCALORIE                    		NUMBER(10)		 NULL ,
+--		DURATION                      		VARCHAR2(100)		 NULL ,
+--		NOTES                         		VARCHAR2(1000)		 NULL ,
+--		STARTDATE                     		DATE		 NOT NULL,
+--		MEMBERNO                      		NUMBER(10)		 NOT NULL,
 
--- 운동 종료 체크      
-UPDATE history
-SET endt = sysdate
-WHERE memberno = 1 and history_seq.nextval;
+-- 운동 기록 등록  
+INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
+VALUES (history_seq.nextval, '유산소', '런닝', 5, 60, '상체, 하체 완료', '24-06-22 12:00:00', 39);
 
--- 총시간 포함 
-SELECT 
-    historyno, 
-    startt, 
-    endt, 
-    memberno,
-    round((endt - startt) * 24 * 60, 0) AS totalt
+INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
+VALUES (history_seq.nextval, '벤치프레스', '헬스', 10, 120, ' 하체 완료', sysdate, 39);
+
+INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
+VALUES (history_seq.nextval, '유산소', '산책', 5, 60, '걷기', sysdate, 40);
+
+SELECT * FROM history;
+
+-- 회원 운동 기록 전체 시간 
+ SELECT SUM(DURATION)
+FROM HISTORY
+WHERE MEMBERNO = 39;  
+
+
+--회원별 + 날짜별 총 운동 시간(time)
+SELECT TRUNC(STARTDATE) AS start_date, SUM(DURATION) AS total_duration
+FROM HISTORY
+WHERE MEMBERNO = 39
+GROUP BY TRUNC(STARTDATE)
+ORDER BY TRUNC(STARTDATE);
+
+-- 회원별 + 날짜별 총 운동 횟수(count)
+SELECT TRUNC(STARTDATE) AS start_date,  COUNT(*) AS total_exercises
+FROM HISTORY
+WHERE MEMBERNO = 39
+GROUP BY TRUNC(STARTDATE)
+ORDER BY TRUNC(STARTDATE);
+
+
+
+-- 회원별 운동기록 리스트조회
+SELECT exrecordno, exname, extype, hiscalorie, duration, notes, TRUNC(STARTDATE) AS start_date, memberno
 FROM history
-WHERE memberno = 40;
+WHERE memberno = 39;
 
+
+-- 운동 기록 삭제
+DELETE FROM history
+WHERE memberno = 1 AND exrecordno = 1;
+
+-- 날짜별 운동 기록 삭제
+DELETE FROM history
+WHERE memberno = 39 AND TRUNC(startdate) = TO_DATE('2024-06-22', 'YYYY-MM-DD');
+
+
+exrecordno, exname, extype, hiscalorie, duration, notes, TRUNC(STARTDATE) AS start_date, memberno
+UPDATE history
+SET exname = '축구', extype='기타 스포츠', hiscalorie= 33, duration=120, notes='아따 운동 끝났다'
+WHERE exrecordno = 6;

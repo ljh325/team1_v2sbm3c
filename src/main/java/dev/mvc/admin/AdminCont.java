@@ -61,7 +61,7 @@ public class AdminCont {
    * @param adminVO
    * @return
    */
-  @GetMapping(value="/create")
+  @GetMapping(value="/create") // http://localhost:9093/admin/create
   public String create_form(Model model, AdminVO adminVO) {
     model.addAttribute("adminVO", new AdminVO());
     return "admin/create"; // /template/admin/create.html
@@ -112,7 +112,7 @@ public class AdminCont {
    * @param adminVO
    * @return
    */
-  @GetMapping(value="/list")
+  @GetMapping(value="/list") // http://localhost:9093/admin/list
   public String list(HttpSession session, Model model) {
     System.out.println("HttpSession ------)_)_))>>" + session);
     ArrayList<AdminVO> list = this.adminProc.list(); // 관리자 회원 목록 실행
@@ -126,7 +126,7 @@ public class AdminCont {
    * @param adminsno 회원 번호
    * @return 회원 정보
    */
-  @GetMapping(value="/read")
+  @GetMapping(value="/read") // http://localhost:9093/admin/read?adminsno=1
   public String read(HttpSession session, Model model, int adminsno) {
     AdminVO adminVO = this.adminProc.read(adminsno);
     model.addAttribute("adminVO", adminVO);
@@ -139,7 +139,7 @@ public class AdminCont {
    * @param adminVO
    * @return
    */
-  @PostMapping(value="/update")
+  @PostMapping(value="/update") 
   public String update_proc(Model model, AdminVO adminVO) {
     int cnt = this.adminProc.update(adminVO); // 수정
 
@@ -161,7 +161,7 @@ public class AdminCont {
    * @param adminsno 회원 번호
    * @return 회원 정보
    */
-  @GetMapping(value="/delete")
+  @GetMapping(value="/delete") //http://localhost:9093/admin/delete
   public String delete(Model model, int adminsno) {
     System.out.println("-> delete adminsno: " + adminsno);
 

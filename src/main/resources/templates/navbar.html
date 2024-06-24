@@ -1,6 +1,7 @@
 <div th:fragment="navbarFragment">
 
   <div class="top_menu">
+    <!-- top_navigation -->
     <div class="top_navigation">
       <a href="/" aria-label="홈버튼" style='font-weight: bold;'>Health Care
       </a>
@@ -9,14 +10,25 @@
         <span><img src="/home/menu.png" class="icon"title="더 보기"></span>
       </button>
     </div>
-      
+    <!-- top_navigation -->
+    
+    
+       <!-- offcanvas offcanvas-end text-bg-dark -->
     <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
       aria-labelledby="offcanvasDarkNavbarLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Health Care</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
+      
+
+      
+     <!-- offcanvas-body-->
       <div class="offcanvas-body">
+      
+      <div>
+        <span th:text="${session.id}"></span>
+      </div>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             
                  <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
@@ -154,9 +166,15 @@
                    
           </ul>
       </div>
+      <!-- offcanvas-body-->
               
     </div>
-  </div>
+    <!-- offcanvas offcanvas-end text-bg-dark -->
+ 
+  </div><!-- top_menu -->
+
            
+
+
 </div>
  

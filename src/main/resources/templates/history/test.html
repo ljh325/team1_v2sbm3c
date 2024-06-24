@@ -1,28 +1,20 @@
 <!DOCTYPE html>
-<!-- layout.html 상속 -->
-<html layout:decorate="~{layout}">
-  <!-- layout:fragment 상속 --> 
-  <div layout:fragment="content" style="width: 100%; margin: auto; text-align: center;">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
-<style>
-body{
-  background-color: black;
-  justify-content: center;
-  align-items: center;
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Swiper Carousel Center Mode Example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <style>
+      /* 전체 HTML과 body를 화면 중앙에 정렬 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
 
-}
-.box1{
-  background-color: red;
-  padding: 15px;
-  border-radius: 7px;
-}
-.box2{
-  background-color: black;
-  padding: 15px;
-  height: 200px;
-}
-/* ============ 캐러셀 CSS 코드 ==================*/
         /* 캐러셀 컨테이너 스타일 */
         .slider {
             overflow: hidden;
@@ -30,7 +22,6 @@ body{
             max-width: 800px; /* 전체 가로폭을 줄이는 부분 */
             width: 100%;
             margin: 50px auto 0;
-            border-radius: 7px;
         }
 
         .slider .inner {
@@ -38,14 +29,13 @@ body{
         }
 
         .slide_list > li {
-            width: 100%;
+            width: 20%;
             height: 200px;
             background: #8ab4f8;
             font-size: 20px;
             line-height: 150px;
             text-align: center;
             box-sizing: border-box; /* box-sizing을 추가하여 padding과 border를 포함하도록 설정 */
-            border-radius: 7px;
         }
 
         .slider .btn {
@@ -70,24 +60,9 @@ body{
             right: 0;
             transform: translateY(-50%);
         }
-/* ============ 캐러셀 CSS 코드 끝==================*/
-</style>
-<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
-<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
-  
-  
-  
-  
-  
-    <div class="box1">
-    <div class= "box2">
-
-    </div>
-  </div>
-
-  <div>
-
-
+    </style>
+</head>
+<body>
     <!-- 캐러셀 슬라이드 -->
     <div class="slider">
         <div class="inner swiper-container">
@@ -105,18 +80,6 @@ body{
     </div>
     <!-- 캐러셀 슬라이드 -->
 
-
-  </div>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <!-- 캐러셀 자바스크립트 코드 -->       
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script>
@@ -177,14 +140,5 @@ body{
             });
         }
     </script>
-    <!-- 캐러셀 자바스크립트 코드 끝 -->
-  
-  
-  
-  
-  
-  
-  </div>
-  <!-- layout:fragment 상속 -->
-  
+</body>
 </html>

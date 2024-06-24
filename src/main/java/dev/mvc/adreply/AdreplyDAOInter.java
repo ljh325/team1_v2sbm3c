@@ -33,9 +33,9 @@ public interface AdreplyDAOInter {
   
   /**
    * 관리자 댓글 삭제
-   * @param reviewno
+   * @param adreplyVO
    * @return
    */
-  public int delete(int reviewno);
+  public int delete(AdreplyVO adreplyVO);
 
 }

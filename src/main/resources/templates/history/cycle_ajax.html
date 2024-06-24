@@ -1,0 +1,83 @@
+<!DOCTYPE html> 
+<html lang="ko"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" />
+<title>http://localhost:9091/jquery/json/cycle_ajax.do</title> 
+<script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+                 
+<link href="/css/style.css" rel='Stylesheet' type='text/css'> <!-- /static -->
+
+<script type="text/javascript">
+  $(function() {
+    $('#btn_cycle_start').on('click', cycle_start);  // 이벤트 처리 함수 등록
+    $('#btn_cycle_stop').on('click', cycle_stop);  // 이벤트 처리 함수 등록
+    $('#btn_cycle_refresh').on('click', cycle_refresh);  // 이벤트 처리 함수 등록
+  });
+
+  // let cycle_start_ajax_id = 0; // 순환 함수의 참조값 저장, 권장하지 않음.
+  function cycle_start() {
+    // setInterval(일정 시간마다 호출할 함수, 시간(1000: 1초))
+    cycle_start_ajax_id = setInterval(cycle_start_ajax, 5000);  // cycle_start_ajax 함수를 5초마다 실행 ★
+    $('#menu').attr('data-cycle_start_ajax_id', cycle_start_ajax_id); // 연속 호출 함수에 할당된 번호 저장, 전역 변수 효과 ★
+    
+    // console.log('-> cycle_start_ajax_id: ' + cycle_start_ajax_id); // 3
+    $('#panel').html("News 수집중입니다. <img src='/history/images/bar05.gif' style='width: 50%;'>"); // static 폴더 기준
+    $('#panel').css("display", "");  // 숨겨진 태그의 출력
+  }
+  
+  function cycle_stop() {
+    let cycle_start_ajax_id = $('#menu').attr('data-cycle_start_ajax_id'); // 연속 호출 함수에 할당된 번호 추출 ★
+    // console.log('-> cycle_start_ajax_id: ' + cycle_start_ajax_id);
+    clearInterval(cycle_start_ajax_id); // 실행 중지
+    $('#panel').html('News 수집을 중지했습니다.');
+  }
+
+  function cycle_refresh() {
+    location.reload(); // 현재 페이지 다시 읽기
+  }
+
+  function cycle_start_ajax() {
+    var params = '';
+    // console.log('-> cycle_start_ajax executed.');
+    // var params = $('#frm').serialize(); // 직렬화, 폼의 데이터를 키와 값의 구조로 조합
+    // alert('params: ' + params);
+    // return;
+    
+    $.ajax({
+      url: '/history/cycle_ajax_json', // form action
+      type: 'get',  // form method, get
+      cache: false, // 응답 결과 임시 저장 취소
+      async: true,  // true: 비동기 통신
+      dataType: 'json', // 응답 형식: json, html, xml...
+      data: params,      // 데이터
+      success: function(rdata) { // 응답이 온경우
+        $('#panel').html(rdata.cnt + '건 처리됨.');  // 보통 DIV, SPAN등에 출력       
+      },
+      // Ajax 통신 에러, 응답 코드가 200이 아닌경우, dataType이 다른경우 
+      error: function(request, status, error) { // callback 함수
+        console.log(error);
+      }
+    });
+    
+    $('#panel').html("News 수집중입니다. <img src='/history/images/bar05.gif' style='width: 50%;'>"); // static
+    $('#panel').show(); // 숨겨진 태그의 출력
+  }
+
+</script>
+</head> 
+<body>
+  <DIV class="title_line" style='width: 90%;'>Javascript 순환 호출 처리</DIV>
+  
+  <DIV id='menu' data-cycle_start_ajax_id='0' class='content_body' style='text-align: center;'> 
+    <button id='btn_cycle_start' class='btn btn-primary'>News 수집 시작</button>
+    <button id='btn_cycle_stop' class='btn btn-primary'>News 수집 중지</button>
+    <button id='btn_cycle_refresh' class='btn btn-primary'>수집된 내용 확인</button>
+  </DIV> <!-- content_body END -->
+  
+  <DIV id='panel' style='display: none; margin: 10px auto; text-align: center; width: 60%;'></DIV>
+
+</body>
+ 
+</html>

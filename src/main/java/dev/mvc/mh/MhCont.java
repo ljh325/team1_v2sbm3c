@@ -333,9 +333,7 @@ public class MhCont {
     } else {
       model.addAttribute("nulls","등록된 건강정보가 없습니다.");
     }
-    
 
-      
     return "/mh/list_all"; // /mh/list_all.html
     
     }else{

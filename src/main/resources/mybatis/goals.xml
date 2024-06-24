@@ -50,4 +50,22 @@
     ORDER BY goalsno ASC
   </select>
   
+  
+  
+  
+  <!-- ===============주찬 쿼리 추가====================-->
+  <!-- 가장 최근에 만들어진 목표 회원별 조회기능-->
+  <select id="recent_read" resultType="dev.mvc.goals.GoalsVO" parameterType="int">
+    SELECT goalsno, kg, ckg, cm, muscle, memberno, gdate
+    FROM Goals
+    WHERE memberno = #{memberno}
+    AND GDATE = (
+      SELECT MAX(gdate) 
+      FROM Goals
+      WHERE MEMBERNO = #{memberno}
+    )
+  </select>
+  <!-- ===============주찬 쿼리 추가====================-->
+  
+  
 </mapper>

@@ -12,9 +12,12 @@
   
   <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   
+
    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
   <link href="/css/style.css" rel="stylesheet" type="text/css"> <!-- /static 기준 -->
   <link rel="shortcut icon" href="/images/star.png" />
   
@@ -116,7 +119,7 @@ $(document).ready(function(){
               <img src="/home/chart.png" class="icon">
               <span>분석</span>
             </a>
-            <a href="/analysis" aria-label="분석">
+            <a href="/history/history_form" aria-label="기록">
               <img src="/home/record.png" class="icon">
               <span>기록</span>
             </a>
@@ -125,7 +128,7 @@ $(document).ready(function(){
               <span>커뮤니티</span>
             </a>
 
-            <a th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}" aria-label="프로필">
+            <a th:if="${session.memberno != null}" th:href="@{|/member/profile?memberno=${session.memberno}|}" aria-label="프로필">
               <img src="/home/profil.png" class="icon">
               <span>프로필</span>
             </a>

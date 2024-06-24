@@ -18,15 +18,15 @@
   
   <!-- 관리자 댓글 생성 -->
   <insert id="create" parameterType="dev.mvc.adreply.AdreplyVO">
-    INSERT INTO adreply(adreplyno, adcontents, addate, reviewno)
-    VALUES (adreply_seq.nextval, #{adcontents}, sysdate, #{reviewno} )
+    INSERT INTO adreply(adreplyno, adcontents, addate, reviewno, adminsno)
+    VALUES (adreply_seq.nextval, #{adcontents}, sysdate, #{reviewno}, #{adminsno})
   </insert>
   
   <!-- 관리자 댓글 조회 -->
   <select id="admin_read" resultType="dev.mvc.adreply.AdreplyVO" parameterType="int">
-    SELECT ad.adreplyno, ad.adcontents, ad.addate, ad.adupdate, ad.reviewno
-    FROM adreply ad, review r
-    WHERE ad.reviewno = r.reviewno AND ad.reviewno=#{reviewno}
+    SELECT ad.adreplyno, ad.adcontents, ad.addate, ad.adupdate, ad.reviewno, ad.adminsno
+    FROM adreply ad, review r, admins a
+    WHERE ad.reviewno = r.reviewno AND ad.adminsno = a.adminsno AND ad.reviewno=#{reviewno}
   </select>
   
   
@@ -42,13 +42,13 @@
   <update id="update" parameterType="dev.mvc.reply.ReplyVO">
     UPDATE adreply
     SET adcontents = #{adcontents}, adupdate=sysdate
-    WHERE reviewno = #{reviewno}
+    WHERE adminsno=#{adminsno} AND reviewno = #{reviewno}
   </update>
   
   <!-- 관리자 댓글 삭제 -->
-  <delete id="delete" parameterType="int">
+  <delete id="delete" parameterType="dev.mvc.reply.ReplyVO">
     DELETE FROM adreply
-    WHERE reviewno = #{reviewno};
+    WHERE adminsno=#{adminsno} AND reviewno = #{reviewno}
   </delete>
   
 

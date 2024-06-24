@@ -6,37 +6,78 @@
 //======================= 주찬 ========================//
                 /* Table Name: 운동기록 */
 
-//  CREATE TABLE HISTORY(
-//      HISTORYNO   NUMBER(10)   NOT NULL  PRIMARY KEY,  //운동기록
-//      START_TIME  DATE         NULL,                   //운동기록번호
-//      LAST_TIME   DATE         NULL,                   //운동시작시간
-//      MEMBERNO    NUMBER(10)   NOT NULL                //회원 번호
-//  );
+/**********************************/
+/* Table Name: 운동기록 */
+/**********************************/
+//  EXRECORDNO                        NUMBER(10)     NOT NULL    PRIMARY KEY,  (운동기록번호)
+//  EXNAME                            VARCHAR2(100)    NOT NULL,    (운동명)
+//  EXTYPE                            VARCHAR2(100)    NOT NULL,    (운동유형)
+//  HISCALORIE                        NUMBER(10)     NULL ,         (소모칼로리)
+//  DURATION                          VARCHAR2(100)    NULL ,       (운동시간)
+//  NOTES                             VARCHAR2(1000)     NULL ,     (메모)
+//  STARTDATE                         DATE     NOT NULL,            (등록날짜)
+//  MEMBERNO                          NUMBER(10)     NOT NULL (FK)  (회원번호)
+
 -->
 <mapper namespace="dev.mvc.history.HistoryDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-  <!-- (o)  운동 시작 체크   -->
-  <insert id="history_start" parameterType="dev.mvc.history.HistoryVO">
-    INSERT INTO history(historyno, startt, endt, memberno)
-    VALUES (history_seq.nextval, sysdate, null, #{memberno})
+  <!-- 운동기록 등록 -->
+  <insert id="insert_history" parameterType="dev.mvc.history.HistoryVO">
+    INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
+    VALUES (history_seq.nextval, #{exname}, #{extype}, #{hiscalorie}, #{duration}, #{notes}, sysdate, #{memberno})
   </insert>
   
-  
-  <!-- 운동 종료 체크 (단)) 기준시간 10시간 이후에는 자동으로 운동 종료: 운동 종료를 안눌렀을때 )-->
-  <update id="history_end" parameterType="int">
-    UPDATE history
-    SET endt = SYSDATE
-    WHERE memberno = #{memberno}
-    AND historyno = (SELECT MAX(historyno) FROM history WHERE memberno = #{memberno})
-  </update>  
-  
-  
-  <!-- (o)  운동 내역 조회 -->
-  <select id="history_read" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT historyno, startt, endt, memberno,
-    round((endt - startt) * 24 * 60, 0) AS totalt
+  <!-- (o)  회원별 운동기록 리스트조회 -->
+  <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, TRUNC(startdate) AS start_date, memberno
     FROM history
-    WHERE memberno = #{memberno};
+    WHERE memberno = #{memberno}
   </select>  
+
+  <!-- 회원별 + 날짜별 총 운동 시간(time) -->
+  <select id="time_for_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT TRUNC(startdate) AS start_date, SUM(duration) AS total_duration
+    FROM history
+    WHERE memberno = #{memberno}
+    GROUP BY TRUNC(startdate)
+    ORDER BY TRUNC(startdate)
+  </select>  
+  
+  <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
+  <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT TRUNC(startdate) AS start_date,  COUNT(*) AS total_exercises
+    FROM history
+    WHERE memberno = #{memberno}
+    GROUP BY TRUNC(startdate)
+    ORDER BY TRUNC(startdate)
+  </select>  
+  
+  <!-- 회원 운동 기록 전체 시간  -->
+  <select id="all_count" resultType="int" parameterType="int">
+    SELECT SUM(DURATION)
+    FROM HISTORY
+    WHERE MEMBERNO = #{memberno}
+  </select>  
+ 
+
+  <!-- 운동 기록 수정 -->
+  <update id="history_update" parameterType="dev.mvc.history.HistoryVO">
+    UPDATE history
+    SET exname = #{exname}, extype=#{extype}, hiscalorie= #{hiscalorie}, duration=#{duration}, notes=#{notes}, exupdatedate=sysdate
+    WHERE exrecordno = #{exrecordno}
+  </update>
+
+  <!-- 운동 기록 부분 삭제 -->
+  <delete id="delete_sectoin_history" parameterType="HashMap">
+    DELETE FROM history
+    WHERE memberno = #{memberno} AND exrecordno = #{exrecordno}
+  </delete>
+  
+  <!-- 날짜별 운동 기록 삭제 -->
+  <delete id="delete_date_history" parameterType="HashMap">
+      DELETE FROM history
+      WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+  </delete>
+
 
 </mapper>

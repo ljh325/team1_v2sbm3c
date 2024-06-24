@@ -26,6 +26,6 @@ public class AdreplyVO {
   /** 리뷰번호 */
   private int reviewno;
   /** 관리자번호 */
-  //private int adminsno;
+  private int adminsno;
 
 }

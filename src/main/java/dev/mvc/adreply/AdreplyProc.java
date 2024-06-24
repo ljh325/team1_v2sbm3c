@@ -40,8 +40,8 @@ public class AdreplyProc implements AdreplyProcInter {
   }
 
   @Override
-  public int delete(int reviewno) {
-    int cnt = this.adreplyDAO.delete(reviewno);
+  public int delete(AdreplyVO adreplyVO) {
+    int cnt = this.adreplyDAO.delete(adreplyVO);
     return cnt;
   }
 

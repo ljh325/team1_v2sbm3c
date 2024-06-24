@@ -228,6 +228,7 @@ public class ReviewCont {
         reviewJson.put("id", review.getId());
         reviewJson.put("star", review.getStar());
         reviewJson.put("rdate", review.getRdate());
+        reviewJson.put("udate", review.getUdate());
         reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
         
         reviewJson.put("nickname", members.getNickname());

@@ -4,7 +4,6 @@ package dev.mvc.member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.contents.Contents;
 import dev.mvc.mlogin.MloginProcInter;
 import dev.mvc.mlogin.MloginVO;
 import dev.mvc.tool.Security;
@@ -204,6 +200,24 @@ public class MemberCont {
   /***************************************************************************************/
   
 
+  
+  
+  
+  
+  @GetMapping(value="/profile")
+  public String profile(Model model, HttpSession session, int memberno) {
+    
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+      //int memberno = (int)session.getAttribute("memberno"); 
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+    
+      return "/member/profile"; // /mh/list_all.html
+    }else{
+      
+    return "index"; // /mh/list_all.html
+    }
+  }
   /***************************************************************************************/
   /**
    * 회원정보 조회
@@ -212,9 +226,9 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value="/read") // http://localhost:9093/member/raed
-  public String read(HttpSession session, Model model) {
+  public String read(int memberno, Model model) {
     
-    int memberno = (int)session.getAttribute("memberno"); // session에서 memberno가져오기
+    //int memberno = (int)session.getAttribute("memberno"); // session에서 memberno가져오기
     //String grade = (String)session.getAttribute("grade"); // 등급: 일반회원 1, 정지회원 2, 탈퇴회원 3
 
     MemberVO memberVO = this.memberProc.read(memberno);

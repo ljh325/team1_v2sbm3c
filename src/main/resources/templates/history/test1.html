@@ -1,0 +1,113 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%;  text-align: center;">
+  <style>
+    .chat-content {
+      height: 370px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: black;
+      border-radius: 4px;
+    }
+
+    .line {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .chat-box {
+      background-color: #ffffff;
+      border-radius: 20px;
+      margin-left: 8px;
+      padding: 10px;
+      max-width: 80%;
+      height: auto;
+    }
+
+    .mine {
+      margin-left: auto;
+      background-color: #d7e6ff;
+    }
+
+    #input {
+      flex-grow: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      margin-top: 7px;
+    }
+
+    #send {
+      margin-left: 5px;
+      margin-top: 8px;
+      margin-right: 3px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #3c82ff;
+      color: #ffffff;
+      border-radius: 20px;
+      cursor: pointer;
+      height: 44px;
+      font-size: 13px;
+    }
+
+    .custom-btn {
+      background-color: white;
+      border: 2px solid #6E6E6E;
+      border-radius: 17px;
+      /* 모서리를 둥글게 */
+      font-size: 13px;
+    }
+
+    .custom-btn:hover {
+      border: 2px solid #000000;
+      /* 호버 시 배경색 변경 */
+    }
+
+    .btn {
+      margin-bottom: 3px;
+    }
+  </style>
+  
+
+  
+    <div class="chat-content">
+      <div class="line">
+        <img src="/images/none.jpg" style="width: 25px; height: 25px; border-radius: 50%;">
+        <span class="chat-box">안녕하세요 쇼핑봇입니다. 무엇을 도와드릴까요??<br><br>
+          <!-- 1. 상품 검색<br> 2. 주문 및 배송 문의<br> 3. 교환 및 환불<br> 4. 옷 추천<br>5. 종료 -->
+        </span>
+      </div>
+      <div class="line">
+
+      </div>
+      <div class="line">
+        <div class="image_wrap" data-itemId="${ls[0].imageList[0].itemId}"
+          data-path="${ls[0].imageList[0].uploadPath}" data-uuid="${ls[0].imageList[0].uuid}"
+          data-filename="${ls[0].imageList[0].fileName}">
+          <a href="/goodsDetail/${ls[0].itemId}" target="_parent">
+            <img src="${ls[0].imageList[0].uploadPath}/${ls[0].imageList[0].uuid}_${ls[0].imageList[0].fileName}"
+              style="width: 200px;">
+          </a>
+      </div> 
+
+    </div>
+
+<div class="container mt-3">
+  <!-- 기존 버튼들 -->
+  <button type="button" class="btn custom-btn" value="service" onclick="sendMessages(this.value)">서비스소개</button>
+  <button type="button" class="btn custom-btn" value="customer" onclick="sendMessages(this.value)">고객센터</button>
+  <button type="button" class="btn custom-btn" value="answer" onclick="sendMessages(this.value)">자주 묻는 질문</button>
+
+  <button type="button" class="btn custom-btn" value="search" onclick="sendMessages(this.value)">배송조회</button>
+  <button type="button" class="btn custom-btn" value="cloth" onclick="sendMessages(this.value)">옷추천</button>
+</div>
+<div class="line">
+
+  <input class="chat-box" id="input" placeholder="메시지를 입력하세요..." onkeydown="handleKeyDown(event)">
+  <button id="send">전송</button>
+</div>
+
+</div>
+
+</html>

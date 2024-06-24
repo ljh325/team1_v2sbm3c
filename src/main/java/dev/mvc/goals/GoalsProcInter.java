@@ -87,7 +87,14 @@ public interface GoalsProcInter {
                                       int record_per_page, int page_per_block);   
   
   
-  
+  //-------------------------주찬 추가------------------------------ 
+  /**\
+   * 가장 최근에 만들어진 목표 회원별 조회기능
+   * @param memberno
+   * @return
+   */
+  public GoalsVO recent_read(int memberno);
+    //-------------------------주찬 추가------------------------------
 }
 
 
