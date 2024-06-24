@@ -2,9 +2,32 @@
 /* Table Name: 운동추천 */
 /**********************************/
 
+
+  SELECT fr.foodrecomno, fr.frecom, fr.goalsno, fr.mhno, fr.rdate
+    FROM (
+        SELECT fr.foodrecomno, fr.frecom, fr.goalsno, fr.mhno, fr.rdate, fr.rownum AS r
+        FROM (
+            SELECT fr.foodrecomno, fr.frecom, fr.goalsno, fr.mhno, fr.rdate
+            FROM foodrecom fr
+            JOIN mh mh ON fr.mhno = mh.mhno
+            JOIN member m ON mh.memberno = m.memberno
+            where
+         
+             UPPER(fr.frecom) LIKE '%' || UPPER('베이글') || '%' 
+           
+                
+            AND m.memberno = 10
+                
+            </where>
+            ORDER BY fr.foodrecomno DESC
+        )
+    )
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+
 DROP TABLE HEALTHRECOM;
 DROP TABLE HEALTHRECOM CASCADE CONSTRAINTS;
 
+select * from foodrecom
 DROP SEQUENCE HEALTHRECOM_SEQ;
 
 CREATE SEQUENCE HEALTHRECOM_SEQ

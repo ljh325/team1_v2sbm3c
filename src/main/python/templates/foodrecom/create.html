@@ -162,7 +162,8 @@
                 meal.items.forEach(item => {
                   const mealItem = document.createElement('p');
                   mealItem.classList.add('meal-item');
-                  mealItem.textContent = `${item.health} (${item.time_m}분)`;
+                  mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                  //mealItem.textContent = `${item.health} (${item.time_m}분)`;
                   mealDiv.appendChild(mealItem);
                 });
                 dayDiv.appendChild(mealDiv);

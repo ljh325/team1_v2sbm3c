@@ -93,8 +93,27 @@
   <div style="text-align: center;">
     <h1>식단 추천</h1>
   </div>
+   
+    <div style="text-align: center; margin-bottom: 14px;">
+      <p class="d-inline-flex gap-1">
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          사용된 정보
+        </button>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+     
+          <div th:replace="~{foodrecom/info::info_list}"></div>
+    
+        </div>
+      </div>
+    </div>
+   
+   
+
   <div class="calendar" id="calendar" th:data-frecom="${frecom}"></div>
  <input type="hidden" id="word" name="word" th:value="${ word }">
+
       
   <div style="text-align: center;">
     <a href="/foodrecom/list_all" class="btn btn-secondary btn-sm">확인</a>

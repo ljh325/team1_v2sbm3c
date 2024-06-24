@@ -94,11 +94,11 @@ public class HealthrecomCont {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
     
-    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
     
 
-    int search_count = this.healthrecomProc.list_search_count(word);
+    int search_count = this.healthrecomProc.list_search_count(word,memberno);
     String paging = this.healthrecomProc.pagingBox(now_page, 
         word, "list_all", search_count, this.record_per_page, this.page_per_block);
     model.addAttribute("paging", paging);
@@ -247,10 +247,10 @@ public class HealthrecomCont {
      
    int memberno = (int)session.getAttribute("memberno");
   
-   ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+   ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
    model.addAttribute("list", list);
   
-   int search_count = this.healthrecomProc.list_search_count(word);
+   int search_count = this.healthrecomProc.list_search_count(word,memberno);
    String paging = this.healthrecomProc.pagingBox(now_page, 
        word, "list_all", search_count, this.record_per_page, this.page_per_block);
    model.addAttribute("paging", paging);
@@ -303,13 +303,13 @@ public class HealthrecomCont {
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     if (this.memberProc.isMember(session)) {
-
-      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      int memberno = (int) session.getAttribute("memberno");
+      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno,now_page, this.record_per_page);    
       model.addAttribute("list", list);
    
       
 
-      int search_count = this.healthrecomProc.list_search_count(word);
+      int search_count = this.healthrecomProc.list_search_count(word,memberno);
       String paging = this.healthrecomProc.pagingBox(now_page, 
           word, "list_all", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);
@@ -379,13 +379,13 @@ public class HealthrecomCont {
                               ) {
     
     if (this.memberProc.isMember(session)) {
-      
-      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word, now_page, this.record_per_page);    
+      int memberno = (int) session.getAttribute("memberno");
+      ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno,now_page, this.record_per_page);    
       model.addAttribute("list", list);
    
       
 
-      int search_count = this.healthrecomProc.list_search_count(word);
+      int search_count = this.healthrecomProc.list_search_count(word,memberno);
       String paging = this.healthrecomProc.pagingBox(now_page, 
           word, "list_all", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);

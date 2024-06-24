@@ -22,14 +22,23 @@ public class FoodrecomVO {
     private int goalsno = 0;
     
 
-    private String frecom;
-
-   
-
-    
+    private String frecom; 
     /** 등록일 */
     private String rdate;
     
+    /**건강정보 **/
+    private String kg;
+    private String ckg;
+
+    private String cm;
+    private String muscle;
+    
+    /**운동 목표 **/
+    private String g_kg;
+    private String g_ckg;
+
+    private String g_cm;
+    private String g_muscle;
 
 
   

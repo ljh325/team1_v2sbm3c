@@ -2,6 +2,45 @@
   
   <script th:inline="javascript">
 
+        window.onload = () => {
+          
+          let buttons = document.querySelectorAll('#delete');
+          buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+ 
+                let div = this.closest('div'); // 자기 자신이 속한 부모 태그
+                let mhno = div.querySelector('#foodrecomno').value; // 부모에 속한 자식 찾기
+
+                fetch("/foodrecom/delete", {
+                  method: "post",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify({foodrecom:foodrecomno})
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success === "success") {
+                    location.reload()
+                    //div.parentElement.remove(); // 해당 요소 삭제
+                  } else {
+                  }
+                })
+                .catch(error => {
+                  // 에러 발생 시 경고 모달창 표시
+                  //showModal("서버 요청에 실패했습니다. 나중에 다시 시도해주세요.");
+                  console.error("Error:", error);
+                });            
+
+    
+      
+            // 추가적인 로직을 여기에 작성하세요.
+            });
+          });
+        };
+
+
+
+
+    
     
     function updateFoodrecom(foodrecomno) {
         // 새 form 엘리먼트 생성
@@ -48,13 +87,41 @@
 </script>
  <div class='menu_line'></div>
  <div style="margin: 1em;">
+    <div th:each="foodrecomVO, status:${list}">
+      <div style="display: flex;">
+        <span th:text="${foodrecomVO.rdate.substring(0, 10)}"></span>
+        <div style=" display: block; margin-left: auto; margin-bottom:3px;">
+          <a th:href="@{|/foodrecom/read?foodrecomno=${foodrecomVO.foodrecomno}&word=${word}&now_page=${now_page}|}"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">수정</span>&nbsp;&nbsp;</a>
+          <span class="delete" id="delete" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+          <input id="foodrecomno" type="hidden" th:value="${foodrecomVO.foodrecomno}">
+        </div>
+      </div>
+
+
+      <div style="background-color: #E6E6E6; border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>번호</span></div>
+    
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${foodrecomVO.foodrecomno + '번'}"></span></div>
+          
+        </div>
+      </div><br>
+
+    </div>
+   
+   
+   
+   
   <table class="table table-striped" style='width: 100%;'>
     
     
     <colgroup>
-      <col style='width: 30%;'/>
-      <col style='width: 40%;'/>
-      <col style='width: 30%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 70%;'/>
+      <col style='width: 20%;'/>
      
  
     </colgroup>
@@ -62,7 +129,7 @@
       <tr>
         <th class="th_bs">번호</th>
         <th class="th_bs">생성시간</th>
-        <th class="th_bs">기타</th>
+        <th class="th_bs">선택</th>
         
 
       </tr>

@@ -181,6 +181,81 @@ public class Tool {
     return dest.getName();
   }
   
+  
+  public static synchronized String preview2(String upDir, String _src,int foodcode, int width,  int height) {
+    int RATIO = 0;
+    int SAME = -1;
+ 
+    File src = new File(upDir + "/" + _src); // 원본 파일 객체 생성
+    String srcname = src.getName(); // 원본 파일명 추출
+ 
+    // 순수 파일명 추출, mt.jpg -> mt 만 추출
+    String _dest = srcname.substring(0, srcname.indexOf("."));
+ 
+    // 축소 이미지 조합 /upDir/mt_t.jpg
+    File dest = new File(upDir + "/f" + foodcode + ".png");
+ 
+    Image srcImg = null;
+ 
+    String name = src.getName().toLowerCase(); // 파일명을 추출하여 소문자로 변경
+    // 이미지 파일인지 검사
+    if (name.endsWith("jpg") || name.endsWith("bmp") || name.endsWith("png")
+        || name.endsWith("gif")) {
+      try {
+        srcImg = ImageIO.read(src); // 메모리에 원본 이미지 생성
+        int srcWidth = srcImg.getWidth(null); // 원본 이미지 너비 추출
+        int srcHeight = srcImg.getHeight(null); // 원본 이미지 높이 추출
+        int destWidth = -1, destHeight = -1; // 대상 이미지 크기 초기화
+ 
+        if (width == SAME) { // width가 같은 경우
+          destWidth = srcWidth;
+        } else if (width > 0) {
+          destWidth = width; // 새로운 width를 할당
+        }
+ 
+        if (height == SAME) { // 높이가 같은 경우
+          destHeight = srcHeight;
+        } else if (height > 0) {
+          destHeight = height; // 새로운 높이로 할당
+        }
+ 
+        // 비율에 따른 크기 계산
+        if (width == RATIO && height == RATIO) {
+          destWidth = srcWidth;
+          destHeight = srcHeight;
+        } else if (width == RATIO) {
+          double ratio = ((double) destHeight) / ((double) srcHeight);
+          destWidth = (int) ((double) srcWidth * ratio);
+        } else if (height == RATIO) {
+          double ratio = ((double) destWidth) / ((double) srcWidth);
+          destHeight = (int) ((double) srcHeight * ratio);
+        }
+ 
+        // 메모리에 대상 이미지 생성
+        Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight,
+            Image.SCALE_SMOOTH);
+        int pixels[] = new int[destWidth * destHeight];
+        PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth,
+            destHeight, pixels, 0, destWidth);
+ 
+        pg.grabPixels();
+ 
+        BufferedImage destImg = new BufferedImage(destWidth, destHeight,
+            BufferedImage.TYPE_INT_RGB);
+        destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
+ 
+        // 파일에 기록
+        ImageIO.write(destImg, "png", dest);
+ 
+        System.out.println(dest.getName() + " 이미지를 생성했습니다.");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+ 
+    return dest.getName();
+  }
+  
   /**
    * 전송 가능한 파일인지 검사
    * @param file

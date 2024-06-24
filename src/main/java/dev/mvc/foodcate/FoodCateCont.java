@@ -87,12 +87,12 @@ public class FoodCateCont {
     String fname = ""; // 원본 파일명 image
     String fupname = ""; // 저장된 파일명, image
     String thumb = ""; // preview image
-
+    
     String upDir = FoodContents.getUploadDir(); // 파일을 업로드할 폴더 준비
     System.out.println("-> upDir: " + upDir);
 
     MultipartFile mf = foodCateVO.getFileMF();
-
+    int foodcode = foodCateVO.getFoodcode();
     fname = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
     System.out.println("-> 원본 파일명 산출 file1: " + fname);
 
@@ -101,10 +101,14 @@ public class FoodCateCont {
       if (Tool.checkUploadFile(fname) == true) { // 업로드 가능한 파일인지 검사
         // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
         fupname = Upload.saveFileSpring(mf, upDir);
-
+        
         if (Tool.isImage(fupname)) { // 이미지인지 검사
           // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
-          thumb = Tool.preview(upDir, fupname, 200, 150);
+         
+         
+          thumb = Tool.preview2(upDir,fupname,foodcode,50, 40);
+//          thumb = Tool.preview(upDir,fupname, 200, 150);
+
         }
         foodCateVO.setFname(fname); // 순수 원본 파일명
         foodCateVO.setFupname(fupname); // 저장된 파일명(파일명 중복 처리)

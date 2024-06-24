@@ -60,11 +60,11 @@ public interface FoodrecomProcInter {
   public String pagingBox(int now_page, String word, String list_file, int search_count, 
       int record_per_page, int page_per_block);
 
-  public int list_search_count(String word);
+  public int list_search_count(String word,int memberno);
   
   
   
-  public ArrayList<FoodrecomVO> list_search_paging(String word, int now_page, int record_per_page);
+  public ArrayList<FoodrecomVO> list_search_paging(String word,int memberno,int now_page, int record_per_page);
 
   
 }

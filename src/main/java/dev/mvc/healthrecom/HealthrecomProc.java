@@ -90,7 +90,7 @@ public class HealthrecomProc implements HealthrecomProcInter {
 
 
   @Override
-  public ArrayList<HealthrecomVO> list_search_paging(String word, int now_page, int record_per_page) {
+  public ArrayList<HealthrecomVO> list_search_paging(String word,int memberno,int now_page, int record_per_page) {
     /*
     예) 페이지당 10개의 레코드 출력
     1 page: WHERE r >= 1 AND r <= 10
@@ -131,8 +131,10 @@ public class HealthrecomProc implements HealthrecomProcInter {
 
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("word", word);
+    map.put("memberno", memberno);
     map.put("start_num", start_num);
     map.put("end_num", end_num);
+    
      
     ArrayList<HealthrecomVO> list=this.healthrecomDAO.list_search_paging(map);
     return list;
@@ -163,8 +165,13 @@ public class HealthrecomProc implements HealthrecomProcInter {
 //  }
 
   @Override
-  public int list_search_count(String word) {
-    int cnt = this.healthrecomDAO.list_search_count(word);
+  public int list_search_count(String word,int memberno) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("word", word);
+    map.put("memberno", memberno);
+  
+    
+    int cnt = this.healthrecomDAO.list_search_count(map);
     return cnt;
   }
 

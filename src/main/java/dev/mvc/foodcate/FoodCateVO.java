@@ -22,7 +22,10 @@ public class FoodCateVO {
     /**카테고리 등록/수정한 관리자 번호 */
     private int adminsno;
     
+    
+    
     /**식품영양정보 DB의 식품코드 참조*/
+    @NotNull(message="식품코드는 필수 입력 항목입니다.")
     private int foodcode;
     
    

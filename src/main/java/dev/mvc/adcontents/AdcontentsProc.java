@@ -245,6 +245,14 @@ public class AdcontentsProc implements AdcontentsProcInter {
     int cnt = this.adcontentsDAO.recom(adcontentsno);
     return cnt;
   }
+  
+  
+
+  @Override
+  public int recom_cancel(int adcontentsno) {
+    int cnt = this.adcontentsDAO.recom_cancel(adcontentsno);
+    return cnt;
+  }
 
   @Override
   public String pagingBox(int cateno, int now_page, String word, String list_file, int search_count,
