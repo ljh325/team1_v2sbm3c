@@ -1,5 +1,6 @@
 package dev.mvc.history;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -183,7 +184,12 @@ public class HistoryCont {
     
     }
   }
-
+  
+  /**
+   * 신체 정보 그래프
+   * @param session
+   * @return
+   */
   @GetMapping(value="/history_analyze_json")
   @ResponseBody
   public String history_analyze_json(HttpSession session) {
@@ -233,10 +239,65 @@ public class HistoryCont {
   }
   
   
+  @PostMapping(value="/read_history")
+  @ResponseBody
+  public String read_history(@RequestBody Map<String, String> request, Model model, HttpSession session) {
+    String startdate = request.get("startdate"); // request에서 startdate를 가져옴
+    System.out.println("시작--->"  + startdate);    
+    JSONObject obj = new JSONObject();
+    
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면
+      int memberno = (int)session.getAttribute("memberno"); // 세션에서 memberno를 꺼내옴
+      HistoryVO historyVO = new HistoryVO();
+      historyVO.setMemberno(memberno);
+      historyVO.setStartdate(startdate);
+      
+      ArrayList<HistoryVO> list = this.historyProc.read_history(historyVO);
+      System.out.println("list:--->" + list);
+           
+      obj.put("list", list);
+      
+      
+      return obj.toString();
+    } else { // 로그인이 안되어있으면
+      return "/member/login";
+    }        
+  }
   
   
+//  if (this.memberProc.isMember(session)) {
+//    int memberno = (int)session.getAttribute("memberno");  
+//   
+//    
+//    return "mh/read";
+//    }
+//    else {
+//      return "index";
+//    }
   
-  
+  @PostMapping(value="delete_sectoin_history")
+  @ResponseBody
+  public String delete_sectoin_history(HttpSession session, Model model,@RequestBody HistoryVO historyVO) {
+    
+    JSONObject obj = new JSONObject();
+    HashMap<String, Object> map = new HashMap<>();
+    
+    if (this.memberProc.isMember(session)) {
+    int memberno = (int)session.getAttribute("memberno");
+    System.out.println("memberno -> " + memberno);
+    map.put("memberno", memberno);
+    map.put("exrecordno", historyVO.getExrecordno());
+    
+    System.out.println("Exrecordno() -> " + historyVO.getExrecordno());
+    int cnt = this.historyProc.delete_sectoin_history(map);
+    System.out.println("cnt --> 삭제가 됬을까 : " + cnt);
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
+    } else {
+      return "member/login";
+    }
+  }
   /***************************************************************************************/
   /***************************************************************************************/
   
@@ -306,6 +367,8 @@ public class HistoryCont {
       return "history/calendar";
   }
 
+  
+
   // 이벤트 값
   @GetMapping("/api/events")
   @ResponseBody
@@ -313,22 +376,23 @@ public class HistoryCont {
     
       int memberno = (int)session.getAttribute("memberno");
       ArrayList<HistoryVO> historyVO = this.historyProc.count_history(memberno);
+      
       List<Map<String, Object>> events = new ArrayList<>();
       
-      
-      
-      
-      Map<String, Object> event1 = new HashMap<>();
-      event1.put("title", "Event 1");
-      event1.put("start", "2024-06-10");
-      
-      Map<String, Object> event2 = new HashMap<>();
-      event2.put("title", "Event 2");
-      event2.put("start", "2024-06-15");
-
-      events.add(event1);
-      events.add(event2);
-      
+      for (HistoryVO history : historyVO) {
+        Map<String, Object> event = new HashMap<>();
+        event.put("title", " " +  history.getTotal_exercises() + " 개");
+        System.out.println("운동 갯수" + history.getTotal_exercises());
+        String startDateStr = history.getStart_date().toString();
+        
+        if (startDateStr.length() >= 10) {
+            startDateStr = startDateStr.substring(0, 10); // 첫 10글자만 추출
+            System.out.println("날짜" + startDateStr.substring(0, 10));
+        }
+        event.put("start", startDateStr);
+        events.add(event);
+ 
+    }
       return events;
   }
 }

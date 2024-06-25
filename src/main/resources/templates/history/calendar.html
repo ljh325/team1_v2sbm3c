@@ -6,6 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
   <style>
     @font-face {
       font-family: 'TTHakgyoansimMonggeulmonggeulR';
@@ -40,8 +41,14 @@
     .fc-day-today {
       background-color: #ffcccc; /* 배경색을 연한 빨강색으로 설정 */
       color: #683ffc; /* 텍스트 색상을 빨강색으로 설정 */
-      font-weight: bold; /* 텍스트를 굵게 설정 */
+      
       font-size: 15px;
+    }
+    /* Custom event style */
+    .custom-event {
+      background-color:   #4682B4 !important; /* 배경색을 빨강색으로 설정 */
+      color: #000000 ; /* 텍스트 색상을 흰색으로 설정 */
+      /*border: 2px solid #000000 !important; /* 테두리를 검정색으로 설정 */
     }
   </style>
 </head>
@@ -54,17 +61,94 @@
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'ko',
-        events: '/history/api/events',
+         events: function(info, successCallback, failureCallback) {
+          fetch('/history/api/events')
+            .then(response => response.json())
+            .then(data => {
+              data.forEach(event => {
+                if (event.title.includes('개')) {
+                  event.classNames = ['custom-event']; // Add custom class for styling
+                }
+              });
+              successCallback(data);
+            });
+        },
+        eventContent: function(arg) {
+          let italicEl = document.createElement('i');
+          italicEl.classList.add('bi', 'bi-fire'); // Bootstrap Icons 클래스 추가
+  
+          let arrayOfDomNodes = [ italicEl ];
+          arg.event.title.split(' ').forEach(text => {
+            let textNode = document.createTextNode(text + ' ');
+            arrayOfDomNodes.push(textNode);
+          });
+  
+          return { domNodes: arrayOfDomNodes }
+        },
         eventClick: function(info) {
           // 클릭된 이벤트의 타이틀을 확인하고 alert 창을 띄움
-          if (info.event.title === 'Event 1') {
-            alert('1');
+          if (info.event.title.includes('개')) {
+            // 날짜 형식을 YYYY-MM-DD로 변환
+            var date = new Date(info.event.start);
+            var startdate = date.toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit' // 까지의 결과 2024.06.22.
+            }).replace(/\./g, '-').replace(/ /g, '').substring(0,10).toString(); 
+            // yyyy-mm-dd .을 -로 변환, 0~ 10자리까지만 출력, 문자열로 변환
+            console.log('formattedDate-->' +startdate);
+            
+            sendStartDateToParent(startdate);
           }
         }
-        
-      });
+      }); // new FullCalendar 종료
       calendar.render();
     });
+    
+    
+    // 해당 날짜별 운동 기록을 불러오는 함수
+    //function record_ex(startdate) {
+      
+      //console.log('startdate--->--->' + startdate);
+      
+      //if (window.parent && startDate) {
+      //  window.parent.postMessage({ startDate: startDate }, 'http://localhost:9093'); // http://localhost:9093 또는 '*'
+      //}
+      /*
+      fetch('/history/read_history' , {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          startdate: startdate
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        
+        let list = data.list;
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+      */
+      
+    //}
+    // record_ex 끝
+    
+    
+    
+    // startdate를 부모 창으로 전달하는 함수
+    function sendStartDateToParent(startdate) {
+        let startDate = startdate;
+        
+        if (window.parent && startDate) {
+            window.parent.postMessage({ startDate: startDate }, '*'); // http://localhost:9093 또는 '*'
+        }
+    }
+
 
   </script>
 </body>

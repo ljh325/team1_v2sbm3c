@@ -25,9 +25,9 @@ public class HistoryProc implements HistoryProcInter{
   }
 
   @Override
-  public HistoryVO read_history(int memberno) {
-    HistoryVO historyVO = this.historyDAO.read_history(memberno);
-    return historyVO;
+  public ArrayList<HistoryVO> read_history(HistoryVO historyVO) {
+    ArrayList<HistoryVO> list = this.historyDAO.read_history(historyVO);
+    return list;
   }
 
   @Override

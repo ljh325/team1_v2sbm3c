@@ -17,7 +17,7 @@ public interface HistoryProcInter {
    * @param memberno
    * @return
    */
-  public HistoryVO read_history(int memberno);
+  public ArrayList<HistoryVO> read_history(HistoryVO historyVO);
   
   /**
    * 회원별 + 날짜별 총 운동 시간(time)

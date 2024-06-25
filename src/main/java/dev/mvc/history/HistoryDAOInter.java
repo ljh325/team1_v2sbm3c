@@ -14,12 +14,13 @@ public interface HistoryDAOInter {
    */
   public int insert_history(HistoryVO historyVO);
   
+  
   /**
    * 회원별 운동기록 리스트조회
-   * @param memberno
+   * @param map
    * @return
    */
-  public HistoryVO read_history(int memberno);
+  public ArrayList<HistoryVO> read_history(HistoryVO historyVO);
   
   /**
    * 회원별 + 날짜별 총 운동 시간(time)

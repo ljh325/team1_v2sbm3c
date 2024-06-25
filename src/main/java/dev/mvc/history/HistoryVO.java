@@ -34,6 +34,10 @@ public class HistoryVO {
   /** 등록날짜 */
   private String startdate;
   /** 회원번호 */
-  private String memberno;
+  private int memberno;
+  
+  private int total_exercises;
+  
+  private String start_date;
 
 }

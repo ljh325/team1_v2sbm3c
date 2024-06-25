@@ -28,10 +28,10 @@
   </insert>
   
   <!-- (o)  회원별 운동기록 리스트조회 -->
-  <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, TRUNC(startdate) AS start_date, memberno
+  <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="dev.mvc.history.HistoryVO">
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS startdate, exupdatedate, memberno
     FROM history
-    WHERE memberno = #{memberno}
+    WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
   </select>  
 
   <!-- 회원별 + 날짜별 총 운동 시간(time) -->

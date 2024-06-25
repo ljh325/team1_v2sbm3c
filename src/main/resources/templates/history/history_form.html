@@ -49,7 +49,31 @@
       background-color: lightgray;
       transform: scale(1.05);
     }
-
+    
+    /* 운동 기록 요소 div */
+    .record_ex_div {
+      background-color: black; 
+      padding: 6px 10px 14px 14px;
+      margin: 10px;
+      border-radius: 7px;
+    }
+    
+    /* 운동 기록 span */
+    .record_ex_div_name{
+      color: white;
+    }
+    .startdate_span{
+      text-align: left;
+      margin-bottom: 12px;
+      }
+    .record_ex_parents{
+      background-color: #2d2e30;
+      padding: 10px;
+      border-radius: 13px;
+    }
+    #historyData{
+      display: none;
+    }
     /* ===============기록 활동 버튼=============== */
   </style>
 
@@ -79,8 +103,16 @@
     </div>
   </div>
   <br>
+  
+  
 
-  <div id="record_btn" style="background-color: #353a50; border-radius: 7px; font-size: 20px; padding: 18px;"
+  <div id="historyData" class="record_ex_parents"></div> <!-- 데이터를 추가할 컨테이너 요소 (기록한 운동 리스트 나열) -->
+  
+  
+  
+  <br>
+  <br>
+  <div id="ex_record_btn" style="background-color: #353a50; border-radius: 7px; font-size: 20px; padding: 18px;"
     onclick="location.href='/history/history_record_form'">
     <span style="color: #E6E6E6; cursor: pointer;">운동 기록 추가 +</span>
   </div>
@@ -98,6 +130,14 @@
   </div>
 
   <script>
+  
+    window.onload = () => {
+      const startdate = new Date();
+      const formattedDate = startdate.toISOString().split('T')[0]; // 현재 날짜를 YYYY-MM-DD 형식으로 변환
+      sendStartDateToServer(formattedDate);
+    }
+  
+  
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -109,7 +149,187 @@
     });
 
 
+/*
+    window.addEventListener('message', function(event) {
+      var data = event.data;
+      if (data.status === 'success') {
+        var historyList = data.list;
+        var historyDataDiv = document.getElementById('historyData');
+        historyList.forEach(function(history) {
+          var listItem = document.createElement('li');
+          listItem.textContent = history.exname + ' - ' + history.startdate + ' - ' + history.hiscalorie;
+          historyDataDiv.appendChild(listItem);
+        });
+      } else {
+        alert('로그인이 필요합니다.');
+      }
+    });
+ */
+    
+    // 메시지 수신 핸들러
+    window.addEventListener('message', function(event) {
+      //if (event.origin === 'http://localhost:9091') {  // 메시지가 특정 도메인에서 왔는지 확인
+            if (event.data && event.data.startDate) {
+                var startDate = event.data.startDate;
+                // 비동기 요청을 보내는 함수 호출
+                console.log("부모 창 startDate 값:" + startDate)
+                sendStartDateToServer(startDate);
+            }
+          //} else {
+          //  console.warn('Received message from unauthorized origin:', event.origin);
+          //  }
+    }, false);
+    
+    // 서버로 startdate를 비동기 요청으로 보내는 함수
+    function sendStartDateToServer(startDate) {
 
+      fetch('/history/read_history' , {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          startdate: startDate
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        let list = data.list;
+        console.log('list가 왔다 아이가...-->>' + list);
+        
+        let historyDataDiv = document.getElementById('historyData');
+        startdates = startDate.substring(5, 10);
+        
+
+        historyDataDiv.innerHTML = ''; // 기존 내용을 초기화합니다.
+        
+        
+          if (list.length > 0) {
+            historyDataDiv.style.display = 'block'; // 데이터가 있으면 보이게 합니다.
+            
+            // 반복하지 않을 부분 추가
+            let firstHistory = list[0];
+            let truncatedDate = firstHistory.startdate.substring(5, 10); // 글자 수 제한
+            let dateDiv = document.createElement('div');
+            dateDiv.innerHTML = `
+                <div id="startdate" class="startdate_span">
+                    <div style="float:left;">
+                      <span style="color: white; margin-left: 10px;">${truncatedDate}</span>
+                      <span style="color: #38fbbb; font-size: 17px;">&nbsp; 운동기록</span>
+                    </div>
+                    <div style="float:right; margin-right:12px;">
+                      <span style="text-align: right; color: #38fbbb;">자세히 보기</span>
+                    </div>
+                    <div style="clear:both;">
+                    </div>
+                </div>
+            `;
+            historyDataDiv.appendChild(dateDiv);
+
+            // 반복이 필요한 부분 추가 (최대 5개)
+            for (let i = 0; i < Math.min(list.length, 5); i++) {
+              let history = list[i];
+              let exrecordno = history.exrecordno; 
+              let newDiv = document.createElement('div');
+              newDiv.className = 'record_ex_div';
+              newDiv.id = `record-${exrecordno}`;  // 고유한 ID 할당
+              newDiv.innerHTML = `
+                <div id="record-${exrecordno}" class="record-${exrecordno}">
+                  <div style="text-align: right;">
+                    <button type="button" class="btn-cancel-${exrecordno} btn-close" aria-label="Close" 
+                       style="background-color: white; font-size: 14px;"></button>
+                  </div>
+                  <div class="d-flex justify-content-evenly">
+                    <div>
+                      <span class="record_ex_div_name">${history.exname}</span>
+                    </div>
+                    <div>
+                      <i class="bi bi-fire" style="color:red"></i>
+                      <span class="record_ex_div_name">${history.hiscalorie}</span>
+                      <span style="font-weight: bold; color: #D3D3D3;">kcal</span>
+                    </div>
+                    <div>
+                      <i class="bi bi-clock-fill" style="font-weight: bold; color: #D3D3D3;"></i>
+                      <span class="record_ex_div_name">${history.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+              historyDataDiv.appendChild(newDiv);
+              
+              
+              // 버튼에 이벤트 리스너 추가
+              let closeButton = newDiv.querySelector('.btn-close');
+              closeButton.addEventListener('click', function() {
+                
+                let exrecordno = [['history.exrecordno']];
+                console.log('클릭 시작이다...' + exrecordno);
+                      
+                // 클릭시 해당 요소의 운동기록 삭제 함수
+                deleteClick(exrecordno)
+             
+              });
+            }
+
+            // 나머지 항목이 있으면 "..." 표시
+            if (list.length > 5) {
+                let moreDiv = document.createElement('div');
+                moreDiv.innerHTML = `
+                    <span style="color: white; font-size: 23px;">...</span>
+                `;
+                historyDataDiv.appendChild(moreDiv);
+            }
+        } else {
+            historyDataDiv.style.display = 'none'; // 데이터가 없으면 숨깁니다.
+        }
+    })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+    
+    
+    
+    // 운동 기록 삭제 함수
+    function deleteClick(exrecordno){
+      
+      //console.log('클릭 시작이다...');
+      
+      //let exrecordno = [['history.exrecordno']];
+      //let memberno = [['session.memberno']];
+      //console.log(exrecordno + ' and ' + memberno);
+      
+      fetch('/history/delete_sectoin_history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          exrecordno : exrecordno
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('delete 운동기록-> 결과는? ' + data.cnt)
+        
+        // 삭제 성공 시 해당 요소 제거
+        if (data.cnt > 0) {
+          
+          // 해당 요소 비동기로 삭제 코드
+          let elements = document.getElementById(`record-${exrecordno}`);
+          if (elements) {
+            elements.remove();
+          }
+
+          
+          
+        }
+        
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })     
+    }
 
   </script>
 
