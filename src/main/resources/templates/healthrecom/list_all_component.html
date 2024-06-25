@@ -27,7 +27,18 @@
         const dayDiv = document.createElement('div');
         dayDiv.classList.add('day');
         dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
-        
+        if(dayData.health =="휴식"){
+                const exerciseDiv = document.createElement('div');
+                exerciseDiv.classList.add('exercise');
+
+                const exerciseTitle = document.createElement('h3');
+                exerciseTitle.textContent ='휴식';
+
+                exerciseDiv.appendChild(exerciseTitle);
+                dayDiv.appendChild(exerciseDiv);
+                
+              }
+              else{
         dayData.health.forEach(exercise => {
           const exerciseDiv = document.createElement('div');
           exerciseDiv.classList.add('exercise');
@@ -49,6 +60,7 @@
           
           dayDiv.appendChild(exerciseDiv);
         });
+        }
         
         exercise_routine.appendChild(dayDiv);
       });

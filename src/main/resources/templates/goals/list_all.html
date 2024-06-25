@@ -1,91 +1,7 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<style>
-  body {
-  font-family: Arial, sans-serif;
-}
 
-h1 {
-  text-align: center;
-}
-
-#calendar {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.calendar-row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.calendar-day {
-  width: calc(100% / 7);
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #ccc;
-}
-
-.calendar-day:hover {
-  background-color: #f0f0f0;
-}
-
-.selected-day {
-  background-color: #007bff;
-  color: #fff;
-}
- 
-</style>
- <script th:inline="javascript">
-document.addEventListener("DOMContentLoaded", function() {
-  const calendarDiv = document.getElementById('calendar');
-  const today = new Date();
-  let selectedDate = new Date();
-
-  renderCalendar(today);
-
-  function renderCalendar(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    const lastDayOfMonth = new Date(year, month, daysInMonth).getDay();
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
-    
-    calendarDiv.innerHTML = '';
-
-    // 이번 달의 첫 주의 시작 요일까지 빈 칸 삽입
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      const emptyDayDiv = document.createElement('div');
-      emptyDayDiv.classList.add('calendar-day');
-      calendarDiv.appendChild(emptyDayDiv);
-    }
-
-    // 이번 달의 날짜 추가
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dayDiv = document.createElement('div');
-      dayDiv.classList.add('calendar-day');
-      dayDiv.textContent = day;
-      if (date.getMonth() === selectedDate.getMonth() && day === selectedDate.getDate()) {
-        dayDiv.classList.add('selected-day');
-      }
-      dayDiv.addEventListener('click', function() {
-        selectedDate = new Date(year, month, day);
-        renderCalendar(new Date(year, month));
-      });
-      calendarDiv.appendChild(dayDiv);
-    }
-
-    // 이번 달의 마지막 주의 빈 칸 삽입
-    for (let i = lastDayOfMonth + 1; i < 7; i++) {
-      const emptyDayDiv = document.createElement('div');
-      emptyDayDiv.classList.add('calendar-day');
-      calendarDiv.appendChild(emptyDayDiv);
-    }
-  }
-});
-</script>
 <div layout:fragment="content">
    <div class="title_line">운동 목표
 
@@ -103,10 +19,13 @@ document.addEventListener("DOMContentLoaded", function() {
   <div style ="text-align: center"> 최근 목표</div>
   <div class="container mt-3" style="width: 50%; margin: 5px auto;">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
-      <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
-      <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
-      <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
+             <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
+          <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
+          <li class="list-group-item">키: <span th:text="${goalsVO.cm}"></span></li>
+         
+          <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
+              <li class="list-group-item">골격근량: <span th:text="${goalsVO.muscle}"></span></li>
+          <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
     
     </ul>  
     

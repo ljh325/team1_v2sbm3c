@@ -30,7 +30,7 @@ def answer(role, prompt, format='json', llm='gpt-3.5-turbo', output='json'):
           ],
           n=1,             # 응답수, 다양한 응답 생성 가능
           max_tokens=4000, # 응답 생성시 최대 1000개의 단어 사용
-          temperature=0,   # 창의적인 응답여부, 값이 클수록 확률에 기반한 창의적인 응답이 생성됨
+          temperature=0.7,   # 창의적인 응답여부, 값이 클수록 확률에 기반한 창의적인 응답이 생성됨
           response_format= { "type":"json_object" }
       )
     else:
@@ -48,7 +48,7 @@ def answer(role, prompt, format='json', llm='gpt-3.5-turbo', output='json'):
           ],
           n=1,             # 응답수, 다양한 응답 생성 가능
           max_tokens=4000, # 응답 생성시 최대 1000개의 단어 사용
-          temperature=0    # 창의적인 응답여부, 값이 클수록 확률에 기반한 창의적인 응답이 생성됨
+          temperature=0.7    # 창의적인 응답여부, 값이 클수록 확률에 기반한 창의적인 응답이 생성됨
       )
    
     return response.choices[0].message.content

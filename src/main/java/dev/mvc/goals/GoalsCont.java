@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +28,7 @@ import dev.mvc.healthrecom.HealthrecomVO;
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.mh.MhVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
@@ -271,6 +274,7 @@ public class GoalsCont {
   }
 
   /**
+   * fetch로 바로 삭제하기 때문에 사용되지 않음
    * Delete form
    * http://localhost:9091/goals/delete/1
    * @param model
@@ -313,34 +317,34 @@ public class GoalsCont {
    * @return
    */
   @PostMapping(value="/delete")
-  public String delete_process(HttpSession session,Model model, 
-                             
-                               @RequestParam("goalsno") int goalsno) {
+  @ResponseBody
+  public String delete_process(@RequestBody Map<String, Integer> requestBody,HttpSession session,Model model ) {
   
     if (this.memberProc.isMember(session)) {
-
-    
+      int goalsno = requestBody.get("goalsno");
       
     
-    int memberno = (int)session.getAttribute("memberno");
-    ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
-    model.addAttribute("list", list);
-    
+      int memberno = (int)session.getAttribute("memberno");
+      ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
+      model.addAttribute("list", list);
+      
+     
+  //    this.healthrecomProc.delete_g(goalsno);
+  //    this.foodrecomProc.delete_g(goalsno); 
+      int cnt = this.goalsProc.delete(goalsno);
+      
    
-//    this.healthrecomProc.delete_g(goalsno);
-//    this.foodrecomProc.delete_g(goalsno); 
-    int cnt = this.goalsProc.delete(goalsno);
     
-   
-    if (cnt == 1) {
+      JSONObject obj = new JSONObject();
       
-      return "redirect:/goals/list_all";
-      
-    } else {
-      model.addAttribute("code", "delete_fail");
-      return "goals/msg"; // /templates/goals/msg.html
-       }
-    }
+      if (cnt == 1) {
+        obj.put("success", "success");
+      } else {
+        obj.put("errors", "errors");
+      }
+      return obj.toString();
+      }
+    
     else {
       return "list_all";
     }

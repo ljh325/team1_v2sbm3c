@@ -24,9 +24,39 @@ app = Flask(__name__)  # __name__ == '__main__'
 CORS(app)
 
 prompt3 ='''
-[회원 건강정보]에 해당하는 사람이 [운동 목표]의 값을 목표로 운동계획을 세우고자한다 [운동표]에 있는 값을 기준으로 운동 기간은 무제한으로 하나 대신 [난이도]에 있는 난이도를 고려하고 일주일간의 운동 루틴을 출력한다 하루루틴에는 그 날 필요한 운동들의 각각의 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 표시한다 필요 세트는 set에, 일주일간 자극 될 근육 부위의 효율도 생각한다 신체 정보에 기반하여 추천해줘.
-출력 형식은 [출력 형식1]과 같은 형식으로  
-상체운동이면 body에 13,하체면 body에 14를 할당할것
+[회원 건강정보]에 해당하는 사람이 [운동 목표]의 신체를 목표할 때의 일주일간의 운동계획을  
+아래의 조건을 모두 지키며 작성해줘 
+1.[운동표]에 있는 값을 기준으로 일주일간의 루틴을 출력하나 그 이후에도 [운동 목표]를 위한 운동을 무제한의 기간동안 지속 한다고 가정한다,대신 [난이도]에 있는 난이도를 기준으로 상중하로 계획을 세운다
+2. 출력은 [출력 형식1]을 따르나 해당하는 [난이도] 값을 따라 그에 해당하는 [운동 난이도]의 하루운동 종류와 일주일 중 운동일 수,하루 권장 운동시간을 적용시킨다
+
+그에 따라 운동 수 즉,{"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},의 수가 달라질수 있고
+
+휴식이 필요한 날은  "health":"휴식"을 할당한다 
+3.각각 운동의 대략적인 예상 운동시간(분)과 그 시간동안 해당하는 운동을 했을 경우 소모되는 예상 칼로리를 할당한다 
+4.일주일간 자극 될 각각 근육 부위의 휴식기간의 균형과 효율을 고려한다
+3.[회원 건강정보]에 해당하는 사람이 [운동 목표]의 신체 정보를 목표로 하기에 적합한 운동을 할당한다 
+4.상체운동이면 body에 13,하체면 body에 14를 할당할것
+5.cal은 칼로리,set를 뜻한다
+
+
+
+ [운동 난이도]
+    상 :
+        (하루 운동 종류 수: 5-7가지 운동
+        일주일 중 운동일 수: 7일중 5-6일 
+        하루 권장 운동 시간: 90~120분 이상)
+
+    중 :
+        (하루 운동 종류 수: 3-5가지 운동
+        일주일 중 운동일 수: 7일중 4-5일
+        하루 권장 운동 시간: 60~90분)
+
+    하 
+        (하루 운동 종류 수: 2-3가지 운동
+        일주일 중 운동일 수: 7일중 3~4일
+        하루 권장 운동 시간: 60분)
+
+
  [회원 건강정보]
     체중: kg
     체지방: %
@@ -52,12 +82,11 @@ prompt3 ='''
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
-        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
     },
     {
       "day": "화요일",
       "health": [
-    {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+    
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -66,7 +95,7 @@ prompt3 ='''
     {
       "day": "수요일",
       "health": [
-        {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -75,7 +104,7 @@ prompt3 ='''
     {
       "day": "목요일",
       "health": [
-       {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+       
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -84,7 +113,7 @@ prompt3 ='''
     {
       "day": "금요일",
       "health": [
-     {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+    
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -93,7 +122,7 @@ prompt3 ='''
     {
       "day": "토요일",
       "health": [
-       {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+    
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -102,7 +131,7 @@ prompt3 ='''
     {
       "day": "일요일",
       "health": [
-     {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+     
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"}
@@ -113,167 +142,13 @@ prompt3 ='''
 
 
 [운동 표]
-EXDATANO EXGROUP EXNAME MUSCLE MUSCLESUB EXLEVEL LOWMET MIDMET HIGHMET LOWACT MIDACT HIGHACT LOWRISK MIDRISK HIGHRISK
 
+EXDATANO 운동근육그룹 운동명 주동근 협응근 난이도 소모칼로리 근육활성도 HIGHMET LOWACT MIDACT HIGHACT LOWRISK MIDRISK HIGHRISK
 
-    
-   
 '''
 
 
-prompt2 = '''
-    아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [운동 목록]에서 운동 목표를 달성하기 위해 필요한 3일의 운동 스케줄을 적절한 운동 시간을 포함해서 출력해줘
-    출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘
 
-    [회원 건강정보]
-    체중: kg
-    체지방: %
-    신장: cm
-    골격근량: kg
-    
-
-    [운동 목표]
-    체중: kg
-    체지방: %
-    신장: cm
-    골격근량: kg
-    
-    
-
-    [운동 목록]
-    벤치 프레스
-    덤벨 플라이
-    푸시업
-    숄더 프레스
-    레터럴 레이즈
-    프론트 레이즈
-    덤벨 컬
-    해머 컬
-    트라이셉스 딥스
-    트라이셉스 익스텐션
-    랫 풀다운
-    바벨 로우
-    시티드 로우
-    풀업
-    페이스 풀
-    벤트오버 덤벨 로우
-    디클라인 벤치 프레스
-    인클라인 벤치 프레스
-    스쿼트
-    레그 프레스
-    런지
-    레그 컬
-    레그 익스텐션
-    카프 레이즈
-    데드리프트
-    굿모닝
-    바이시클 크런치
-    플랭크
-    행잉 레그 레이즈
-    시티드 크런치
-    
- 
-  
-    
-    [출력 형식1]
-    {
-    "res": [
-        {
-            "day": 1,
-            "meals": [
-                {
-                    "meal": "breakfast",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "lunch",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "dinner",
-                    "items": [
-                     {"health": 운동명, "time_h": 시간(분) },
-                    {"health": 운동명, "time_h": 시간(분) },
-                    {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                }
-            ]
-        },
-        {
-            "day": 2,
-            "meals": [
-                {
-                    "meal": "breakfast",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "lunch",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "dinner",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                }
-            ]
-        },
-        {
-            "day": 3,
-            "meals": [
-                {
-                    "meal": "breakfast",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "lunch",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                },
-                {
-                    "meal": "dinner",
-                    "items": [
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) },
-                        {"health": 운동명, "time_h": 시간(분) }
-                    ]
-                }
-            ]
-        }
-    ]
-}
-
-    [출력 형식2]
-    {
-    "res": 추천 운동 목록
-    }
-
-    '''
 prompt = '''
     아래의 [회원 건강정보]을 가진 회원이 아래의 [운동 목표]를 목표로 해서 [3]달간 운동중이야, [식단 목록]에서 운동 목표를 달성하기 위해 필요한 하루의 식단을 식단의 섭취량(g)을 포함해서 출력해줘 식품 코드 또한 출력
     출력 형식은 JSON으로 [출력형식1]과 같은 형식으로 출력해줘

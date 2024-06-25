@@ -124,9 +124,9 @@
       <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
       <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
       <select id="level" name="level">
-        <option value="beginner">초급</option>
-        <option value="intermediate">중급</option>
-        <option value="advanced">상급</option>
+        <option value="초급">초급</option>
+        <option value="중급">중급</option>
+        <option value="상급">상급</option>
       </select>
       <button type="button" id="register" class="btn">생성</button>
       <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
@@ -173,29 +173,41 @@
               const dayDiv = document.createElement('div');
               dayDiv.classList.add('day');
               dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
-              
-              dayData.health.forEach(exercise => {
+              if(dayData.health =="휴식"){
                 const exerciseDiv = document.createElement('div');
                 exerciseDiv.classList.add('exercise');
-                
-                
+
                 const exerciseTitle = document.createElement('h3');
-                exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
-                
+                exerciseTitle.textContent ='휴식';
 
-                const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-                //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-                exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
-                
-
-                const exerciseDetails = document.createElement('p');
-                exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 예상 운동 시간: ${exercise.time} 분`;
-                
                 exerciseDiv.appendChild(exerciseTitle);
-                exerciseDiv.appendChild(exerciseDetails);
-                
                 dayDiv.appendChild(exerciseDiv);
-              });
+                
+              }
+              else{
+                dayData.health.forEach(exercise => {
+                  const exerciseDiv = document.createElement('div');
+                  exerciseDiv.classList.add('exercise');
+                  
+                  
+                  const exerciseTitle = document.createElement('h3');
+                  exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
+                  
+
+                  const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                  //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                  exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+                  
+
+                  const exerciseDetails = document.createElement('p');
+                  exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal,세트: ${exercise.set} 세트,예상 운동 시간: ${exercise.time} 분`;
+                  
+                  exerciseDiv.appendChild(exerciseTitle);
+                  exerciseDiv.appendChild(exerciseDetails);
+                  
+                  dayDiv.appendChild(exerciseDiv);
+                });
+              }
               
               calendarDiv.appendChild(dayDiv);
             });
