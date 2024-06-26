@@ -1,0 +1,836 @@
+/**********************************/
+/* Table Name: 관리자 */
+/**********************************/
+CREATE TABLE ADMINS(
+		ADMINSNO                      		NUMBER(10)		 NULL ,
+		ADMINID                       		VARCHAR2(30)		 NOT NULL,
+		ADMINPW                       		VARCHAR2(200)		 NOT NULL,
+		GRADE                         		NUMBER(10)		 NOT NULL,
+		ANAME                         		VARCHAR2(20)		 NOT NULL,
+		ADATA                         		DATE		 NOT NULL
+);
+
+COMMENT ON TABLE ADMINS is '관리자';
+COMMENT ON COLUMN ADMINS.ADMINSNO is '관리자 번호';
+COMMENT ON COLUMN ADMINS.ADMINID is '관리자 아이디';
+COMMENT ON COLUMN ADMINS.ADMINPW is '관리자 패스워드';
+COMMENT ON COLUMN ADMINS.GRADE is '관리자 등급';
+COMMENT ON COLUMN ADMINS.ANAME is '관리자이름';
+COMMENT ON COLUMN ADMINS.ADATA is '가입일';
+
+
+/**********************************/
+/* Table Name: 카테고리 */
+/**********************************/
+CREATE TABLE CATE(
+		CATENO                        		NUMBER(10)		 NOT NULL,
+		NAME                          		VARCHAR2(30)		 NOT NULL,
+		NAMESUB                       		VARCHAR2(30)		 NOT NULL,
+		CNT                           		NUMBER(7)		 NOT NULL,
+		RDATE                         		DATE		 NOT NULL,
+		SEQNO                         		NUMBER(5)		 NOT NULL,
+		VISIBLE                       		CHAR(1)		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE CATE is '카테고리';
+COMMENT ON COLUMN CATE.CATENO is '카테고리번호';
+COMMENT ON COLUMN CATE.NAME is '중분류명';
+COMMENT ON COLUMN CATE.NAMESUB is '소분류명';
+COMMENT ON COLUMN CATE.CNT is '관련 자료수';
+COMMENT ON COLUMN CATE.RDATE is '등록일';
+COMMENT ON COLUMN CATE.SEQNO is '출력 순서';
+COMMENT ON COLUMN CATE.VISIBLE is '출력 모드';
+COMMENT ON COLUMN CATE.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 회원 */
+/**********************************/
+CREATE TABLE MEMBER(
+		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+		ID                            		VARCHAR2(30)		 NOT NULL,
+		PASSWD                        		VARCHAR2(200)		 NOT NULL,
+		MNAME                         		VARCHAR2(30)		 NOT NULL,
+		NICKNAME                      		VARCHAR2(100)		 NOT NULL,
+		TEL                           		VARCHAR2(20)		 NOT NULL,
+		ZIPCODE                       		VARCHAR2(5)		 NULL ,
+		ADDRESS1                      		VARCHAR2(80)		 NULL ,
+		ADDRESS2                      		VARCHAR2(50)		 NULL ,
+		MDATE                         		DATE		 NOT NULL,
+		GRADE                         		NUMBER(2)		 NOT NULL,
+		POINT                         		NUMBER(10)		 DEFAULT 0		 NOT NULL,
+		BIRTH                         		VARCHAR2(20)		 NOT NULL,
+		SEX                           		VARCHAR2(20)		 NOT NULL,
+		PROFILE                       		VARCHAR2(100)		 NULL ,
+		PROFILESAVED                  		VARCHAR2(100)		 NULL ,
+		THUMBS                        		VARCHAR2(100)		 NULL ,
+		SIZES                         		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE MEMBER is '회원';
+COMMENT ON COLUMN MEMBER.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN MEMBER.ID is '아이디';
+COMMENT ON COLUMN MEMBER.PASSWD is '패스워드';
+COMMENT ON COLUMN MEMBER.MNAME is '성명';
+COMMENT ON COLUMN MEMBER.NICKNAME is '닉네임';
+COMMENT ON COLUMN MEMBER.TEL is '전화번호';
+COMMENT ON COLUMN MEMBER.ZIPCODE is '우편번호';
+COMMENT ON COLUMN MEMBER.ADDRESS1 is '주소1';
+COMMENT ON COLUMN MEMBER.ADDRESS2 is '주소2';
+COMMENT ON COLUMN MEMBER.MDATE is '가입일';
+COMMENT ON COLUMN MEMBER.GRADE is '등급';
+COMMENT ON COLUMN MEMBER.POINT is '포인트';
+COMMENT ON COLUMN MEMBER.BIRTH is '생년월일';
+COMMENT ON COLUMN MEMBER.SEX is '성별';
+COMMENT ON COLUMN MEMBER.PROFILE is '메인 이미지';
+COMMENT ON COLUMN MEMBER.PROFILESAVED is '실제 저장된 메인 이미지';
+COMMENT ON COLUMN MEMBER.THUMBS is '메인 이미지 Preview';
+COMMENT ON COLUMN MEMBER.SIZES is '메인 이미지 크기';
+
+
+/**********************************/
+/* Table Name: 커뮤티니 */
+/**********************************/
+CREATE TABLE CONTENTS(
+		CONTENTSNO                    		NUMBER(10)		 NOT NULL,
+		CATENO                        		NUMBER(10)		 NOT NULL,
+		TITLE                         		VARCHAR2(100)		 NOT NULL,
+		CONTENT                       		CLOB(4000)		 NOT NULL,
+		RECOM                         		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		VIEWCNT                       		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		COMMENTCNT                    		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		PASSWD                        		VARCHAR2(15)		 NOT NULL,
+		TAG                           		VARCHAR2(100)		 NULL ,
+		RDATE                         		DATE		 NOT NULL,
+		FILE1                         		VARCHAR2(1000)		 NULL ,
+		FILE1SAVED                    		VARCHAR2(1000)		 NULL ,
+		THUMB1                        		VARCHAR2(1000)		 NULL ,
+		SIZE1                         		NUMBER(10)		 NULL ,
+		YOUTUBE                       		VARCHAR2(1000)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		GRADE                         		NUMBER(10)		 DEFAULT 1		 NOT NULL
+);
+
+COMMENT ON TABLE CONTENTS is '커뮤티니';
+COMMENT ON COLUMN CONTENTS.CONTENTSNO is '컨텐츠 번호';
+COMMENT ON COLUMN CONTENTS.CATENO is '카테고리 번호';
+COMMENT ON COLUMN CONTENTS.TITLE is '제목';
+COMMENT ON COLUMN CONTENTS.CONTENT is '내용';
+COMMENT ON COLUMN CONTENTS.RECOM is '추천수';
+COMMENT ON COLUMN CONTENTS.VIEWCNT is '조회수';
+COMMENT ON COLUMN CONTENTS.COMMENTCNT is '댓글수';
+COMMENT ON COLUMN CONTENTS.PASSWD is '패스워드';
+COMMENT ON COLUMN CONTENTS.TAG is '태그';
+COMMENT ON COLUMN CONTENTS.RDATE is '등록일';
+COMMENT ON COLUMN CONTENTS.FILE1 is '메인 이미지';
+COMMENT ON COLUMN CONTENTS.FILE1SAVED is '실제 저장된 메인 이미지';
+COMMENT ON COLUMN CONTENTS.THUMB1 is '메인 이미지 Preview';
+COMMENT ON COLUMN CONTENTS.SIZE1 is '메인 이미지 크기';
+COMMENT ON COLUMN CONTENTS.YOUTUBE is 'YOUTUBE 영상';
+COMMENT ON COLUMN CONTENTS.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN CONTENTS.GRADE is '관리자 권한';
+
+
+/**********************************/
+/* Table Name:  회원 로그인 내역 */
+/**********************************/
+CREATE TABLE MLOGIN(
+		MLOGINNO                      		NUMBER(10)		 NOT NULL,
+		IP                            		VARCHAR2(15)		 NOT NULL,
+		LOGINDATE                     		DATE		 NOT NULL,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE MLOGIN is ' 회원 로그인 내역';
+COMMENT ON COLUMN MLOGIN.MLOGINNO is '회원 로그인 번호';
+COMMENT ON COLUMN MLOGIN.IP is '접속 ip';
+COMMENT ON COLUMN MLOGIN.LOGINDATE is '로그인 날짜';
+COMMENT ON COLUMN MLOGIN.MEMBERNO is '회원번호';
+
+
+/**********************************/
+/* Table Name: 운동기록 */
+/**********************************/
+CREATE TABLE HISTORY(
+		EXRECORDNO                    		NUMBER(10)		 NOT NULL,
+		EXNAME                        		VARCHAR2(100)		 NOT NULL,
+		EXTYPE                        		VARCHAR2(100)		 NOT NULL,
+		HISCALORIE                    		NUMBER(10)		 NULL ,
+		DURATION                      		VARCHAR2(100)		 NULL ,
+		NOTES                         		VARCHAR2(1000)		 NULL ,
+		STARTDATE                     		DATE		 NOT NULL,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE HISTORY is '운동기록';
+COMMENT ON COLUMN HISTORY.EXRECORDNO is '운동기록번호';
+COMMENT ON COLUMN HISTORY.EXNAME is '운동명';
+COMMENT ON COLUMN HISTORY.EXTYPE is '운동유형';
+COMMENT ON COLUMN HISTORY.HISCALORIE is '소모칼로리';
+COMMENT ON COLUMN HISTORY.DURATION is '운동시간';
+COMMENT ON COLUMN HISTORY.NOTES is '메모';
+COMMENT ON COLUMN HISTORY.STARTDATE is '등록날짜';
+COMMENT ON COLUMN HISTORY.MEMBERNO is '회원 번호';
+
+
+/**********************************/
+/* Table Name: 이재호 */
+/**********************************/
+CREATE TABLE 이재호(
+
+);
+
+COMMENT ON TABLE 이재호 is '이재호';
+
+
+/**********************************/
+/* Table Name: 박주찬 */
+/**********************************/
+CREATE TABLE 박주찬(
+
+);
+
+COMMENT ON TABLE 박주찬 is '박주찬';
+
+
+/**********************************/
+/* Table Name: 장범조 */
+/**********************************/
+CREATE TABLE 장범조(
+
+);
+
+COMMENT ON TABLE 장범조 is '장범조';
+
+
+/**********************************/
+/* Table Name: 한희락 */
+/**********************************/
+CREATE TABLE 한희락(
+
+);
+
+COMMENT ON TABLE 한희락 is '한희락';
+
+
+/**********************************/
+/* Table Name: 운동 목표 */
+/**********************************/
+CREATE TABLE GOALS(
+		GOALSNO                       		NUMBER(10)		 NOT NULL,
+		KG                            		NUMBER(10)		 NOT NULL,
+		CKG                           		NUMBER(10)		 NOT NULL,
+		CM                            		NUMBER(10)		 NULL ,
+		MUSCLE                        		NUMBER(10)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		GDATE                         		DATE		 NOT NULL
+);
+
+COMMENT ON TABLE GOALS is '운동 목표';
+COMMENT ON COLUMN GOALS.GOALSNO is '목표 번호';
+COMMENT ON COLUMN GOALS.KG is '체중';
+COMMENT ON COLUMN GOALS.CKG is '체지방';
+COMMENT ON COLUMN GOALS.CM is '신장';
+COMMENT ON COLUMN GOALS.MUSCLE is '골격근량 ';
+COMMENT ON COLUMN GOALS.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN GOALS.GDATE is '등록일';
+
+
+/**********************************/
+/* Table Name: 임시 */
+/**********************************/
+CREATE TABLE TABLE_20(
+
+);
+
+COMMENT ON TABLE TABLE_20 is '임시';
+
+
+/**********************************/
+/* Table Name: 댓글 */
+/**********************************/
+CREATE TABLE COMMENT(
+		COMMENTNO                     		NUMBER(50)		 NOT NULL,
+		CONTENTS                      		VARCHAR2(1000)		 NOT NULL,
+		RDATE                         		DATE		 NOT NULL,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+		CONTENTSNO                    		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE COMMENT is '댓글';
+COMMENT ON COLUMN COMMENT.COMMENTNO is '댓글번호';
+COMMENT ON COLUMN COMMENT.CONTENTS is '댓글내용';
+COMMENT ON COLUMN COMMENT.RDATE is '등록일';
+COMMENT ON COLUMN COMMENT.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN COMMENT.CONTENTSNO is '컨텐츠 번호';
+
+
+/**********************************/
+/* Table Name: 리뷰 */
+/**********************************/
+CREATE TABLE REIVIEW(
+		REVIEWNO                      		NUMBER(10)		 NOT NULL,
+		STAR                          		NUMBER(5)		 DEFAULT 0		 NOT NULL,
+		CONTENTS                      		VARCHAR2(1000)		 NOT NULL,
+		TEMPERATURE                   		NUMBER(5)		 DEFAULT 0		 NULL ,
+		RDATE                         		DATE		 NOT NULL,
+		UDATE                         		DATE		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE REIVIEW is '리뷰';
+COMMENT ON COLUMN REIVIEW.REVIEWNO is '리뷰번호';
+COMMENT ON COLUMN REIVIEW.STAR is '별점';
+COMMENT ON COLUMN REIVIEW.CONTENTS is '내용';
+COMMENT ON COLUMN REIVIEW.TEMPERATURE is '댓글온도';
+COMMENT ON COLUMN REIVIEW.RDATE is '등록일';
+COMMENT ON COLUMN REIVIEW.UDATE is '수정일';
+COMMENT ON COLUMN REIVIEW.MEMBERNO is '회원 번호';
+
+
+/**********************************/
+/* Table Name: 대댓글 */
+/**********************************/
+CREATE TABLE REPLY(
+		REPLYNO                       		NUMBER(50)		 NOT NULL,
+		CONTENTS                      		VARCHAR2(1000)		 NOT NULL,
+		RDATE                         		DATE		 NOT NULL,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+		CONTENTSNO                    		NUMBER(10)		 NOT NULL,
+		COMMENTNO                     		NUMBER(50)		 NULL 
+);
+
+COMMENT ON TABLE REPLY is '대댓글';
+COMMENT ON COLUMN REPLY.REPLYNO is '대댓글번호';
+COMMENT ON COLUMN REPLY.CONTENTS is '대댓글내용';
+COMMENT ON COLUMN REPLY.RDATE is '등록일';
+COMMENT ON COLUMN REPLY.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN REPLY.CONTENTSNO is '컨텐츠 번호';
+COMMENT ON COLUMN REPLY.COMMENTNO is '댓글번호';
+
+
+/**********************************/
+/* Table Name: 회원 건강 정보 */
+/**********************************/
+CREATE TABLE MH(
+		MHNO                          		NUMBER(10)		 NOT NULL,
+		KG                            		NUMBER(10)		 NOT NULL,
+		CKG                           		NUMBER(10)		 NOT NULL,
+		CM                            		NUMBER(10)		 NOT NULL,
+		MUSCLE                        		NUMBER(10)		 NOT NULL,
+		Waist                         		NUMBER(10)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		INSERTDATE                    		DATE		 NOT NULL
+);
+
+COMMENT ON TABLE MH is '회원 건강 정보';
+COMMENT ON COLUMN MH.MHNO is '회원건강 정보 번호';
+COMMENT ON COLUMN MH.KG is '체중';
+COMMENT ON COLUMN MH.CKG is '체지방';
+COMMENT ON COLUMN MH.CM is '신장';
+COMMENT ON COLUMN MH.MUSCLE is '골격근량';
+COMMENT ON COLUMN MH.Waist is '허리둘레';
+COMMENT ON COLUMN MH.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN MH.INSERTDATE is '등록일';
+
+
+/**********************************/
+/* Table Name: 운동추천 */
+/**********************************/
+CREATE TABLE HEARTHRECOM(
+		HEALTHRECOMNO                 		NUMBER(10)		 NOT NULL,
+		HRECOM                        		CLOB(4000)		 NOT NULL,
+		GOALSNO                       		NUMBER(10)		 NOT NULL,
+		MHNO                          		NUMBER(10)		 NOT NULL,
+		RDATE                         		DATE		 NOT NULL
+);
+
+COMMENT ON TABLE HEARTHRECOM is '운동추천';
+COMMENT ON COLUMN HEARTHRECOM.HEALTHRECOMNO is '운동추천번호';
+COMMENT ON COLUMN HEARTHRECOM.HRECOM is '운동추천내용';
+COMMENT ON COLUMN HEARTHRECOM.GOALSNO is '목표 번호';
+COMMENT ON COLUMN HEARTHRECOM.MHNO is '회원 건강진단 번호';
+COMMENT ON COLUMN HEARTHRECOM.RDATE is '날짜';
+
+
+/**********************************/
+/* Table Name: 식단 카테고리 */
+/**********************************/
+CREATE TABLE FOODCATE(
+		FOODCATENO                    		NUMBER(10)		 NOT NULL,
+		IMAGE                         		VARCHAR2(10)		 NULL ,
+		FDATE                         		DATE		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NULL ,
+		FOODCODE                      		NUMBER(30)		 NOT NULL
+);
+
+COMMENT ON TABLE FOODCATE is '식단 카테고리';
+COMMENT ON COLUMN FOODCATE.FOODCATENO is '식단 번호';
+COMMENT ON COLUMN FOODCATE.IMAGE is '식품 이미지';
+COMMENT ON COLUMN FOODCATE.FDATE is '등록일';
+COMMENT ON COLUMN FOODCATE.ADMINSNO is '관리자 번호';
+COMMENT ON COLUMN FOODCATE.FOODCODE is '식품 코드';
+
+
+/**********************************/
+/* Table Name: 식단추천 */
+/**********************************/
+CREATE TABLE FOODRECOM(
+		FOODRECOMNO                   		NUMBER(10)		 NOT NULL,
+		FRECOM                        		CLOB(4000)		 NOT NULL,
+		GOALSNO                       		NUMBER(10)		 NOT NULL,
+		MHNO                          		NUMBER(10)		 NOT NULL,
+		RDATE                         		DATE		 NOT NULL
+);
+
+COMMENT ON TABLE FOODRECOM is '식단추천';
+COMMENT ON COLUMN FOODRECOM.FOODRECOMNO is '식단추천번호';
+COMMENT ON COLUMN FOODRECOM.FRECOM is '식단추천내용';
+COMMENT ON COLUMN FOODRECOM.GOALSNO is '목표 번호';
+COMMENT ON COLUMN FOODRECOM.MHNO is '회원건강 정보 번호';
+COMMENT ON COLUMN FOODRECOM.RDATE is '날짜';
+
+
+/**********************************/
+/* Table Name: 관리자 로그인 내역 */
+/**********************************/
+CREATE TABLE ALOGIN(
+		ALOGINNO                      		NUMBER(10)		 NOT NULL,
+		IP                            		VARCHAR2(15)		 NOT NULL,
+		LOGINDATE                     		DATE		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE ALOGIN is '관리자 로그인 내역';
+COMMENT ON COLUMN ALOGIN.ALOGINNO is '관리자 로그인 번호';
+COMMENT ON COLUMN ALOGIN.IP is '접속 IP';
+COMMENT ON COLUMN ALOGIN.LOGINDATE is '로그인 날짜';
+COMMENT ON COLUMN ALOGIN.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 리뷰키워드 */
+/**********************************/
+CREATE TABLE keyword(
+		KEYWORDNO                     		NUMBER(10)		 NOT NULL,
+		KEYWORDNAME                   		VARCHAR2(100)		 NOT NULL,
+		WORD                          		VARCHAR2(100)		 NOT NULL,
+		REVIEWNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE keyword is '리뷰키워드';
+COMMENT ON COLUMN keyword.KEYWORDNO is '키워드번호';
+COMMENT ON COLUMN keyword.KEYWORDNAME is '키워드명';
+COMMENT ON COLUMN keyword.WORD is '단어';
+COMMENT ON COLUMN keyword.REVIEWNO is '리뷰번호';
+
+
+/**********************************/
+/* Table Name: 리뷰이미지 */
+/**********************************/
+CREATE TABLE REVIEWIMAGE(
+		IMAGENO                       		NUMBER(10)		 NOT NULL,
+		PROFILE                       		VARCHAR2(100)		 NULL ,
+		PROFILESAVED                  		VARCHAR2(100)		 NULL ,
+		THUMBS                        		VARCHAR2(100)		 NULL ,
+		SIZES                         		NUMBER(10)		 NULL ,
+		REVIEWNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE REVIEWIMAGE is '리뷰이미지';
+COMMENT ON COLUMN REVIEWIMAGE.IMAGENO is '이미지파일번호';
+COMMENT ON COLUMN REVIEWIMAGE.PROFILE is '메인 이미지';
+COMMENT ON COLUMN REVIEWIMAGE.PROFILESAVED is '실제 저장된 이미지';
+COMMENT ON COLUMN REVIEWIMAGE.THUMBS is '메인 이미지 Preview';
+COMMENT ON COLUMN REVIEWIMAGE.SIZES is '메인 이미지 크기';
+COMMENT ON COLUMN REVIEWIMAGE.REVIEWNO is '리뷰번호';
+
+
+/**********************************/
+/* Table Name: 운동 데이터 */
+/**********************************/
+CREATE TABLE EXDATA(
+		EXDATANO                      		NUMBER(10)		 NOT NULL,
+		EXGROUP                       		VARCHAR2(100)		 NULL ,
+		EXNAME                        		VARCHAR2(100)		 NULL ,
+		MUSCLE                        		VARCHAR2(100)		 NULL ,
+		MUSCLESUB                     		VARCHAR2(100)		 NULL ,
+		EXLEVEL                       		NUMBER(10)		 NOT NULL,
+		LOWMET                        		NUMBER(10)		 NOT NULL,
+		MIDMET                        		NUMBER(10)		 NOT NULL,
+		HIGHMET                       		NUMBER(10)		 NOT NULL,
+		LOWACT                        		NUMBER(10)		 NOT NULL,
+		MIDACT                        		NUMBER(10)		 NOT NULL,
+		HIGHACT                       		NUMBER(10)		 NOT NULL,
+		LOWRISK                       		NUMBER(10)		 NOT NULL,
+		MIDRISK                       		NUMBER(10)		 NOT NULL,
+		HIGHRISK                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE EXDATA is '운동 데이터';
+COMMENT ON COLUMN EXDATA.EXDATANO is '운동데이터번호';
+COMMENT ON COLUMN EXDATA.EXGROUP is '운동근육그룹';
+COMMENT ON COLUMN EXDATA.EXNAME is '운동명';
+COMMENT ON COLUMN EXDATA.MUSCLE is '주동근';
+COMMENT ON COLUMN EXDATA.MUSCLESUB is '협응근';
+COMMENT ON COLUMN EXDATA.EXLEVEL is '난이도';
+COMMENT ON COLUMN EXDATA.LOWMET is '낮은강도MET';
+COMMENT ON COLUMN EXDATA.MIDMET is '중간강도MET';
+COMMENT ON COLUMN EXDATA.HIGHMET is '높은강도MET';
+COMMENT ON COLUMN EXDATA.LOWACT is '낮은강도근육활성도';
+COMMENT ON COLUMN EXDATA.MIDACT is '중간강도근육활성도';
+COMMENT ON COLUMN EXDATA.HIGHACT is '높은강도근육활성도';
+COMMENT ON COLUMN EXDATA.LOWRISK is '낮은강도부상위험도';
+COMMENT ON COLUMN EXDATA.MIDRISK is '중간강도부상위험도';
+COMMENT ON COLUMN EXDATA.HIGHRISK is '높은강도부상위험도';
+
+
+/**********************************/
+/* Table Name: 기록이미지 */
+/**********************************/
+CREATE TABLE RECORDIMAGE(
+		RECIMAGENO                    		NUMBER(10)		 NOT NULL,
+		RECPROFILE                    		VARCHAR2(100)		 NULL ,
+		RECPROFILESAVED               		VARCHAR2(100)		 NULL ,
+		RECTHUMBS                     		VARCHAR2(100)		 NULL ,
+		RECSIZES                      		NUMBER(10)		 NULL ,
+		RECCONTENTS                   		VARCHAR2(1000)		 NULL ,
+		RECVISIBLE                    		NUMBER(10)		 NULL ,
+		RECDATE                       		DATE		 NOT NULL,
+		HISTORYNO                     		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE RECORDIMAGE is '기록이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECIMAGENO is '이미지파일번호';
+COMMENT ON COLUMN RECORDIMAGE.RECPROFILE is '메인이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECPROFILESAVED is '실제 저장된 이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECTHUMBS is '메인 이미지 Preview';
+COMMENT ON COLUMN RECORDIMAGE.RECSIZES is '메인 이미지 크기';
+COMMENT ON COLUMN RECORDIMAGE.RECCONTENTS is '글내용';
+COMMENT ON COLUMN RECORDIMAGE.RECVISIBLE is '공개비공개';
+COMMENT ON COLUMN RECORDIMAGE.RECDATE is '등록일자';
+COMMENT ON COLUMN RECORDIMAGE.HISTORYNO is '운동기록번호';
+
+
+/**********************************/
+/* Table Name: 관리자리뷰댓글 */
+/**********************************/
+CREATE TABLE ADREPLY(
+		ADREPLYNO                     		NUMBER(10)		 NOT NULL,
+		ADCONTENTS                    		VARCHAR2(1000)		 NOT NULL,
+		ADDATE                        		DATE		 NOT NULL,
+		ADUPDATE                      		DATE		 NULL ,
+		REVIEWNO                      		NUMBER(10)		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NOT NULL
+);
+
+COMMENT ON TABLE ADREPLY is '관리자리뷰댓글';
+COMMENT ON COLUMN ADREPLY.ADREPLYNO is '관리자리뷰댓글번호';
+COMMENT ON COLUMN ADREPLY.ADCONTENTS is '댓글내용';
+COMMENT ON COLUMN ADREPLY.ADDATE is '등록일';
+COMMENT ON COLUMN ADREPLY.ADUPDATE is '수정일';
+COMMENT ON COLUMN ADREPLY.REVIEWNO is '리뷰번호';
+COMMENT ON COLUMN ADREPLY.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 관리자 등급 */
+/**********************************/
+CREATE TABLE ADGRADE(
+		ADGRADENO                     		NUMBER(10)		 NOT NULL,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		ADMINSNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE ADGRADE is '관리자 등급';
+COMMENT ON COLUMN ADGRADE.ADGRADENO is '등급번호';
+COMMENT ON COLUMN ADGRADE.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN ADGRADE.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 운동카테 */
+/**********************************/
+CREATE TABLE HTC(
+		HTCNO                         		NUMBER(10)		 NOT NULL,
+		NAME                          		INTEGER(10)		 NOT NULL,
+		NAMESUB                       		VARCHAR2(10)		 DEFAULT '-'		 NULL ,
+		RDATE                         		DATE		 NOT NULL,
+		SEQNO                         		CHAR(10)		 DEFAULT N		 NULL ,
+		VISIBLE                       		NUMBER(10)		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE HTC is '운동카테';
+COMMENT ON COLUMN HTC.HTCNO is '헬스카테번호';
+COMMENT ON COLUMN HTC.NAME is '중분류';
+COMMENT ON COLUMN HTC.NAMESUB is '소분류';
+COMMENT ON COLUMN HTC.RDATE is '등록일';
+COMMENT ON COLUMN HTC.SEQNO is '출력순서';
+COMMENT ON COLUMN HTC.VISIBLE is '출력모드';
+COMMENT ON COLUMN HTC.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 운동종류 */
+/**********************************/
+CREATE TABLE HEALTH(
+		HEALTHNO                      		NUMBER(10)		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NOT NULL,
+		HTCNO                         		NUMBER(10)		 NOT NULL,
+		TITLE                         		VARCHAR2(1000)		 NOT NULL,
+		EXPLAN                        		CLOB(10)		 NOT NULL,
+		PASSWD                        		VARCHAR2(30)		 NOT NULL,
+		WORD                          		CHAR(100)		 NOT NULL,
+		FILE1                         		NUMBER(100)		 NOT NULL,
+		FILE1SAVED                    		VARCHAR2(100)		 NOT NULL,
+		THUMB1                        		VARCHAR2(100)		 NOT NULL,
+		SIZE1                         		NUMBER(10)		 NULL ,
+		YOUTUBE                       		VARCHAR2(1000)		 NULL ,
+		RDATE                         		DATE		 NOT NULL,
+		RECOM                         		NUMBER(10)		 NULL ,
+		VIEWCNT                       		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE HEALTH is '운동종류';
+COMMENT ON COLUMN HEALTH.HEALTHNO is '종류 번호';
+COMMENT ON COLUMN HEALTH.ADMINSNO is '관리자 번호';
+COMMENT ON COLUMN HEALTH.HTCNO is '헬스카테고리번호';
+COMMENT ON COLUMN HEALTH.TITLE is '제목';
+COMMENT ON COLUMN HEALTH.EXPLAN is '내용';
+COMMENT ON COLUMN HEALTH.PASSWD is '패스워드';
+COMMENT ON COLUMN HEALTH.WORD is '검색어';
+COMMENT ON COLUMN HEALTH.FILE1 is '메인이미지';
+COMMENT ON COLUMN HEALTH.FILE1SAVED is '실제 저장된 메인 이미지';
+COMMENT ON COLUMN HEALTH.THUMB1 is 'Preview인 이미지';
+COMMENT ON COLUMN HEALTH.SIZE1 is '이미지 크기';
+COMMENT ON COLUMN HEALTH.YOUTUBE is '유튜브';
+COMMENT ON COLUMN HEALTH.RDATE is '등록일';
+COMMENT ON COLUMN HEALTH.RECOM is '추천수';
+COMMENT ON COLUMN HEALTH.VIEWCNT is '조회수';
+
+
+/**********************************/
+/* Table Name: 추천 */
+/**********************************/
+CREATE TABLE RECOM(
+		RECOMNO                       		NUMBER(10)		 NOT NULL,
+		RECOM                         		NUMBER(10)		 NULL ,
+		CONTENTSNO                    		NUMBER(10)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE RECOM is '추천';
+COMMENT ON COLUMN RECOM.RECOMNO is '추천번호';
+COMMENT ON COLUMN RECOM.RECOM is '추천여부';
+COMMENT ON COLUMN RECOM.CONTENTSNO is '컨텐츠 번호';
+COMMENT ON COLUMN RECOM.MEMBERNO is '회원 번호';
+
+
+/**********************************/
+/* Table Name: 관리자커뮤티니 */
+/**********************************/
+CREATE TABLE ADCONTENTS(
+		ADCONTENTSNO                  		NUMBER(10)		 NOT NULL,
+		CATENO                        		NUMBER(10)		 NOT NULL,
+		TITLE                         		VARCHAR2(100)		 NOT NULL,
+		CONTENT                       		CLOB(4000)		 NOT NULL,
+		RECOM                         		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		VIEWCNT                       		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		COMMENTCNT                    		NUMBER(7)		 DEFAULT 0		 NOT NULL,
+		PASSWD                        		VARCHAR2(15)		 NOT NULL,
+		TAG                           		VARCHAR2(100)		 NULL ,
+		RDATE                         		DATE		 NOT NULL,
+		FILE1                         		VARCHAR2(1000)		 NULL ,
+		FILE1SAVED                    		VARCHAR2(1000)		 NULL ,
+		THUMB1                        		VARCHAR2(1000)		 NULL ,
+		SIZE1                         		NUMBER(10)		 NULL ,
+		YOUTUBE                       		VARCHAR2(1000)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		GRADE                         		NUMBER(10)		 DEFAULT 1		 NOT NULL,
+		ADMINSNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE ADCONTENTS is '관리자커뮤티니';
+COMMENT ON COLUMN ADCONTENTS.ADCONTENTSNO is '관리자컨텐츠 번호';
+COMMENT ON COLUMN ADCONTENTS.CATENO is '카테고리 번호';
+COMMENT ON COLUMN ADCONTENTS.TITLE is '제목';
+COMMENT ON COLUMN ADCONTENTS.CONTENT is '내용';
+COMMENT ON COLUMN ADCONTENTS.RECOM is '추천수';
+COMMENT ON COLUMN ADCONTENTS.VIEWCNT is '조회수';
+COMMENT ON COLUMN ADCONTENTS.COMMENTCNT is '댓글수';
+COMMENT ON COLUMN ADCONTENTS.PASSWD is '패스워드';
+COMMENT ON COLUMN ADCONTENTS.TAG is '태그';
+COMMENT ON COLUMN ADCONTENTS.RDATE is '등록일';
+COMMENT ON COLUMN ADCONTENTS.FILE1 is '메인 이미지';
+COMMENT ON COLUMN ADCONTENTS.FILE1SAVED is '실제 저장된 메인 이미지';
+COMMENT ON COLUMN ADCONTENTS.THUMB1 is '메인 이미지 Preview';
+COMMENT ON COLUMN ADCONTENTS.SIZE1 is '메인 이미지 크기';
+COMMENT ON COLUMN ADCONTENTS.YOUTUBE is 'YOUTUBE 영상';
+COMMENT ON COLUMN ADCONTENTS.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN ADCONTENTS.GRADE is '관리자 권한';
+COMMENT ON COLUMN ADCONTENTS.ADMINSNO is '관리자 번호';
+
+
+/**********************************/
+/* Table Name: 관리자추천 */
+/**********************************/
+CREATE TABLE ADRECOM(
+		ADRECOMNO                     		NUMBER(10)		 NOT NULL,
+		ADRECOM                       		NUMBER(10)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL ,
+		ADCONTENTSNO                  		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE ADRECOM is '관리자추천';
+COMMENT ON COLUMN ADRECOM.ADRECOMNO is '추천번호';
+COMMENT ON COLUMN ADRECOM.ADRECOM is '추천여부';
+COMMENT ON COLUMN ADRECOM.MEMBERNO is '회원 번호';
+COMMENT ON COLUMN ADRECOM.ADCONTENTSNO is '관리자컨텐츠 번호';
+
+
+/**********************************/
+/* Table Name: 추천 */
+/**********************************/
+CREATE TABLE HEALTHRECOM(
+		HEALTHRECOMNO                 		NUMBER(10)		 NOT NULL,
+		HEALTHRECOM                   		NUMBER(10)		 NULL ,
+		HEALTHNO                      		NUMBER(10)		 NULL ,
+		MEMBERNO                      		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE HEALTHRECOM is '추천';
+COMMENT ON COLUMN HEALTHRECOM.HEALTHRECOMNO is '추천번호';
+COMMENT ON COLUMN HEALTHRECOM.HEALTHRECOM is '추천여부';
+COMMENT ON COLUMN HEALTHRECOM.HEALTHNO is '종류 번호';
+COMMENT ON COLUMN HEALTHRECOM.MEMBERNO is '회원 번호';
+
+
+/**********************************/
+/* Table Name: 운동상세기록 */
+/**********************************/
+CREATE TABLE detailrecord(
+		DETAILNO                      		NUMBER(10)		 NOT NULL,
+		DETAILLEVEL                   		NUMBER(10)		 NOT NULL,
+		DETAILGROUP                   		VARCHAR2(100)		 NOT NULL,
+		DETAILNAME                    		VARCHAR2(100)		 NOT NULL,
+		SET                           		NUMBER(10)		 NULL ,
+		CNT                           		NUMBER(10)		 NULL ,
+		CALORIE                       		NUMBER(10)		 NULL ,
+		ALLTIME                       		VARCHAR2(100)		 NULL ,
+		DETAILDATE                    		DATE		 NOT NULL,
+		HISTORYNO                     		NUMBER(10)		 NULL ,
+		EXDATANO                      		NUMBER(10)		 NULL ,
+		MHNO                          		NUMBER(10)		 NULL 
+);
+
+COMMENT ON TABLE detailrecord is '운동상세기록';
+COMMENT ON COLUMN detailrecord.DETAILNO is '헬스번호';
+COMMENT ON COLUMN detailrecord.DETAILLEVEL is '난이도';
+COMMENT ON COLUMN detailrecord.DETAILGROUP is '근육그룹';
+COMMENT ON COLUMN detailrecord.DETAILNAME is '운동명';
+COMMENT ON COLUMN detailrecord.SET is '세트';
+COMMENT ON COLUMN detailrecord.CNT is '횟수';
+COMMENT ON COLUMN detailrecord.CALORIE is '소모칼로리';
+COMMENT ON COLUMN detailrecord.ALLTIME is '전체운동시간';
+COMMENT ON COLUMN detailrecord.DETAILDATE is '등록날짜';
+COMMENT ON COLUMN detailrecord.HISTORYNO is '운동기록번호';
+COMMENT ON COLUMN detailrecord.EXDATANO is '운동데이터번호';
+COMMENT ON COLUMN detailrecord.MHNO is '회원건강 정보 번호';
+
+
+
+ALTER TABLE ADMINS ADD CONSTRAINT IDX_ADMINS_PK PRIMARY KEY (ADMINSNO);
+
+ALTER TABLE CATE ADD CONSTRAINT IDX_CATE_PK PRIMARY KEY (CATENO);
+ALTER TABLE CATE ADD CONSTRAINT IDX_CATE_FK0 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE MEMBER ADD CONSTRAINT IDX_MEMBER_PK PRIMARY KEY (MEMBERNO);
+ALTER TABLE MEMBER ADD CONSTRAINT SYS_C008567 UNIQUE (ID);
+
+ALTER TABLE CONTENTS ADD CONSTRAINT IDX_CONTENTS_PK PRIMARY KEY (CONTENTSNO);
+ALTER TABLE CONTENTS ADD CONSTRAINT IDX_CONTENTS_FK0 FOREIGN KEY (CATENO) REFERENCES CATE (CATENO);
+ALTER TABLE CONTENTS ADD CONSTRAINT IDX_CONTENTS_FK1 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE MLOGIN ADD CONSTRAINT IDX_MLOGIN_PK PRIMARY KEY (MLOGINNO);
+ALTER TABLE MLOGIN ADD CONSTRAINT IDX_MLOGIN_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE HISTORY ADD CONSTRAINT IDX_HISTORY_PK PRIMARY KEY (EXRECORDNO);
+ALTER TABLE HISTORY ADD CONSTRAINT IDX_HISTORY_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE GOALS ADD CONSTRAINT IDX_GOALS_PK PRIMARY KEY (GOALSNO);
+ALTER TABLE GOALS ADD CONSTRAINT IDX_GOALS_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE COMMENT ADD CONSTRAINT IDX_COMMENT_PK PRIMARY KEY (COMMENTNO);
+ALTER TABLE COMMENT ADD CONSTRAINT IDX_COMMENT_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+ALTER TABLE COMMENT ADD CONSTRAINT IDX_COMMENT_FK1 FOREIGN KEY (CONTENTSNO) REFERENCES CONTENTS (CONTENTSNO);
+
+ALTER TABLE REIVIEW ADD CONSTRAINT IDX_REIVIEW_PK PRIMARY KEY (REVIEWNO);
+ALTER TABLE REIVIEW ADD CONSTRAINT IDX_REIVIEW_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE REPLY ADD CONSTRAINT IDX_REPLY_PK PRIMARY KEY (REPLYNO);
+ALTER TABLE REPLY ADD CONSTRAINT IDX_REPLY_FK0 FOREIGN KEY (COMMENTNO) REFERENCES COMMENT (COMMENTNO);
+
+ALTER TABLE MH ADD CONSTRAINT IDX_MH_PK PRIMARY KEY (MHNO);
+ALTER TABLE MH ADD CONSTRAINT IDX_MH_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE HEARTHRECOM ADD CONSTRAINT IDX_HEARTHRECOM_PK PRIMARY KEY (HEALTHRECOMNO);
+ALTER TABLE HEARTHRECOM ADD CONSTRAINT IDX_HEARTHRECOM_FK0 FOREIGN KEY (GOALSNO) REFERENCES GOALS (GOALSNO);
+ALTER TABLE HEARTHRECOM ADD CONSTRAINT IDX_HEARTHRECOM_FK1 FOREIGN KEY (MHNO) REFERENCES MH (MHNO);
+
+ALTER TABLE FOODCATE ADD CONSTRAINT IDX_FOODCATE_PK PRIMARY KEY (FOODCATENO);
+ALTER TABLE FOODCATE ADD CONSTRAINT IDX_FOODCATE_FK0 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE FOODRECOM ADD CONSTRAINT IDX_FOODRECOM_PK PRIMARY KEY (FOODRECOMNO);
+ALTER TABLE FOODRECOM ADD CONSTRAINT IDX_FOODRECOM_FK0 FOREIGN KEY (GOALSNO) REFERENCES GOALS (GOALSNO);
+ALTER TABLE FOODRECOM ADD CONSTRAINT IDX_FOODRECOM_FK1 FOREIGN KEY (MHNO) REFERENCES MH (MHNO);
+
+ALTER TABLE ALOGIN ADD CONSTRAINT IDX_ALOGIN_PK PRIMARY KEY (ALOGINNO);
+ALTER TABLE ALOGIN ADD CONSTRAINT IDX_ALOGIN_FK0 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE keyword ADD CONSTRAINT IDX_keyword_PK PRIMARY KEY (KEYWORDNO);
+ALTER TABLE keyword ADD CONSTRAINT IDX_keyword_FK0 FOREIGN KEY (REVIEWNO) REFERENCES REIVIEW (REVIEWNO);
+
+ALTER TABLE REVIEWIMAGE ADD CONSTRAINT IDX_REVIEWIMAGE_PK PRIMARY KEY (IMAGENO);
+ALTER TABLE REVIEWIMAGE ADD CONSTRAINT IDX_REVIEWIMAGE_FK0 FOREIGN KEY (REVIEWNO) REFERENCES REIVIEW (REVIEWNO);
+
+ALTER TABLE EXDATA ADD CONSTRAINT IDX_EXDATA_PK PRIMARY KEY (EXDATANO);
+
+ALTER TABLE RECORDIMAGE ADD CONSTRAINT IDX_RECORDIMAGE_PK PRIMARY KEY (RECIMAGENO);
+
+ALTER TABLE ADREPLY ADD CONSTRAINT IDX_ADREPLY_PK PRIMARY KEY (ADREPLYNO);
+ALTER TABLE ADREPLY ADD CONSTRAINT IDX_ADREPLY_FK0 FOREIGN KEY (REVIEWNO) REFERENCES REIVIEW (REVIEWNO);
+ALTER TABLE ADREPLY ADD CONSTRAINT IDX_ADREPLY_FK1 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE ADGRADE ADD CONSTRAINT IDX_ADGRADE_PK PRIMARY KEY (ADGRADENO);
+ALTER TABLE ADGRADE ADD CONSTRAINT IDX_ADGRADE_FK0 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+ALTER TABLE ADGRADE ADD CONSTRAINT IDX_ADGRADE_FK1 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE HTC ADD CONSTRAINT IDX_HTC_PK PRIMARY KEY (HTCNO);
+ALTER TABLE HTC ADD CONSTRAINT IDX_HTC_FK0 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE HEALTH ADD CONSTRAINT IDX_HEALTH_PK PRIMARY KEY (HEALTHNO);
+ALTER TABLE HEALTH ADD CONSTRAINT IDX_HEALTH_FK0 FOREIGN KEY (HTCNO) REFERENCES HTC (HTCNO);
+ALTER TABLE HEALTH ADD CONSTRAINT IDX_HEALTH_FK1 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+
+ALTER TABLE RECOM ADD CONSTRAINT IDX_RECOM_PK PRIMARY KEY (RECOMNO);
+ALTER TABLE RECOM ADD CONSTRAINT IDX_RECOM_FK0 FOREIGN KEY (CONTENTSNO) REFERENCES CONTENTS (CONTENTSNO);
+ALTER TABLE RECOM ADD CONSTRAINT IDX_RECOM_FK1 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE ADCONTENTS ADD CONSTRAINT IDX_ADCONTENTS_PK PRIMARY KEY (ADCONTENTSNO);
+ALTER TABLE ADCONTENTS ADD CONSTRAINT IDX_ADCONTENTS_FK0 FOREIGN KEY (ADMINSNO) REFERENCES ADMINS (ADMINSNO);
+ALTER TABLE ADCONTENTS ADD CONSTRAINT IDX_ADCONTENTS_FK1 FOREIGN KEY (CATENO) REFERENCES CATE (CATENO);
+
+ALTER TABLE ADRECOM ADD CONSTRAINT IDX_ADRECOM_PK PRIMARY KEY (ADRECOMNO);
+ALTER TABLE ADRECOM ADD CONSTRAINT IDX_ADRECOM_FK0 FOREIGN KEY (ADCONTENTSNO) REFERENCES ADCONTENTS (ADCONTENTSNO);
+ALTER TABLE ADRECOM ADD CONSTRAINT IDX_ADRECOM_FK1 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE HEALTHRECOM ADD CONSTRAINT IDX_HEALTHRECOM_PK PRIMARY KEY (HEALTHRECOMNO);
+ALTER TABLE HEALTHRECOM ADD CONSTRAINT IDX_HEALTHRECOM_FK0 FOREIGN KEY (HEALTHNO) REFERENCES HEALTH (HEALTHNO);
+ALTER TABLE HEALTHRECOM ADD CONSTRAINT IDX_HEALTHRECOM_FK1 FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO);
+
+ALTER TABLE detailrecord ADD CONSTRAINT IDX_detailrecord_PK PRIMARY KEY (DETAILNO);
+ALTER TABLE detailrecord ADD CONSTRAINT IDX_detailrecord_FK1 FOREIGN KEY (EXDATANO) REFERENCES EXDATA (EXDATANO);
+ALTER TABLE detailrecord ADD CONSTRAINT IDX_detailrecord_FK2 FOREIGN KEY (MHNO) REFERENCES MH (MHNO);
+
