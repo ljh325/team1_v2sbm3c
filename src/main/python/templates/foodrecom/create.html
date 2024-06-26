@@ -89,7 +89,6 @@
       background-color: #0056b3;
     }
   </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
   <div class="container">
@@ -108,7 +107,7 @@
   </div>
 
   <script>
-    $(document).ready(() => {
+    document.addEventListener("DOMContentLoaded", () => {
       const registerButton = document.getElementById('register');
       const resultAnimationTag = document.getElementById('result_animation');
       const calendarDiv = document.getElementById('calendar');
@@ -124,58 +123,55 @@
         const formData = new FormData(document.getElementById('recomForm'));
 
         // 데이터를 POST 요청으로 서버에 보냅니다.
-        $.ajax({
-          url: "/foodrecom/create",
-          type: "POST",
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function(data) {
-            const mealData2 = JSON.parse(data);
-            mealData2.res.forEach(dayData => {
-              const dayDiv = document.createElement('div');
-              dayDiv.classList.add('day');
-              dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
-              dayData.meals.forEach(meal => {
-                const mealDiv = document.createElement('div');
-                mealDiv.classList.add('meal');
+        fetch("/foodrecom/create", {
+          method: "POST",
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          const mealData2 = data;
+          mealData2.res.forEach(dayData => {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+            dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+            dayData.meals.forEach(meal => {
+              const mealDiv = document.createElement('div');
+              mealDiv.classList.add('meal');
+              
+              // Add image if the first item exists
+              if (meal.items.length > 0) {
+                const firstItem = meal.items[0];
+                const mealTitle = document.createElement('h3');
+                mealTitle.textContent = meal.meal;
+                const mealImage = document.createElement('img');
+                mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+                mealImage.alt = firstItem.food;
                 
-                // Add image if the first item exists
-                if (meal.items.length > 0) {
-                  const firstItem = meal.items[0];
-                  const mealTitle = document.createElement('h3');
-                  mealTitle.textContent = meal.meal;
-                  const mealImage = document.createElement('img');
-                  mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
-                  mealImage.alt = firstItem.food;
-                  
-                  mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
-                      this.style.display = 'none';
-                  };
-                  
-                  mealTitle.appendChild(mealImage);
-                  mealDiv.appendChild(mealTitle);
-                } else {
-                  mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
-                }
+                mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
+                    this.style.display = 'none';
+                };
+                
+                mealTitle.appendChild(mealImage);
+                mealDiv.appendChild(mealTitle);
+              } else {
+                mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+              }
 
-                meal.items.forEach(item => {
-                  const mealItem = document.createElement('p');
-                  mealItem.classList.add('meal-item');
-                  mealItem.textContent = `${item.food} (${item.amount_g}g)`;
-                  //mealItem.textContent = `${item.health} (${item.time_m}분)`;
-                  mealDiv.appendChild(mealItem);
-                });
-                dayDiv.appendChild(mealDiv);
+              meal.items.forEach(item => {
+                const mealItem = document.createElement('p');
+                mealItem.classList.add('meal-item');
+                mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                mealDiv.appendChild(mealItem);
               });
-              calendarDiv.appendChild(dayDiv);
+              dayDiv.appendChild(mealDiv);
             });
-            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
-          },
-          error: function(error) {
-            console.error('Error:', error);
-            resultAnimationTag.style.display = 'none';
-          }
+            calendarDiv.appendChild(dayDiv);
+          });
+          resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          resultAnimationTag.style.display = 'none';
         });
       });
     });

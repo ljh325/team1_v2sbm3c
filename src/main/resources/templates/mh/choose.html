@@ -33,26 +33,38 @@
   </style>
   
   <aside class="aside_right">
-    <a href="/goals/create">등록</a>
+    <a href="/goals/create">목표 등록</a>
      <span class="menu_devide">│</span>
      <a href="/mh/list_all">새로운 추천</a>
     
 
   </aside>
  <div class="menu_line"></div>
-    <div th:if="${goalsVO != null}">
-      <div style ="text-align: center"> 최근 목표</div>
+    <div th:if="${mhVO != null}">
+      <h3>현재 정보</h3>
       <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
-          <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
-          <li class="list-group-item">키: <span th:text="${goalsVO.cm}"></span></li>
-         
-          <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
-              <li class="list-group-item">골격근량: <span th:text="${goalsVO.muscle}"></span></li>
-          <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
+        <div style ="text-align: center" th:text="${mhVO.insertdate}">입력 날짜</div>
+    
+    
+  </div>
         
-        </ul>  
+           <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>체중</span></div>
+          <div class="column"><span>신장</span></div>
+          <div class="column"><span>체지방</span></div>
+          <div class="column"><span>골격근량</span></div>
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${mhVO.kg + ' kg'}"></span></div>
+          <div class="column"><span th:text="${mhVO.cm + ' cm'}"></span></div>
+          <div class="column"><span th:text="${mhVO.ckg + ' %'}"></span></div>
+          <div class="column"><span th:text="${mhVO.muscle + ' kg'}"></span></div>
+        </div>
+      </div><br>
+        
+        
+        
         
       </div>
 
