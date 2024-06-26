@@ -120,10 +120,26 @@
     }
   </style>
   <script>
+
     function showModal(message) {
-        document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
-        $('#warningModal').modal('show'); // 모달창 표시
-      }
+      document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
+      $('#warningModal').modal('show'); // 모달창 표시
+    }
+
+    function showModal2(message) {
+      document.getElementById("modalBody2").innerText = message; // 모달창 내용 설정
+      $('#warningModal2').modal('show'); // 모달창 표시
+    }
+
+    function showModal3(message) {
+      document.getElementById("modalBody3").innerText = message; // 모달창 내용 설정
+      $('#warningModal3').modal('show'); // 모달창 표시
+    }
+
+    function deleteModal(no) {
+      showModal3()
+    }
+
     function checkID() {
 
       let url = './check_login'
@@ -280,6 +296,8 @@
       <li class="li_none">
         <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
         <script>
+          let sw = 0;
+
           window.onload = () => {
 
             let contents_tag = document.getElementById('contents');
@@ -290,7 +308,7 @@
               //alert('Click: ' + id);
               if (id == '') {
                 showModal('로그인 후 댓글 입력 가능합니다.');
-                
+
               } else {
 
               }
@@ -321,6 +339,18 @@
 
             });
 
+            document.getElementById('modalConfirmButton').addEventListener('click', () => { // 로그인 필요 모달창
+              location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+              $('#warningModal').modal('hide'); // 모달창 닫기
+            });
+
+            document.getElementById('modalConfirmButton2').addEventListener('click', () => { // 댓글 및 답글 수정 모달창
+
+              $('#warningModal2').modal('hide'); // 모달창 닫기
+            });
+
+
+
             //---------------------------------------------- 추천 기능 부분 -------------------------------------------------------
             document.getElementById('likeButton').addEventListener('click', function () {
               const button = document.getElementById('likeButton');
@@ -329,8 +359,8 @@
               let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
               //alert('Click: ' + id);
               if (id == '') {
-                alert('로그인 후 추천 가능합니다.');
-                location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+                showModal('로그인 후 추천 가능합니다.');
+
               }
 
               fetch("/recom/read?contentsno=[[${contentsVO.contentsno}]]", {
@@ -669,7 +699,7 @@
             let commentsno = commentsno_tag.value;
 
             if (contents.length == 0) {
-              alert('내용이 없습니다. 내용을 입력해주세요.');
+              showModal2('내용이 없습니다. 내용을 입력해주세요.');
             } else {
               fetch("/comments/update", {
                 "method": "post",
@@ -679,14 +709,15 @@
                 .then((response) => response.json())
                 .then((data) => {
                   if (data['res'] == 0) {
-                    alert('댓글 수정에 실패 했습니다.)');
+                    showModal2('댓글 수정에 실패했습니다.');
                   } else {
                     list_by_contentsno_join(); // 목록 출력
                   }
                 });
 
+              location.reload();
+
             }
-            location.reload();
 
           }
 
@@ -701,8 +732,22 @@
             })
               .then((response) => response.json())
               .then((data) => {
-                let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
-                if (sw == true) {
+                //let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+                showModal3("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+                console.log(sw);
+                
+                document.getElementById('modalConfirmButton3').addEventListener('click', () => { // 댓글 및 답글 삭제 확인버튼 모달창
+                  sw = 1;
+                  $('#warningModal3').modal('hide'); // 모달창 닫기
+
+                });
+
+                document.getElementById('modalCancelButton').addEventListener('click', () => { // 댓글 및 답글 삭제 취소버튼 모달창
+                  sw = 2;
+                  $('#warningModal3').modal('hide'); // 모달창 닫기
+
+                });
+                if (sw == 1) {
 
                   fetch("/comments/delete", {
                     "method": "post",
@@ -713,6 +758,7 @@
                     .then((data) => {
 
                       if (data['res'] == 1) {
+                        location.reload();
                         list_by_contentsno_join(); // 목록 출력
 
                       } else {
@@ -721,11 +767,10 @@
                     });
 
                 } else {
-                  alert('삭제를 취소 했습니다.');
+                  //alert('삭제를 취소 했습니다.');
                 }
               });
 
-            location.reload();
           }
 
           function timeSince(date) { // 작성일자 표시 함수
@@ -843,8 +888,7 @@
             let id = '[[${session.id}]]'; //  JavaScript -> Thymeleaf -> Session
             //alert('Click: ' + id);
             if (id == '') {
-              alert('로그인 후 답글 입력 가능합니다.');
-              location.href = "/member/login?url=contents/read?contentsno=[[${contentsVO.contentsno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+              showModal('로그인 후 답글 입력 가능합니다.');
             } else {
 
             }
@@ -1059,22 +1103,58 @@
       </li>
     </ul>
   </fieldset>
-  
-  <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="warningModalLabel">경고</h5>
-          </div>
-          <div class="modal-body" id="modalBody">
-            <!-- 경고 메시지가 여기에 표시됩니다 -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="modalConfirmButton">확인</button>
-          </div>
+
+  <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="warningModalLabel">경고</h5>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- 경고 메시지가 여기에 표시됩니다 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modalConfirmButton">확인</button>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="modal fade" id="warningModal2" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="warningModalLabel2">경고</h5>
+        </div>
+        <div class="modal-body" id="modalBody2">
+          <!-- 경고 메시지가 여기에 표시됩니다 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modalConfirmButton2">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="warningModal3" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="warningModalLabel3">경고</h5>
+        </div>
+        <div class="modal-body" id="modalBody3">
+          <!-- 경고 메시지가 여기에 표시됩니다 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modalConfirmButton3">확인</button>
+          <button type="button" class="btn btn-secondary" id="modalCancelButton">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
