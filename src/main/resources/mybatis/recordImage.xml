@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+//======================= 주찬 ========================//
+                /* Table Name: 운동기록 */
+
+/**********************************/
+/* Table Name: 운동기록이미지 */
+/**********************************/
+    RECIMAGENO                        NUMBER(10)     NOT NULL    PRIMARY KEY,
+    RECPROFILE                        VARCHAR2(100)    NULL ,
+    RECPROFILESAVED                   VARCHAR2(100)    NULL ,
+    RECTHUMBS                         VARCHAR2(100)    NULL ,
+    RECSIZES                          NUMBER(10)     NULL ,
+    RECCONTENTS                       VARCHAR2(1000)     NULL ,
+    RECVISIBLE                        NUMBER(10)     NULL ,
+    RECDATE                           DATE     NOT NULL,
+    RECUPDATE                         DATE     NULL ,
+    EXRECORDNO                        NUMBER(10)     NULL ,
+    MEMBERNO                            NUMBER(10)   NOT NULL,
+  FOREIGN KEY (EXRECORDNO) REFERENCES HISTORY (EXRECORDNO),
+  FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
+
+-->
+<mapper namespace="dev.mvc.recordImage.RecordImageDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 운동이미지 등록 -->
+  <insert id="rec_images_insert" parameterType="dev.mvc.recordImage.RecordImageVO">
+    INSERT INTO recordimage(recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno)
+    VALUES (recordImage_seq.nextval, #{recprofile}, #{recprofilesaved}, #{recthumbs}, #{recsizes}, #{reccontents}, #{recvisible}, sysdate, #{exrecordno}, #{memberno})
+  </insert> 
+
+  <!-- 회원이 보는 이미지 리스트 조회 -->
+  <select id="rec_images_list" resultType="dev.mvc.recordImage.RecordImageVO" parameterType="int">
+    SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+    FROM recordimage
+    WHERE memberno = #{memberno}
+  </select>  
+  
+  <!-- 기록 별 이미지 조회 -->
+  <select id="rec_images_read" resultType="dev.mvc.recordImage.RecordImageVO" parameterType="map">
+    SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+    FROM recordimage
+    WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
+  </select> 
+  
+  
+  <!-- 회원별 총 이미지 수 -->
+  <select id="rec_images_cnt" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM recordimage
+    WHERE memberno = #{memberno}
+  </select>  
+  
+ 
+ 
+
+  <!-- 운동 기록 이미지 수정 -->
+  <update id="rec_images_update"  parameterType="dev.mvc.recordImage.RecordImageVO">
+    UPDATE recordimage
+    SET recprofile=#{recprofile}, recprofilesaved=#{recprofilesaved}, recthumbs=#{recthumbs}, recsizes=#{recsizes}, 
+    reccontents=#{reccontents} , recvisible=#{recvisible}, recupdate=sysdate
+    WHERE memberno = #{memberno}
+  </update>
+
+  <!-- 운동 기록이미지 삭제 -->
+  <delete id="rec_images_delete" parameterType="int">
+    DELETE FROM recordimage
+    WHERE exrecordno = #{exrecordno}
+  </delete>
+  
+
+
+</mapper>

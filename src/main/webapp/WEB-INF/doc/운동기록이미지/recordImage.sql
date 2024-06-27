@@ -1,25 +1,92 @@
+/**********************************/
+/* Table Name: 운동기록이미지 */
+/**********************************/
+DROP TABLE RECORDIMAGE;
+DROP TABLE RECORDIMAGE CASCADE CONSTRAINTS;
 
-/**********************************/
-/* Table Name: 기록이미지 */
-/**********************************/
-CREATE TABLE TABLE_26(
-		COLUMN_1                      		INTEGER(10)		 NOT NULL		 PRIMARY KEY,
-		COLUMN_2                      		INTEGER(10)		 NULL ,
-		COLUMN_3                      		INTEGER(10)		 NULL ,
-		COLUMN_4                      		INTEGER(10)		 NULL ,
-		COLUMN_5                      		INTEGER(10)		 NULL ,
+CREATE TABLE RECORDIMAGE(
+		RECIMAGENO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+		RECPROFILE                    		VARCHAR2(100)		 NULL ,
+		RECPROFILESAVED               		VARCHAR2(100)		 NULL ,
+		RECTHUMBS                     		VARCHAR2(100)		 NULL ,
+		RECSIZES                      		NUMBER(10)		 NULL ,
 		RECCONTENTS                   		VARCHAR2(1000)		 NULL ,
 		RECVISIBLE                    		NUMBER(10)		 NULL ,
-		HISTORYNO                     		NUMBER(10)		 NULL ,
-  FOREIGN KEY (HISTORYNO) REFERENCES HISTORY (HISTORYNO)
+		RECDATE                       		DATE		 NOT NULL,
+		RECUPDATE                     		DATE		 NULL ,
+		EXRECORDNO                    		NUMBER(10)		 NULL ,
+        MEMBERNO                            NUMBER(10)   NOT NULL,
+  FOREIGN KEY (EXRECORDNO) REFERENCES HISTORY (EXRECORDNO),
+  FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
 );
 
-COMMENT ON TABLE TABLE_26 is '기록이미지';
-COMMENT ON COLUMN TABLE_26.COLUMN_1 is '이미지파일번호';
-COMMENT ON COLUMN TABLE_26.COLUMN_2 is '메인이미지';
-COMMENT ON COLUMN TABLE_26.COLUMN_3 is '실제 저장된 이미지';
-COMMENT ON COLUMN TABLE_26.COLUMN_4 is '메인 이미지 Preview';
-COMMENT ON COLUMN TABLE_26.COLUMN_5 is '메인 이미지 크기';
-COMMENT ON COLUMN TABLE_26.RECCONTENTS is '글내용';
-COMMENT ON COLUMN TABLE_26.RECVISIBLE is '공개비공개';
-COMMENT ON COLUMN TABLE_26.HISTORYNO is '운동기록번호';
+COMMENT ON TABLE RECORDIMAGE is '기록이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECIMAGENO is '이미지파일번호';
+COMMENT ON COLUMN RECORDIMAGE.RECPROFILE is '메인이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECPROFILESAVED is '실제 저장된 이미지';
+COMMENT ON COLUMN RECORDIMAGE.RECTHUMBS is '메인 이미지 Preview';
+COMMENT ON COLUMN RECORDIMAGE.RECSIZES is '메인 이미지 크기';
+COMMENT ON COLUMN RECORDIMAGE.RECCONTENTS is '글내용';
+COMMENT ON COLUMN RECORDIMAGE.RECVISIBLE is '공개비공개';
+COMMENT ON COLUMN RECORDIMAGE.RECDATE is '등록일자';
+COMMENT ON COLUMN RECORDIMAGE.RECUPDATE is '수정일자';
+COMMENT ON COLUMN RECORDIMAGE.EXRECORDNO is '운동기록번호';
+COMMENT ON COLUMN RECORDIMAGE.MEMBERNO is '회원번호';
+
+
+-- 시퀀스 삭제
+DROP SEQUENCE recordImage_seq;
+
+-- 시퀀스 생성
+CREATE SEQUENCE recordImage_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+  CACHE 2                       -- 2번은 메모리에서만 계산
+  NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+  
+SELECT * FROM RECORDIMAGE;
+commit;
+
+-- 운동 기록 이미지 등록
+INSERT INTO recordimage(recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno)
+VALUES (recordImage_seq.nextval, 'pig.jpg', 'pig.jpg', 'pig.jpg', 90, '오운완', 0, sysdate, 1, 40);
+
+INSERT INTO recordimage(recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno)
+VALUES (recordImage_seq.nextval, 'h1.jpg', 'h1.jpg', 'h1.jpg', 60, '완료', 2, sysdate, 1, 40);
+
+INSERT INTO recordimage(recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno)
+VALUES (recordImage_seq.nextval, 'h21.jpg', 'h21.jpg', 'h21.jpg', 602, '완료', 12, sysdate, 2, 40);
+
+-- 회원이 보는 이미지 리스트 조회
+SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+FROM recordimage
+WHERE memberno = 40;
+
+-- 기록 별 이미지 조회
+SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+FROM recordimage
+WHERE exrecordno = 1 AND memberno = 40;
+
+-- 회원별 총 이미지 수
+SELECT count(*)
+FROM recordimage
+WHERE memberno = 40;
+
+-- 운동 이미지 기록 수정
+--UPDATE recordimage
+--SET recprofile=#{recprofile}, recprofilesaved=#{recprofilesaved}, recthumbs=#{recthumbs}, recsizes=#{recsizes}
+--reccontents=#{reccontents}, recvisible=#{recvisible}, recupdate=sysdate
+--WHERE memberno = #{memberno};
+
+-- 이미지 수정
+UPDATE recordimage
+SET recprofile='pi.jpg', recprofilesaved='pi.jpg', recthumbs='pi.jpg', recsizes=3500, 
+reccontents='이것만 오운완 ', recvisible=0, recupdate=sysdate
+WHERE memberno = 40;
+
+-- 이미지 삭제
+DELETE FROM recordimage
+WHERE exrecordno = 1;
+
+

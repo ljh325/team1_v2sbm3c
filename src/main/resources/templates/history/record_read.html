@@ -1,0 +1,40 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+
+<style>
+body{
+  background-color: black;
+}
+</style>
+
+<div style="background-color: red; padding: 14px; text-align: left;">
+  <span>완료한 운동</span>
+</div>
+<br>
+
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.exname}"></span>
+</div>
+
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.extype}"></span>
+</div>
+
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.hiscalorie}"></span>
+</div>
+
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.duration}"></span>
+</div>
+
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.notes}"></span>
+</div>
+<div style="text-align: left; background-color: gray;">
+  <span th:text="${histortyVO.startdate}"></span>
+</div>
+
+</div>
+</html>

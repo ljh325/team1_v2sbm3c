@@ -209,6 +209,9 @@
             
             // 반복하지 않을 부분 추가
             let firstHistory = list[0];
+            let startdate = firstHistory.startdate.substring(0, 10)
+            let exrecordno = firstHistory.exrecordno;
+            console.log("운동 번호" + exrecordno );
             let truncatedDate = firstHistory.startdate.substring(5, 10); // 글자 수 제한
             let dateDiv = document.createElement('div');
             dateDiv.innerHTML = `
@@ -217,7 +220,7 @@
                       <span style="color: white; margin-left: 10px;">${truncatedDate}</span>
                       <span style="color: #38fbbb; font-size: 17px;">&nbsp; 운동기록</span>
                     </div>
-                    <div style="float:right; margin-right:12px;">
+                    <div style="float:right; margin-right:12px;" onclick="location.href='/history/record_read?exrecordno=${exrecordno}'">
                       <span style="text-align: right; color: #38fbbb;">자세히 보기</span>
                     </div>
                     <div style="clear:both;">

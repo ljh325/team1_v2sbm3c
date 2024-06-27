@@ -8,6 +8,7 @@ import dev.mvc.adcontents.Adcontents;
 import dev.mvc.contents.Contents;
 import dev.mvc.health.Health;
 import dev.mvc.member.Member;
+import dev.mvc.recordImage.RecordImage;
 import dev.mvc.reviewImage.ReviewImage;
 import dev.mvc.tool.Tool;
 
@@ -27,6 +28,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         registry.addResourceHandler("/adcontents/storage/**").addResourceLocations("file:///" +  Adcontents.getUploadDir());
         registry.addResourceHandler("/member/storage/**").addResourceLocations("file:///" +  Member.getUploadDir());
         registry.addResourceHandler("/reviewImage/storage/**").addResourceLocations("file:///" +  ReviewImage.getUploadDir());
+        registry.addResourceHandler("/recordImage/storage/**").addResourceLocations("file:///" +  RecordImage.getUploadDir());
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");
         
