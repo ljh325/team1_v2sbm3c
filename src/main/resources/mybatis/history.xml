@@ -32,6 +32,7 @@
     SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS startdate, exupdatedate, memberno
     FROM history
     WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+    ORDER BY startdate DESC
   </select>  
   
   <!-- (o)  회원별 운동기록 상세 목록조회 -->
@@ -53,7 +54,7 @@
   
   <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
   <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(startdate) AS start_date,  COUNT(*) AS total_exercises
+    SELECT TRUNC(startdate) AS start_date, COUNT(*) AS total_exercises
     FROM history
     WHERE memberno = #{memberno}
     GROUP BY TRUNC(startdate)
@@ -71,6 +72,13 @@
   <select id="exrecordno_max" resultType="int">
     SELECT MAX(exrecordno) as exrecordno
     FROM history
+  </select>
+  
+  <!-- 운동기록 총 갯수 -->
+  <select id="ex_cnt" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM history
+    WHERE exrecordno=#{exrecordno}
   </select>
   
   <!-- 운동 기록 수정 -->

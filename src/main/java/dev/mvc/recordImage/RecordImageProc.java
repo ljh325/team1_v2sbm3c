@@ -48,4 +48,10 @@ public class RecordImageProc implements RecordImageProcInter {
     return cnt;
   }
 
+  @Override
+  public ArrayList<RecordImageVO> one_images_read(int memberno) {
+    ArrayList<RecordImageVO> read = this.recordImageDAO.one_images_read(memberno);
+    return read;
+  }
+
 }

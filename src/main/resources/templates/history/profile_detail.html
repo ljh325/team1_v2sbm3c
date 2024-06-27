@@ -1,0 +1,162 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+
+  <style>
+    body {
+      background-color: black;
+    }
+
+    /* =========기록 활동 버튼=============== */
+    .button-container {
+      width: 100%;
+      /*margin-bottom: 10px;*/
+      display: flex;
+    }
+
+    .button {
+      width: 50%;
+      background-color: gray;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .button span {
+      font-size: 17px;
+      color: white;
+    }
+
+    .button:hover {
+      background-color: lightgray;
+      transform: scale(1.05);
+    }
+
+    /* ===============기록 활동 버튼=============== */
+  </style>
+  <div style="text-align: left;">
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀
+      뒤로가기</span>
+  </div>
+
+
+  <div class="button-container">
+    <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
+      <span style="color: #E6E6E6;">기록</span>
+    </div>
+    <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'"
+      style="background-color: #E6E6E6;">
+      <span style="color: black;">활동</span>
+    </div>
+  </div>
+
+  <div style="background-color: white; text-align: left; padding:7px;">
+    <div style="float:left;">
+      <img src="/images/none.jpg" style="width: 40px; border-radius: 50%;  margin-left:10px;">
+    </div>
+
+    <div style="float:left; margin-left: 10px;">
+      <div>
+        <span th:text="${memberVO.nickname }" style="font-size: 13px;"></span>
+        <i class="bi bi-person-check-fill"></i>
+      </div>
+      <div>
+        <span style="font-size: 10px;">5시간전</span>
+      </div>
+    </div>
+    <div style="float:right; margin: 10px 10px 0 0;">
+      <i class="bi bi-three-dots" style="font-size: 18px;"></i>
+    </div>
+    <div style="clear: both;">
+    </div>
+  </div>
+  <div th:if="${list != null}">
+  <div th:each="list, status : ${list}" th:if="${status.first}" style="background-color: white; padding: 8px 12px; text-align: left;">
+      <span th:text="${list.reccontents}" style="font-size: 14px;"></span>
+  </div>
+  </div>
+  <div th:if="${list == null}">
+  <span style="font-size: 13px;">...</span>
+  </div>
+
+
+  <!-- 이미지 -->
+  <!--<img src="/history/images/no.jpg" style="width: 370px; border-radius: 6px;">-->
+  <div id="carouselExampleFade" class="carousel slide">
+    <div class="carousel-inner">
+      <!-- 데이터가 없는 경우 디폴트 이미지 표시 -->
+      <div th:if="${#lists.isEmpty(list)}" class="carousel-item active">
+        <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+      </div>
+
+      <!-- 데이터가 있는 경우 반복문을 통해 이미지 표시 -->
+      <div th:each="list, status : ${list}">
+        <div th:class="${status.first ? 'carousel-item active' : 'carousel-item'}">
+          <div
+            th:if="${list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')}">
+            <img th:src="@{|/recordImage/storage/${list.recthumbs}|}" class="d-block w-100 profile-img"
+              style="width: 370px;" alt="Image">
+          </div>
+          <div
+            th:if="${((list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')) == false) and (list.recsizes > 0)}">
+            <span th:text="${list.recprofile}"></span>
+          </div>
+          <div th:if="${list.recsizes == 0}">
+            <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+          </div>
+          <div th:if="${list == null}">
+            <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- 
+  빈하트 
+<i class="bi bi-suit-heart"></i>
+
+꽉찬 하트
+<i class="bi bi-suit-heart-fill"></i>
+메세지
+<i class="bi bi-chat-text"></i>
+-->
+  <!-- 이미지 밑에 창 -->
+  <div style="background-color: white;">
+    <div class="d-flex justify-content-between" style="background-color: white; padding:8px 0 6px 0;">
+      <i class="bi bi-heart" style="font-size: 22px;"></i>
+      <i class="bi bi-chat-text-fill" style="font-size: 22px;"></i>
+      <i class="bi bi-bookmark" style="font-size: 22px;"></i>
+    </div>
+  </div>
+  <div style="background-color: white;">
+    <div style="float:left; padding:10px 0 13px 0;">
+      <span style="font-size: 12px; margin-left:15px;">좋아요 12개</span>
+    </div>
+    <div style="float:right; padding:10px 0 13px 0;">
+      <span style="font-size: 12px; margin-right:15px;">댓글 0개</span>
+    </div>
+    <div style="clear: both;">
+    </div>
+  </div>
+  
+  
+  
+  <br>
+  <br>
+  <div style="background-color: red; padding: 10px;">
+    <span>몇 세트 몇 횟수</span>
+  </div>
+
+</div>
+
+</html>

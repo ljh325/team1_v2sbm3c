@@ -2,7 +2,7 @@
 /**********************************/
 /* Table Name: 등급 */
 /**********************************/
-
+commit;
 
 DROP TABLE GRADE;
 DROP TABLE GRADE CASCADE CONSTRAINTS;

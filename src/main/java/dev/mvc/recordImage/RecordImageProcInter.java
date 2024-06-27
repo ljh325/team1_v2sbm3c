@@ -25,6 +25,12 @@ public interface RecordImageProcInter {
    * @return
    */
   public ArrayList<RecordImageVO> rec_images_read(HashMap<String, Object> map);
+  
+  /**
+   * 기록 별 이미지 하나조회
+   * @return
+   */
+  public ArrayList<RecordImageVO> one_images_read(int memberno);
 
   /**
    * 회원별 총 이미지 수

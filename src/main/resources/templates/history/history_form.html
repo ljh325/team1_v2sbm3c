@@ -237,7 +237,7 @@
               newDiv.className = 'record_ex_div';
               newDiv.id = `record-${exrecordno}`;  // 고유한 ID 할당
               newDiv.innerHTML = `
-                <div id="record-${exrecordno}" class="record-${exrecordno}">
+                <div id="record-${exrecordno}" class="record-${exrecordno}" onclick="location.href='/history/record_read?exrecordno=${exrecordno}'">
                   <div style="text-align: right;">
                     <button type="button" class="btn-cancel-${exrecordno} btn-close" aria-label="Close" 
                        style="background-color: white; font-size: 14px;"></button>
