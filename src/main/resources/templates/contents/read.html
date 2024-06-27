@@ -121,17 +121,17 @@
   </style>
   <script>
 
-    function showModal(message) {
+    function showModal(message) { // 로그인 필요 모달 창 
       document.getElementById("modalBody").innerText = message; // 모달창 내용 설정
       $('#warningModal').modal('show'); // 모달창 표시
     }
 
-    function showModal2(message) {
+    function showModal2(message) { // 단순 확인 모달 창
       document.getElementById("modalBody2").innerText = message; // 모달창 내용 설정
       $('#warningModal2').modal('show'); // 모달창 표시
     }
 
-    function showModal3(message) {
+    function showModal3(message) { // 확인 및 취소 버튼 모달 창
       document.getElementById("modalBody3").innerText = message; // 모달창 내용 설정
       $('#warningModal3').modal('show'); // 모달창 표시
     }
@@ -139,30 +139,6 @@
     function deleteModal(no) {
       showModal3()
     }
-
-    function checkID() {
-
-      let url = './check_login'
-      fetch(url, {
-        method: 'GET',
-        // headers: {
-        //   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
-        // },
-        // body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함            
-      })
-        .then(response => response.json())
-        .then(rdata => {
-          if (rdata.check == 0) { // 로그인 X
-            alert("로그인 후 추천 가능합니다.")
-          }
-        })
-        .catch(error => { // 서버 다운등 통신 에러
-          console.error('Error:', error);
-        });
-
-    }
-
-
 
   </script>
   <div class='title_line'>
@@ -191,17 +167,6 @@
     </span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
-  <!-- 
-  <aside class="aside_right" th:if="${session.grade != 'admin'}">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|/contents/list_by_cateno?cateno=${cateVO.cateno }&word=${word }&now_page=${now_page}|}">목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|/contents/list_by_cateno_grid?cateno=${cateVO.cateno }&now_page=${now_page}&word=${word }|}">갤러리형</a>
-  </aside> -->
-
-
-
 
   <div class='menu_line'></div>
 
@@ -259,19 +224,6 @@
 
       </li>
 
-      <!--
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;">
-        <span th:if="${session.memberno != null}">
-          <button id="recom" type="button"
-            th:attr="onclick=|location.href='/contents/recom?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}'|"
-            class="btn btn-secondary btn-sm">추천</button>
-        </span>
-
-        <span th:unless="${session.memberno != null}">
-          <button id="recom" type="button" onclick="checkID()" class="btn btn-secondary btn-sm">추천</button>
-        </span>
-      </li>
--->
       <li class="li_none" style="clear: both;">
         <span style="color:dimgray" th:text="|태그(키워드): ${contentsVO.tag}|"></span>
 
@@ -318,9 +270,8 @@
               let contents = document.getElementById('contents').value;
 
               if (contents.trim().length == 0) {
-                alert('댓글의 내용이 없습니다. 내용을 입력 해주세요.');
+                showModal2('댓글의 내용이 없습니다. 내용을 입력 해주세요.');
               } else {
-                //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
                 fetch("/comments/create", {
                   "method": "post",
                   "headers": {"Content-Type": "application/json"},
@@ -722,56 +673,57 @@
           }
 
           function comments_delete(no) { // 댓글 삭제
-
             let contents_tag = document.getElementById('contents');
 
             fetch("/comments/read?commentsno=" + no, {
               "method": "get",
-              "headers": {"Content-Type": "application/json"},
-              // body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]"})
+              "headers": {"Content-Type": "application/json"}
             })
-              .then((response) => response.json())
-              .then((data) => {
-                //let sw = confirm("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
-                showModal3("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
-                console.log(sw);
-                
-                document.getElementById('modalConfirmButton3').addEventListener('click', () => { // 댓글 및 답글 삭제 확인버튼 모달창
-                  sw = 1;
-                  $('#warningModal3').modal('hide'); // 모달창 닫기
+              .then(response => response.json())
+              .then(data => {
+                return new Promise((resolve) => {
+                  showModal3("「" + data['res']['contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
 
-                });
+                  document.getElementById('modalConfirmButton3').addEventListener('click', () => { // 댓글 및 답글 삭제 확인버튼 모달창
+                    $('#warningModal3').modal('hide'); // 모달창 닫기
+                    resolve(1); // 확인 버튼을 클릭하면 1을 반환
+                  });
 
-                document.getElementById('modalCancelButton').addEventListener('click', () => { // 댓글 및 답글 삭제 취소버튼 모달창
-                  sw = 2;
-                  $('#warningModal3').modal('hide'); // 모달창 닫기
-
-                });
-                if (sw == 1) {
-
-                  fetch("/comments/delete", {
-                    "method": "post",
-                    "headers": {"Content-Type": "application/json"},
-                    body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "commentsno": no, "memberno": data['res']['memberno']})
+                  document.getElementById('modalCancelButton').addEventListener('click', () => { // 댓글 및 답글 삭제 취소버튼 모달창
+                    $('#warningModal3').modal('hide'); // 모달창 닫기
+                    resolve(2); // 취소 버튼을 클릭하면 2를 반환
+                  });
+                })
+                  .then(sw => {
+                    if (sw === 1) {
+                      return fetch("/comments/delete", {
+                        "method": "post",
+                        "headers": {"Content-Type": "application/json"},
+                        body: JSON.stringify({"contentsno": "[[${contentsVO.contentsno}]]", "commentsno": no, "memberno": "[[${session.memberno}]]"})
+                      })
+                        .then(response => response.json());
+                    } else {
+                      showModal2('삭제를 취소 했습니다.');
+                      // Reject the promise to prevent the next `then` from executing
+                      return Promise.reject('취소됨');
+                    }
                   })
-                    .then((response) => response.json())
-                    .then((data) => {
-
-                      if (data['res'] == 1) {
-                        location.reload();
-                        list_by_contentsno_join(); // 목록 출력
-
-                      } else {
-                        alert('댓글 삭제에 실패했습니다. 다시 시도 해주세요.');
-                      }
-                    });
-
-                } else {
-                  //alert('삭제를 취소 했습니다.');
-                }
+                  .then(data => {
+                    if (data['res'] == 1) {
+                      location.reload();
+                      list_by_contentsno_join(); // 목록 출력
+                    } else {
+                      showModal2('댓글 삭제에 실패 했습니다. 다시 시도 해주세요.');
+                    }
+                  })
+                  .catch(error => {
+                    if (error !== '취소됨') {
+                      console.error('Error:', error);
+                    }
+                  });
               });
-
           }
+
 
           function timeSince(date) { // 작성일자 표시 함수
             const seconds = Math.floor((new Date() - date) / 1000);
@@ -919,9 +871,8 @@
             let reply_contents = document.getElementById('reply_contents').value;
 
             if (reply_contents.trim().length == 0) {
-              alert('답글의 내용이 없습니다. 내용을 입력 해주세요.');
+              showModal2('답글의 내용이 없습니다. 내용을 입력 해주세요.');
             } else {
-              //alert('contents: ' + contents_tag.value); // 댓글 내용 출력
               fetch("/reply/create", {
                 "method": "post",
                 "headers": {"Content-Type": "application/json"},
@@ -930,12 +881,13 @@
               })
                 .then((response) => response.json())
                 .then((data) => {
-                  list_by_contentsno_join(); // 목록 출력
+                  location.reload();
+                  
                 });
 
             }
 
-            location.reload();
+            
 
           }
 
@@ -996,7 +948,7 @@
             let replyno = replyno_tag.value;
 
             if (contents.length == 0) {
-              alert('내용이 없습니다. 내용을 입력해주세요.');
+              showModal2('내용이 없습니다. 내용을 입력 해주세요.');        
             } else {
               fetch("/reply/update", {
                 "method": "post",
@@ -1006,7 +958,7 @@
                 .then((response) => response.json())
                 .then((data) => {
                   if (data['res'] == 0) {
-                    alert('답글 수정에 실패 했습니다.)');
+                    showModal2('답글 수정에 실패 했습니다.');
                   } else {
 
                     fetch("/reply/read?replyno=" + no, { // 대댓글 정보 조회
@@ -1017,7 +969,7 @@
                       .then((response) => response.json())
                       .then((data) => {
                         let commentsno = data['res']['commentsno']; // 댓글 번호 추출
-                        list_by_commentsno_join(commentsno); // 대댓글 목록 출력
+                        location.reload();
                       });
 
                   }
@@ -1026,7 +978,7 @@
 
             }
 
-            location.reload();
+            
 
           }
 
