@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.alogin.AloginProcInter;
 import dev.mvc.alogin.AloginVO;
+import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,23 +27,15 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/admin")
 @Controller
 public class AdminCont {
-  
-  //아이디 체크 
-  @GetMapping(value="/checkID") // http://localhost:9093/admin/checkID?id=admin
-  @ResponseBody
-  public String checkID(String id) {
-    System.out.println("-> id: " + id);
-    int cnt = this.adminProc.checkID(id);
 
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
-    
-    return obj.toString();
-  }
 
   @Autowired
   @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProcInter adminProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.member.MemberProc")  // @Service("dev.mvc.member.MemberProc")
+  private MemberProcInter memberProc;
   
   @Autowired
   @Qualifier("dev.mvc.alogin.AloginProc")
@@ -55,54 +48,6 @@ public class AdminCont {
     System.out.println("-> AdminCont created.");
   }
 
-  /**
-   * 관리자 가입 폼
-   * @param model
-   * @param adminVO
-   * @return
-   */
-  @GetMapping(value="/create") // http://localhost:9093/admin/create
-  public String create_form(Model model, AdminVO adminVO) {
-    model.addAttribute("adminVO", new AdminVO());
-    return "admin/create"; // /template/admin/create.html
-  }
-
-  /**
-   * 관리자 가입 Proc
-   * @param model
-   * @param adminVO
-   * @return
-   */
-  @PostMapping(value="/create")
-  public String create_proc(Model model, AdminVO adminVO) {
-      // Check for duplicate ID
-      int checkID_cnt = this.adminProc.checkID(adminVO.getId());
-      //System.out.println("ID Duplication Check Count: " + checkID_cnt); // Logging
-
-      if (checkID_cnt == 0) {
-          // Encrypt the password before setting it in adminVO
-        int cnt = this.adminProc.create(adminVO);
-
-          // Set the grade to 1 for new admins
-          adminVO.setGrade(1); // 관리자 1
-
-          if (cnt == 1) {
-            model.addAttribute("code", "create_success");
-            model.addAttribute("aname", adminVO.getAname());
-            model.addAttribute("id", adminVO.getId());
-          } else {
-            model.addAttribute("code", "create_fail");
-          }
-          
-          model.addAttribute("cnt", cnt);
-        } else { // id 중복
-          model.addAttribute("code", "duplicte_fail");
-          model.addAttribute("cnt", 0);
-        }
-        
-        return "admin/msg"; // /templates/admin/msg.html
-      
-  }
 
 
 
@@ -155,39 +100,8 @@ public class AdminCont {
     return "admin/msg"; // /templates/admin/msg.html
   }
 
-  /**
-   * 삭제
-   * @param model
-   * @param adminsno 회원 번호
-   * @return 회원 정보
-   */
-  @GetMapping(value="/delete") //http://localhost:9093/admin/delete
-  public String delete(Model model, int adminsno) {
-    System.out.println("-> delete adminsno: " + adminsno);
+ 
 
-    AdminVO adminVO = this.adminProc.read(adminsno);
-    model.addAttribute("adminVO", adminVO);
-
-    return "admin/delete"; // templates/admin/delete.html
-  }
-
-  /**
-   * 회원 Delete process
-   * @param model
-   * @param adminsno 삭제할 레코드 번호
-   * @return
-   */
-  @PostMapping(value="/delete")
-  public String delete_process(Model model, Integer adminsno) {
-    int cnt = this.adminProc.delete(adminsno);
-
-    if (cnt == 1) {
-      return "redirect:/admin/admins_list";
-    } else {
-      model.addAttribute("code", "delete_fail");
-      return "admin/msg"; // /templates/admin/msg.html
-    }
-  }
 
   /**
    * 로그인
@@ -270,12 +184,14 @@ public class AdminCont {
       System.out.println("로그인 내역" + log);
       
       
-      if (adminVO.getGrade() >= 1 && adminVO.getGrade() <= 10) {
+      if (adminVO.getGrade() ==0) {
         session.setAttribute("grade", "admin");
-      } else if (adminVO.getGrade() >= 11 && adminVO.getGrade() <= 20) {
+      } else if (adminVO.getGrade() ==1) {
         session.setAttribute("grade", "member");
-      } else if (adminVO.getGrade() >= 21) {
-        session.setAttribute("grade", "guest");
+      } else if (adminVO.getGrade() == 2) {
+        session.setAttribute("black", "black");
+      }else if (adminVO.getGrade() == 3) {
+        session.setAttribute("exit", "exit");
       }
 
       // Cookie 관련 코드

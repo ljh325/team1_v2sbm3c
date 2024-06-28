@@ -21,22 +21,7 @@ public class AdminProc implements AdminProcInter {
   @Autowired
   Security security;
   
-  @Override
-  public int checkID(String id) {
-    int cnt = this.adminDAO.checkID(id);
-    return cnt;
-  }
 
-  @Override
-  public int create(AdminVO adminVO) {
-    String passwd = adminVO.getPasswd();
-    
-    String passwd_encoded = this.security.aesEncode(passwd);
-    adminVO.setPasswd(passwd_encoded);
-
-    int cnt = this.adminDAO.create(adminVO);
-    return cnt;
-  }
 
   @Override
   public ArrayList<AdminVO> list() {
@@ -102,32 +87,5 @@ public class AdminProc implements AdminProcInter {
     return cnt;
   }
 
-//  @Override
-//  public int update(FcalendarVO adminVO) {
-//    String passwd = adminVO.getPasswd();
-//    // Security security = new Security();
-//    String passwd_encoded = this.security.aesEncode(passwd);
-//    adminVO.setPasswd(passwd_encoded);
-//    int cnt = this.adminDAO.update(adminVO);
-//    return cnt;
-//  }
-
-  @Override
-  public int delete(int adminsno) {
-    int cnt = this.adminDAO.delete(adminsno);
-    return cnt;
-  }
-
-  @Override
-  public int passwd_check(HashMap<String, Object> map) {
-    int cnt = this.adminDAO.passwd_check(map);
-    return cnt;
-  }
-
-  @Override
-  public int passwd_update(HashMap<String, Object> map) {
-    int cnt = this.adminDAO.passwd_update(map);
-    return cnt;
-  }
 
 }
