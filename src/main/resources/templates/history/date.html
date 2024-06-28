@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Picker Form</title>
+    
+    
+    
+    
+ 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+    
+    
+    <style>
+
+    </style>
+</head>
+<body>
+
+           
+            <input type="text" id="event_date" name="event_date" placeholder="Select a date">
+            
+            
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#event_date").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "c-100:c+10" // Adjust as needed
+            });
+        });
+    </script>
+</body>
+</html>

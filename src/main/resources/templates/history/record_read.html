@@ -7,7 +7,14 @@
       background-color: black;
     }
   </style>
-
+  <div style="float: left; margin:6px; padding:5px;">
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀ 뒤로가기</span>
+  </div>
+  <div style="float: right; margin:6px; padding:5px;" th:onclick="|location.href='/history/record_read_update?exrecordno=${historyVO.exrecordno}'|">
+    <span style="color: #58FAAC;">수정</span>
+  </div>
+  <div style="clear: both;">
+  </div>
   <div style="background-color: white; padding: 14px; text-align: center;">
     <span style="color: black; font-size: 20px;">기록한 운동</span>
   </div>
@@ -18,8 +25,8 @@
 
     <!-- 기록 날짜 -->
     <div th:if="${historyVO != null}">
-      <div style="text-align: center; padding: 13px 0 13px 0; background-color:  #778899; border-radius: 7px;">
-        <span th:text="|${histortyVO.startdate.substring(0, 10)} (운동)|" style="color: white; font-size: 20px;"></span>
+      <div style="text-align: center; padding: 13px 0 13px 0;  border-radius: 7px;">
+        <span th:text="|${histortyVO.recorddate.substring(0, 10)} (운동)|" style="color: white; font-size: 20px;"></span>
       </div>
       <br>
 
@@ -122,12 +129,13 @@
 
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // historyVO가 null인지 확인하고 null인 경우 리다이렉트
-      if ('[[${historyVO == null}]]') {
-        window.location.href = '/history/history_form';
-      }
-    });
+//    document.addEventListener("DOMContentLoaded", function () {
+//      // historyVO가 null인지 확인하고 null인 경우 리다이렉트
+//      console.log('아아'+ '[[${historyVO}]]')
+//     if ('[[${historyVO}]]' == null) {
+//        window.location.href = '/history/history_form';
+//      }
+//   });
   </script>
 
 </div>

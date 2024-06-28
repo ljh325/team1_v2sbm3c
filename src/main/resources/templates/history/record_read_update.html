@@ -1,4 +1,3 @@
-
 <html layout:decorate="~{layout}">
   <!-- layout.html 상속 -->
   <div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
@@ -120,7 +119,6 @@
       <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀ 뒤로가기</span>
     </div>
     <div id="btn_insert" style="float:right; ">
-      <span style="font-size: 17px; color: #58FAAC; cursor: pointer;">추가</span>
     </div>
     <div style="clear: both;">
     </div>
@@ -174,19 +172,21 @@
       <div>
         
         <!-- 운동명 입력 -->
-        <input id="exname" name="exname" class="form-control form-control-lg" type="text" placeholder="운동명" aria-label=".form-control-lg example">
+       <input id="exname" name="exname" class="form-control form-control-lg" type="text"
+            aria-label=".form-control-lg example"
+           th:value="${historyVO != null ? historyVO.exname : ''}">
         <br>
         <div id="selectedExercise" style="display: none;"></div>
         
         <!-- 날짜 입력 -->
         <div style="display: flex;">
-          <input type="text" class="form-control" id="event_date" name="recorddate" style="padding:10px; width: 80%;" placeholder="날짜를 선택하세요.">
+          <input type="text" th:value="${historyVO != null ? historyVO.recorddate.substring(0,10) : ''}" class="form-control" id="event_date" name="recorddate" style="padding:10px; width: 80%;">
           <span style="font-size: 17px; color: white; margin-top:10px;">날짜 입력</span>
         </div>
         <br>
         <!-- 칼로리 입력 -->
         <div style="display: flex;">
-          <input id="hiscalorie" name="hiscalorie" class="form-control form-control-lg" type="text"
+          <input id="hiscalorie" name="hiscalorie" th:value="${historyVO != null ? historyVO.hiscalorie : ''}" class="form-control form-control-lg" type="text"
           style="width: 80%;" placeholder="칼로리" aria-label=".form-control-lg example">
           <span style="font-size: 24px; color: white; margin: auto;">kcal</span>
         </div>
@@ -198,7 +198,7 @@
         <span style="font-size: 17px; color: white;">운동 시간(30분 단위)</span>
         <div class="container">
           <button class="btn btn-primary" id="decrease">-</button>
-          <div id="duration" name="duration" class="duration">0</div>
+          <div id="duration" name="duration" class="duration" th:text="${historyVO.duration != null ? historyVO.duration : 0}">0</div>
           <button class="btn btn-primary" id="increase">+</button>
         </div>
         <br>
@@ -206,7 +206,7 @@
         <!-- 메모 입력 -->
         <div class="mb-3">
           <label for="notes" class="form-label">운동 메모</label>
-          <textarea id="notes" name="notes" class="form-control" placeholder="메모를 입력하세요..." rows="3"></textarea>
+          <textarea id="notes" name="notes" th:text="${historyVO != null ? historyVO.notes : ''}"  class="form-control" placeholder="메모를 입력하세요..." rows="3"></textarea>
         </div>
         
 
@@ -216,8 +216,8 @@
     
     <br>
     <br>
-    <div style="text-align: center; border-radius: 7px; padding: 12px; background-color: #2e2d2d;">    
-      <span style="font-size: 20px; color: #58FAAC;">+ &nbsp;상세 기록</span>
+    <div id="btn_update" style="text-align: center; border-radius: 7px; padding: 12px; background-color: #2e2d2d;">    
+      <span style="font-size: 20px; color: #58FAAC;">수 정 하 기</span>
     </div>
     
 
@@ -312,7 +312,7 @@
         
         
         
-         document.getElementById('btn_insert').addEventListener('click', (event) => {
+         document.getElementById('btn_update').addEventListener('click', (event) => {
           var msg = document.getElementById('msg').innerHTML=""; // msg 초기화
           insert_history()
         })
@@ -349,7 +349,7 @@
             return;
           }
           let duration = document.getElementById("duration").innerText;
-          if (duration === "0") {
+          if (duration === "") {
             msg.innerHTML = "운동 시간을 입력해주세요.";
             return;
           }
@@ -377,7 +377,7 @@
           .then(data => {
             if(data['cnt'] == 1){
               console.log('성공;');
-              window.location.href = '/history/activity_record';
+              window.location.href = '/history/history_form';
               
             } else{
               console.log('실패');

@@ -16,7 +16,7 @@ CREATE TABLE RECORDIMAGE(
 		RECUPDATE                     		DATE		 NULL ,
 		EXRECORDNO                    		NUMBER(10)		 NULL ,
         MEMBERNO                            NUMBER(10)   NOT NULL,
-  FOREIGN KEY (EXRECORDNO) REFERENCES HISTORY (EXRECORDNO),
+  --FOREIGN KEY (EXRECORDNO) REFERENCES HISTORY (EXRECORDNO),
   FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
 );
 
@@ -46,6 +46,7 @@ CREATE SEQUENCE recordImage_seq
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
   
 SELECT * FROM RECORDIMAGE;
+delete from RECORDIMAGE;
 commit;
 
 -- 운동 기록 이미지 등록
@@ -64,15 +65,31 @@ FROM recordimage
 WHERE memberno = 40;
 
 -- 기록 별 이미지 조회
-SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
-FROM recordimage
-WHERE exrecordno = 1 AND memberno = 40;
+SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, h.exrecordno, r.memberno
+FROM recordimage r , history h
+WHERE h.exrecordno = 40 AND r.memberno = 5;
 
+select * from recordimage;
 -- 회원별 총 이미지 수
-SELECT count(*)
-FROM recordimage
-WHERE memberno = 40;
 
+-- 운동기록번호 중복 제거한 총 수
+SELECT COUNT(DISTINCT exrecordno) 
+        FROM recordimage
+        WHERE memberno = 5;
+
+
+SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+FROM (
+    SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno,
+           ROW_NUMBER() OVER (PARTITION BY exrecordno ORDER BY recimageno) AS rn
+    FROM recordimage
+    WHERE memberno = 5
+)
+WHERE rn = 1;
+
+    SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, DISTINCT(exrecordno), memberno
+    FROM recordimage
+    WHERE memberno = 5
 -- 운동 이미지 기록 수정
 --UPDATE recordimage
 --SET recprofile=#{recprofile}, recprofilesaved=#{recprofilesaved}, recthumbs=#{recthumbs}, recsizes=#{recsizes}

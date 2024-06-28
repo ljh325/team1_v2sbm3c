@@ -95,8 +95,8 @@
   </div>
 
   <br>
-  
-  
+
+
   <div style="float:left; width:30%;">
     <img src="/images/none.jpg" style="width: 67px; border-radius:50%">
   </div>
@@ -117,8 +117,8 @@
   <div style="clear: both;">
   </div>
 
-  <div style="float:left; text-align: left; margin-left:10%; margin-top:8px;">
-    <span class="insta" style="font-size: 16px;">박주찬</span>
+  <div style="float:left; text-align: left; margin-left:29px; margin-top:8px;">
+    <span th:text="${memberVO.nickname}" class="insta" style="font-size: 16px;">박주찬</span>
   </div>
   <div style="float:right; margin-left:10%; margin:8px 17px 15px 0; background-color: red; padding:7px;">
     <span>프로필 편집</span>
@@ -157,7 +157,8 @@
       </div>
     </div>
  -->
-  <div th:if="${list != null}">
+
+
     <div class="image-container">
       <div th:each="list : ${list}" class="image-item">
         <div
@@ -181,10 +182,19 @@
         </div>
       </div>
     </div>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div th:if="${list == null or #lists.isEmpty(list)}">
+    <span style="color: white; font-size: 20px;">게시글이 없습니다.</span>
   </div>
-  <div th:if="${list == null}">
-    <span>게시글이 없습니다.</span>
-  </div>
+
+
+
 
 </div>
 
