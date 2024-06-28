@@ -67,42 +67,44 @@
         form.submit();
     }
   </script>
-  <div style="display: flex; justify-content: center;">
-    <table class="table table-hover">
-      <colgroup>
-        <col style='width: 20%;'/>
-        <col style='width: 15%;'/>
-        <col style='width: 40%;'/>
-        <col style='width: 15%;'/>
-        <col style='width: 10%;'/>
-      </colgroup>
-      <thead>
-        <tr>
-          <th class="th_bs">번호</th>
-          <th class="th_bs">등록일</th>
-          <th class="th_bs">이미지</th>
-          <th class="th_bs">식품코드</th>
-          <th class="th_bs">기타</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="foodcateVO, status:${list}">
-          <td class="td_basic" th:text="${status.index+1}"></td>
-          <td class="td_basic" th:text="${foodcateVO.fdate.substring(5, 10)}"></td>
-          <td class="td_basic">
-              
-              <img th:src="@{|/foodcate/images/${foodcateVO.thumb}|}" style="width: 50; height: 40;">
-               
-          </td>           
-          <td class="td_basic" th:text="${foodcateVO.foodcode}"></td>
   
-          <td class="td_basic">
-            <img src="/images/read.png" class="icon" th:onclick="'javascript:readFoodcate(' + ${foodcateVO.foodcateno} + ')'">    
-            <img src="/images/delete.png" class="icon" th:onclick="'javascript:deleteFoodcate(' + ${foodcateVO.foodcateno} + ')'">
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <div class="menu_line"></div>
+  <div style="margin: 1em;">
+    
+        <h3>식단 카테고리</h3>
+    <div th:each="foodcateVO, status:${list}">
+      <div class="delete-container" style="display: flex;">
+        <span th:text="${foodcateVO.fdate.substring(0, 10)}"></span>
+        <div style="display: block; margin-left: auto; margin-bottom:3px;">
+           <span th:onclick="'javascript:readFoodcate(' + ${foodcateVO.foodcateno} + ')'"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">확인</span>&nbsp;&nbsp;
+          <span th:onclick="'javascript:deleteFoodcate(' + ${foodcateVO.foodcateno} + ')'" style="color: white; font-size: 13px; background-color: red; padding: 3px; border-radius: 7px;">삭제</span>
+          
+          <input class="foodcateno" type="hidden" th:value="${foodcateVO.foodcateno}">
+   
+        </div>
+      </div>
+      <div style="background-color: rgb(192, 192, 192); border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>번호</span></div>
+          <div class="column"><span>이미지</span></div>
+          <div class="column"><span>식품코드</span></div>
+    
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${foodcateVO.foodcateno + '번'}"></span></div>
+       
+          <div class="column">
+              
+              <img th:src="@{'/foodcate/images/' + ${foodcateVO.thumb}}" style="width: 50px; height: 40px;">
+               
+          </div>           
+          <div class="column"><span th:text="${foodcateVO.foodcode}"></span></div>
+        </div>
+      </div><br>
+    </div>
+    
+  </div>
     
     <!-- 페이지 버튼 목록 출력 시작 -->
     <div class="Bottom_menu" th:utext="${paging}"></div>

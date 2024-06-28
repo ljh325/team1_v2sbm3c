@@ -14,6 +14,10 @@
 
             return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
         }
+        
+        
+        
+        
     </script>
 <div layout:fragment="content">
    <div class="title_line">운동 목표
@@ -39,7 +43,7 @@
     
   </div>
 
-     <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+     <div style="background-color: rgb(192, 192, 192); border-radius: 10px; height: auto; padding: 15px;">
         <div class="row title">
           <div class="column"><span>체중</span></div>
           <div class="column"><span>신장</span></div>
@@ -59,9 +63,15 @@
   <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
   
 </div>
-<div th:unless="${goalsVO != null}">
-  
-    <h3>저장된 목표가 없습니다 </h3>
+<div th:unless="${goalsVO != null}" style="text-align: center;">
+ 
+    <br>
+    <br>
+    <span style="font-size: 17px;">저장된 정보가 없습니다.</span>
+    <br>
+    <br>
+    <br>
+  </div>
       <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
   </div>
 

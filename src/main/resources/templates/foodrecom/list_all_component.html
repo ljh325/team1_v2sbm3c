@@ -78,7 +78,6 @@
         });
       }
     </script>
-
     <div class='menu_line'></div>
     <br>
     <div style="margin: 1em;">
@@ -102,4 +101,16 @@
                 </div>
             </div><br>
         </div>
+        
+    <div th:unless="${foodrecomVO != null}" style="text-align: center;">
+
+      <br>
+      <br>
+      <span style="font-size: 17px;">저장된 정보가 없습니다.</span>
+      <br>
+      <br>
+      <br>
+ 
+  </div>
+        
     </div>

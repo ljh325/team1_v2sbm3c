@@ -113,7 +113,7 @@ public class FoodrecomCont {
     
     
     else {
-      return "index";
+      return "redirect:/member/login";
     }
    
    
@@ -168,7 +168,7 @@ public class FoodrecomCont {
  
   
     }else {
-      return "index";
+      return "redirect:/member/login";
     }
   }
   
@@ -220,7 +220,7 @@ public class FoodrecomCont {
       
     }
    }else {
-     return "index";
+     return "redirect:/member/login";
     }
    }
   
@@ -258,7 +258,7 @@ public class FoodrecomCont {
     return "/foodrecom/list_all"; // /foodrecom/list_all.html
     }else
     {
-    return "index"; // /foodrecom/list_all.html
+    return "redirect:/member/login"; // /foodrecom/list_all.html
     }
   }
   
@@ -293,7 +293,7 @@ public class FoodrecomCont {
  
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
 
    
@@ -344,7 +344,7 @@ public class FoodrecomCont {
       }
       return obj.toString();
       } else {
-      return "index";
+      return "redirect:/member/login";
       }
   
   }
@@ -360,7 +360,7 @@ public class FoodrecomCont {
 //       }
 //    }
 //    else {
-//      return "index";
+//      return "redirect:/member/login";
 //    }
 
   

@@ -92,7 +92,7 @@ public class MhCont {
     return "mh/read";
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
  
 
@@ -123,7 +123,7 @@ public class MhCont {
 
   return "/mh/create"; // /mh/list_all.html
   }else {
-    return "index";
+    return "redirect:/member/login";
   }
 
   }
@@ -165,7 +165,7 @@ public class MhCont {
       return obj.toString();
     }
    }else {
-     return "index";
+     return "redirect:/member/login";
     }
    }
   
@@ -208,7 +208,7 @@ public class MhCont {
       
     }
    }else {
-     return "index";
+     return "redirect:/member/login";
     }
    }
   
@@ -251,7 +251,7 @@ public class MhCont {
       
     }
    }else {
-     return "index";
+     return "redirect:/member/login";
     }
    }
   
@@ -338,7 +338,7 @@ public class MhCont {
     
     }else{
       
-    return "index"; // /mh/list_all.html
+    return "redirect:/member/login"; // /mh/list_all.html
     
     }
   }
@@ -401,7 +401,7 @@ public class MhCont {
     return "mh/choose";
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
  
 
@@ -472,7 +472,7 @@ public class MhCont {
       return "mh/msg"; // /templates/mh/msg.html
     }
     }else {
-      return "index";
+      return "redirect:/member/login";
     }
 
   }
@@ -501,7 +501,7 @@ public class MhCont {
     model.addAttribute("mhVO", mhVO);
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
 
    
