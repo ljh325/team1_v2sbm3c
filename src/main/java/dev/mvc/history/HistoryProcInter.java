@@ -53,6 +53,13 @@ public interface HistoryProcInter {
    */
   public int exrecordno_max();
   
+  /**
+   * 운동기록 총 수
+   * @param exrecordno
+   * @return
+   */
+  public int ex_cnt(int exrecordno);
+  
   
   /**
    * 운동 기록 수정

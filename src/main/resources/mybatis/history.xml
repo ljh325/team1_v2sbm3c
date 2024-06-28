@@ -23,20 +23,21 @@
 
   <!-- 운동기록 등록 -->
   <insert id="insert_history" parameterType="dev.mvc.history.HistoryVO">
-    INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
-    VALUES (history_seq.nextval, #{exname}, #{extype}, #{hiscalorie}, #{duration}, #{notes}, sysdate, #{memberno})
+    INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate, memberno)
+    VALUES (history_seq.nextval, #{exname}, #{extype}, #{hiscalorie}, #{duration}, #{notes}, #{recorddate}, sysdate, #{memberno})
   </insert>
 
   <!-- (o)  회원별 운동기록 리스트조회 -->
   <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="dev.mvc.history.HistoryVO">
-    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS startdate, exupdatedate, memberno
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate , exupdatedate, memberno
     FROM history
-    WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+    WHERE memberno = #{memberno} AND TRUNC(recorddate) = TO_DATE(#{recorddate}, 'YYYY-MM-DD')
+    ORDER BY recorddate DESC
   </select>  
   
   <!-- (o)  회원별 운동기록 상세 목록조회 -->
   <select id="record_read" resultType="dev.mvc.history.HistoryVO" parameterType="map">
-    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate, exupdatedate, memberno
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate, exupdatedate, memberno
     FROM history
     WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
   </select> 
@@ -44,20 +45,20 @@
   
   <!-- 회원별 + 날짜별 총 운동 시간(time) -->
   <select id="time_for_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(startdate) AS start_date, SUM(duration) AS total_duration
+    SELECT TRUNC(recorddate) AS recorddate, SUM(duration) AS total_duration
     FROM history
     WHERE memberno = #{memberno}
-    GROUP BY TRUNC(startdate)
-    ORDER BY TRUNC(startdate)
+    GROUP BY TRUNC(recorddate)
+    ORDER BY TRUNC(recorddate)
   </select>  
   
   <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
   <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(startdate) AS start_date,  COUNT(*) AS total_exercises
+    SELECT TRUNC(recorddate) AS recorddate, COUNT(*) AS total_exercises
     FROM history
     WHERE memberno = #{memberno}
-    GROUP BY TRUNC(startdate)
-    ORDER BY TRUNC(startdate)
+    GROUP BY TRUNC(recorddate)
+    ORDER BY TRUNC(recorddate)
   </select>  
   
   <!-- 회원 운동 기록 전체 시간  -->
@@ -73,10 +74,17 @@
     FROM history
   </select>
   
+  <!-- 운동기록 총 갯수 -->
+  <select id="ex_cnt" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM history
+    WHERE exrecordno=#{exrecordno}
+  </select>
+  
   <!-- 운동 기록 수정 -->
   <update id="history_update" parameterType="dev.mvc.history.HistoryVO">
     UPDATE history
-    SET exname = #{exname}, extype=#{extype}, hiscalorie= #{hiscalorie}, duration=#{duration}, notes=#{notes}, exupdatedate=sysdate
+    SET exname = #{exname}, extype=#{extype}, hiscalorie= #{hiscalorie}, duration=#{duration},  notes=#{notes}, recorddate=#{recorddate}, exupdatedate=sysdate
     WHERE exrecordno = #{exrecordno}
   </update>
 

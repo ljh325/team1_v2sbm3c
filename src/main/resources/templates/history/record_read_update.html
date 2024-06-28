@@ -1,0 +1,416 @@
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+  body{
+    background-color: black;
+  }
+  /* ============ 캐러셀 CSS 코드 ==================*/
+        /* 캐러셀 컨테이너 스타일 */
+        .slider {
+            overflow: hidden;
+            position: relative;
+            max-width: 800px; /* 전체 가로폭을 줄이는 부분 */
+            width: 100%;
+            height:10%;
+            margin: 50px auto 0;
+            border-radius: 7px;
+        }
+
+        .slider .inner {
+            overflow: hidden;
+        }
+        .slide_list {
+            display: flex;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+      .slide_list > li {
+            width: 100%;
+            height: 200px;
+            background: #34394f;
+            text-align: center;
+            box-sizing: border-box; /* box-sizing을 추가하여 padding과 border를 포함하도록 설정 */
+            border-radius: 7px;
+            transition: background-color 0.3s, color 0.3s; /* 부드러운 전환 효과 추가 */
+            cursor: pointer; /* 커서를 포인터로 변경 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+             /* 이미지 스타일 */
+        .slide_list > li img {
+            width: 90%;
+            height: 70%;
+            object-fit: cover; /* 이미지가 영역을 꽉 채우도록 설정 */
+            border-radius: 7px 7px 0 0;
+        }
+        
+        .slide_list > li span {
+            font-size: 20px;
+            line-height: 50px;
+        }
+        /* Hover 스타일 */
+        .slide_list > li:hover {
+            background: #0056b3; /* 배경색 변경 */
+        }
+        
+        /* 선택된 슬라이드 스타일 */
+        .slide_list > li.selected {
+            background: #0056b3; /* 배경색 변경 */
+            color: #ffffff; /* 텍스트 색상 변경 */
+            border: 4px solid #ffffff; /* 테두리 추가 */
+        }
+
+        .slider .btn {
+            position: absolute;
+            top: 50%;
+            width: 35px;
+            height: 35px;
+            background:url('images/arrow.png') center center no-repeat;
+            background-size: cover;
+            text-indent: -999em;
+            cursor: pointer;
+            z-index: 10;
+            transform: translateY(-50%);
+        }
+
+        .slider .btn.btn_prev {
+            left: 0;
+            transform: rotateY(180deg) translateY(-50%);
+        }
+
+        .slider .btn.btn_next {
+            right: 0;
+            transform: translateY(-50%);
+        }
+/* ============ 캐러셀 CSS 코드 끝==================*/
+
+/* ============ 운동시간 CSS 30분단위 ============  */
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .duration {
+            font-size: 24px;
+            color: white;
+        }
+/* ============ 운동시간 CSS 30분단위 ============  */
+</style>
+<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+
+
+
+
+
+  
+    <!-- 뒤로가기 와 기록추가버튼 -->
+    <div style="float:left">
+      <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀ 뒤로가기</span>
+    </div>
+    <div id="btn_insert" style="float:right; ">
+    </div>
+    <div style="clear: both;">
+    </div>
+    <!-- 뒤로가기 와 기록추가버튼 -->
+    
+    
+    
+    <br>
+    <div>
+      <span style="color: white; font-size: 24px;">운동 기록</span>
+    </div>
+    <div>
+      <span id="msg"style="color: red; font-size: 13px;"></span>
+    </div>
+    
+  <div>
+
+
+    <!-- 캐러셀 슬라이드 -->
+    <div class="slider">
+        <div class="inner swiper-container">
+            <ul class="swiper-wrapper slide_list">
+                <li class="swiper-slide">
+                    <img src="/history/images/health.jpg" alt="헬스 이미지">
+                    <span style="color: white;">헬스</span>
+                </li>
+                <li class="swiper-slide">
+                    <img src="/history/images/running.jpg" alt="유산소 이미지">
+                    <span style="color: white;">유산소</span>
+                </li>
+                <li class="swiper-slide">
+                    <img src="/history/images/mountain.jpg" alt="등산 이미지">
+                    <span style="color: white;">등산</span>
+                </li>
+                <li class="swiper-slide">
+                    <img src="/history/images/tenis.jpg" alt="기타스포츠 이미지">
+                    <span style="color: white;">기타</span>
+                </li>
+            </ul>
+        </div>
+        <span class="btn btn_prev">이전</span>
+        <span class="btn btn_next">다음</span>
+    </div>
+    <!-- 캐러셀 슬라이드 -->
+
+
+  </div>
+  <br>
+  
+      <!-- 운동 기록 입력 -->
+      <div>
+        
+        <!-- 운동명 입력 -->
+       <input id="exname" name="exname" class="form-control form-control-lg" type="text"
+            aria-label=".form-control-lg example"
+           th:value="${historyVO != null ? historyVO.exname : ''}">
+        <br>
+        <div id="selectedExercise" style="display: none;"></div>
+        
+        <!-- 날짜 입력 -->
+        <div style="display: flex;">
+          <input type="text" th:value="${historyVO != null ? historyVO.recorddate.substring(0,10) : ''}" class="form-control" id="event_date" name="recorddate" style="padding:10px; width: 80%;">
+          <span style="font-size: 17px; color: white; margin-top:10px;">날짜 입력</span>
+        </div>
+        <br>
+        <!-- 칼로리 입력 -->
+        <div style="display: flex;">
+          <input id="hiscalorie" name="hiscalorie" th:value="${historyVO != null ? historyVO.hiscalorie : ''}" class="form-control form-control-lg" type="text"
+          style="width: 80%;" placeholder="칼로리" aria-label=".form-control-lg example">
+          <span style="font-size: 24px; color: white; margin: auto;">kcal</span>
+        </div>
+        <br>
+        
+
+        
+        <!-- 운동 시간 입력 -->
+        <span style="font-size: 17px; color: white;">운동 시간(30분 단위)</span>
+        <div class="container">
+          <button class="btn btn-primary" id="decrease">-</button>
+          <div id="duration" name="duration" class="duration" th:text="${historyVO.duration != null ? historyVO.duration : 0}">0</div>
+          <button class="btn btn-primary" id="increase">+</button>
+        </div>
+        <br>
+        
+        <!-- 메모 입력 -->
+        <div class="mb-3">
+          <label for="notes" class="form-label">운동 메모</label>
+          <textarea id="notes" name="notes" th:text="${historyVO != null ? historyVO.notes : ''}"  class="form-control" placeholder="메모를 입력하세요..." rows="3"></textarea>
+        </div>
+        
+
+        
+      </div>
+      <!-- 운동 기록 입력 -->
+    
+    <br>
+    <br>
+    <div id="btn_update" style="text-align: center; border-radius: 7px; padding: 12px; background-color: #2e2d2d;">    
+      <span style="font-size: 20px; color: #58FAAC;">수 정 하 기</span>
+    </div>
+    
+
+   <!-- 캐러셀 자바스크립트 코드 -->       
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        // 달력 jquery
+        $(document).ready(function() {
+            $("#event_date").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "c-100:c+10" // Adjust as needed
+            });
+        });
+      
+      // 케러셀 자바스크립트 코드
+        $(window).on('load', function () {
+          slider(); 
+          // 슬라이드 항목 클릭 이벤트
+          $('.swiper-slide').on('click', function() {
+                let selectedValue = $(this).text();
+                $('#selectedExercise').text(selectedValue); // 값 저장
+
+                // 모든 슬라이드에서 selected 클래스 제거
+                $('.swiper-slide').removeClass('selected');
+
+                // 클릭된 슬라이드에 selected 클래스 추가
+                $(this).addClass('selected');
+
+                console.log("Selected Exercise: " + selectedValue); // 콘솔에 출력
+            });
+        });
+              
+
+        
+              
+        function slider(){
+            $(".slider").each(function(index){
+                let $this = $(this);
+                let swiper = undefined;
+                let slideNum =  $this.find('.swiper-slide').length; //슬라이드 총 개수
+                let slideInx = 0; //현재 슬라이드 index
+                
+                //디바이스 체크
+                let oldWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+                sliderAct();
+                $(window).on('resize', function () {
+                    let newWChk = window.innerWidth > 768 ? 'pc' : 'mo';
+                    if(newWChk != oldWChk){
+                        oldWChk = newWChk;
+                        sliderAct();
+                    }
+                });
+
+                function sliderAct(){
+                    //슬라이드 인덱스 클래스 추가
+                    $this.addClass(`slider${index}`);
+
+                    //슬라이드 초기화 
+                    if (swiper != undefined){ 
+                        swiper.destroy();
+                        swiper = undefined;
+                    }
+
+                    //slidesPerView 옵션 설정
+                    let viewNum = oldWChk == 'pc' ? 5 : 2;
+                    //loop 옵션 체크
+                    let loopChk = slideNum > viewNum;
+
+                    swiper = new Swiper(`.slider${index} .swiper-container`, {
+                        slidesPerView: viewNum,
+                        initialSlide :slideInx,
+                        spaceBetween: 10,
+                        slidesPerGroup: 1,
+                        loop: loopChk,
+                        navigation: {
+                            prevEl: $(`.slider${index} .btn_prev`)[0],
+                            nextEl: $(`.slider${index} .btn_next`)[0],
+                        },
+                        on: {
+                            activeIndexChange: function () {
+                                slideInx = this.realIndex; //현재 슬라이드 index 갱신
+                            }
+                        },
+                    });
+                }
+            });
+        }
+        
+        
+        
+         document.getElementById('btn_update').addEventListener('click', (event) => {
+          var msg = document.getElementById('msg').innerHTML=""; // msg 초기화
+          insert_history()
+        })
+
+        function insert_history(){
+          
+          var msg = document.getElementById('msg');
+            
+          let exname = document.getElementById("exname").value;
+          if (exname.trim() === "") { // 공백일 경우 함수 종료
+              msg.innerHTML = "운동명을 입력하세요.";
+              return;
+          }
+          let extype = document.getElementById("selectedExercise").innerText; // 선택된 운동 유형 가져오기
+          if (extype === "") { // 공백일 경우 함수 종료
+              msg.innerHTML = "운동 유형을 선택해주세요.";
+              return;
+          }
+          let recorddate = document.getElementById("event_date").value;
+          console.log(recorddate);
+          if (recorddate === "") {
+            msg.innerHTML = "날짜를 입력해주세요.";
+            return;
+          }
+          let hiscalorie = document.getElementById("hiscalorie").value.trim();
+          if(hiscalorie === ""){
+            msg.innerHTML = "칼로리를 입력해주세요.";
+            return;
+          }
+
+          
+          if (isNaN(hiscalorie) || hiscalorie <= 0) { // hiscalorie가 숫자가 아니거나 0보다 작거나 같은 경우
+            msg.innerHTML = "유효한 칼로리 값을 입력해주세요.";
+            return;
+          }
+          let duration = document.getElementById("duration").innerText;
+          if (duration === "") {
+            msg.innerHTML = "운동 시간을 입력해주세요.";
+            return;
+          }
+
+          let notes = document.getElementById("notes").value.trim() || "No notes";     
+          let memberno = '[[${session.memberno}]]';   
+         
+
+          fetch('/history/history_record_proc' , {
+            method : 'POST',
+            headers: {
+              'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
+            },
+            body: JSON.stringify({
+              exname:exname,
+              extype:extype,
+              hiscalorie:parseInt(hiscalorie), // 정수로 변환
+              duration:duration,
+              recorddate:recorddate,
+              notes:notes,
+              memberno:memberno
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data['cnt'] == 1){
+              console.log('성공;');
+              window.location.href = '/history/history_form';
+              
+            } else{
+              console.log('실패');
+              msg.innerHTML = '입력을 똑바로 해주시오'
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+        
+        
+        
+        // 운동 시간 조절 버튼 클릭 이벤트 핸들러
+        document.getElementById('decrease').addEventListener('click', () => {
+            let durationElement = document.getElementById("duration");
+            let duration = parseInt(durationElement.innerText, 10);
+            if (duration - 30 >= 0) {
+                duration -= 30;
+                durationElement.innerText = duration;
+            }
+        });
+        
+        document.getElementById('increase').addEventListener('click', () => {
+            let durationElement = document.getElementById("duration");
+            let duration = parseInt(durationElement.innerText, 10);
+            duration += 30;
+            durationElement.innerText = duration;
+        });
+    </script>
+    <!-- 캐러셀 자바스크립트 코드 끝 -->
+
+    
+    
+  </div>
+</html>

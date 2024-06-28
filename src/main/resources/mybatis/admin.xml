@@ -5,18 +5,6 @@
 <mapper namespace="dev.mvc.admin.AdminDAOInter">
 
 
-  <!-- (o)  중복 아이디 검사 || 존재 1, 없으면 0 -->
-  <select id="checkID" resultType="int" parameterType="String">
-    SELECT COUNT(id) as cnt
-    FROM admins
-    WHERE id=#{id}
-  </select>
-  
-  <!-- (o) 회원 가입 || (참고) 시퀀스 명 디비랑 일치하는지 비교해야함 //member_seq// , 회원 이미지 : profile 설계 필요  -->
-  <insert id="create" parameterType="dev.mvc.admin.AdminVO">
-    INSERT INTO admins(adminsno, id, passwd, aname, adate, grade)
-    VALUES (admin_seq.nextval, #{id}, #{passwd}, #{aname}, sysdate, #{grade})
-  </insert>
 
   <!-- (o) 회원 전체 목록 || profile (X) -->
   <select id="list" resultType="dev.mvc.admin.AdminVO">
@@ -51,15 +39,5 @@
     SET aname=#{aname}, passwd=#{passwd}
     WHERE adminsno=#{adminsno}
   </update>
-
-
-  
-  <!-- (o) 회원 삭제 처리 || 탈퇴 성공 : 1, 실패 : 0 -->
-  <!-- 회원등급 -> 일반회원: 1, 정지회원: 2, 탈퇴회원: 3 -->
-  <delete id="delete" parameterType="int">
-    DELETE FROM admins
-    WHERE adminsno=#{adminsno}
-  </delete>
-
 
 </mapper>

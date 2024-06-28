@@ -161,11 +161,20 @@
                     <!-- admin 권한 -->
                     <div style="display: flex; justify-content: space-around;">
                              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
-                                 aria-controls="navbarSupportedContent" >관리자 등록
+                                 aria-controls="navbarSupportedContent" >관리자
                              </button> 
                      </div>
                      <div class="collapse navbar-collapse" id="navDropdown1">
                           <ul class="nav-top" style="font-size: 10px;">
+                          
+                            <!-- 관리자 -->
+                            <a class="review_title_line" th:if="${session.adminno == null}" th:href="@{/admin/login_need}" >관리자로그인 </a>
+
+                            <a class="review_title_line" th:if="${session.adminno != null}" th:href="@{|/admin/read?adminno=${session.adminno}|}">정보</a>
+                            
+                            <!-- 관리자 로그인시 로그아웃 -->
+                            <a class="review_title_line" th:if="${session.adminno != null}" href="/admin/logout">로그아웃</a>
+                          
                             <!-- admin 전체 회원 목록 -->
                                 <div style="display: flex; justify-content: space-around;">
                                     <a class="review_title_line" href="/member/list">회원 목록</a>

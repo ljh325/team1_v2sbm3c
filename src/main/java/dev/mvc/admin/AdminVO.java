@@ -1,5 +1,9 @@
 package dev.mvc.admin;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter@Setter
 public class AdminVO {
   /** 관리자 번호*/
   private int adminsno;
@@ -14,42 +18,6 @@ public class AdminVO {
   /** 등급 */
   private int grade;
   
-  public int getAdminsno() {
-    return adminsno;
-  }
-  public void setAdminno(int adminsno) {
-    this.adminsno = adminsno;
-  }
-  public String getId() {
-    return id;
-  }
-  public void setId(String id) {
-    this.id = id;
-  }
-  public String getPasswd() {
-    return passwd;
-  }
-  public void setPasswd(String passwd) {
-    this.passwd = passwd;
-  }
-  public String getAname() {
-    return aname;
-  }
-  public void setAname(String aname) {
-    this.aname = aname;
-  }
-  public String getAdate() {
-    return adate;
-  }
-  public void setAdate(String adate) {
-    this.adate = adate;
-  }
-  public int getGrade() {
-    return grade;
-  }
-  public void setGrade(int grade) {
-    this.grade = grade;
-  }
-  
+
   
 }

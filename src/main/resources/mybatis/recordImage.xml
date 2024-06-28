@@ -46,10 +46,22 @@
     WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
   </select> 
   
+  <!-- 기록 별 이미지 하나조회 -->
+  <select id="one_images_read" resultType="dev.mvc.recordImage.RecordImageVO" parameterType="int">
+    SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno
+    FROM (
+        SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, exrecordno, memberno,
+               ROW_NUMBER() OVER (PARTITION BY exrecordno ORDER BY recimageno) AS rn
+        FROM recordimage
+        WHERE memberno = #{memberno}
+    )
+    WHERE rn = 1
+  </select>
+  
   
   <!-- 회원별 총 이미지 수 -->
   <select id="rec_images_cnt" resultType="int" parameterType="int">
-    SELECT count(*)
+    SELECT COUNT(DISTINCT exrecordno) 
     FROM recordimage
     WHERE memberno = #{memberno}
   </select>  

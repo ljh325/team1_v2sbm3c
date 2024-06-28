@@ -68,6 +68,7 @@ prompt3 ='''
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
         {"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},
+        ]
     },
     {
       "day": "화요일",

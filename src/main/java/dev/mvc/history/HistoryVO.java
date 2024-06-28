@@ -31,6 +31,8 @@ public class HistoryVO {
   private int duration;
   /** 메모 */
   private String notes;
+  /* 기록 날짜 */
+  private String recorddate;
   /** 등록날짜 */
   private String startdate;
   /** 회원번호 */
@@ -39,5 +41,7 @@ public class HistoryVO {
   private int total_exercises;
   
   private String start_date;
+  
+  
 
 }

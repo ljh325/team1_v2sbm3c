@@ -1,7 +1,9 @@
 // version 1.0
 package dev.mvc.tool;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
@@ -182,79 +184,61 @@ public class Tool {
   }
   
   
-  public static synchronized String preview2(String upDir, String _src,int foodcode, int width,  int height) {
+  
+  public static synchronized String preview2(String upDir, String _src, int foodcode, int width, int height) {
     int RATIO = 0;
     int SAME = -1;
- 
+
     File src = new File(upDir + "/" + _src); // 원본 파일 객체 생성
     String srcname = src.getName(); // 원본 파일명 추출
- 
+
     // 순수 파일명 추출, mt.jpg -> mt 만 추출
     String _dest = srcname.substring(0, srcname.indexOf("."));
- 
-    // 축소 이미지 조합 /upDir/mt_t.jpg
+
+    // 축소 이미지 조합 /upDir/f[foodcode].png
     File dest = new File(upDir + "/f" + foodcode + ".png");
- 
-    Image srcImg = null;
- 
-    String name = src.getName().toLowerCase(); // 파일명을 추출하여 소문자로 변경
-    // 이미지 파일인지 검사
-    if (name.endsWith("jpg") || name.endsWith("bmp") || name.endsWith("png")
-        || name.endsWith("gif")) {
-      try {
-        srcImg = ImageIO.read(src); // 메모리에 원본 이미지 생성
-        int srcWidth = srcImg.getWidth(null); // 원본 이미지 너비 추출
-        int srcHeight = srcImg.getHeight(null); // 원본 이미지 높이 추출
-        int destWidth = -1, destHeight = -1; // 대상 이미지 크기 초기화
- 
-        if (width == SAME) { // width가 같은 경우
-          destWidth = srcWidth;
-        } else if (width > 0) {
-          destWidth = width; // 새로운 width를 할당
+
+    try {
+        BufferedImage srcImg = ImageIO.read(src); // 메모리에 원본 이미지 생성
+        if (srcImg == null) {
+            throw new IllegalArgumentException("Invalid image file: " + src.getPath());
         }
- 
-        if (height == SAME) { // 높이가 같은 경우
-          destHeight = srcHeight;
-        } else if (height > 0) {
-          destHeight = height; // 새로운 높이로 할당
-        }
- 
+
+        int srcWidth = srcImg.getWidth(); // 원본 이미지 너비 추출
+        int srcHeight = srcImg.getHeight(); // 원본 이미지 높이 추출
+        int destWidth = width;
+        int destHeight = height;
+
         // 비율에 따른 크기 계산
         if (width == RATIO && height == RATIO) {
-          destWidth = srcWidth;
-          destHeight = srcHeight;
+            destWidth = srcWidth;
+            destHeight = srcHeight;
         } else if (width == RATIO) {
-          double ratio = ((double) destHeight) / ((double) srcHeight);
-          destWidth = (int) ((double) srcWidth * ratio);
+            double ratio = (double) destHeight / (double) srcHeight;
+            destWidth = (int) ((double) srcWidth * ratio);
         } else if (height == RATIO) {
-          double ratio = ((double) destWidth) / ((double) srcWidth);
-          destHeight = (int) ((double) srcHeight * ratio);
+            double ratio = (double) destWidth / (double) srcWidth;
+            destHeight = (int) ((double) srcHeight * ratio);
         }
- 
-        // 메모리에 대상 이미지 생성
-        Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight,
-            Image.SCALE_SMOOTH);
-        int pixels[] = new int[destWidth * destHeight];
-        PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth,
-            destHeight, pixels, 0, destWidth);
- 
-        pg.grabPixels();
- 
-        BufferedImage destImg = new BufferedImage(destWidth, destHeight,
-            BufferedImage.TYPE_INT_RGB);
-        destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
- 
+
+        // 대상 이미지 생성
+        BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = destImg.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(srcImg, 0, 0, destWidth, destHeight, null);
+        g2d.dispose();
+
         // 파일에 기록
         ImageIO.write(destImg, "png", dest);
- 
+
         System.out.println(dest.getName() + " 이미지를 생성했습니다.");
-      } catch (Exception e) {
+    } catch (Exception e) {
         e.printStackTrace();
-      }
     }
- 
+
     return dest.getName();
-  }
+}
+  
   
   /**
    * 전송 가능한 파일인지 검사
@@ -464,13 +448,13 @@ public class Tool {
       String path = "";
       if (File.separator.equals("\\")) {
           // Windows 개발시 사용 폴더
-          path = "C:/kd/deploy/team1_v2sbm3c";
+          path = "C:/kd/deploy/resort_v4sbm3c";
 
       } else {
           // Linux 배포
           // 기본 명령어
           // pwd: 현재 경로 확인, mkdir deploy: 폴더 생성, cd deploy: 폴더 이동, rmdir resort_v2sbm3c: 폴더 삭제, cd ..: 상위 폴더로 이동 
-          path = "/home/ubuntu/deploy/team1_v2sbm3c";
+          path = "/home/ubuntu/deploy/resort_v4sbm3c";
       }
       // System.out.println("path: " + path);
       

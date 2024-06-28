@@ -78,6 +78,12 @@ public class HistoryProc implements HistoryProcInter{
     return max;
   }
 
+  @Override
+  public int ex_cnt(int exrecordno) {
+    int cnt = this.historyDAO.ex_cnt(exrecordno);
+    return cnt;
+  }
+
   
   
 

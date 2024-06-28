@@ -104,7 +104,7 @@
       <span style="color: #D8D8D8;"><i style="color:white; font-size: 20px;" class="bi bi-bar-chart-line"></i>&nbsp;&nbsp;그래프를 표시합니다.</span>
     </div>
     <br>
-    
+     <div th:if="|${mhVO != null && goalsVO != null}|">
      <!-- 아코디언 시작 -->
      <div id="Accordion_wrap">
        <!-- 현재 체중 분석 -->
@@ -225,7 +225,10 @@
        
      </div>
      <!-- 아코디언 종료 -->
-      
+     </div>
+     <div th:if="|${mhVO == null ||  goalsVO == null}|">
+       <span>현재 체중과 목표체중을 입력해주세요.</span>
+     </div>
       
       
       

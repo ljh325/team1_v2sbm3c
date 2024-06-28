@@ -8,19 +8,7 @@ import jakarta.servlet.http.HttpSession;
 
 public interface AdminProcInter {
   
-  /**
-   * 관리자 아이디 중복 검사
-   * @param id
-   * @return 중복 아이디 갯수
-   */
-  public int checkID(String id);
-  
-  /**
-   * 관리자 가입
-   * @param adminVO
-   * @return 추가한 레코드 갯수
-   */
-  public int create(AdminVO adminVO);
+
   
   /**
    * 관리자 전체 목록
@@ -70,25 +58,5 @@ public interface AdminProcInter {
   public int update(AdminVO adminVO);
   
 
- 
-  /**
-   * 관리자 삭제 처리
-   * @param memberno
-   * @return
-   */
-  public int delete(int adminsno);
-  
-  /**
-   * 현재 패스워드 검사
-   * @param map
-   * @return 0: 일치하지 않음, 1: 일치함
-   */
-  public int passwd_check(HashMap<String, Object> map);
-  
-  /**
-   * 패스워드 변경
-   * @param map
-   * @return 변경된 패스워드 갯수
-   */
-  public int passwd_update(HashMap<String, Object> map);
+
 }

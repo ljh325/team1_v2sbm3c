@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+//======================= 주찬 ========================//
+                /* Table Name: 팔로우팔로잉 */
+
+/**********************************/
+/* Table Name: 팔로우팔로잉 */
+/**********************************/
+    FOLLOWER_NO                         NUMBER(10)     NOT NULL,
+    FOLLOWED_NO                       NUMBER(10)     NOT NULL,
+    FOLLOW_DATE                       DATE     NULL ,
+  PRIMARY KEY (FOLLOWER_NO, FOLLOWED_NO),
+  FOREIGN KEY (FOLLOWER_NO) REFERENCES MEMBER(MEMBERNO),
+  FOREIGN KEY (FOLLOWED_NO) REFERENCES MEMBER(MEMBERNO)
+-->
+<mapper namespace="dev.mvc.follows.FollowsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 팔로우 관계를 추가 -->
+  <insert id="insert_history" parameterType="dev.mvc.follows.FollowsVO">
+    INSERT INTO Follows (follower_no, followed_no, follow_date) VALUES (#{follower_no}, #{followed_no}, sysdate);
+  </insert>
+
+
+
+
+
+
+  <!-- (o)  회원별 운동기록 리스트조회 -->
+  <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="dev.mvc.history.HistoryVO">
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate , exupdatedate, memberno
+    FROM history
+    WHERE memberno = #{memberno} AND TRUNC(recorddate) = TO_DATE(#{recorddate}, 'YYYY-MM-DD')
+    ORDER BY recorddate DESC
+  </select>  
+  
+  <!-- (o)  회원별 운동기록 상세 목록조회 -->
+  <select id="record_read" resultType="dev.mvc.history.HistoryVO" parameterType="map">
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate, exupdatedate, memberno
+    FROM history
+    WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
+  </select> 
+  
+  
+  <!-- 회원별 + 날짜별 총 운동 시간(time) -->
+  <select id="time_for_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT TRUNC(recorddate) AS recorddate, SUM(duration) AS total_duration
+    FROM history
+    WHERE memberno = #{memberno}
+    GROUP BY TRUNC(recorddate)
+    ORDER BY TRUNC(recorddate)
+  </select>  
+  
+  <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
+  <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
+    SELECT TRUNC(recorddate) AS recorddate, COUNT(*) AS total_exercises
+    FROM history
+    WHERE memberno = #{memberno}
+    GROUP BY TRUNC(recorddate)
+    ORDER BY TRUNC(recorddate)
+  </select>  
+  
+  <!-- 회원 운동 기록 전체 시간  -->
+  <select id="all_count" resultType="int" parameterType="int">
+    SELECT SUM(DURATION)
+    FROM HISTORY
+    WHERE MEMBERNO = #{memberno}
+  </select>  
+ 
+  <!-- 운동기록번호의 최댓값 -->
+  <select id="exrecordno_max" resultType="int">
+    SELECT MAX(exrecordno) as exrecordno
+    FROM history
+  </select>
+  
+  <!-- 운동기록 총 갯수 -->
+  <select id="ex_cnt" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM history
+    WHERE exrecordno=#{exrecordno}
+  </select>
+  
+  <!-- 운동 기록 수정 -->
+  <update id="history_update" parameterType="dev.mvc.history.HistoryVO">
+    UPDATE history
+    SET exname = #{exname}, extype=#{extype}, hiscalorie= #{hiscalorie}, duration=#{duration},  notes=#{notes}, recorddate=#{recorddate}, exupdatedate=sysdate
+    WHERE exrecordno = #{exrecordno}
+  </update>
+
+  <!-- 운동 기록 부분 삭제 -->
+  <delete id="delete_sectoin_history" parameterType="HashMap">
+    DELETE FROM history
+    WHERE memberno = #{memberno} AND exrecordno = #{exrecordno}
+  </delete>
+  
+  <!-- 날짜별 운동 기록 삭제 -->
+  <delete id="delete_date_history" parameterType="HashMap">
+      DELETE FROM history
+      WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+  </delete>
+
+
+</mapper>

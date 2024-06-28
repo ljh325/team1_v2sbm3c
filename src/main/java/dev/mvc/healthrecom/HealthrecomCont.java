@@ -80,7 +80,7 @@ public class HealthrecomCont {
 //    return "healthrecom/read";
 //    }
 //    else {
-//      return "index";
+//      return "redirect:/member/login";
 //    }
 // 
 //
@@ -125,7 +125,7 @@ public class HealthrecomCont {
     return "healthrecom/read";
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
   
   }
@@ -151,7 +151,7 @@ public class HealthrecomCont {
 
   return "/healthrecom/create"; // /healthrecom/list_all.html
   }else {
-    return "index";
+    return "redirect:/member/login";
   }
 
   }
@@ -204,7 +204,7 @@ public class HealthrecomCont {
       
     }
    }else {
-     return "index";
+     return "redirect:/member/login";
     }
    }
   
@@ -227,7 +227,7 @@ public class HealthrecomCont {
 //    return "/healthrecom/list_all"; // /healthrecom/list_all.html
 //    }else
 //    {
-//    return "index"; // /healthrecom/list_all.html
+//    return "redirect:/member/login"; // /healthrecom/list_all.html
 //    }
 //  }
 //  
@@ -265,7 +265,7 @@ public class HealthrecomCont {
    return "/healthrecom/list_all"; // /healthrecom/list_all.html
    }else
    {
-   return "index"; // /healthrecom/list_all.html
+   return "redirect:/member/login"; // /healthrecom/list_all.html
    }
  }
   
@@ -287,7 +287,7 @@ public class HealthrecomCont {
 // 
 //    }
 //    else {
-//      return "index";
+//      return "redirect:/member/login";
 //    }
 //
 //   
@@ -329,7 +329,7 @@ public class HealthrecomCont {
  
     }
     else {
-      return "index";
+      return "redirect:/member/login";
     }
 
    
@@ -366,7 +366,7 @@ public class HealthrecomCont {
 //       }
 //    }
 //    else {
-//      return "index";
+//      return "redirect:/member/login";
 //    }
 //
 //  
@@ -418,7 +418,7 @@ public class HealthrecomCont {
       }
       return obj.toString();
       } else {
-      return "index";
+      return "redirect:/member/login";
       }
   
   }

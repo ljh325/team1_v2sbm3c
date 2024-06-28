@@ -2,7 +2,9 @@
 <html layout:decorate="~{layout}">
   <!-- layout.html 상속 -->
   <div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <style>
   body{
     background-color: black;
@@ -175,6 +177,13 @@
         <input id="exname" name="exname" class="form-control form-control-lg" type="text" placeholder="운동명" aria-label=".form-control-lg example">
         <br>
         <div id="selectedExercise" style="display: none;"></div>
+        
+        <!-- 날짜 입력 -->
+        <div style="display: flex;">
+          <input type="text" class="form-control" id="event_date" name="recorddate" style="padding:10px; width: 80%;" placeholder="날짜를 선택하세요.">
+          <span style="font-size: 17px; color: white; margin-top:10px;">날짜 입력</span>
+        </div>
+        <br>
         <!-- 칼로리 입력 -->
         <div style="display: flex;">
           <input id="hiscalorie" name="hiscalorie" class="form-control form-control-lg" type="text"
@@ -182,6 +191,8 @@
           <span style="font-size: 24px; color: white; margin: auto;">kcal</span>
         </div>
         <br>
+        
+
         
         <!-- 운동 시간 입력 -->
         <span style="font-size: 17px; color: white;">운동 시간(30분 단위)</span>
@@ -198,11 +209,7 @@
           <textarea id="notes" name="notes" class="form-control" placeholder="메모를 입력하세요..." rows="3"></textarea>
         </div>
         
-        <!-- 이미지 입력 -->
-        <div class="input-group mb-3">
-          <input type="file" class="form-control" id="inputGroupFile02">
-          <label class="input-group-text" for="inputGroupFile02">Upload</label>
-        </div>
+
         
       </div>
       <!-- 운동 기록 입력 -->
@@ -217,7 +224,19 @@
    <!-- 캐러셀 자바스크립트 코드 -->       
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        // 달력 jquery
+        $(document).ready(function() {
+            $("#event_date").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "c-100:c+10" // Adjust as needed
+            });
+        });
+      
+      // 케러셀 자바스크립트 코드
         $(window).on('load', function () {
           slider(); 
           // 슬라이드 항목 클릭 이벤트
@@ -312,21 +331,29 @@
               msg.innerHTML = "운동 유형을 선택해주세요.";
               return;
           }
+          let recorddate = document.getElementById("event_date").value;
+          console.log(recorddate);
+          if (recorddate === "") {
+            msg.innerHTML = "날짜를 입력해주세요.";
+            return;
+          }
           let hiscalorie = document.getElementById("hiscalorie").value.trim();
           if(hiscalorie === ""){
             msg.innerHTML = "칼로리를 입력해주세요.";
             return;
           }
+
+          
           if (isNaN(hiscalorie) || hiscalorie <= 0) { // hiscalorie가 숫자가 아니거나 0보다 작거나 같은 경우
             msg.innerHTML = "유효한 칼로리 값을 입력해주세요.";
             return;
           }
           let duration = document.getElementById("duration").innerText;
-          if (duration === "") {
+          if (duration === "0") {
             msg.innerHTML = "운동 시간을 입력해주세요.";
             return;
           }
-          alert("duration-->" + duration)
+
           let notes = document.getElementById("notes").value.trim() || "No notes";     
           let memberno = '[[${session.memberno}]]';   
          
@@ -341,6 +368,7 @@
               extype:extype,
               hiscalorie:parseInt(hiscalorie), // 정수로 변환
               duration:duration,
+              recorddate:recorddate,
               notes:notes,
               memberno:memberno
             })

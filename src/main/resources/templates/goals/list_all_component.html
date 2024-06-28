@@ -126,7 +126,7 @@
    
         </div>
       </div>
-      <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+      <div style="background-color: rgb(192, 192, 192); border-radius: 10px; height: auto; padding: 15px;">
         <div class="row title">
           <div class="column"><span>체중</span></div>
           <div class="column"><span>신장</span></div>
@@ -142,9 +142,16 @@
       </div><br>
     </div>
     
-     <div th:if="${foodrecomVO == null}" style="text-align: center;">
-   
-    </div>
+  <div th:unless="${goalsVO != null}" style="text-align: center;">
+
+    <br>
+    <br>
+    <span style="font-size: 17px;">저장된 정보가 없습니다.</span>
+    <br>
+    <br>
+    <br>
+ 
+  </div>
     
   </div>
 </div>

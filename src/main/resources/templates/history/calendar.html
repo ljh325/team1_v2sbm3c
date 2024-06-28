@@ -90,15 +90,15 @@
           if (info.event.title.includes('개')) {
             // 날짜 형식을 YYYY-MM-DD로 변환
             var date = new Date(info.event.start);
-            var startdate = date.toLocaleDateString('ko-KR', {
+            var recorddate = date.toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',
               day: '2-digit' // 까지의 결과 2024.06.22.
             }).replace(/\./g, '-').replace(/ /g, '').substring(0,10).toString(); 
             // yyyy-mm-dd .을 -로 변환, 0~ 10자리까지만 출력, 문자열로 변환
-            console.log('formattedDate-->' +startdate);
+            console.log('formattedDate-->' +recorddate);
             
-            sendStartDateToParent(startdate);
+            sendStartDateToParent(recorddate);
           }
         }
       }); // new FullCalendar 종료
@@ -141,11 +141,11 @@
     
     
     // startdate를 부모 창으로 전달하는 함수
-    function sendStartDateToParent(startdate) {
-        let startDate = startdate;
+    function sendStartDateToParent(recorddate) {
+        let recordDate = recorddate;
         
-        if (window.parent && startDate) {
-            window.parent.postMessage({ startDate: startDate }, '*'); // http://localhost:9093 또는 '*'
+        if (window.parent && recordDate) {
+            window.parent.postMessage({ recordDate: recordDate }, '*'); // http://localhost:9093 또는 '*'
         }
     }
 
