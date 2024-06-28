@@ -39,5 +39,7 @@ public class HistoryVO {
   private int total_exercises;
   
   private String start_date;
+  
+  
 
 }

@@ -1,6 +1,6 @@
 package dev.mvc.history;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.goals.GoalsProcInter;
 import dev.mvc.goals.GoalsVO;
@@ -24,6 +27,11 @@ import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhProcInter;
 import dev.mvc.mh.MhVO;
+import dev.mvc.recordImage.RecordImage;
+import dev.mvc.recordImage.RecordImageProcInter;
+import dev.mvc.recordImage.RecordImageVO;
+import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -50,6 +58,10 @@ public class HistoryCont {
   @Autowired
   @Qualifier("dev.mvc.mh.MhProc")
   private MhProcInter mhProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.recordImage.RecordImageProc")
+  private RecordImageProcInter recordImageProc;
   
   public HistoryCont() {
     System.out.println("-> HistoryCont created.");  
@@ -112,26 +124,206 @@ public class HistoryCont {
    * @return
    */
   @GetMapping(value="/history_record_form")
-  public String history_record_form(Model model) {
+  public String history_record_form(Model model, HttpSession session) {
     
-    return "history/history_record_form";
-    
+    if (this.memberProc.isMember(session)) {
+      
+      return "history/history_record_form";
+    }
+    else {
+      return "member/login";
+    } 
   }
   
-  
+  /**
+   * 운동 정보 기록
+   * @param model
+   * @param historyVO
+   * @return
+   */
   @PostMapping(value="/history_record_proc")
   @ResponseBody
-  public String history_record_proc(Model model, @RequestBody HistoryVO historyVO) {
+  public String history_record_proc(Model model, 
+                                    @RequestBody HistoryVO historyVO,
+                                    HttpSession session) {
     
     JSONObject obj = new JSONObject();
     
     int cnt = this.historyProc.insert_history(historyVO);
+    
     System.out.println("cnt->" + cnt);
     obj.put("cnt", cnt);
   
+    if (cnt == 1) {
+      
+    }
+    
+//    // ------------------------------------------------------------------------------
+//    // 파일 전송 코드 시작
+//    // ------------------------------------------------------------------------------
+//    String profile = "";          // 원본 파일명 image
+//    String profilesaved = "";   // 저장된 파일명, image
+//    String thumbs = "";     // preview image
+//
+//    String upDir =  RecordImage.getUploadDir(); // 파일을 업로드할 폴더 준비
+//    System.out.println("-> upDir: " + upDir);
+//    
+//    // 전송 파일이 없어도 files1MF 객체가 생성됨.
+//    // <input type='file' class="form-control" name='files1MF' id='files1MF' 
+//    //           value='' placeholder="파일 선택">
+//    ArrayList<MultipartFile> mf = recordImageVO.getFiles1MF();
+//    
+//    int count = mf.size(); // 전송 파일 갯수
+//    
+//    if(count > 0) {
+//      for (MultipartFile multipartFile:mf) { // 파일 추출, 1개이상 파일 처리
+//        profile = multipartFile.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+//        System.out.println("-> 원본 파일명 산출 file1: " + profile);
+//        long sizes = multipartFile.getSize(); // 파일 크기
+//        if (sizes > 0) { // 파일 크기 체크, 파일을 올리는 경우
+//          if (Tool.checkUploadFile(profile) == true) { // 업로드 가능한 파일인지 검사
+//            // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+//            profilesaved = Upload.saveFileSpring(multipartFile, upDir); 
+//            
+//            if (Tool.isImage(profilesaved)) { // 이미지인지 검사
+//              // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+//              thumbs = Tool.preview(upDir, profilesaved, 200, 150); 
+//            }
+//
+//            recordImageVO.setRecprofile(profile);   // 순수 원본 파일명
+//            recordImageVO.setRecprofilesaved(profilesaved); // 저장된 파일명(파일명 중복 처리)
+//            recordImageVO.setRecthumbs(thumbs);      // 원본이미지 축소판
+//            recordImageVO.setRecsizes(sizes);  // 파일 크기
+//            
+//            // 이미지 외 나머지 데이터 입력
+//            int exrecordno = this.historyProc.exrecordno_max();
+//            System.out.println("exrecordno->" + exrecordno);
+//            recordImageVO.setExrecordno(exrecordno);
+//            int image_cnt = this.recordImageProc.rec_images_insert(recordImageVO);
+//            model.addAttribute("image_cnt", image_cnt);
+//            if (image_cnt == 1) { // 성공: 1 했을 경우
+//              System.out.println("이미지 등록 성공");
+//            } else { // 실패: 0 
+//              System.out.println("이미지 등록 실패");
+//            }
+//          }else { // 전송 못하는 파일 형식
+//            ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+//            ra.addFlashAttribute("cnt", 0); // 업로드 실패
+//            ra.addFlashAttribute("url", "/member/msg"); // msg.html, redirect parameter 적용
+//             // Post -> Get - param...
+//          }
+//        } else { // 글만 등록하는 경우
+//          System.out.println("-> 글만 등록");
+//        }
+//      }
+//    }
+//    // ------------------------------------------------------------------------------
+//    // 파일 전송 코드 종료
+//    // ------------------------------------------------------------------------------
+
     return obj.toString(); 
   }
   /***************************************************************************************/
+  
+  
+  
+  @GetMapping(value="/activity_record") // http://localhost:9093/history/activity_record
+  public String activity_record(Model model, HttpSession session) {
+    if (this.memberProc.isMember(session)) {
+      
+      return "/history/activity_record";
+    }
+    else {
+      return "member/login";
+    } 
+  }
+  
+  
+  
+  @PostMapping(value="/activity_record_proc")
+  public String activity_record_proc(Model model, 
+                                     RecordImageVO recordImageVO,
+                                     RedirectAttributes ra,
+                                     HttpSession session) {
+    
+    
+  int memberno = (int) session.getAttribute("memberno");
+  
+  System.out.println("Image: memberno ---->" + memberno);
+// ------------------------------------------------------------------------------
+// 파일 전송 코드 시작
+// ------------------------------------------------------------------------------
+  String profile = "";          // 원본 파일명 image
+  String profilesaved = "";   // 저장된 파일명, image
+  String thumbs = "";     // preview image
+
+  String upDir =  RecordImage.getUploadDir(); // 파일을 업로드할 폴더 준비
+  System.out.println("-> upDir: " + upDir);
+  
+  // 전송 파일이 없어도 files1MF 객체가 생성됨.
+  // <input type='file' class="form-control" name='files1MF' id='files1MF' 
+  //           value='' placeholder="파일 선택">
+  ArrayList<MultipartFile> mf = recordImageVO.getFiles1MF();
+  
+  int count = mf.size(); // 전송 파일 갯수
+  
+  if(count > 0) {
+    for (MultipartFile multipartFile:mf) { // 파일 추출, 1개이상 파일 처리
+      profile = multipartFile.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+      System.out.println("-> 원본 파일명 산출 file1: " + profile);
+      long sizes = multipartFile.getSize(); // 파일 크기
+      if (sizes > 0) { // 파일 크기 체크, 파일을 올리는 경우
+        if (Tool.checkUploadFile(profile) == true) { // 업로드 가능한 파일인지 검사
+          // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+          profilesaved = Upload.saveFileSpring(multipartFile, upDir); 
+          
+          if (Tool.isImage(profilesaved)) { // 이미지인지 검사
+            // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+            thumbs = Tool.preview(upDir, profilesaved, 200, 150); 
+          }
+
+          recordImageVO.setRecprofile(profile);   // 순수 원본 파일명
+          recordImageVO.setRecprofilesaved(profilesaved); // 저장된 파일명(파일명 중복 처리)
+          recordImageVO.setRecthumbs(thumbs);      // 원본이미지 축소판
+          recordImageVO.setRecsizes(sizes);  // 파일 크기
+          
+          // 이미지 외 나머지 데이터 입력
+          int exrecordno = this.historyProc.exrecordno_max(); // 운동기록번호중 가장 최대값불러오기
+          System.out.println("exrecordno->" + exrecordno);
+          
+          recordImageVO.setExrecordno(exrecordno);
+          recordImageVO.setMemberno(memberno);
+          
+          // 이미지정보를 디비에 저장하는 코드
+          int cnt = this.recordImageProc.rec_images_insert(recordImageVO);
+          model.addAttribute("cnt", cnt);
+          
+          System.out.println("디비에 이미지 저장 성공?" + cnt);
+          
+          
+          if (cnt == 1) { // 저장성공했을경우 1
+            System.out.println("이미지 등록 성공");
+          } else { // 실패: 0 
+            System.out.println("이미지 등록 실패");
+          }
+        }else { // 전송 못하는 파일 형식
+          ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+          ra.addFlashAttribute("cnt", 0); // 업로드 실패
+          ra.addFlashAttribute("url", "/member/msg"); // msg.html, redirect parameter 적용
+           // Post -> Get - param...
+        }
+      } else { // 글만 등록하는 경우
+        System.out.println("-> 글만 등록");
+      }
+    }
+  }
+  // ------------------------------------------------------------------------------
+  // 파일 전송 코드 종료
+  // ------------------------------------------------------------------------------
+    return "history/recored_ssuccess";
+  }
+  
+  
   
   /**
    * 프로필 활동
@@ -139,9 +331,53 @@ public class HistoryCont {
    * @return
    */
   @GetMapping(value="/profile_activity")
-  public String profile_activity(Model model) {
+  public String profile_activity(Model model, HttpSession session) {
     
-    return "history/profile_activity";
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+      int memberno = (int)session.getAttribute("memberno");
+      
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+      
+      // 회원별 이미지 리스트
+      ArrayList<RecordImageVO> list = this.recordImageProc.one_images_read(memberno);
+      model.addAttribute("list", list);
+      
+      // 회원 별 이미지글 총 수
+      int cnt = this.recordImageProc.rec_images_cnt(memberno);
+      model.addAttribute("cnt", cnt);
+      return "history/profile_activity";
+    }else{
+    return "member/login"; // /member/login.html
+    }
+  }
+  
+  
+  @GetMapping(value="/profile_detail")
+  public String profile_detail(@RequestParam String exrecordno, Model model, HttpSession session) {
+    
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+      int memberno = (int)session.getAttribute("memberno");
+      
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+      
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      
+      map.put("memberno", memberno);
+      map.put("exrecordno", exrecordno);
+      
+      HistoryVO histortyVO = this.historyProc.record_read(map);
+      model.addAttribute("histortyVO", histortyVO);
+      
+      System.out.println("map--> " + map);
+      ArrayList<RecordImageVO> list = this.recordImageProc.rec_images_read(map);
+      model.addAttribute("list", list);
+      System.out.println("list ===> " + list);
+      return "history/profile_detail";
+    }else{
+    return "member/login"; // /member/login.html
+    }
   }
   
   /**
@@ -239,6 +475,13 @@ public class HistoryCont {
   }
   
   
+  /**
+   * 운동 기록 리스트 조회
+   * @param request
+   * @param model
+   * @param session
+   * @return
+   */
   @PostMapping(value="/read_history")
   @ResponseBody
   public String read_history(@RequestBody Map<String, String> request, Model model, HttpSession session) {
@@ -265,6 +508,31 @@ public class HistoryCont {
   }
   
   
+  @GetMapping(value="record_read")
+  public String record_read(@RequestParam String exrecordno, HttpSession session, Model model, HistoryVO historyVO) {
+    //System.out.println("스타또 데이트" + startdate);
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면
+      int memberno = (int)session.getAttribute("memberno"); // 세션에서 memberno를 꺼내옴
+      System.out.println("memberno-->" + memberno);
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      
+      map.put("memberno", memberno);
+      map.put("exrecordno", exrecordno);
+      
+      HistoryVO histortyVO = this.historyProc.record_read(map);
+      model.addAttribute("histortyVO", histortyVO);
+      
+      System.out.println("map--> " + map);
+      ArrayList<RecordImageVO> list = this.recordImageProc.rec_images_read(map);
+      model.addAttribute("list", list);
+      System.out.println("list ===> " + list);
+      return "history/record_read";
+    
+    } else { // 로그인이 안되어있으면
+      return "/member/login";
+    }    
+  }
+  
 //  if (this.memberProc.isMember(session)) {
 //    int memberno = (int)session.getAttribute("memberno");  
 //   
@@ -275,6 +543,13 @@ public class HistoryCont {
 //      return "index";
 //    }
   
+  /**
+   * 운동기록 삭제
+   * @param session
+   * @param model
+   * @param historyVO
+   * @return
+   */
   @PostMapping(value="delete_sectoin_history")
   @ResponseBody
   public String delete_sectoin_history(HttpSession session, Model model,@RequestBody HistoryVO historyVO) {
@@ -287,7 +562,7 @@ public class HistoryCont {
     System.out.println("memberno -> " + memberno);
     map.put("memberno", memberno);
     map.put("exrecordno", historyVO.getExrecordno());
-    
+    int image_cnt = this.recordImageProc.rec_images_delete(historyVO.getExrecordno());
     System.out.println("Exrecordno() -> " + historyVO.getExrecordno());
     int cnt = this.historyProc.delete_sectoin_history(map);
     System.out.println("cnt --> 삭제가 됬을까 : " + cnt);
@@ -328,7 +603,11 @@ public class HistoryCont {
     
     return "history/test2";
   }
-  
+  @GetMapping(value="/fotorama")
+  public String fotorama(Model model) {
+    
+    return "history/fotorama";
+  }
   
   /**
    * ajax 실습

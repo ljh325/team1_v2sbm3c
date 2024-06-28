@@ -1,0 +1,135 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+
+  <style>
+    body {
+      background-color: black;
+    }
+  </style>
+
+  <div style="background-color: white; padding: 14px; text-align: center;">
+    <span style="color: black; font-size: 20px;">기록한 운동</span>
+  </div>
+  <br>
+
+  <div style="background-color: #2e2f30; border-radius: 8px; padding:13px;">
+
+
+    <!-- 기록 날짜 -->
+    <div th:if="${historyVO != null}">
+      <div style="text-align: center; padding: 13px 0 13px 0; background-color:  #778899; border-radius: 7px;">
+        <span th:text="|${histortyVO.startdate.substring(0, 10)} (운동)|" style="color: white; font-size: 20px;"></span>
+      </div>
+      <br>
+
+      <!-- 운동 기록 -->
+      <div style="margin-bottom:10px;">
+        <div class="d-flex justify-content-around">
+          <span style="font-size: 17px; color: white;">운동 유형</span>
+          <span style="font-size: 17px; color: white;">운동 종류</span>
+          <span style="font-size: 17px; color: white;">칼로리(kcal)</span>
+        </div>
+      </div>
+      <div style="background-color: black; padding:12px;  border-radius: 7px;">
+        <div class="d-flex justify-content-around" style="padding:6px;">
+          <span th:text="${histortyVO.extype}" style="font-size: 15px; color: white;"></span>
+          <span th:text="${histortyVO.exname}" style="font-size: 15px; color: white;"></span>
+          <span th:text="|${histortyVO.hiscalorie} kcal|" style="font-size: 15px; color: white;"></span>
+        </div>
+      </div>
+
+
+
+      <br>
+
+      <!-- 운동 시간 -->
+      <div style="text-align: center; font-size: 16px; ">
+        <i class="bi bi-clock-fill" style="font-weight: bold; color: #D3D3D3;"></i>&nbsp;
+        <span style="color: white;">운동 시간: </span>
+        <span th:text="|&nbsp; ${histortyVO.duration} 분|" style="color: white;"></span>
+      </div>
+    </div>
+    <div th:if="${historyVO == null}">
+
+    </div>
+    <br>
+
+    <!-- 이미지 -->
+    <!--<img src="/history/images/no.jpg" style="width: 370px; border-radius: 6px;">-->
+    <div id="carouselExampleFade" class="carousel slide">
+      <div class="carousel-inner">
+        <!-- 데이터가 없는 경우 디폴트 이미지 표시 -->
+        <div th:if="${#lists.isEmpty(list)}" class="carousel-item active">
+          <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+        </div>
+
+        <!-- 데이터가 있는 경우 반복문을 통해 이미지 표시 -->
+        <div th:each="list, status : ${list}">
+          <div th:class="${status.first ? 'carousel-item active' : 'carousel-item'}">
+            <div
+              th:if="${list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')}">
+              <img th:src="@{|/recordImage/storage/${list.recthumbs}|}" class="d-block w-100 profile-img"
+                style="width: 370px;" alt="Image">
+            </div>
+            <div
+              th:if="${((list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')) == false) and (list.recsizes > 0)}">
+              <span th:text="${list.recprofile}"></span>
+            </div>
+            <div th:if="${list.recsizes == 0}">
+              <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+            </div>
+            <div th:if="${list == null}">
+              <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+
+
+
+    <br>
+    <br>
+
+    <!-- 메모 기록 -->
+    <div th:if="${historyVO != null}">
+      <div style="padding:10px;">
+        <span style="color: white; font-size: 20px;">메모</span>
+      </div>
+      <div class="mb-3">
+        <textarea class="form-control" id="exampleFormControlTextarea1" th:text="${histortyVO.notes}" rows="3"
+          disabled></textarea>
+      </div>
+    </div>
+    <div th:if="${historyVO == null}">
+
+    </div>
+
+
+
+
+  </div>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // historyVO가 null인지 확인하고 null인 경우 리다이렉트
+      if ('[[${historyVO == null}]]') {
+        window.location.href = '/history/history_form';
+      }
+    });
+  </script>
+
+</div>
+
+</html>

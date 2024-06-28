@@ -102,6 +102,9 @@ SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS sta
 FROM history
 WHERE memberno = 40 AND TRUNC(startdate) = TO_DATE('2024-06-22', 'YYYY-MM-DD');
 
+SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS startdate, exupdatedate, memberno
+FROM history
+WHERE exrecordno = 1 AND memberno = 39;
 
 -- 운동 기록 삭제
 DELETE FROM history

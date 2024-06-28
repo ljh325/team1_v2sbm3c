@@ -26,14 +26,23 @@
     INSERT INTO history(exrecordno, exname, extype, hiscalorie, duration, notes, startdate, memberno)
     VALUES (history_seq.nextval, #{exname}, #{extype}, #{hiscalorie}, #{duration}, #{notes}, sysdate, #{memberno})
   </insert>
-  
+
   <!-- (o)  회원별 운동기록 리스트조회 -->
   <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="dev.mvc.history.HistoryVO">
     SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate AS startdate, exupdatedate, memberno
     FROM history
     WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+    ORDER BY startdate DESC
   </select>  
-
+  
+  <!-- (o)  회원별 운동기록 상세 목록조회 -->
+  <select id="record_read" resultType="dev.mvc.history.HistoryVO" parameterType="map">
+    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, startdate, exupdatedate, memberno
+    FROM history
+    WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
+  </select> 
+  
+  
   <!-- 회원별 + 날짜별 총 운동 시간(time) -->
   <select id="time_for_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
     SELECT TRUNC(startdate) AS start_date, SUM(duration) AS total_duration
@@ -45,7 +54,7 @@
   
   <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
   <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(startdate) AS start_date,  COUNT(*) AS total_exercises
+    SELECT TRUNC(startdate) AS start_date, COUNT(*) AS total_exercises
     FROM history
     WHERE memberno = #{memberno}
     GROUP BY TRUNC(startdate)
@@ -59,7 +68,19 @@
     WHERE MEMBERNO = #{memberno}
   </select>  
  
-
+  <!-- 운동기록번호의 최댓값 -->
+  <select id="exrecordno_max" resultType="int">
+    SELECT MAX(exrecordno) as exrecordno
+    FROM history
+  </select>
+  
+  <!-- 운동기록 총 갯수 -->
+  <select id="ex_cnt" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM history
+    WHERE exrecordno=#{exrecordno}
+  </select>
+  
   <!-- 운동 기록 수정 -->
   <update id="history_update" parameterType="dev.mvc.history.HistoryVO">
     UPDATE history

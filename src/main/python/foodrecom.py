@@ -26,8 +26,9 @@ CORS(app)
 prompt3 ='''
 [회원 건강정보]에 해당하는 사람이 [운동 목표]의 신체를 목표할 때의 일주일간의 운동계획을  
 아래의 조건을 모두 지키며 작성해줘 
-1.[운동표]에 있는 값을 기준으로 일주일간의 루틴을 출력하나 그 이후에도 [운동 목표]를 위한 운동을 무제한의 기간동안 지속 한다고 가정한다,대신 [난이도]에 있는 난이도를 기준으로 상중하로 계획을 세운다
-2. 출력은 [출력 형식1]을 따르나 해당하는 [난이도] 값을 따라 그에 해당하는 [운동 난이도]의 하루운동 종류와 일주일 중 운동일 수,하루 권장 운동시간을 적용시킨다
+1.[운동표]에 있는 값을 기준으로 일주일간의 루틴을 출력하나 그 이후에도 [운동 목표]를 위한 운동을 무제한의 기간동안 지속 한다고 가정한다
+,대신 [난이도]에 있는 난이도를 기준으로 계획을 세운다
+2. 출력은 [출력 형식1]을 따르나 해당하는 [난이도]의 값을 따르고 그에 해당하는 [운동 난이도]의 하루운동 종류와 일주일 중 운동일 수,하루 권장 운동시간을 적용시킨다
 
 그에 따라 운동 수 즉,{"exname": , "musclesub": , "cal": , "time": ,"body":  ,"set:"},의 수가 달라질수 있고
 
@@ -39,22 +40,8 @@ prompt3 ='''
 5.cal은 칼로리,set를 뜻한다
 
 
-
- [운동 난이도]
-    상 :
-        (하루 운동 종류 수: 5-7가지 운동
-        일주일 중 운동일 수: 7일중 5-6일 
-        하루 권장 운동 시간: 90~120분 이상)
-
-    중 :
-        (하루 운동 종류 수: 3-5가지 운동
-        일주일 중 운동일 수: 7일중 4-5일
-        하루 권장 운동 시간: 60~90분)
-
-    하 
-        (하루 운동 종류 수: 2-3가지 운동
-        일주일 중 운동일 수: 7일중 3~4일
-        하루 권장 운동 시간: 60분)
+ [난이도]
+ 난이도:
 
 
  [회원 건강정보]
@@ -70,8 +57,7 @@ prompt3 ='''
     신장: cm
     골격근량: kg
     
-    [난이도]
-    난이도:
+ 
 
  [출력 형식1]
     {"healths": {
@@ -406,16 +392,29 @@ def populate_prompt(prompt, member_info, goal_info):
     
     return filled_prompt
 
-def level_prompt(prompt, level):
-    """
-    주어진 prompt에 level 값을 채워넣는 함수
-    :param prompt: 원본 프롬프트 문자열
-    :param level: 난이도
-    :return: 채워진 새로운 프롬프트 문자열
-    """
-    filled_prompt = prompt.replace("난이도:", f"난이도: {level}", 1)
+def level_prompt2(prompt, level):
+    if level == "상급":
+        level_info = '''
+        하루 운동 종류 수: 5-7가지 운동
+        일주일 중 운동일 수: 7일중 5-6일 
+        하루 권장 운동 시간: 90~120분 이상
+        '''
+    elif level == "중급":
+        level_info = '''
+        하루 운동 종류 수: 3-5가지 운동
+        일주일 중 운동일 수: 7일중 4-5일
+        하루 권장 운동 시간: 60~90분
+        '''
+    else :
+        level_info = '''
+        하루 운동 종류 수: 2-3가지 운동
+        일주일 중 운동일 수: 7일중 3~4일
+        하루 권장 운동 시간: 60분
+        '''
+    filled_prompt = prompt
+    filled_prompt = prompt.replace("난이도:", f"난이도: {level_info}", 1)
     return filled_prompt
-
+        
 
     
 # http://localhost:5000/foodrecom/create.html
@@ -468,7 +467,7 @@ def healthrecom_create_proc():
     filled_prompt = populate_prompt(prompt3, mh[0], goals[0]) + result_str
     
     
-    final_prompt = level_prompt(filled_prompt,level) 
+    final_prompt = level_prompt2(filled_prompt,level) 
     
     print(final_prompt)
     response = tool.answer(role='헬스트레이너야', prompt=final_prompt, output='json', 

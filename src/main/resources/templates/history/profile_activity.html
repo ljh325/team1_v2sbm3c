@@ -1,54 +1,191 @@
-
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속 -->
-<div layout:fragment="content" style="width: 100%; margin: 50px auto; text-align: center;">
+<div layout:fragment="content" style="width: 100%; margin: 30px auto; text-align: center;">
 
-<style>
-    body{
+  <style>
+    body {
       background-color: black;
     }
+
     /* =========기록 활동 버튼=============== */
     .button-container {
-        width: 100%;
-        margin-bottom: 10px;
-        display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      display: flex;
     }
 
     .button {
-        width: 50%;
-        background-color: gray;
-        padding: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
+      width: 50%;
+      background-color: gray;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
     }
 
     .button span {
-        font-size: 17px;
-        color: white;
+      font-size: 17px;
+      color: white;
     }
 
     .button:hover {
-        background-color: lightgray;
-        transform: scale(1.05);
+      background-color: lightgray;
+      transform: scale(1.05);
     }
+
     /* ===============기록 활동 버튼=============== */
+    .insta {
+      color: white;
+    }
+
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .image-item {
+      width: 31%;
+      margin: 1%;
+      position: relative;
+    }
+
+    .profile-img,
+    .default-img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      transition: border 0.3s ease;
+    }
+
+    .image-item:hover .profile-img,
+    .image-item:hover .default-img {
+      border: 2px solid white;
+    }
+
+    .image-item span {
+      display: block;
+      height: 119px;
+      line-height: 119px;
+      text-align: center;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      transition: border 0.3s ease;
+    }
+
+    .image-item:hover span {
+      border: 2px solid white;
+    }
   </style>
-  
+
   <div style="text-align: left;">
-    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀ 뒤로가기</span>
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀
+      뒤로가기</span>
   </div>
 
 
-    <div class="button-container">
-        <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
-            <span style="color: #E6E6E6;">기록</span>
-        </div>
-        <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'" style="background-color: #E6E6E6;">
-            <span style="color: black;">활동</span>
-        </div>
+  <div class="button-container">
+    <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
+      <span style="color: #E6E6E6;">기록</span>
     </div>
-    
-    
+    <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'"
+      style="background-color: #E6E6E6;">
+      <span style="color: black;">활동</span>
+    </div>
+  </div>
+
+  <br>
+  
+  
+  <div style="float:left; width:30%;">
+    <img src="/images/none.jpg" style="width: 67px; border-radius:50%">
+  </div>
+  <div style="float:right; background-color: white; border-radius: 7px; padding: 4px; width:70%;">
+    <div style="background-color: black; border-radius: 7px; padding:7px;">
+      <div class="d-flex justify-content-around">
+        <span th:text="${cnt}" class="insta"></span>
+        <span class="insta">12</span>
+        <span class="insta">13</span>
+      </div>
+      <div class="d-flex justify-content-around">
+        <span class="insta">게시글</span>
+        <span class="insta">팔로우</span>
+        <span class="insta">팔로잉</span>
+      </div>
+    </div>
+  </div>
+  <div style="clear: both;">
+  </div>
+
+  <div style="float:left; text-align: left; margin-left:10%; margin-top:8px;">
+    <span class="insta" style="font-size: 16px;">박주찬</span>
+  </div>
+  <div style="float:right; margin-left:10%; margin:8px 17px 15px 0; background-color: red; padding:7px;">
+    <span>프로필 편집</span>
+  </div>
+  <div style="clear: both;">
+  </div>
+
+
+
+  <div style="background-color: #000000; padding:5px 0 2px 0; border: 2px solid white;">
+    <div style="float: left; margin-left: 23%;">
+      <i class="bi bi-grid-3x3-gap" style="font-size: 25px;  color: white;"></i>
+    </div>
+    <div style="float: right; margin-right: 23%;">
+      <i class="bi bi-person-square" style="font-size: 25px; color: white;"></i>
+    </div>
+    <div style="clear: both;">
+    </div>
+  </div>
+
+  <!--  
+    <div style="text-align: left;">
+      <div style="margin: 3px;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+      </div>
+      <div style="margin: 3px;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+      </div>
+      <div style="margin: 3px;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+        <img src="/images/none.jpg" style="width: 32%; height: 32%;">
+      </div>
+    </div>
+ -->
+  <div th:if="${list != null}">
+    <div class="image-container">
+      <div th:each="list : ${list}" class="image-item">
+        <div
+          th:if="${list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')}"
+          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
+          <img th:src="@{|/recordImage/storage/${list.recthumbs}|}" class="profile-img" style="height:119px;"
+            alt="Image">
+        </div>
+        <div
+          th:if="${((list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')) == false) and (list.recsizes > 0)}"
+          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
+          <span th:text="${list.recprofile}" style="height:119px;"></span>
+        </div>
+        <div th:if="${list.recsizes == 0}"
+          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
+          <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
+        </div>
+        <div th:if="${list == null}"
+          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
+          <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:if="${list == null}">
+    <span>게시글이 없습니다.</span>
+  </div>
+
 </div>
+
 </html>

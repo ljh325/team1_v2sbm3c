@@ -20,6 +20,13 @@ public interface HistoryProcInter {
   public ArrayList<HistoryVO> read_history(HistoryVO historyVO);
   
   /**
+   * 회원별 운동기록 상세 목록조회
+   * @param map
+   * @return
+   */
+  public HistoryVO record_read(HashMap<String, Object> map);
+  
+  /**
    * 회원별 + 날짜별 총 운동 시간(time)
    * @param memberno
    * @return
@@ -39,6 +46,20 @@ public interface HistoryProcInter {
    * @return
    */
   public int all_count(int memberno);
+  
+  /**
+   * 운동기록번호의 최댓값
+   * @return
+   */
+  public int exrecordno_max();
+  
+  /**
+   * 운동기록 총 수
+   * @param exrecordno
+   * @return
+   */
+  public int ex_cnt(int exrecordno);
+  
   
   /**
    * 운동 기록 수정

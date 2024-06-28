@@ -198,11 +198,7 @@
           <textarea id="notes" name="notes" class="form-control" placeholder="메모를 입력하세요..." rows="3"></textarea>
         </div>
         
-        <!-- 이미지 입력 -->
-        <div class="input-group mb-3">
-          <input type="file" class="form-control" id="inputGroupFile02">
-          <label class="input-group-text" for="inputGroupFile02">Upload</label>
-        </div>
+
         
       </div>
       <!-- 운동 기록 입력 -->
@@ -326,7 +322,7 @@
             msg.innerHTML = "운동 시간을 입력해주세요.";
             return;
           }
-          alert("duration-->" + duration)
+
           let notes = document.getElementById("notes").value.trim() || "No notes";     
           let memberno = '[[${session.memberno}]]';   
          
@@ -349,7 +345,7 @@
           .then(data => {
             if(data['cnt'] == 1){
               console.log('성공;');
-              window.location.href = '/history/recored_ssuccess';
+              window.location.href = '/history/activity_record';
               
             } else{
               console.log('실패');

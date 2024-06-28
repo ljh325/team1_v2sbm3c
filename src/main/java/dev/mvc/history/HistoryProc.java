@@ -66,6 +66,24 @@ public class HistoryProc implements HistoryProcInter{
     return cnt;
   }
 
+  @Override
+  public HistoryVO record_read(HashMap<String, Object> map) {
+    HistoryVO historyVO = this.historyDAO.record_read(map);
+    return historyVO;
+  }
+
+  @Override
+  public int exrecordno_max() {
+    int max = this.historyDAO.exrecordno_max();
+    return max;
+  }
+
+  @Override
+  public int ex_cnt(int exrecordno) {
+    int cnt = this.historyDAO.ex_cnt(exrecordno);
+    return cnt;
+  }
+
   
   
 

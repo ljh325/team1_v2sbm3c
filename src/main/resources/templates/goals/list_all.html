@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+  <script>
+       function formatDate(dateString) {
+            const date = new Date(dateString);
 
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해야 합니다.
+            const day = date.getDate();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+
+            return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+        }
+    </script>
 <div layout:fragment="content">
    <div class="title_line">운동 목표
 
@@ -16,21 +29,31 @@
    <div class="menu_line"></div>
 
 <div th:if="${goalsVO != null}">
-  <div style ="text-align: center"> 최근 목표</div>
+  <h3> 최근 목표</h3>
   <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-    <ul class="list-group list-group-flush">
-             <li class="list-group-item">번호: <span th:text="${goalsVO.goalsno}"></span></li>
-          <li class="list-group-item">체중: <span th:text="${goalsVO.kg}"></span></li>
-          <li class="list-group-item">키: <span th:text="${goalsVO.cm}"></span></li>
-         
-          <li class="list-group-item">체지방:<span th:text="${goalsVO.ckg}"></span></li>
-              <li class="list-group-item">골격근량: <span th:text="${goalsVO.muscle}"></span></li>
-          <li class="list-group-item">입력 날짜: <span th:text="${goalsVO.gdate}"></span></li>
     
-    </ul>  
+    
+
+    <div style ="text-align: center" th:text="${goalsVO.gdate}">입력 날짜</div>
+    
     
   </div>
 
+     <div style="background-color: #E6E6E7; border-radius: 10px; height: auto; padding: 15px;">
+        <div class="row title">
+          <div class="column"><span>체중</span></div>
+          <div class="column"><span>신장</span></div>
+          <div class="column"><span>체지방</span></div>
+          <div class="column"><span>골격근량</span></div>
+        </div>
+        <div class="row">
+          <div class="column"><span th:text="${goalsVO.kg + ' kg'}"></span></div>
+          <div class="column"><span th:text="${goalsVO.cm + ' cm'}"></span></div>
+          <div class="column"><span th:text="${goalsVO.ckg + ' %'}"></span></div>
+          <div class="column"><span th:text="${goalsVO.muscle + ' kg'}"></span></div>
+        </div>
+      </div><br>
+    
   
   <!-- /mh/list_all_component.html 파일의 list_all_fragment import -->
   <div th:replace="~{goals/list_all_component::list_all_fragment}"></div>
