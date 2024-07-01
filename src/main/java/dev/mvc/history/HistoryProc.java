@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-
 @Component("dev.mvc.history.HistoryProc")
 public class HistoryProc implements HistoryProcInter{
   

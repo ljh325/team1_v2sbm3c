@@ -70,6 +70,32 @@ FROM recordimage r , history h
 WHERE h.exrecordno = 40 AND r.memberno = 5;
 
 select * from recordimage;
+
+-- 전체 이미지 수
+SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, recupdate, exrecordno, memberno
+FROM recordimage
+ORDER BY   COALESCE(recupdate, recdate) DESC;
+
+commit;
+    SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM recordimage r, member m
+    WHERE r.memberno = m.memberno
+    ORDER BY  COALESCE(r.recupdate, r.recdate) DESC;
+
+SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+       m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+FROM recordimage r
+JOIN member m ON r.memberno = m.memberno
+WHERE r.recimageno IN (
+    SELECT MAX(recimageno)
+    FROM recordimage
+    GROUP BY exrecordno
+)
+ORDER BY COALESCE(r.recupdate, r.recdate) DESC;
+
+
+select count(*) from recordimage;
 -- 회원별 총 이미지 수
 
 -- 운동기록번호 중복 제거한 총 수

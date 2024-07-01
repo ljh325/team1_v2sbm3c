@@ -226,6 +226,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
+    
+        // URL에 memberno의 값을 추출
+        function getQueryParams() {
+          let params = {};
+          window.location.search.substring(1).split("&").forEach(pair => {
+            let [key, value] = pair.split("=");
+            params[decodeURIComponent(key)] = decodeURIComponent(value);
+          });
+          return params;
+        }
+
+ 
+
+        
         // 달력 jquery
         $(document).ready(function() {
             $("#event_date").datepicker({
@@ -353,9 +367,10 @@
             msg.innerHTML = "운동 시간을 입력해주세요.";
             return;
           }
-
+          let params = getQueryParams();
+          let memberno = params['memberno'];
           let notes = document.getElementById("notes").value.trim() || "No notes";     
-          let memberno = '[[${session.memberno}]]';   
+          //let memberno = '[[${session.memberno}]]';   
          
 
           fetch('/history/history_record_proc' , {
@@ -377,7 +392,7 @@
           .then(data => {
             if(data['cnt'] == 1){
               console.log('성공;');
-              window.location.href = '/history/activity_record';
+              window.location.href = '/history/activity_record?memberno=' + memberno;
               
             } else{
               console.log('실패');

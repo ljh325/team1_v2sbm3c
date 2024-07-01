@@ -33,7 +33,7 @@
         }
         /* ================= 드롭 다운 버튼 ====================*/
         
-            /* =========기록 활동 버튼=============== */
+    /* =========기록 활동 버튼=============== */
     .button-container {
       width: 100%;
       margin-bottom: 10px;
@@ -58,7 +58,6 @@
       background-color: lightgray;
       transform: scale(1.05);
     }
-
     /* ===============기록 활동 버튼=============== */
   </style>
 
@@ -101,15 +100,14 @@
 
 
   <div class="button-container">
-    <div id="record_btn" class="button" onclick="location.href='/history/sns_following_form'">
-      <span style="color: #E6E6E6;">팔로잉</span>
-    </div>
-    <div id="activity_btn" class="button" onclick="location.href='/history/sns_comunity_form'"
+    <div id="record_btn" class="button" onclick="location.href='/history/sns_following_form'"
       style="background-color: #E6E6E6;">
-      <span style="color: black;">인기</span>
+      <span style="color: black;">팔로잉</span>
+    </div>
+    <div id="activity_btn" class="button" onclick="location.href='/history/sns_comunity_form'">
+      <span>인기</span>
     </div>
   </div>
-
 
 
 <div th:if="${msg == '0'}">
@@ -118,14 +116,11 @@
   <br>
   <br>
   <span style="color: #E6E6E6; font-size: 20px; ">팔로잉을 해주세요.</span>
-</div>
+</div> 
 
 
 <div th:if="${msg == '1'}">
   <div th:each="list, status : ${list}" style="border-bottom: solid 7px #D3D3D3;">
-  
-    <!-- 회원 번호 숨김 -->
-      
   
     <!-- 상단 프로필 닉네임 및 드롭다운 --> 
     <div style="background-color: white; text-align: left; padding:7px;">
@@ -248,8 +243,27 @@
         <div style="clear: both;">
         </div>
       </div>
-  </div>    
-</div>
+  </div>
+</div>    
+<!--=======================================================================-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -327,9 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
   
 }); // dom close
-
-
-
 
   </script>
 </div>

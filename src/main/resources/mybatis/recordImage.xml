@@ -58,7 +58,32 @@
     WHERE rn = 1
   </select>
   
+   
+  <!-- 전체 이미지  COALESCE(r.recupdate, r.recdate) DESC 
   
+  
+      SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM recordimage r, member m
+    WHERE r.memberno = m.memberno
+    ORDER BY r.recdate DESC
+  
+  
+  
+   -->
+  <select id="sns_image_read" resultType="dev.mvc.recordImage.RecordImageVO">
+    SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+           m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM recordimage r
+    JOIN member m ON r.memberno = m.memberno
+    WHERE r.recimageno IN (
+        SELECT MAX(recimageno)
+        FROM recordimage
+        GROUP BY exrecordno
+    )
+    ORDER BY COALESCE(r.recupdate, r.recdate) DESC
+  </select> 
+   
   <!-- 회원별 총 이미지 수 -->
   <select id="rec_images_cnt" resultType="int" parameterType="int">
     SELECT COUNT(DISTINCT exrecordno) 
@@ -66,7 +91,10 @@
     WHERE memberno = #{memberno}
   </select>  
   
- 
+ <!-- 이미지 총 수 -->
+ <select id="all_image_cnt" resultType="int" parameterType="int">
+   select count(*) from recordimage
+ </select>
  
 
   <!-- 운동 기록 이미지 수정 -->

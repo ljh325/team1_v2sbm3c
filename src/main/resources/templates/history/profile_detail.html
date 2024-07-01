@@ -65,11 +65,10 @@
 
 
   <div class="button-container">
-    <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
+    <div id="record_btn" class="button">
       <span style="color: #E6E6E6;">기록</span>
     </div>
-    <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'"
-      style="background-color: #E6E6E6;">
+    <div id="activity_btn" class="button" style="background-color: #E6E6E6;">
       <span style="color: black;">활동</span>
     </div>
   </div>
@@ -86,8 +85,12 @@
         <span th:text="${memberVO.nickname }" style="font-size: 13px;"></span>
         <i class="bi bi-person-check-fill"></i>
       </div>
-      <div>
-        <span style="font-size: 10px;">5시간전</span>
+      <div th:each="list, status : ${list}" th:if="${status.first}">
+        <span class="recdate" th:attr="data-recdate=${list.recdate}" style="font-size: 10px;">5시간전</span>
+        <!-- 1일 경우 bi-globe 아이콘 -->
+        <i class="bi bi-globe" style="font-size: 10px;" th:if="${list.recvisible == 1}"></i>
+        <!-- 2일 경우 bi-person-fill-lock 아이콘 -->
+        <i class="bi bi-person-fill-lock" style="font-size: 10px;" th:if="${list.recvisible == 2}"></i>
       </div>
     </div>
     
@@ -210,7 +213,20 @@
   <span id="exrecordnoDisplay"></span>
   
   
+    
     <script>
+        // URL에 memberno의 값을 추출
+        function getQueryParams() {
+          let params = {};
+          window.location.search.substring(1).split("&").forEach(pair => {
+            let [key, value] = pair.split("=");
+            params[decodeURIComponent(key)] = decodeURIComponent(value);
+          });
+          return params;
+        }
+    
+    
+    
         document.getElementById('dropdownMenuButton').addEventListener('click', function () {
             var dropdownMenu = document.getElementById('dropdownMenu');
             if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
@@ -231,6 +247,18 @@
         
         
         document.addEventListener("DOMContentLoaded", function() {
+          
+          let params = getQueryParams();
+          let memberno = params['memberno'];
+          document.getElementById('record_btn').onclick = function () {
+            location.href = `/history/history_form?memberno=${memberno}`;
+          };
+  
+          document.getElementById('activity_btn').onclick = function () {
+            location.href = `/history/profile_activity?memberno=${memberno}`;
+          };
+          
+          
           // 현재 URL의 쿼리 스트링을 파싱하는 함수
           function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -278,6 +306,43 @@
 
           
         });
+        
+        
+        
+        
+        
+  // 작성일자 표시 함수
+  function timeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      let interval = seconds / 31536000;
+
+      if (interval > 1) {
+        return Math.floor(interval) + '년 전';
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + '달 전';
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + '일 전';
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + '시간 전';
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + '분 전';
+      }
+      return Math.floor(seconds) + '초 전';
+    }
+    // 작성일자 표시
+    document.querySelectorAll('.recdate').forEach(function (element) {
+      const recdate = element.getAttribute('data-recdate');
+      const date = new Date(recdate);
+      element.textContent = timeAgo(date);
+    });
     </script>
 </div>
 

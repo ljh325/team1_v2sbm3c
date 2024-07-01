@@ -49,7 +49,7 @@
       background-color: lightgray;
       transform: scale(1.05);
     }
-    
+    /* ===============기록 활동 버튼=============== */
     /* 운동 기록 요소 div */
     .record_ex_div {
       background-color: black; 
@@ -83,11 +83,11 @@
 
 
   <div class="button-container">
-    <div id="record_btn" class="button" onclick="location.href='/history/history_form'"
+    <div id="record_btn" class="button" 
       style="background-color: #E6E6E6;">
       <span style="color: black;">기록</span>
     </div>
-    <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'">
+    <div id="activity_btn" class="button">
       <span>활동</span>
     </div>
   </div>
@@ -99,7 +99,7 @@
     <div style="height: 470px;">
       <!--<h1 style="color: black;">Calendar</h1> -->
       <!--<div id="calendar"></div> -->
-      <iframe src="/history/calendar" title="Example Iframe"></iframe>
+      <iframe id="calendarIframe" src="" title="Example Iframe"></iframe>
     </div>
   </div>
   <br>
@@ -112,23 +112,20 @@
   
   <br>
   <br>
-  <div id="ex_record_btn" style="background-color: #353a50; border-radius: 7px; font-size: 20px; padding: 18px;"
-    onclick="location.href='/history/history_record_form'">
-    <span style="color: #E6E6E6; cursor: pointer;">운동 기록 추가 +</span>
-  </div>
-  <br>
-  <div>
-    <div style=" width: 100%;  background-color: #353a50; padding: 18px; border-radius: 7px; "
-      onclick="location.href='/history/history_analyze'">
-      <span style="font-size: 20px; color: #E6E6E6; cursor: pointer;">
-      신체 통계분석&nbsp; 
-      <i class="bi bi-graph-up-arrow" style="color: white; font-size: 20px;  font-weight: bold;"></i>
-      </span>
+  <div id="content" th:if="${session.memberno}">
+    <div id="ex_record_btn" style="background-color: #353a50; border-radius: 7px; font-size: 20px; padding: 18px;">
+      <span style="color: #E6E6E6; cursor: pointer;">운동 기록 추가 +</span>
     </div>
-
-
+    <br>
+    <div>
+      <div id="analyze" style=" width: 100%;  background-color: #353a50; padding: 18px; border-radius: 7px; ">
+        <span style="font-size: 20px; color: #E6E6E6; cursor: pointer;">
+        신체 통계분석&nbsp; 
+        <i class="bi bi-graph-up-arrow" style="color: white; font-size: 20px;  font-weight: bold;"></i>
+        </span>
+      </div>
+    </div>
   </div>
-
   <script>
   
     window.onload = () => {
@@ -139,6 +136,7 @@
   
   
     document.addEventListener('DOMContentLoaded', function () {
+      
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -146,9 +144,59 @@
         events: '/mh/api/events'
       });
       calendar.render();
+      // 켈린더 끝
     });
+    
+    
+    // URL에 memberno의 값을 추출
+    function getQueryParams() {
+      let params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        let [key, value] = pair.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      });
+      return params;
+    }
 
 
+    let params = getQueryParams();
+    let memberno = params['memberno'];
+    
+    if (memberno) {
+      // iframe에 memberno 전달
+      document.getElementById('calendarIframe').src = `/history/calendar?memberno=${memberno}`;
+        
+      document.getElementById('record_btn').onclick = function() {
+        location.href = `/history/history_form?memberno=${memberno}`;
+      };
+      
+      document.getElementById('activity_btn').onclick = function() {
+        location.href = `/history/profile_activity?memberno=${memberno}`;
+      };
+      // 운동기록 추가 버튼
+      document.getElementById('ex_record_btn').onclick = function() {
+        location.href = `/history/history_record_form?memberno=${memberno}`;
+      };
+      document.getElementById('analyze').onclick = function() {
+        location.href = `/history/history_analyze?memberno=${memberno}`;
+      };
+    } else {
+      alert('memberno 파라미터가 없습니다.');
+    }
+    
+    
+
+    // URL에서 memberno 파라미터 추출
+    const paramss = new URLSearchParams(window.location.search);
+    const urlMemberNo = paramss.get('memberno');
+
+    let session = '[[${session.memberno}]]';
+    
+    // 세션에 로그인 한 memberno와 URL파라미터에 있는 memberno와 비교
+    if (!urlMemberNo || session !== urlMemberNo) {
+        // 일치하지 않으면 특정 요소를 숨기기
+        document.getElementById('content').style.display = 'none';
+    }
 /*
     window.addEventListener('message', function(event) {
       var data = event.data;

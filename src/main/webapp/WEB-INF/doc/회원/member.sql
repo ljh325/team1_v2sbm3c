@@ -99,3 +99,4 @@ WHERE  r >= 1 AND r <= 10;
     SET grade=3
     WHERE memberno=38;
  
+ UPDATE

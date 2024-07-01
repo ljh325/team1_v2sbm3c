@@ -29,10 +29,22 @@ public class RecordImageProc implements RecordImageProcInter {
     ArrayList<RecordImageVO> read = this.recordImageDAO.rec_images_read(map);
     return read;
   }
+  
+  @Override
+  public ArrayList<RecordImageVO> sns_image_read() {
+    ArrayList<RecordImageVO> list = this.recordImageDAO.sns_image_read();
+    return list;
+  }
 
   @Override
   public int rec_images_cnt(int memberno) {
     int cnt = this.recordImageDAO.rec_images_cnt(memberno);
+    return cnt;
+  }
+
+  @Override
+  public int all_image_cnt() {
+    int cnt = this.recordImageDAO.all_image_cnt();
     return cnt;
   }
 
@@ -53,5 +65,7 @@ public class RecordImageProc implements RecordImageProcInter {
     ArrayList<RecordImageVO> read = this.recordImageDAO.one_images_read(memberno);
     return read;
   }
+
+
 
 }
