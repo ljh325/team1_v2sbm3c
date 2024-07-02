@@ -66,6 +66,18 @@ public class RecordImageProc implements RecordImageProcInter {
     return read;
   }
 
+  @Override
+  public int rec_recvisible_update(int exrecordno) {
+    int cnt = this.recordImageDAO.rec_recvisible_update(exrecordno);
+    return cnt;
+  }
+
+  @Override
+  public int rec_norecvisible_update(int exrecordno) {
+    int cnt = this.recordImageDAO.rec_norecvisible_update(exrecordno);
+    return cnt;
+  }
+
 
 
 }

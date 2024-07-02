@@ -72,15 +72,21 @@
   
    -->
   <select id="sns_image_read" resultType="dev.mvc.recordImage.RecordImageVO">
-    SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
-           m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
-    FROM recordimage r
-    JOIN member m ON r.memberno = m.memberno
-    WHERE r.recimageno IN (
+    SELECT 
+      r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, 
+      r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+      m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, 
+      m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM 
+      recordimage r
+    JOIN 
+      member m ON r.memberno = m.memberno
+    WHERE 
+      r.recimageno IN (
         SELECT MAX(recimageno)
         FROM recordimage
         GROUP BY exrecordno
-    )
+      )
     ORDER BY COALESCE(r.recupdate, r.recdate) DESC
   </select> 
    
@@ -104,7 +110,21 @@
     reccontents=#{reccontents} , recvisible=#{recvisible}, recupdate=sysdate
     WHERE memberno = #{memberno}
   </update>
-
+  
+  <!-- 기록 이미지 공개  -->
+  <update id="rec_recvisible_update"  parameterType="int">
+    UPDATE recordimage
+    SET recvisible= 1
+    WHERE exrecordno = #{exrecordno}
+  </update>
+  
+  <!-- 기록 이미지 비공개  -->
+  <update id="rec_norecvisible_update"  parameterType="int">
+    UPDATE recordimage
+    SET recvisible= 2
+    WHERE exrecordno = #{exrecordno}
+  </update>
+  
   <!-- 운동 기록이미지 삭제 -->
   <delete id="rec_images_delete" parameterType="int">
     DELETE FROM recordimage

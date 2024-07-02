@@ -59,6 +59,21 @@ public interface RecordImageProcInter {
   public int rec_images_update(RecordImageVO recordImageVO);
   
   /**
+   * 기록 이미지 공개
+   * @param exrecordno
+   * @return
+   */
+  public int rec_recvisible_update(int exrecordno);
+  
+  /**
+   * 기록 이미지 비공개
+   * @param exrecordno
+   * @return
+   */
+  public int rec_norecvisible_update(int exrecordno);
+  
+  
+  /**
    * 운동 기록이미지 삭제
    * @param exrecordno
    * @return

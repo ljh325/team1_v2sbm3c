@@ -121,12 +121,27 @@
 
 <div th:if="${msg == '1'}">
   <div th:each="list, status : ${list}" style="border-bottom: solid 7px #D3D3D3;">
-  
+
     <!-- 상단 프로필 닉네임 및 드롭다운 --> 
     <div style="background-color: white; text-align: left; padding:7px;">
-      <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|">
-        <img src="/images/none.jpg" style="width: 40px; border-radius: 50%; cursor: pointer;  margin-left:10px;">
-      </div>
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${list.profile.endsWith('jpg') or list.profile.endsWith('png')  or list.profile.endsWith('gif')}">
+    <img th:src="@{|/member/storage/${list.thumbs}|}" class="profile-img"
+      style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;">
+  </div>
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${((list.profile.endsWith('jpg') or list.profile.endsWith('png')  or list.profile.endsWith('gif')) == false) and (list.sizes > 0)}">
+    <span th:text="${list.profile}" 
+    style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;"></span>
+  </div>
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${list.sizes == 0}">
+    <img src="/images/none.jpg" class="default-img" 
+    style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;">
+  </div>
   
       <div style="float:left; margin-left: 10px;">
         <div>
@@ -143,7 +158,7 @@
       </div>
       
       <!-- 드롭 다운 / 이미지 수정삭제 -->
-      <div style="float:right; margin: 10px 10px 0 0; position: relative;">
+      <div th:if="${session.memberno == list.memberno}" style="float:right; margin: 10px 10px 0 0; position: relative;">
         <i class="bi bi-three-dots" style="font-size: 18px; cursor: pointer;" th:attr="id='dropdownMenuButton' + ${status.index}"></i>
         <div class="dropdown-menu" th:attr="id='dropdownMenu' + ${status.index}">
           <div id="image_update">
@@ -243,7 +258,14 @@
         <div style="clear: both;">
         </div>
       </div>
+      
+      
+      
+
+  
+  
   </div>
+  <!-- each 종료 -->
 </div>    
 <!--=======================================================================-->
 

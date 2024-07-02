@@ -345,10 +345,10 @@ public class HistoryCont {
   
   
   @GetMapping(value="/profile_followng")
-  public String profile_followng(Model model, HttpSession session) {
+  public String profile_followng(Model model, HttpSession session, int memberno) {
     
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      int memberno = (int)session.getAttribute("memberno");
+      //int memberno = (int)session.getAttribute("memberno");
       
       int follower_cnt = this.followsProc.follower_cnt(memberno);
       int following_cnt = this.followsProc.following_cnt(memberno);
@@ -369,11 +369,11 @@ public class HistoryCont {
   }
   
   @GetMapping(value="/profile_follower")
-  public String profile_follower(Model model, HttpSession session) {
+  public String profile_follower(Model model, HttpSession session, int memberno) {
     
     
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      int memberno = (int)session.getAttribute("memberno");
+      //model. memberno = (int)session.getAttribute("memberno");
       
       int follower_cnt = this.followsProc.follower_cnt(memberno);
       int following_cnt = this.followsProc.following_cnt(memberno);
@@ -480,7 +480,45 @@ public class HistoryCont {
     } 
   }
   
+  /**
+   * 게시글 공개
+   * @param model
+   * @param exrecordno
+   * @return
+   */
+  @PostMapping(value="/rec_recvisible_update")
+  @ResponseBody
+  public String rec_recvisible_update(Model model,@RequestBody Map<String, Integer> request) {
+    int exrecordno = request.get("exrecordno");
+    
+    System.out.println("exrecordno-->" + exrecordno);
+    JSONObject obj = new JSONObject();
+    int cnt = this.recordImageProc.rec_recvisible_update(exrecordno);
+    obj.put("cnt", cnt);
+    System.out.println("cnt-->" + cnt);
+    
+    return obj.toString();
+  }
   
+  /**
+   * 게시글 비공개
+   * @param model
+   * @param exrecordno
+   * @return
+   */
+  @PostMapping(value="/rec_norecvisible_update")
+  @ResponseBody
+  public String rec_norecvisible_update(Model model,@RequestBody Map<String, Integer> request) {
+    int exrecordno = request.get("exrecordno");
+    
+    System.out.println("exrecordno-->" + exrecordno);
+    JSONObject obj = new JSONObject();
+    int cnt = this.recordImageProc.rec_norecvisible_update(exrecordno);
+    obj.put("cnt", cnt);
+    System.out.println("cnt-->" + cnt);
+    
+    return obj.toString();
+  }
   
   /**
    * 운동 기록 성공 폼

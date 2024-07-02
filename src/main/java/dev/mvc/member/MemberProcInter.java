@@ -18,6 +18,13 @@ public interface MemberProcInter {
   public int checkID(String id);
   
   /**
+   * 중복 닉네임 검사
+   * @param nickname
+   * @return
+   */
+  public int nickCheck(String nickname);
+  
+  /**
    * 회원 가입
    * @param memberVO
    * @return 추가한 레코드 갯수
@@ -66,6 +73,20 @@ public interface MemberProcInter {
    * @return
    */
   public int update(MemberVO memberVO);
+  
+  /**
+   * 프로필 사진 수정 및 소개글 닉네임 수정
+   * @param memberVO
+   * @return
+   */
+  public int profile_update_proc(MemberVO memberVO);
+  
+  /**
+   * 소개글 닉네임 수정
+   * @param memberVO
+   * @return
+   */
+  public int profile_nickIntro(MemberVO memberVO);
   
   /**
    * 파일 정보 수정

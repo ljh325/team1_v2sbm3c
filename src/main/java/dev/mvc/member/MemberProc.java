@@ -388,6 +388,24 @@ public class MemberProc implements MemberProcInter {
     return str.toString();
   }
 
+@Override
+public int nickCheck(String nickname) {
+  int cnt = this.memberDAO.nickCheck(nickname);
+  return cnt;
+}
+
+@Override
+public int profile_update_proc(MemberVO memberVO) {
+  int cnt = this.memberDAO.profile_update_proc(memberVO);
+  return cnt;
+}
+
+@Override
+public int profile_nickIntro(MemberVO memberVO) {
+  int cnt = this.memberDAO.profile_nickIntro(memberVO);
+  return cnt;
+}
+
 
 
 

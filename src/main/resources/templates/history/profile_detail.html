@@ -76,9 +76,25 @@
 
 
   <div style="background-color: white; text-align: left; padding:7px;">
-    <div style="float:left;">
-      <img src="/images/none.jpg" style="width: 40px; border-radius: 50%;  margin-left:10px;">
-    </div>
+
+    
+    
+    
+    
+  <div style="float:left;"
+    th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
+    <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img"
+      style="width: 47px; height:40px; border-radius: 50%;  margin-left:10px;">
+  </div>
+
+  <div style="float:left;"
+    th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+    <span th:text="${memberVO.profile}" style="width: 47px; height:40px; border-radius: 50%;  margin-left:10px;"></span>
+  </div>
+
+  <div style="float:left;" th:if="${memberVO.sizes == 0}">
+    <img src="/images/none.jpg" class="default-img" style="width: 47px; height:40px; border-radius: 50%;  margin-left:10px;"><br>
+  </div>
 
     <div style="float:left; margin-left: 10px;">
       <div>
@@ -88,9 +104,9 @@
       <div th:each="list, status : ${list}" th:if="${status.first}">
         <span class="recdate" th:attr="data-recdate=${list.recdate}" style="font-size: 10px;">5시간전</span>
         <!-- 1일 경우 bi-globe 아이콘 -->
-        <i class="bi bi-globe" style="font-size: 10px;" th:if="${list.recvisible == 1}"></i>
+        &nbsp;<i class="bi bi-globe" style="font-size: 11px;" th:if="${list.recvisible == 1}"></i>
         <!-- 2일 경우 bi-person-fill-lock 아이콘 -->
-        <i class="bi bi-person-fill-lock" style="font-size: 10px;" th:if="${list.recvisible == 2}"></i>
+        &nbsp;<i class="bi bi-person-fill-lock" style="font-size: 13px;" th:if="${list.recvisible == 2}"></i>
       </div>
     </div>
     

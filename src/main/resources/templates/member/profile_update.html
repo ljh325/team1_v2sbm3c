@@ -1,0 +1,208 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%;  text-align: center;">
+  <style>
+    body {
+      background-color: black;
+    }
+    .update_bnt {
+      width: 100%;
+      padding: 11px;
+    }
+  </style>
+
+  <div style="text-align: left; margin-bottom:10px;">
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="history.back()">◀
+      뒤로가기</span>
+  </div>
+
+  <div style="background-color: #2e2d2d; padding:14px; border-radius: 7px;">
+    <div style="background-color: #000000; padding:15px; border-radius: 7px;">
+      <span style="font-size: 25px; color: white;">프로필 수정</span>
+    </div>
+    <br>
+    <div style="background-color: #000000; padding:13px; padding-bottom:7%; border-radius: 7px;">
+    <br>
+      <div style="text-align: center; margin-left: 15px; font-size: 17px;">
+        <div
+          th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
+          <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img"
+            style="border-radius: 50%; width:27%; height:30%; margin-right: 17px;">
+        </div>
+
+        <div
+          th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+          <span th:text="${memberVO.profile}" style="border-radius: 50%; width:20%; margin-right: 17px;"></span>
+        </div>
+
+        <div th:if="${memberVO.sizes == 0}">
+          <img src="/images/none.jpg" class="default-img" style="border-radius: 50%; width:20%; margin-right: 17px;">
+        </div>
+      </div>
+      <br>
+      <span style="color: white" th:if="${memberVO.nickname != null}" th:text="${memberVO.nickname}"></span>
+      <span style="color: white" th:if="${memberVO.nickname == null}" th:text="${session.id}"></span>
+    </div>
+    
+    <div>
+    <br>
+      <span id="msg" style="color: red; font-size: 12px;" value=""></span>
+    </div>
+    <br>
+
+    <script>
+
+
+      let isIdChecked = false; // 중복확인 여부를 나타내는 플래그 변수  true면 가입가능
+      function nickCheck() { // checkID 아이디 중복확인 함수
+
+
+        let nickname = document.getElementById('nickname');
+        let msg = document.getElementById('msg');
+        let nickCheck = document.getElementById('nickCheck');
+
+        if (nickname.value.trim().length == 0) { // id가 공백이거나 비었을때 
+          msg.innerHTML = '닉네임을 입력해주세요.';
+          msg.innerHTML.style.color = 'red';
+          nickname.focus();
+
+          return false;  // 회원 가입 진행 중지
+
+        } else {  // 아이디에 값이 있을때
+          //msg.remove(); // class 삭제
+
+          // ---------------------------------------------------------------------------------------
+          // fetch 관련 시작 - 아이디 중복 확인 체크
+
+          fetch('/member/nickCheck?nickname=' + nickname.value, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data['cnt'] > 0) {
+                //alert(data['cnt'])
+                msg.innerHTML = '중복된 닉네임이 있습니다.';
+                msg.style.color = 'red';
+                nickname.focus();
+                console.log('중복O');
+              } else {
+                // 오류 메세지
+                msg.innerHTML = '사용 가능한 닉네임입니다.';
+                msg.style.color = '#34cf7f';
+
+                //중복확인 버튼
+                nickCheck.disabled = true;
+                nickCheck.innerHTML = '확인<i class="bi bi-check-circle"></i>';
+
+                // 중복확인 완료 플래그 설정
+                isIdChecked = true;
+
+                nickCheck.classList.add('btn-disabled');
+                // 아이디 입력창 비활성화
+                nickname.readOnly = true;
+
+                // 소개글로 커서 이동
+                document.getElementById('introduce').focus();
+                console.log('중복X');
+                //alert(data['cnt'])
+              }
+            });
+          // ---------------------------------------------------------------------------------------
+          // fetch 관련 종료
+          // ---------------------------------------------------------------------------------------
+        } // else{} 종료
+      } // nickCheck() 종료
+
+
+
+
+
+      function send() { // 회원 가입 처리
+        let nickname = document.getElementById('nickname');
+        let msg = document.getElementById('msg');
+
+        //alert(1)
+        if (!isIdChecked) {
+          //alert('중복필요')
+          msg.innerHTML = '중복확인을 해주세요.';
+          msg.style.color = 'red';
+          return false; // 회원 가입 진행 중지
+        }
+
+        // 아이디 유효성 검사 **
+
+        if (nickname.value.trim().length == 0) { // id가 공백이거나 비었을때 
+          msg.innerHTML = '닉네임을 입력해주세요.';
+          msg.innerHTML.style.color = 'red';
+          nickname.focus();
+
+          return false;  // 회원 가입 진행 중지
+
+        }
+        // 소개글 유효성 검사 **
+        let introduce = document.getElementById('introduce');
+
+        if (introduce.value.length == 0) {
+          introduce.value = " ";
+        }
+        
+        
+        fetch('/member/profile_nickIntro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            nickname: nickname.value,
+            introduce: introduce.value
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data['cnt'] == 1) {
+            console.log('수정 성공');
+            document.getElementById('frm').submit(); // 등록폼 전달
+          } else {
+            console.log('수정 실패');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+          
+
+      }
+
+    </script>
+    <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/profile_update_proc"
+      enctype="multipart/form-data">
+      <div class="d-flex justify-content-between">
+        <span style="width: 31%; margin-top:4px; color: #E6E6E6;">닉네임:</span>
+        <input type="text" th:value="${memberVO.nickname}" class="form-control" id="nickname" name="nickname"  placeholder="닉네임을 입력해주세요.">
+        <span id="nickCheck" onclick="nickCheck()"
+          style="background-color: red; border-radius: 7px; padding:4px; width: 30%; margin:4px 0 0 7px; color: #E6E6E6; cursor: pointer;">중복확인</span>
+      </div>
+      <br>
+
+      <div>
+        <label style="width: 53%; margin-top:4px; color: #E6E6E6; padding:10px;">프로필사진 수정</label>
+        <input type="file" class="form-control" id="files1MF" name="files1MF">
+      </div>
+      <br>
+      <div class="mb-3">
+        <label for="introduce" class="form-label" style="color: #E6E6E6;">프로필 소개글 쓰기</label>
+        <textarea th:text="${memberVO.introduce}" class="form-control" id="introduce" name="introduce" placeholder="소개글을 쓰시오" rows="3"></textarea>
+      </div>
+      <br>
+      <button type="button" onclick="send();" class="update_bnt btn btn-success">수 정</button>
+    </form>
+
+  </div>
+
+
+</div>
+
+</html>

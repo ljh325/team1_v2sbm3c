@@ -25,6 +25,13 @@
     WHERE id=#{id}
   </select>
   
+  <!-- 중복 닉네임 검사 -->
+  <select id="nickCheck" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM member
+    WHERE nickname=#{nickname}
+  </select>
+  
   <!-- (o) 회원 가입 || ( 회원 이미지 : profile 설계 필요  -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
     INSERT INTO member(memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, birth, sex)
@@ -34,7 +41,7 @@
 
   <!-- (o) 회원 전체 목록 || profile (X) -->
   <select id="list" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex
+    SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, introduce
     FROM member
     ORDER BY grade ASC, id ASC
   </select>
@@ -43,14 +50,14 @@
   <!-- (o) memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
     SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex,
-    profile, profilesaved, thumbs, sizes
+    profile, profilesaved, thumbs, sizes, introduce
     FROM member
     WHERE memberno = #{memberno}
   </select>  
 
   <!-- (o) (로그인) id로 회원 정보 조회 -->
   <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
-    SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex
+    SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, profile, point, birth, sex, introduce
     FROM member
     WHERE id = #{id}
   </select>
@@ -83,6 +90,20 @@
     SET grade=3
     WHERE memberno=#{memberno}
   </update>
+  
+  <!-- 프로필 사진 수정 --> 
+  <update id="profile_update_proc" parameterType="dev.mvc.member.MemberVO">
+    UPDATE member
+    SET profile= #{profile}, profilesaved= #{profilesaved}, thumbs= #{thumbs}, sizes= #{sizes}
+    WHERE memberno = #{memberno}
+  </update>
+  
+  <!-- 소개글 닉네임 수정 --> 
+  <update id="profile_nickIntro" parameterType="dev.mvc.member.MemberVO">
+    UPDATE member
+    SET nickname= #{nickname}, introduce= #{introduce}
+    WHERE memberno = #{memberno}
+  </update>
 
   <!-- (o)로그인 처리 || 로그인성공시 : 1, 실패 : 0 || 탈퇴회원:3 이 아닌 회원 로그인-->
   <select id="login" resultType="int" parameterType="HashMap">
@@ -111,7 +132,7 @@
     <!-- 이름, 아이디별 검색 목록 -->
   <select id="list_by_search" resultType="dev.mvc.member.MemberVO" parameterType="HashMap">
     SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex, 
-           profile, profilesaved, thumbs, sizes
+           profile, profilesaved, thumbs, sizes, introduce
     FROM member
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
