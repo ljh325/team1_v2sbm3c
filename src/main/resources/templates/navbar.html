@@ -1,9 +1,49 @@
 <div th:fragment="navbarFragment">
-
+  <style>
+    .notification-bell {
+            position: relative;
+            display: flex;
+            font-size: 30px;
+            margin-left:10px;
+            margin-top:5px;
+            
+            color: black;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+        .notification-bell .badge {
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            
+            border-radius: 50%;
+            background: red;
+            color: white;
+            font-size: 10px;
+        }
+        .notification-bell i {
+            color: black; /* 기본 색상 설정 */
+            transition: color 0.15s ease; /* 색상 전환 애니메이션 */
+        }
+        .notification-bell:hover i {
+            color: #333;
+            transition: color 0.15s;
+        }
+        .notification-bell:active i {
+            color: #111;
+        }
+        
+  </style>
+  
   <div class="top_menu">
     <!-- top_navigation -->
     <div class="top_navigation">
-      <a href="/" aria-label="홈버튼" style='font-weight: bold;'>Health Care
+      
+      <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <span class="badge">3</span>
+      </div> 
+      <a href="/" aria-label="홈버튼" style='font-weight: bold; margin-left:0px;'>Health Care
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
         aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
