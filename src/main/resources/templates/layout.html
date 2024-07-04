@@ -122,11 +122,15 @@ $(document).ready(function(){
               <img src="/home/chart.png" class="icon">
               <span>분석</span>
             </a>
-            <a href="/history/history_form" aria-label="기록">
-              <img src="/home/record.png" class="icon">
-              <span>기록</span>
+            <a th:if="${session.memberno != null}" th:href="@{|/history/history_form?memberno=${session.memberno}|}" aria-label="기록">
+                <img src="/home/record.png" class="icon">
+                <span>기록</span>
             </a>
-            <a href="/history/sns_comunity_form" aria-label="커뮤니티">
+            <a th:if="${session.memberno == null}" th:href="@{/member/login}" aria-label="로그인">
+                <img src="/home/record.png" class="icon">
+                <span>기록</span>
+            </a>
+            <a href="/history/sns_following_form" aria-label="커뮤니티">
               <img src="/home/community.png" class="icon">
               <span>커뮤니티</span>
             </a>

@@ -52,7 +52,8 @@ public class MemberVO {
   private String sex = "";
   /** 닉네임 */
   private String nickname="";
-  
+  /** 소개글 */
+  private String introduce;
   
   
   //------------------------------------------

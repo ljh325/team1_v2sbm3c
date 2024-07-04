@@ -57,12 +57,26 @@
   <div id="calendar"></div>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      
+      
+      // URL에 memberno의 값을 추출
+      function getQueryParams() {
+        let params = {};
+        window.location.search.substring(1).split("&").forEach(pair => {
+          let [key, value] = pair.split("=");
+          params[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return params;
+      }
+      let params = getQueryParams();
+      let memberno = params['memberno'];
+      
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'ko',
          events: function(info, successCallback, failureCallback) {
-          fetch('/history/api/events')
+          fetch('/history/api/events?memberno='+ memberno)
             .then(response => response.json())
             .then(data => {
               data.forEach(event => {

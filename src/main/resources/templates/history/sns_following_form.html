@@ -1,0 +1,370 @@
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+<div layout:fragment="content" style="width: 100%;  text-align: center;">
+  <style>
+    .content_body {
+      width: 93%;
+    }
+  
+    body {
+      background-color: black;
+    }
+    
+        /* ================= 드롭 다운 버튼 ====================*/
+           .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: -10px; /* 살짝 오른쪽으로 이동 */
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+            max-width: 100px; /* 드롭다운 메뉴의 너비를 조정 */
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 5px 10px;
+            color: black;
+            text-decoration: none;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+        /* ================= 드롭 다운 버튼 ====================*/
+        
+    /* =========기록 활동 버튼=============== */
+    .button-container {
+      width: 100%;
+      margin-bottom: 10px;
+      display: flex;
+    }
+
+    .button {
+      width: 50%;
+      background-color: gray;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .button span {
+      font-size: 17px;
+      color: white;
+    }
+
+    .button:hover {
+      background-color: lightgray;
+      transform: scale(1.05);
+    }
+    /* ===============기록 활동 버튼=============== */
+  </style>
+
+  <div class="d-flex justify-content-evenly" style="background-color: gray; padding:15px;">
+      <div>
+        <div>
+          <img src="/images/none.jpg" style="width: 56px; border-radius: 50%;  margin-left:10px;">
+        </div>
+        <div>
+          <span style="font-size: 12px;">자유 게시판</span>
+        </div>
+      </div>
+      <div>
+        <div>
+          <img src="/images/none.jpg" style="width: 56px; border-radius: 50%;  margin-left:10px;">
+        </div>
+        <div>
+          <span style="font-size: 12px;">공지사항</span>
+        </div>
+      </div>   
+      <div>
+        <div>
+          <img src="/images/none.jpg" style="width: 56px; border-radius: 50%;  margin-left:10px;">
+        </div>
+        <div>
+          <span style="font-size: 12px;">스토리</span>
+        </div>
+      </div>
+      <div>
+        <div>
+          <img src="/images/none.jpg" style="width: 56px; border-radius: 50%;  margin-left:10px;">
+        </div>
+        <div>
+          <span style="font-size: 12px;">스토리2</span>
+        </div>
+      </div>    
+  </div>
+  <br>
+
+
+
+  <div class="button-container">
+    <div id="record_btn" class="button" onclick="location.href='/history/sns_following_form'"
+      style="background-color: #E6E6E6;">
+      <span style="color: black;">팔로잉</span>
+    </div>
+    <div id="activity_btn" class="button" onclick="location.href='/history/sns_comunity_form'">
+      <span>인기</span>
+    </div>
+  </div>
+
+
+<div th:if="${msg == '0'}">
+  <br>
+  <br>
+  <br>
+  <br>
+  <span style="color: #E6E6E6; font-size: 20px; ">팔로잉을 해주세요.</span>
+</div> 
+
+
+<div th:if="${msg == '1'}">
+  <div th:each="list, status : ${list}" style="border-bottom: solid 7px #D3D3D3;"
+       th:if="${list.recvisible != 2 or (list.recvisible == 2 and session.memberno == list.memberno)}">
+
+    <!-- 상단 프로필 닉네임 및 드롭다운 --> 
+    <div style="background-color: white; text-align: left; padding:7px;">
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${list.profile.endsWith('jpg') or list.profile.endsWith('png')  or list.profile.endsWith('gif')}">
+    <img th:src="@{|/member/storage/${list.thumbs}|}" class="profile-img"
+      style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;">
+  </div>
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${((list.profile.endsWith('jpg') or list.profile.endsWith('png')  or list.profile.endsWith('gif')) == false) and (list.sizes > 0)}">
+    <span th:text="${list.profile}" 
+    style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;"></span>
+  </div>
+
+  <div style="float:left;" th:onclick="|location.href='/history/profile_activity?memberno=${list.memberno}'|"
+    th:if="${list.sizes == 0}">
+    <img src="/images/none.jpg" class="default-img" 
+    style="width: 45px; height:42px; border-radius: 50%; cursor: pointer;  margin-left:10px;">
+  </div>
+  
+      <div style="float:left; margin-left: 10px;">
+        <div>
+          <span th:text="${list.nickname}" style="font-size: 13px; cursor: pointer;">닉넴따윗</span>
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+        <div>
+          <span class="recdate" th:attr="data-recdate=${list.recdate}"  style="font-size: 10px;">5시간전</span>
+          <!-- 1일 경우 bi-globe 아이콘 -->
+          <i class="bi bi-globe" style="font-size: 10px; margin-left: 4px;" th:if="${list.recvisible == 1}"></i>
+          <!-- 2일 경우 bi-person-fill-lock 아이콘 -->
+          <i class="bi bi-person-fill-lock" style="font-size: 10px;" th:if="${list.recvisible == 2}"></i>
+        </div>
+      </div>
+      
+      <!-- 드롭 다운 / 이미지 수정삭제 -->
+      <div th:if="${session.memberno == list.memberno}" style="float:right; margin: 10px 10px 0 0; position: relative;">
+        <i class="bi bi-three-dots" style="font-size: 18px; cursor: pointer;" th:attr="id='dropdownMenuButton' + ${status.index}"></i>
+        <div class="dropdown-menu" th:attr="id='dropdownMenu' + ${status.index}">
+          <div id="image_update">
+            <div style="float:left;">
+              <a href="#">&nbsp;수정</a>
+            </div>
+            <div style="float:right; margin-top: 5px; margin-right:9px;">
+              <i class="bi bi-pencil-fill" style="padding:8px;"></i>
+            </div>
+            <div style="clear: both;">
+            </div>
+          </div>
+          <div id="image_delete">
+            <div style="float:left;">
+              <a href="#">&nbsp;삭제</a>
+            </div>
+            <div style="float:right; margin-top: 5px; margin-right:9px;">
+              <i class="bi bi-trash3-fill" style="padding:8px; "></i>
+            </div>
+            <div style="clear: both;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="clear: both;">
+      </div>
+      <!-- 드롭 다운 / 이미지 수정삭제 -->
+    </div>
+    <!-- 상단 프로필 닉네임 및 드롭다운 -->
+    
+    
+    <!-- 컨텐츠 내용 -->
+    <div th:if="${list.reccontents != null}" style="background-color: white; padding: 8px 12px; text-align: left;">
+      <span th:text="${list.reccontents}" style="font-size: 14px;"></span>
+    </div>
+    <div th:if="${list.reccontents == null}">
+      <span style="font-size: 13px;">...</span>
+    </div>
+    <!-- 컨텐츠 내용 -->
+    
+    <!-- 이미지 -->
+    <div th:attr="id='carouselExampleFade' + ${status.index}" class="carousel slide">
+      <div class="carousel-inner">
+        <!-- 데이터가 없는 경우 디폴트 이미지 표시 -->
+        <div th:if="${#lists.isEmpty(imageMap[list.exrecordno])}" class="carousel-item active">
+          <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image">
+        </div>
+  
+        <!-- 데이터가 있는 경우 반복문을 통해 이미지 표시 -->
+        <div th:each="image, imgStatus : ${imageMap[list.exrecordno]}">
+          <div th:class="${imgStatus.first ? 'carousel-item active' : 'carousel-item'}">
+            <div th:if="${image.recprofile.endsWith('jpg') or image.recprofile.endsWith('png') or image.recprofile.endsWith('gif')}">
+              <img th:src="@{|/recordImage/storage/${image.recthumbs}|}" class="d-block w-100 profile-img"
+                style="width: 100%; height: 330px;" alt="Image">
+            </div>
+            <div th:if="${((image.recprofile.endsWith('jpg') or image.recprofile.endsWith('png') or image.recprofile.endsWith('gif')) == false) and (image.recsizes > 0)}">
+              <span th:text="${image.recprofile}" style="width: 100%; height: 330px;"></span>
+            </div>
+            <div th:if="${image.recsizes == 0}">
+              <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image" style="width: 100%; height: 330px;">
+            </div>
+            <div th:if="${image == null}">
+              <img src="/history/images/no.jpg" class="d-block w-100 default-img" alt="No Image" style="width: 100%; height: 330px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" th:attr="data-bs-target='#carouselExampleFade' + ${status.index}" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" th:attr="data-bs-target='#carouselExampleFade' + ${status.index}" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <!-- 이미지 끝 -->
+    
+    
+    
+    
+    
+    <div style="background-color: white;">
+        <div class="d-flex justify-content-between" style="background-color: white; padding:8px 0 6px 0;">
+          <i class="bi bi-heart" style="font-size: 22px;"></i>
+          <i class="bi bi-chat-text-fill" style="font-size: 22px;"></i>
+          <i class="bi bi-bookmark" style="font-size: 22px;"></i>
+        </div>
+      </div>
+      <div style="background-color: white;">
+        <div style="float:left; padding:10px 0 13px 0;">
+          <span style="font-size: 12px; margin-left:15px;">좋아요 12개</span>
+        </div>
+        <div style="float:right; padding:10px 0 13px 0;">
+          <span style="font-size: 12px; margin-right:15px;">댓글 0개</span>
+        </div>
+        <div style="clear: both;">
+        </div>
+      </div>
+      
+      
+      
+
+  
+  
+  </div>
+  <!-- each 종료 -->
+</div>    
+<!--=======================================================================-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  var buttons = document.querySelectorAll('[id^="dropdownMenuButton"]');
+  buttons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      var id = event.target.id.replace('dropdownMenuButton', 'dropdownMenu');
+      var dropdownMenu = document.getElementById(id);
+      if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+        dropdownMenu.style.display = 'block';
+      } else {
+        dropdownMenu.style.display = 'none';
+      }
+    });
+  });
+
+  // 클릭한 곳이 드롭다운 메뉴 밖이면 드롭다운 메뉴를 닫습니다.
+  document.addEventListener('click', function (event) {
+    var isClickInsideDropdown = false;
+    var dropdowns = document.querySelectorAll('[id^="dropdownMenu"]');
+    dropdowns.forEach(function (dropdownMenu) {
+      if (dropdownMenu.contains(event.target) || 
+          event.target.id.indexOf('dropdownMenuButton') !== -1) {
+        isClickInsideDropdown = true;
+      }
+    });
+    
+    if (!isClickInsideDropdown) {
+      dropdowns.forEach(function (dropdownMenu) {
+        dropdownMenu.style.display = 'none';
+      });
+    }
+  });
+  
+  
+  
+  
+  
+
+
+  // 작성일자 표시 함수
+  function timeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      let interval = seconds / 31536000;
+
+      if (interval > 1) {
+        return Math.floor(interval) + '년 전';
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + '달 전';
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + '일 전';
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + '시간 전';
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + '분 전';
+      }
+      return Math.floor(seconds) + '초 전';
+    }
+    // 작성일자 표시
+    document.querySelectorAll('.recdate').forEach(function (element) {
+      const recdate = element.getAttribute('data-recdate');
+      const date = new Date(recdate);
+      element.textContent = timeAgo(date);
+    });
+    
+  
+  
+  
+}); // dom close
+
+  </script>
+</div>
+</html>

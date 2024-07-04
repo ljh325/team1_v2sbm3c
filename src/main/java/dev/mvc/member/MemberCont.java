@@ -69,6 +69,124 @@ public class MemberCont {
   }
   /***************************************************************************************/
   /**
+   * 닉네임 중복 확인
+   * @param nickname
+   * @return
+   */
+  @GetMapping(value="/nickCheck") // http://localhost:9093/member/checkID?id=admin
+  @ResponseBody
+  public String nickCheck(String nickname) {
+    System.out.println("-> nickname: " + nickname);
+    int cnt = this.memberProc.nickCheck(nickname);
+    System.out.println("-> cnt: " + cnt);
+    // return "cnt: " + cnt;
+    // return "{\"cnt\": " + cnt + "}";    // {"cnt": 1} JSON
+    
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
+  }
+  /***************************************************************************************/
+  @PostMapping(value="profile_nickIntro")
+  @ResponseBody
+  public String profile_nickIntro(Model model, HttpSession session,@RequestBody MemberVO memberVO) {
+    
+    JSONObject obj = new JSONObject();
+    int memberno = (int)session.getAttribute("memberno"); 
+    System.out.println("profile_nickIntro");
+    System.out.println("---------------------------------------------------------");
+    System.out.println("소개글" + memberVO.getIntroduce());
+    System.out.println("닉네임" + memberVO.getNickname());
+    System.out.println("---------------------------------------------------------");
+    memberVO.setMemberno(memberno);
+    
+    
+    int cnt = this.memberProc.profile_nickIntro(memberVO);
+    obj.put("cnt", cnt);
+    
+    
+    return obj.toString();
+  }
+  /***************************************************************************************/
+  @PostMapping(value="/profile_update_proc")
+  public String profile_update_proc(Model model, MemberVO memberVO,
+                                    HttpSession session,
+                                    RedirectAttributes ra) {
+    
+    System.out.println("profile_update_proc");
+
+    
+    int memberno = (int)session.getAttribute("memberno"); 
+    memberVO.setMemberno(memberno);
+    
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 시작
+    // ------------------------------------------------------------------------------
+    String profile = "";          // 원본 파일명 image
+    String profilesaved = "";   // 저장된 파일명, image
+    String thumbs = "";     // preview image
+
+    String upDir =  Member.getUploadDir(); // 파일을 업로드할 폴더 준비
+    System.out.println("-> upDir: " + upDir);
+    
+    // 전송 파일이 없어도 files1MF 객체가 생성됨.
+    // <input type='file' class="form-control" name='files1MF' id='files1MF' 
+    //           value='' placeholder="파일 선택">
+    MultipartFile mf = memberVO.getFiles1MF();
+    
+    profile = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+    System.out.println("-> 원본 파일명 산출 file1: " + profile);
+    
+    long sizes = mf.getSize();  // 파일 크기
+    if (sizes > 0) { // 파일 크기 체크, 파일을 올리는 경우
+      if (Tool.checkUploadFile(profile) == true) { // 업로드 가능한 파일인지 검사
+        // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+        profilesaved = Upload.saveFileSpring(mf, upDir); 
+        
+        if (Tool.isImage(profilesaved)) { // 이미지인지 검사
+          // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+          thumbs = Tool.preview(upDir, profilesaved, 200, 150); 
+        }
+        
+        memberVO.setProfile(profile);   // 순수 원본 파일명
+        memberVO.setProfilesaved(profilesaved); // 저장된 파일명(파일명 중복 처리)
+        memberVO.setThumbs(thumbs);      // 원본이미지 축소판
+        memberVO.setSizes(sizes);  // 파일 크기
+        
+
+        
+        int cnt = this.memberProc.profile_update_proc(memberVO);
+        model.addAttribute("cnt" , cnt);
+        
+        if (cnt == 0) {
+          return "redirect:/member/profile_update?memberno=" + memberno;
+        }
+        return "redirect:/member/profile?memberno=" + memberno;
+        
+        
+        
+      } else { // 전송 못하는 파일 형식
+        ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+        ra.addFlashAttribute("cnt", 0); // 업로드 실패
+        ra.addFlashAttribute("url", "/member/msg"); // msg.html, redirect parameter 적용
+         // Post -> Get - param...
+      }
+    } else { // 글만 등록하는 경우
+      System.out.println("-> 글만 등록");
+    }
+    
+    // ------------------------------------------------------------------------------
+    // 파일 전송 코드 종료
+    // ------------------------------------------------------------------------------
+    
+    
+    return "redirect:/member/profile?memberno=" + memberno;
+  }
+  
+  /***************************************************************************************/
+  
+  /**
    * 아이디 찾기 폼
    * @param model
    * @return
@@ -212,10 +330,26 @@ public class MemberCont {
       MemberVO memberVO = this.memberProc.read(memberno);
       model.addAttribute("memberVO", memberVO);
     
-      return "/member/profile"; // /mh/list_all.html
+      return "member/profile"; // /mh/list_all.html
     }else{
       
-    return "index"; // /mh/list_all.html
+    return "member/login"; // /mh/list_all.html
+    }
+  }
+  /***************************************************************************************/
+
+  @GetMapping(value="/profile_update")
+  public String profile_update(Model model, HttpSession session) {
+    
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+      int memberno = (int)session.getAttribute("memberno"); 
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+    
+      return "member/profile_update"; // /mh/list_all.html
+    }else{
+      
+    return "member/login"; // /mh/list_all.html
     }
   }
   /***************************************************************************************/

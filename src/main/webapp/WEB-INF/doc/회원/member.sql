@@ -99,3 +99,22 @@ WHERE  r >= 1 AND r <= 10;
     SET grade=3
     WHERE memberno=38;
  
+
+SELECT COUNT(*) 
+FROM member
+WHERE nickname='닉넴따윗';
+
+-- 이미지 수정
+UPDATE member
+SET nickname='나니', profile='pi.jpg', profilesaved='pi.jpg', thumbs='pi.jpg', sizes=3500, introduce='안녕 날 소개하지!'
+WHERE memberno = 11;
+
+
+-- 이미지 수정
+UPDATE recordimage
+
+SET recprofile='pi.jpg', recprofilesaved='pi.jpg', recthumbs='pi.jpg', recsizes=3500, 
+reccontents='이것만 오운완 ', recvisible=0, recupdate=sysdate
+WHERE memberno = 40;
+
+

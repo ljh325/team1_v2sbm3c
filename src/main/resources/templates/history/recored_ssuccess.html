@@ -40,8 +40,30 @@
   <br>
   <br>
   <br>
-  <div class="success-message"  onclick="location.href='/history/history_form'">
+  <div id="success-message" class="success-message">
       <span style="font-size: 20px;">등록 성공</span>
   </div>
+  <script>
+    // URL에 memberno의 값을 추출
+    function getQueryParams() {
+      let params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        let [key, value] = pair.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      });
+      return params;
+    }
+    
+    document.addEventListener("DOMContentLoaded", function () {
+      let params = getQueryParams();
+      let memberno = params['memberno'];
+      
+        // 팔로우 조회버튼 
+        document.getElementById('success-message').onclick = function () {
+          //alert(1)
+          location.href = `/history/history_form?memberno=${memberno}`;
+        };
+      });
+  </script>
 </div>
 </html>

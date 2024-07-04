@@ -61,7 +61,7 @@
           
           
           
-    <div style="float:left; width:30%;">
+    <div style="float:center; width:30%;">
         <div th:object="${memberVO}">
             <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
                 <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img">
@@ -76,20 +76,7 @@
             </div>
         </div>
     </div>    
-    <div style="float:right; background-color: white; border-radius: 7px; padding: 4px; width:70%;">
-        <div style="background-color: black; border-radius: 7px; padding:7px;">
-            <div class="d-flex justify-content-around">
-                <span class="insta">0</span>
-                <span class="insta">12</span>
-                <span class="insta">13</span>
-            </div>
-            <div class="d-flex justify-content-around">
-                <span class="insta">게시글</span>
-                <span class="insta">팔로우</span>
-                <span class="insta">팔로잉</span>
-            </div>
-        </div>
-    </div>
+
     <div style="clear: both;"></div>
           <div class="d-flex justify-content-between py-2 border-bottom">
               <span>아이디</span>

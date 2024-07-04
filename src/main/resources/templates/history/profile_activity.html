@@ -76,6 +76,25 @@
     .image-item:hover span {
       border: 2px solid white;
     }
+
+    /* 팔로잉 팔로우 버튼*/
+    .followButton {
+      float: right;
+      margin-left: 10%;
+      border-radius: 9px;
+      margin: 0 17px 15px 0;
+      background-color: #00CED1;
+      padding: 7px;
+    }
+
+    .unfollowButton {
+      float: right;
+      margin-left: 10%;
+      border-radius: 9px;
+      margin: 0 17px 15px 0;
+      background-color: red;
+      padding: 7px;
+    }
   </style>
 
   <div style="text-align: left;">
@@ -85,27 +104,42 @@
 
 
   <div class="button-container">
-    <div id="record_btn" class="button" onclick="location.href='/history/history_form'">
+    <div id="record_btn" class="button">
       <span style="color: #E6E6E6;">기록</span>
     </div>
-    <div id="activity_btn" class="button" onclick="location.href='/history/profile_activity'"
-      style="background-color: #E6E6E6;">
+    <div id="activity_btn" class="button" style="background-color: #E6E6E6;">
       <span style="color: black;">활동</span>
     </div>
   </div>
 
   <br>
 
-
-  <div style="float:left; width:30%;">
-    <img src="/images/none.jpg" style="width: 67px; border-radius:50%">
+  <div style="float:left; width:30%;"
+    th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}">
+    <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img"
+      style="border-radius: 50%; width:74%; margin-bottom:8px;"><br>
+    <span th:text="${memberVO.nickname}" class="insta" style="font-size: 16px;">박주찬</span>
   </div>
+
+  <div style="float:left; width:30%;"
+    th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+    <span th:text="${memberVO.profile}" style="border-radius: 50%; width:74%; margin-bottom:8px;"><br></span>
+    <span th:text="${memberVO.nickname}" class="insta" style="font-size: 16px;">박주찬</span>
+  </div>
+
+  <div style="float:left; width:30%;" th:if="${memberVO.sizes == 0}">
+    <img src="/images/none.jpg" class="default-img" style="border-radius: 50%; width:54%; margin-bottom:8px;"><br>
+    <span th:text="${memberVO.nickname}" class="insta" style="font-size: 16px;">박주찬</span>
+  </div>
+
+
+
   <div style="float:right; background-color: white; border-radius: 7px; padding: 4px; width:70%;">
     <div style="background-color: black; border-radius: 7px; padding:7px;">
       <div class="d-flex justify-content-around">
         <span th:text="${cnt}" class="insta"></span>
-        <span class="insta">12</span>
-        <span class="insta">13</span>
+        <span th:text="${follower_cnt}" id="follow" class="insta" style="cursor:pointer;"></span>
+        <span th:text="${following_cnt}" id="following" class="insta" style="cursor:pointer;"></span>
       </div>
       <div class="d-flex justify-content-around">
         <span class="insta">게시글</span>
@@ -117,10 +151,21 @@
   <div style="clear: both;">
   </div>
 
-  <div style="float:left; text-align: left; margin-left:29px; margin-top:8px;">
-    <span th:text="${memberVO.nickname}" class="insta" style="font-size: 16px;">박주찬</span>
+  <div th:if="${memberVO.introduce == null}" style="float:left; text-align: left; margin-left:20px; margin-top:5px;">
+    <span style="font-size: 14px; ">소개글이 없습니다.</span>
   </div>
-  <div style="float:right; margin-left:10%; margin:8px 17px 15px 0; background-color: red; padding:7px;">
+  <div th:if="${memberVO.introduce != null}" style="float:left; text-align: left; margin-left:20px; margin-top:5px;">
+    <span th:text="|▷ ${memberVO.introduce}|" class="insta" style="font-size: 12px;">박주찬</span>
+  </div>
+  <div th:if="${exit_cnt == 0}" id="followButton" class="followButton">
+    <span id="followButtonText">팔로우</span>
+  </div>
+  <div th:if="${exit_cnt == 1}" id="unfollowButton" class="unfollowButton">
+    <span id="unfollowButtonText">언팔로우</span>
+  </div>
+
+  <div id="profile_update"
+    style="cursor:pointer; float: right; border-radius: 9px; margin:0 17px 15px 0; background-color: #00CED1; padding:7px;">
     <span>프로필 편집</span>
   </div>
   <div style="clear: both;">
@@ -159,29 +204,28 @@
  -->
 
 
-    <div class="image-container">
-      <div th:each="list : ${list}" class="image-item">
-        <div
-          th:if="${list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')}"
-          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
-          <img th:src="@{|/recordImage/storage/${list.recthumbs}|}" class="profile-img" style="height:119px;"
-            alt="Image">
-        </div>
-        <div
-          th:if="${((list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')) == false) and (list.recsizes > 0)}"
-          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
-          <span th:text="${list.recprofile}" style="height:119px;"></span>
-        </div>
-        <div th:if="${list.recsizes == 0}"
-          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
-          <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
-        </div>
-        <div th:if="${list == null}"
-          th:onclick="|location.href='/history/profile_detail?exrecordno=${list.exrecordno}'|">
-          <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
-        </div>
+  <div class="image-container">
+    <div th:each="list, status : ${list}" class="image-item">
+      <div class="image-id"
+        th:if="${list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')}">
+        <img th:src="@{|/recordImage/storage/${list.recthumbs}|}" class="profile-img" style="height:119px;" alt="Image">
+        <input type="hidden" class="exrecordno" th:value="${list.exrecordno}">
+      </div>
+      <div class="image-id"
+        th:if="${((list.recprofile.endsWith('jpg') or list.recprofile.endsWith('png') or list.recprofile.endsWith('gif')) == false) and (list.recsizes > 0)}">
+        <span th:text="${list.recprofile}" style="height:119px;"></span>
+        <input type="hidden" class="exrecordno" th:value="${list.exrecordno}">
+      </div>
+      <div class="image-id" th:if="${list.recsizes == 0}">
+        <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
+        <input type="hidden" class="exrecordno" th:value="${list.exrecordno}">
+      </div>
+      <div class="image-id" th:if="${list == null}">
+        <img src="/history/images/no.jpg" class="default-img" style="height:119px;" alt="No Image">
+        <input type="hidden" class="exrecordno" th:value="${list.exrecordno}">
       </div>
     </div>
+  </div>
 
   <br>
   <br>
@@ -194,7 +238,135 @@
   </div>
 
 
+  <script>
 
+    // URL에 memberno의 값을 추출
+    function getQueryParams() {
+      let params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        let [key, value] = pair.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      });
+      return params;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      let params = getQueryParams();
+      let memberno = params['memberno'];
+      let sessionMemberno = '[[${session.memberno}]]';
+      if (sessionMemberno != memberno) {
+        document.getElementById('profile_update').style.display = 'none';
+      }
+
+
+      if (memberno) {
+        // 팔로우 조회버튼
+        document.getElementById('follow').onclick = function () {
+          //alert(1)
+          location.href = `/history/profile_follower?memberno=${memberno}`;
+        };
+        // 팔로잉 조회 버튼
+        document.getElementById('following').onclick = function () {
+          location.href = `/history/profile_followng?memberno=${memberno}`;
+        };
+
+        document.getElementById('record_btn').onclick = function () {
+          location.href = `/history/history_form?memberno=${memberno}`;
+        };
+
+        document.getElementById('activity_btn').onclick = function () {
+          location.href = `/history/profile_activity?memberno=${memberno}`;
+        };
+        document.getElementById('profile_update').onclick = function () {
+          location.href = `/member/profile_update?memberno=${memberno}`;
+        };
+        document.querySelectorAll('.image-id').forEach(function (imageDiv) {
+          imageDiv.addEventListener('click', function () {
+            let exrecordno = this.querySelector('.exrecordno').value;
+            location.href = `/history/profile_detail?exrecordno=${exrecordno}&memberno=${memberno}`;
+          });
+        });
+
+        follows(memberno)
+      }
+      if (memberno && sessionMemberno) {
+        if (memberno == sessionMemberno) {
+          document.getElementById('followButton').style.display = 'none';
+          document.getElementById('unfollowButton').style.display = 'none';
+        }
+      } else {
+        alert('memberno 파라미터가 없거나 세션 정보가 없습니다.');
+      }
+
+
+
+
+      function follows(memberno) {
+
+        let followButton = document.getElementById('followButton');
+        let unfollowButton = document.getElementById('unfollowButton');
+
+
+        if (followButton) {
+          followButton.addEventListener('click', function (event) {
+            fetch('/follows/follower_insert', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({memberno: memberno})
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data['cnt'] == 1) {
+                  console.log('팔로우 성공');
+                  followButton.style.backgroundColor = 'red';
+                  followButton.innerHTML = '<span id="followButtonText">언팔로우</span>';
+                  followButton.id = 'unfollowButton';
+                  location.reload();
+                  //updateButtonListeners();
+                } else {
+                  console.log('팔로우 실패');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          });
+        }
+
+        if (unfollowButton) {
+          unfollowButton.addEventListener('click', function (event) {
+            fetch('/follows/delete_friends', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({memberno: memberno})
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data['cnt'] == 1) {
+                  console.log('언팔로우 성공');
+                  unfollowButton.style.backgroundColor = '#00CED1';
+                  unfollowButton.innerHTML = '<span id="followButtonText">팔로우</span>';
+                  unfollowButton.id = 'followButton';
+                  location.reload();
+                  //updateButtonListeners();
+                } else {
+                  console.log('언팔로우 실패');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          });
+        }
+
+      } // function 끝
+    });
+
+  </script>
 
 </div>
 

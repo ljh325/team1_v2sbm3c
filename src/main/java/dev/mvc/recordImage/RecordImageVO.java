@@ -53,5 +53,52 @@ public class RecordImageVO {
   /* 회원번호 */
   private int memberno;
   
+  
+  
+  
+  
+  
+  //-----------------------------------------------
+  /** 아이디(이메일) */
+  private String id = "";
+  /** 회원 성명 */
+  private String mname = "";
+  /** 전화 번호 */
+  private String tel = "";
+  /** 가입일 */
+  private String mdate = "";
+  /** 등급 */
+  private int grade;
+  /** 포인트 */
+  private int point;
+  /** 생일 */
+  private String birth;
+  /** sex */
+  private String sex = "";
+  /** 닉네임 */
+  private String nickname="";
+  
+  //-----------------------------------------------
+ private MultipartFile files2MF;
+
+  
+  /** 메인 이미지 크기 단위, 파일 크기 */
+  private String sizes_label2= "";
+  
+  /** 등록 파일 */
+  private String profile = "";
+  
+  /** 저장된 등록 파일 */
+  private String profilesaved = "";
+  
+  /** 미리보기 이미지*/
+  private String thumbs = "";
+  /** 메인 이미지 크기 */
+  private long sizes;
+  
+//-----------------------------------------------
+  
+  /** 좋아요 수 */
+  private int likeCnt;
 
 }

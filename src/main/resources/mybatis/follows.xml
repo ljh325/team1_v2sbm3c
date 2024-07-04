@@ -9,97 +9,117 @@
 /**********************************/
 /* Table Name: 팔로우팔로잉 */
 /**********************************/
-    FOLLOWER_NO                         NUMBER(10)     NOT NULL,
-    FOLLOWED_NO                       NUMBER(10)     NOT NULL,
-    FOLLOW_DATE                       DATE     NULL ,
-  PRIMARY KEY (FOLLOWER_NO, FOLLOWED_NO),
-  FOREIGN KEY (FOLLOWER_NO) REFERENCES MEMBER(MEMBERNO),
-  FOREIGN KEY (FOLLOWED_NO) REFERENCES MEMBER(MEMBERNO)
+    FOLLOWER_NO      NUMBER(10)     NOT NULL,
+    FOLLOWED_NO      NUMBER(10)     NOT NULL,
+    FOLLOW_DATE      DATE           NULL ,
+  PRIMARY KEY (FOLLOWER_NO, FOLLOWED_NO), (복합키)
+  FOREIGN KEY (FOLLOWER_NO) REFERENCES MEMBER(MEMBERNO), (FK)
+  FOREIGN KEY (FOLLOWED_NO) REFERENCES MEMBER(MEMBERNO)  (FK)
 -->
 <mapper namespace="dev.mvc.follows.FollowsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <!-- 팔로우 관계를 추가 -->
-  <insert id="insert_history" parameterType="dev.mvc.follows.FollowsVO">
-    INSERT INTO Follows (follower_no, followed_no, follow_date) VALUES (#{follower_no}, #{followed_no}, sysdate);
+  <insert id="follower_insert" parameterType="dev.mvc.follows.FollowsVO">
+    INSERT INTO Follows (follower_no, followed_no, follow_date) VALUES (#{follower_no}, #{followed_no}, sysdate)
   </insert>
-
-
-
-
-
-
-  <!-- (o)  회원별 운동기록 리스트조회 -->
-  <select id="read_history" resultType="dev.mvc.history.HistoryVO" parameterType="dev.mvc.history.HistoryVO">
-    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate , exupdatedate, memberno
-    FROM history
-    WHERE memberno = #{memberno} AND TRUNC(recorddate) = TO_DATE(#{recorddate}, 'YYYY-MM-DD')
-    ORDER BY recorddate DESC
-  </select>  
   
-  <!-- (o)  회원별 운동기록 상세 목록조회 -->
-  <select id="record_read" resultType="dev.mvc.history.HistoryVO" parameterType="map">
-    SELECT exrecordno, exname, extype, hiscalorie, duration, notes, recorddate, startdate, exupdatedate, memberno
-    FROM history
-    WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
+  <!-- 내가 팔로우 한 사람이 있는지 확인 -->
+  <select id="exist_cnt" parameterType="dev.mvc.follows.FollowsVO" resultType="int">
+    SELECT count(*) as cnt FROM Follows WHERE followed_no = #{followed_no} AND follower_no = #{follower_no}
+  </select>
+
+  <!-- Alice가 팔로우하는 사람들 -->
+  <select id="following_read" resultType="dev.mvc.follows.FollowsVO" parameterType="int">
+    SELECT follower_no, followed_no, follow_date
+    FROM Follows 
+    WHERE follower_no = #{follower_no}
   </select> 
   
-  
-  <!-- 회원별 + 날짜별 총 운동 시간(time) -->
-  <select id="time_for_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(recorddate) AS recorddate, SUM(duration) AS total_duration
-    FROM history
-    WHERE memberno = #{memberno}
-    GROUP BY TRUNC(recorddate)
-    ORDER BY TRUNC(recorddate)
-  </select>  
-  
-  <!-- 회원별 + 날짜별 총 운동 횟수(count) -->
-  <select id="count_history" resultType="dev.mvc.history.HistoryVO" parameterType="int">
-    SELECT TRUNC(recorddate) AS recorddate, COUNT(*) AS total_exercises
-    FROM history
-    WHERE memberno = #{memberno}
-    GROUP BY TRUNC(recorddate)
-    ORDER BY TRUNC(recorddate)
-  </select>  
-  
-  <!-- 회원 운동 기록 전체 시간  -->
-  <select id="all_count" resultType="int" parameterType="int">
-    SELECT SUM(DURATION)
-    FROM HISTORY
-    WHERE MEMBERNO = #{memberno}
-  </select>  
- 
-  <!-- 운동기록번호의 최댓값 -->
-  <select id="exrecordno_max" resultType="int">
-    SELECT MAX(exrecordno) as exrecordno
-    FROM history
+  <!-- Alice가 팔로우당한 사람들 -->
+  <select id="follower_read" resultType="dev.mvc.follows.FollowsVO" parameterType="int">
+    SELECT  follower_no, followed_no, follow_date
+    FROM Follows 
+    WHERE followed_no = #{followed_no}
   </select>
   
-  <!-- 운동기록 총 갯수 -->
-  <select id="ex_cnt" resultType="int" parameterType="int">
-    SELECT count(*)
-    FROM history
-    WHERE exrecordno=#{exrecordno}
+  <!-- 내가 팔로잉 한 사람들 조회 -->
+  <select id="following_member_read" resultType="dev.mvc.follows.FollowsVO" parameterType="int">
+    SELECT f.follower_no, f.followed_no, f.follow_date, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM Follows f, member m
+    WHERE m.memberno = f.followed_no AND follower_no = #{follower_no}
   </select>
   
-  <!-- 운동 기록 수정 -->
-  <update id="history_update" parameterType="dev.mvc.history.HistoryVO">
-    UPDATE history
-    SET exname = #{exname}, extype=#{extype}, hiscalorie= #{hiscalorie}, duration=#{duration},  notes=#{notes}, recorddate=#{recorddate}, exupdatedate=sysdate
-    WHERE exrecordno = #{exrecordno}
-  </update>
-
-  <!-- 운동 기록 부분 삭제 -->
-  <delete id="delete_sectoin_history" parameterType="HashMap">
-    DELETE FROM history
-    WHERE memberno = #{memberno} AND exrecordno = #{exrecordno}
+  <!-- 다른 사람이 나를 팔로우 한 사람들 조회 -->
+  <select id="follower_member_read" resultType="dev.mvc.follows.FollowsVO" parameterType="int">
+    SELECT f.follower_no, f.followed_no, f.follow_date, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM Follows f, member m
+    WHERE m.memberno = f.follower_no AND followed_no = #{followed_no}
+  </select>
+  
+    <!-- 팔로우한게시글 조회 -->
+  <select id="sns_follow_member_read" resultType="dev.mvc.follows.FollowsVO" parameterType="int" >
+ SELECT *
+FROM (
+    SELECT 
+        f.follower_no,
+        f.followed_no,
+        f.follow_date,
+        r.recimageno,
+        r.recprofile,
+        r.recprofilesaved,
+        r.recthumbs,
+        r.recsizes,
+        r.reccontents,
+        r.recvisible,
+        r.recdate,
+        r.recupdate,
+        r.exrecordno,
+        r.memberno,
+        m.id,
+        m.mname,
+        m.nickname,
+        m.tel,
+        m.mdate,
+        m.grade,
+        m.point,
+        m.birth,
+        m.sex,
+        m.profile,
+        m.profilesaved,
+        m.thumbs,
+        m.sizes,
+        ROW_NUMBER() OVER (PARTITION BY r.exrecordno ORDER BY r.recdate DESC) AS row_num
+    FROM Follows f
+    JOIN recordimage r ON f.followed_no = r.memberno
+    JOIN member m ON r.memberno = m.memberno
+    WHERE f.follower_no = #{follower_no}
+) t
+WHERE t.row_num = 1
+  </select>
+  
+  <!-- 현재 내가 팔로잉 한 수  -->
+  <select id="following_cnt" resultType="int" parameterType="int">
+    SELECT count(followed_no)
+    FROM Follows 
+    WHERE follower_no = #{follower_no}
+  </select>  
+  
+  
+  <!-- 현재 내 팔로우 수  -->
+  <select id="follower_cnt" resultType="int" parameterType="int">
+    SELECT count(follower_no)
+    FROM Follows 
+    WHERE followed_no = #{followed_no}
+  </select>  
+  
+  
+    <!-- Bob이 Dave를 팔로우하는 관계 삭제 -->
+  <delete id="delete_friends" parameterType="HashMap">
+    DELETE FROM Follows 
+    WHERE follower_no = #{follower_no} AND followed_no = #{followed_no}
   </delete>
   
-  <!-- 날짜별 운동 기록 삭제 -->
-  <delete id="delete_date_history" parameterType="HashMap">
-      DELETE FROM history
-      WHERE memberno = #{memberno} AND TRUNC(startdate) = TO_DATE(#{startdate}, 'YYYY-MM-DD')
-  </delete>
-
 
 </mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+//======================= 주찬 ========================//
+                /* Table Name: 팔로우팔로잉 */
+
+/**********************************/
+/* Table Name: 팔로우팔로잉 */
+/**********************************/
+    FOLLOWER_NO      NUMBER(10)     NOT NULL,
+    FOLLOWED_NO      NUMBER(10)     NOT NULL,
+    FOLLOW_DATE      DATE           NULL ,
+  PRIMARY KEY (FOLLOWER_NO, FOLLOWED_NO), (복합키)
+  FOREIGN KEY (FOLLOWER_NO) REFERENCES MEMBER(MEMBERNO), (FK)
+  FOREIGN KEY (FOLLOWED_NO) REFERENCES MEMBER(MEMBERNO)  (FK)
+-->
+<mapper namespace="dev.mvc.likesyesno.LikesyesnoDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 좋아요 추가 -->
+  <insert id="like_insert" parameterType="dev.mvc.likesyesno.LikesyesnoVO">
+    INSERT INTO likesyesno(likesno, likesdate, exrecordno, memberno)
+    VALUES (likesyesno_seq.nextval, sysdate, #{exrecordno}, #{memberno})
+  </insert>
+  
+
+  <!-- 좋아요 한 회원 조회 -->
+  <select id="like_read" resultType="dev.mvc.likesyesno.LikesyesnoVO" parameterType="int">
+      SELECT l.likesno, l.likesdate, l.exrecordno, l.memberno, 
+             m.id, m.mname, m.nickname, m.mdate, m.grade, 
+             m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes, m.introduce
+      FROM likesyesno l, member m
+      WHERE l.memberno = m.memberno AND exrecordno = #{exrecordno}
+  </select> 
+
+
+  
+  <!-- 좋아요 수  -->
+  <select id="like_cnt" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt FROM likesyesno
+    WHERE exrecordno = #{exrecordno}
+  </select>  
+  
+  
+    <!-- 좋아요 삭제 -->
+  <delete id="unlike" parameterType="HashMap">
+    DELETE FROM likesyesno
+    WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
+  </delete>
+  
+
+</mapper>

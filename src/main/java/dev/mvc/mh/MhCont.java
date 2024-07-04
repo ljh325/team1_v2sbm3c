@@ -390,11 +390,72 @@ public class MhCont {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");  
     MhVO mhVO = this.mhProc.read(mhno);
+    
+    
+    
+    model.addAttribute("mhVO",mhVO );
+    
+    
+    if (mhVO != null) {
+      float kg = mhVO.getKg();
+      float cm = mhVO.getCm() / 100;
+      float bmi_float = kg / (cm * cm); // 소수점 제한 안한 값
+      String bmi = String.format("%.2f", bmi_float); //소숫점 2째자리까지
+      
+      System.out.println("kg -> " + kg);
+      System.out.println("cm -> " + cm);
+      System.out.println("bmi -> " + bmi);
+      
+      
+        String result = "";
+        String risk = "";
+        String exercise_recommendation = "";
+        String diet_recommendation = "";
+        
+        if (bmi_float < 18.5) {
+            result += " 저체중";
+            risk += "영양 결핍, 빈혈 위험이 있습니다.";
+            exercise_recommendation += "근육을 증가시키기 위한 저강도 운동과 단백질 섭취를 권장합니다.";
+            diet_recommendation += "고단백 식품과 영양가 있는 식사를 권장합니다.";
+        } else if (bmi_float < 23) {
+            result += "정상";
+            risk = "건강한 상태입니다.";
+            exercise_recommendation += "유산소 운동과 근력 운동을 균형 있게 하십시오.";
+            diet_recommendation += "균형 잡힌 식단을 유지하십시오.";
+        } else if (bmi_float < 25) {
+            result += "과체중";
+            risk = "심혈관 질환 및 당뇨병 위험이 있습니다.";
+            exercise_recommendation += "체중 감량을 위한 유산소 운동을 권장합니다.";
+            diet_recommendation += "저칼로리 식단과 적절한 영양 섭취를 권장합니다.";
+        } else {
+            result += "비만";
+            risk = "고혈압, 당뇨병, 심혈관 질환 및 관절염 위험이 있습니다.";
+            exercise_recommendation += "체중 감량을 위한 저강도 유산소 운동과 식이 조절을 권장합니다.";
+            diet_recommendation += "저칼로리 식단과 함께 식사량을 조절하십시오.";
+        }
+        //if (gender == 'male' and waist >= 102) or (gender == 'female' and waist >= 88):
+        //  risk += " 또한, 복부비만으로 심혈관 질환 위험이 증가합니다."
+
+        //if (gender == 'male' and muscle_mass <= 34) or (gender == 'female' and muscle_mass <= 24):
+        //  risk += " 근감소증 위험이 있습니다."
+      
+        
+        model.addAttribute("bmi", bmi);
+        model.addAttribute("result" ,result);
+        model.addAttribute("risk" ,risk);
+        model.addAttribute("exercise_recommendation" ,exercise_recommendation);
+        model.addAttribute("diet_recommendation" ,diet_recommendation);   
+    } else {
+      model.addAttribute("nulls","등록된 건강정보가 없습니다.");
+    }
+
+    
+    
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
     GoalsVO goalsVO = this.goalsProc.read_n(memberno);
     model.addAttribute("goalsVO", goalsVO);
     mhVO.setMemberno(memberno);  
-    model.addAttribute("mhVO", mhVO);
+ 
 
     model.addAttribute("list", list);
     
