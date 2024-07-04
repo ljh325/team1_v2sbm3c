@@ -120,7 +120,8 @@
 
 
 <div th:if="${msg == '1'}">
-  <div th:each="list, status : ${list}" style="border-bottom: solid 7px #D3D3D3;">
+  <div th:each="list, status : ${list}" style="border-bottom: solid 7px #D3D3D3;"
+       th:if="${list.recvisible != 2 or (list.recvisible == 2 and session.memberno == list.memberno)}">
 
     <!-- 상단 프로필 닉네임 및 드롭다운 --> 
     <div style="background-color: white; text-align: left; padding:7px;">

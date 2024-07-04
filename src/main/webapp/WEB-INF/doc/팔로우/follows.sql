@@ -37,7 +37,7 @@ FROM Follows;
 --특정 사용자의 팔로우 관계를 조회합니다:
 SELECT  follower_no, followed_no, follow_date
 FROM Follows 
-WHERE follower_no = 5; -- Alice가 팔로우하는 사람들
+WHERE follower_no = 9; -- Alice가 팔로우하는 사람들
 
 -- 허
 SELECT  f.follower_no, f.followed_no, f.follow_date, 
@@ -77,11 +77,47 @@ FROM (
         ROW_NUMBER() OVER (PARTITION BY r.exrecordno ORDER BY r.recdate DESC) AS row_num
     FROM Follows f
     JOIN recordimage r ON f.followed_no = r.memberno
-    WHERE f.follower_no = 11
+    WHERE f.follower_no = 9
 ) t
 WHERE t.row_num = 1;
   
-    
+ SELECT *
+FROM (
+    SELECT 
+        f.follower_no,
+        f.followed_no,
+        f.follow_date,
+        r.recimageno,
+        r.recprofile,
+        r.recprofilesaved,
+        r.recthumbs,
+        r.recsizes,
+        r.reccontents,
+        r.recvisible,
+        r.recdate,
+        r.recupdate,
+        r.exrecordno,
+        r.memberno,
+        m.id,
+        m.mname,
+        m.nickname,
+        m.tel,
+        m.mdate,
+        m.grade,
+        m.point,
+        m.birth,
+        m.sex,
+        m.profile,
+        m.profilesaved,
+        m.thumbs,
+        m.sizes,
+        ROW_NUMBER() OVER (PARTITION BY r.exrecordno ORDER BY r.recdate DESC) AS row_num
+    FROM Follows f
+    JOIN recordimage r ON f.followed_no = r.memberno
+    JOIN member m ON r.memberno = m.memberno
+    WHERE f.follower_no = 9
+) t
+WHERE t.row_num = 1;   
     SELECT recimageno, recprofile, recprofilesaved, recthumbs, recsizes, reccontents, recvisible, recdate, recupdate, exrecordno, memberno
 FROM recordimage
 ORDER BY   COALESCE(recupdate, recdate) DESC;
@@ -89,19 +125,32 @@ ORDER BY   COALESCE(recupdate, recdate) DESC;
 --특정 사용자의 팔로우 관계를 조회합니다:
 SELECT  follower_no, followed_no, follow_date
 FROM Follows 
-WHERE followed_no = 5; -- Alice가 팔로우당한 사람들
+WHERE follower_no = 5; -- Alice가 팔로우당한 사람들
 
 
 
 -- 현재 내가 팔로잉 한 수
 SELECT count(followed_no)
 FROM Follows 
-WHERE follower_no = 5;
+WHERE follower_no = 12;
+
+SELECT  follower_no, followed_no, follow_date
+FROM Follows 
+WHERE follower_no = 11; -- Alice가 팔로우당한 사람들
+
+-------------------------------------------------
 
 -- 현재 내 팔로우 수
 SELECT count(follower_no)
 FROM Follows 
-WHERE followed_no = 5;
+WHERE followed_no = 9;
+
+SELECT  follower_no, followed_no, follow_date
+FROM Follows 
+WHERE followed_no = 5; -- Alice가 팔로우당한 사람들
+
+
+
 
 -- 내가 팔로우 한 사람이 있는지 확인
 SELECT count(*) as cnt FROM Follows WHERE followed_no = 9 AND follower_no = 5; 
@@ -129,12 +178,18 @@ SELECT * FROM member;
 
 
 
+--following_member_read
+    SELECT f.follower_no, f.followed_no, f.follow_date, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM Follows f, member m
+    WHERE m.memberno = f.followed_no AND follower_no = 5;
 
 
-
-
-
-
+--follower_member_read
+    SELECT f.follower_no, f.followed_no, f.follow_date, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
+    FROM Follows f, member m
+    WHERE m.memberno = f.follower_no AND followed_no = 5;
 
 
 -- 삭제

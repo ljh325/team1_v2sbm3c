@@ -96,5 +96,9 @@ public class RecordImageVO {
   /** 메인 이미지 크기 */
   private long sizes;
   
+//-----------------------------------------------
+  
+  /** 좋아요 수 */
+  private int likeCnt;
 
 }

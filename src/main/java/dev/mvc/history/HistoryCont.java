@@ -3,6 +3,7 @@ package dev.mvc.history;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import dev.mvc.follows.FollowsProcInter;
 import dev.mvc.follows.FollowsVO;
 import dev.mvc.goals.GoalsProcInter;
 import dev.mvc.goals.GoalsVO;
+import dev.mvc.likesyesno.LikesyesnoProcInter;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhProcInter;
@@ -68,6 +70,10 @@ public class HistoryCont {
   @Autowired
   @Qualifier("dev.mvc.follows.FollowsProc")
   private FollowsProcInter followsProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.likesyesno.LikesyesnoProc")
+  private LikesyesnoProcInter likesyesnoProc;
   
   public HistoryCont() {
     System.out.println("-> HistoryCont created.");  
@@ -430,15 +436,24 @@ public class HistoryCont {
         
         //ArrayList<RecordImageVO> newList = new ArrayList<>();
         HashMap<Integer, ArrayList<RecordImageVO>> imageMap = new HashMap<>();
+        // 좋아요수
+        HashMap<Integer, Integer> likeCountMap = new HashMap<>();
         
         for (RecordImageVO item : list) {
           HashMap<String, Object> map = new HashMap<String, Object>();
           map.put("memberno", item.getMemberno());
           map.put("exrecordno", item.getExrecordno());
-
+          
+          // 여러 exrecordno의 값들이 존재
+          int exrecordno = item.getExrecordno();
+          int like_cnt = this.likesyesnoProc.like_cnt(exrecordno);
+          likeCountMap.put(exrecordno, like_cnt);
+          
           ArrayList<RecordImageVO> imageList = this.recordImageProc.rec_images_read(map);
-          imageMap.put(item.getExrecordno(), imageList);
+          imageMap.put(exrecordno, imageList);
         }
+        
+        model.addAttribute("likeCountMap", likeCountMap); 
         model.addAttribute("imageMap", imageMap);         
       }
       return "history/sns_comunity_form";
@@ -476,7 +491,7 @@ public class HistoryCont {
         }
       return "history/sns_following_form";
     }else{
-    return "member/login"; // /member/login.html
+    return "redirect:/member/login"; // /member/login.html
     } 
   }
   

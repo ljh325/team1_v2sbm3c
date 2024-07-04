@@ -132,13 +132,26 @@ WHERE memberno = 40;
 DELETE FROM recordimage
 WHERE exrecordno = 1;
 
-    SELECT r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
-           m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes
-    FROM recordimage r
-    JOIN member m ON r.memberno = m.memberno
-    WHERE r.recimageno IN (
-      SELECT MAX(recimageno)
-      FROM recordimage
-      GROUP BY exrecordno
+SELECT 
+    r.recimageno, r.recprofile, r.recprofilesaved, r.recthumbs, r.recsizes, 
+    r.reccontents, r.recvisible, r.recdate, r.recupdate, r.exrecordno, r.memberno, 
+    m.memberno, m.id, m.mname, m.nickname, m.tel, m.mdate, m.grade, 
+    m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes, m.introduce
+FROM 
+    recordimage r
+JOIN 
+    member m ON r.memberno = m.memberno
+WHERE 
+    r.recimageno IN (
+        SELECT MAX(recimageno)
+        FROM recordimage
+        WHERE recvisible != 2
+        GROUP BY exrecordno
     )
-    ORDER BY COALESCE(r.recupdate, r.recdate) DESC;
+ORDER BY 
+    COALESCE(r.recupdate, r.recdate) DESC;
+    
+    
+    UPDATE recordimage
+    SET recvisible=2
+    WHERE exrecordno = 14;

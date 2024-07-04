@@ -50,6 +50,19 @@ public class AdminCont {
 
 
 
+  @GetMapping(value="/admin_form")
+  public String admin_form(Model model,HttpSession session) {
+    
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int)session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+      
+      return "admin_index";
+      
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    } 
+    
+  }
 
   /**
    * 관리자 목록 조회
@@ -229,7 +242,7 @@ public class AdminCont {
       ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
       response.addCookie(ck_passwd_save);
 
-      return "redirect:/";
+      return "redirect:/admin/admin_form";
     } else {
       model.addAttribute("code", "login_fail");
       return "admin/msg";
