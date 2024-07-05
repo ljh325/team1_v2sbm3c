@@ -1,0 +1,187 @@
+@startumld
+left to right direction
+
+class AdcontentsProc [[java:dev.mvc.adcontents.AdcontentsProc]] {
+	~security: Security
+	+create(adcontentsVO: AdcontentsVO): int
+	+list_cate(adcontentsno: int): ArrayList<AdcontentsVO>
+	+list_cate_count(cateno: int): int
+	+list_all_count(): int
+	+read(adcontentsno: int): AdcontentsVO
+	+youtube(hashmap: HashMap<String,Object>): int
+	+list_all_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	+list_all_search_count(hashmap: HashMap<String,Object>): int
+	+list_all_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	+list_cate_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	+list_cate_search_count(hashmap: HashMap<String,Object>): int
+	+list_cate_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	+list_cate_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	+password_check(hashmap: HashMap<String,Object>): int
+	+update_text(adcontentsVO: AdcontentsVO): int
+	+update_file(adcontentsVO: AdcontentsVO): int
+	+delete(adcontentsno: int): int
+	+delete_by_cate(cateno: int): int
+	+view(adcontentsno: int): int
+	+recom(adcontentsno: int): int
+	+recom_cancel(adcontentsno: int): int
+	+pagingBox(cateno: int, now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+	+pagingBox_all(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+}
+class AdcontentsDAOInter {
+}
+AdcontentsProc --> "1" AdcontentsDAOInter : adcontentsDAO
+class AdcontentsVO {
+}
+AdcontentsProc --> "*" AdcontentsVO : list_all()
+interface AdcontentsProcInter {
+}
+AdcontentsProcInter <|.. AdcontentsProc
+class Adcontents [[java:dev.mvc.adcontents.Adcontents]] {
+	+{static} RECORD_PER_PAGE: int
+	+{static} PAGE_PER_BLOCK: int
+	+{static} getUploadDir(): String
+}
+interface AdcontentsProcInter [[java:dev.mvc.adcontents.AdcontentsProcInter]] {
+	create(adcontentsVO: AdcontentsVO): int
+	list_cate(adcontentsno: int): ArrayList<AdcontentsVO>
+	list_cate_count(cateno: int): int
+	list_all_count(): int
+	read(adcontentsno: int): AdcontentsVO
+	youtube(hashmap: HashMap<String,Object>): int
+	list_all_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_all_search_count(hashmap: HashMap<String,Object>): int
+	list_all_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_search_count(hashmap: HashMap<String,Object>): int
+	list_cate_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	password_check(hashmap: HashMap<String,Object>): int
+	update_text(adcontentsVO: AdcontentsVO): int
+	update_file(adcontentsVO: AdcontentsVO): int
+	delete(adcontentsno: int): int
+	delete_by_cate(cateno: int): int
+	view(adcontentsno: int): int
+	recom(adcontentsno: int): int
+	recom_cancel(adcontentsno: int): int
+	pagingBox(cateno: int, now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+	pagingBox_all(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+}
+class AdcontentsVO {
+}
+AdcontentsProcInter --> "*" AdcontentsVO : list_all()
+interface AdcontentsDAOInter [[java:dev.mvc.adcontents.AdcontentsDAOInter]] {
+	create(adcontentsVO: AdcontentsVO): int
+	list_cate(adcontentsno: int): ArrayList<AdcontentsVO>
+	list_cate_count(cateno: int): int
+	list_all_count(): int
+	read(adcontentsno: int): AdcontentsVO
+	youtube(hashmap: HashMap<String,Object>): int
+	list_all_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_all_search_count(hashmap: HashMap<String,Object>): int
+	list_all_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_search(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_search_count(hashmap: HashMap<String,Object>): int
+	list_cate_search_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	list_cate_paging(hashmap: HashMap<String,Object>): ArrayList<AdcontentsVO>
+	password_check(hashmap: HashMap<String,Object>): int
+	update_text(adcontentsVO: AdcontentsVO): int
+	update_file(adcontentsVO: AdcontentsVO): int
+	delete(adcontentsno: int): int
+	delete_by_cate(cateno: int): int
+	view(adcontentsno: int): int
+	recom(adcontentsno: int): int
+	recom_cancel(adcontentsno: int): int
+}
+class AdcontentsVO {
+}
+AdcontentsDAOInter --> "*" AdcontentsVO : list_all()
+class AdcontentsVO [[java:dev.mvc.adcontents.AdcontentsVO]] {
+	-adcontentsno: int
+	-cateno: int
+	-adminsno: int
+	-title: String
+	-content: String
+	-recom: int
+	-viewcnt: int
+	-commentcnt: int
+	-passwd: String
+	-tag: String
+	-rdate: String
+	-id: String
+	-size1: long
+	-youtube: String
+	-file1MF: MultipartFile
+	-file2MF: MultipartFile
+	-size1_label: String
+	-file1: String
+	-file1saved: String
+	-thumb1: String
+	+getAdcontentsno(): int
+	+getCateno(): int
+	+getAdminsno(): int
+	+getTitle(): String
+	+getContent(): String
+	+getRecom(): int
+	+getViewcnt(): int
+	+getCommentcnt(): int
+	+getPasswd(): String
+	+getTag(): String
+	+getRdate(): String
+	+getId(): String
+	+getSize1(): long
+	+getYoutube(): String
+	+getFile1MF(): MultipartFile
+	+getFile2MF(): MultipartFile
+	+getSize1_label(): String
+	+getFile1(): String
+	+getFile1saved(): String
+	+getThumb1(): String
+	+setAdcontentsno(adcontentsno: int): void
+	+setCateno(cateno: int): void
+	+setAdminsno(adminsno: int): void
+	+setTitle(title: String): void
+	+setContent(content: String): void
+	+setRecom(recom: int): void
+	+setViewcnt(viewcnt: int): void
+	+setCommentcnt(commentcnt: int): void
+	+setPasswd(passwd: String): void
+	+setTag(tag: String): void
+	+setRdate(rdate: String): void
+	+setId(id: String): void
+	+setSize1(size1: long): void
+	+setYoutube(youtube: String): void
+	+setFile1MF(file1MF: MultipartFile): void
+	+setFile2MF(file2MF: MultipartFile): void
+	+setSize1_label(size1_label: String): void
+	+setFile1(file1: String): void
+	+setFile1saved(file1saved: String): void
+	+setThumb1(thumb1: String): void
+}
+class AdcontentsCont [[java:dev.mvc.adcontents.AdcontentsCont]] {
+	-adminProc: AdminProcInter
+	-cateProc: CateProcInter
+	-commentsProc: CommentsProcInter
+	-replyProc: ReplyProcInter
+	-htcProc: HtcProcInter
+	~security: Security
+	+AdcontentsCont()
+	+create(model: Model, adcontentsVO: AdcontentsVO, cateno: int): String
+	+create(request: HttpServletRequest, session: HttpSession, model: Model, adcontentsVO: AdcontentsVO, ra: RedirectAttributes): String
+	+list_cate_search_paging(session: HttpSession, model: Model, cateno: int, word: String, now_page: int): String
+	+read(model: Model, adcontentsno: int, word: String, now_page: int): String
+	+checkLogin(session: HttpSession): String
+	+recom(session: HttpSession, model: Model, adcontentsno: int, ra: RedirectAttributes, word: String, now_page: int): String
+	+youtube(model: Model, adcontentsno: int, word: String, now_page: int): String
+	+youtube_update(model: Model, ra: RedirectAttributes, adcontentsno: int, youtube: String, word: String, now_page: int): String
+	+update_text(session: HttpSession, model: Model, adcontentsno: int, ra: RedirectAttributes, word: String, now_page: int): String
+	+update_text(session: HttpSession, model: Model, ra: RedirectAttributes, adcontentsVO: AdcontentsVO, word: String, now_page: int): String
+	+update_file(session: HttpSession, model: Model, adcontentsno: int, word: String, now_page: int): String
+	+update_file(session: HttpSession, model: Model, ra: RedirectAttributes, adcontentsVO: AdcontentsVO, word: String, now_page: int): String
+	+delete(session: HttpSession, model: Model, ra: RedirectAttributes, adcontentsno: int, cateno: int, word: String, now_page: int): String
+	+delete(ra: RedirectAttributes, model: Model, adcontentsno: int, cateno: int, word: String, now_page: int): String
+}
+class AdcontentsProcInter {
+}
+AdcontentsCont --> "1" AdcontentsProcInter : adcontentsProc
+
+@enduml
