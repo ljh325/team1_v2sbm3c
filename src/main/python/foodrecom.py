@@ -6,10 +6,17 @@ from datetime import datetime
 import random
 import cx_Oracle as cx
 import pandas as pd
-
 import tool
-
 from openai import OpenAI
+#데이터 분석
+import matplotlib.pyplot as plt
+import io
+from flask import Flask, send_file
+import seaborn as sns
+import matplotlib.font_manager as fm
+from matplotlib import font_manager, rc
+import platform 
+
 
 client = OpenAI(
   api_key=os.getenv('OPENAI_API_KEY')
@@ -551,6 +558,134 @@ def foodrecom_create_proc():
     cursor.close()
     conn.close()
     return response
+
+#데이터 분석을 위한 코드
+@app.route('/full_analysis/bargraph')
+def bargraph_proc():
+    
+    if (platform.system() == 'Windows'):  # Windows
+        rc('font', family=font_manager.FontProperties(fname="C:/Windows/Fonts/malgun.ttf").get_name())
+        path = '.' # Local
+    else:    
+        plt.rc('font', family='NanumBarunGothic')  # Ubuntu 18.04 기준 한글 처리
+        path = '/content/drive/My Drive/kd_ml/core' # Colab
+  
+    plt.rcParams['axes.unicode_minus'] = False  # minus 부호는 unicode 적용시 한글이 깨짐으로 설정
+    #history 테이블의 값을 가져와 액셀로 생성한다
+    conn = cx.connect("team1", "69017000", "3.39.75.85:1521/xe")
+    cursor = conn.cursor()
+
+    select_his = '''
+    SELECT *
+    from history 
+    '''
+
+    cursor.execute(select_his)
+    rows = cursor.fetchall()    
+        
+    columns = ['EXRECORDNO', 'EXNAME', 'EXTYPE', 'HISCALORIE', 'DURATION', 'NOTES', 'RECORDDATE', 'STARTDATE', 'EXUPDATEDATE', 'MEMBERNO']
+    df = pd.DataFrame(rows, columns=columns)
+
+    file_path = 'exercise_records.xlsx'
+    df.to_excel(file_path, index=False)
+
+    file_path = './exercise_records.xlsx'
+
+    # 엑셀 파일 읽기
+    df = pd.read_excel(file_path)
+
+    # EXTYPE의 분포 계산
+    extype_distribution = df['EXTYPE'].value_counts().reset_index()
+    extype_distribution.columns = ['EXTYPE', 'Count']
+
+
+    
+    # EXTYPE 분포 시각화
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=extype_distribution, x='EXTYPE', y='Count')
+    plt.title('EXTYPE Distribution')
+    plt.xlabel('EXTYPE')
+    plt.ylabel('Count')
+    plt.xticks(rotation=90)  # x축 레이블 회전
+      
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plt.close()    
+    
+    return send_file(img, mimetype='image/png')
+
+@app.route('/full_analysis/scatterplot')
+def scatterplot_proc():
+    
+    
+    #history 테이블의 값을 가져와 액셀로 생성한다
+    conn = cx.connect("team1", "69017000", "3.39.75.85:1521/xe")
+    cursor = conn.cursor()
+
+    select_his = '''
+    SELECT *
+    from history 
+    '''
+
+    cursor.execute(select_his)
+    rows = cursor.fetchall()    
+        
+    columns = ['EXRECORDNO', 'EXNAME', 'EXTYPE', 'HISCALORIE', 'DURATION', 'NOTES', 'RECORDDATE', 'STARTDATE', 'EXUPDATEDATE', 'MEMBERNO']
+    df = pd.DataFrame(rows, columns=columns)
+
+    file_path = 'exercise_records.xlsx'
+    df.to_excel(file_path, index=False)
+
+    file_path = './exercise_records.xlsx'
+
+    # 엑셀 파일 읽기
+    df = pd.read_excel(file_path)
+    plt.rcParams["font.size"] = 12         # 글자 크기
+    plt.rcParams["figure.figsize"] = (6, 3) # 10:4의 그래프 비율
+    sns.scatterplot(data=df, x='HISCALORIE', y='DURATION')
+
+    # EXTYPE의 분포 계산
+    extype_distribution = df['EXTYPE'].value_counts().reset_index()
+    extype_distribution.columns = ['EXTYPE', 'Count']
+
+
+
+      
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plt.close()    
+    
+    return send_file(img, mimetype='image/png')
+
+
+#참고
+# def bar_chart():
+#     # 데이터 생성
+#     categories = ['A', 'B', 'C', 'D', 'E']
+#     values = [10, 24, 36, 40, 52]
+
+#     # 막대 그래프 생성
+#     plt.figure(figsize=(10, 5))
+#     plt.bar(categories, values)
+#     plt.xlabel('Categories')
+#     plt.ylabel('Values')
+#     plt.title('Bar Chart Example')
+
+#     # 이미지 버퍼에 저장
+#     img = io.BytesIO()
+#     plt.savefig(img, format='png')
+#     img.seek(0)
+#     plt.close()
+
+#     # 이미지 반환
+#     return send_file(img, mimetype='image/png')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 
 
 if __name__ == '__main__':
