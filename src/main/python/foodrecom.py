@@ -439,6 +439,8 @@ def healthrecom_create_proc():
     level = request.form.get('level')
     goalsno = request.form.get('goalsno')
     mhno = request.form.get('mhno')
+    print(f"goalsno: {goalsno}")
+    print(f"mhno: {mhno}")
     
     
     
@@ -513,6 +515,8 @@ def foodrecom_create_proc():
 
     goalsno = request.form.get('goalsno')
     mhno = request.form.get('mhno')
+   
+    
     #데이터 베이스에 연결
     conn = cx.connect("team1", "69017000", "3.39.75.85:1521/xe")
     cursor = conn.cursor()

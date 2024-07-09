@@ -8,17 +8,7 @@
    운동 목표
   </div>
   <script>
-        function loadHealthrecom() {
-            fetch('http://localhost:5000/full_analysis/bargraph')
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const imgElement = document.getElementById('barChartImage');
-                    imgElement.src = url;
-                    imgElement.style.display = 'block'; 
-                })
-                .catch(error => console.error('Error loading bar chart:', error));
-        }
+       
         document.addEventListener("DOMContentLoaded", function() {
           var chart = document.querySelector('.doughnut1');
           var bmi = chart.textContent;
@@ -214,86 +204,89 @@
         }
       </style>
       
-      <script>
-    $(document).ready(() => {
-      const registerButton = document.getElementById('register');
-      const resultAnimationTag = document.getElementById('result_animation');
-      const calendarDiv = document.getElementById('exercise_routine');
+    <script>
+      $(document).ready(() => {
 
-      registerButton.addEventListener("click", function() {
-        // 결과 표시 영역 초기화
-        calendarDiv.innerHTML = '';
+        const registerButtons = document.querySelectorAll('.register-button');
+        const resultAnimationTag = document.getElementById('result_animation');
+        const calendarDiv = document.getElementById('exercise_routine');
 
-        // 진행 중 애니메이션을 표시합니다.
-        resultAnimationTag.style.display = 'block';
+        registerButtons.forEach(button => {
+          button.addEventListener('click', function() {
+           const goalsno = button.dataset.goalsno; // 버튼의 data-goalsno 속성 가져오기
+           console.log(goalsno)
+            const formData = new FormData(document.getElementById('recomForm'));
+         
+            formData.set('goalsno', goalsno); // FormData에 goalsno 추가
+          
+            // 결과 표시 영역 초기화
+            calendarDiv.innerHTML = '';
 
-        // 폼 데이터를 가져옵니다.
-        const formData = new FormData(document.getElementById('recomForm'));
+            // 진행 중 애니메이션을 표시합니다.
+            resultAnimationTag.style.display = 'block';
+           
 
-        // 데이터를 POST 요청으로 서버에 보냅니다.
-        $.ajax({
-          url: "/healthrecom/create",
-          type: "POST",
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function(data) {
-            // 서버에서 받은 JSON 데이터를 파싱합니다.
-            const exerciseData = JSON.parse(data);
+            // 데이터를 POST 요청으로 서버에 보냅니다.
+            fetch("http://localhost:5000/healthrecom/create", {
+                method: "POST",
+      
+                body: formData,
+               
+            })
+            .then(response => response.json())
+            .then(data => {
+               console.log(data);
+                // 서버에서 받은 JSON 데이터를 파싱합니다.
 
-            // 요일별 운동 루틴을 출력
-            exerciseData.healths["rutin"].forEach(dayData => {
-              const dayDiv = document.createElement('div');
-              dayDiv.classList.add('day');
-              dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
-              if(dayData.health =="휴식"){
-                const exerciseDiv = document.createElement('div');
-                exerciseDiv.classList.add('exercise');
 
-                const exerciseTitle = document.createElement('h3');
-                exerciseTitle.textContent ='휴식';
+                // 요일별 운동 루틴을 출력
+                data.healths["rutin"].forEach(dayData => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.classList.add('day');
+                    dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
+                    if (dayData.health == "휴식") {
+                        const exerciseDiv = document.createElement('div');
+                        exerciseDiv.classList.add('exercise');
 
-                exerciseDiv.appendChild(exerciseTitle);
-                dayDiv.appendChild(exerciseDiv);
-                
-              }
-              else{
-                dayData.health.forEach(exercise => {
-                  const exerciseDiv = document.createElement('div');
-                  exerciseDiv.classList.add('exercise');
-                  
-                  
-                  const exerciseTitle = document.createElement('h3');
-                  exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
-                  
+                        const exerciseTitle = document.createElement('h3');
+                        exerciseTitle.textContent = '휴식';
 
-                  const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-                  //const exerciseUrl = `http://192.168.12.147:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
-                  exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
-                  
+                        exerciseDiv.appendChild(exerciseTitle);
+                        dayDiv.appendChild(exerciseDiv);
 
-                  const exerciseDetails = document.createElement('p');
-                  exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal,세트: ${exercise.set} 세트,예상 운동 시간: ${exercise.time} 분`;
-                  
-                  exerciseDiv.appendChild(exerciseTitle);
-                  exerciseDiv.appendChild(exerciseDetails);
-                  
-                  dayDiv.appendChild(exerciseDiv);
+                    } else {
+                        dayData.health.forEach(exercise => {
+                            const exerciseDiv = document.createElement('div');
+                            exerciseDiv.classList.add('exercise');
+
+                            const exerciseTitle = document.createElement('h3');
+                            exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
+
+                            const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                            exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+
+                            const exerciseDetails = document.createElement('p');
+                            exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 세트: ${exercise.set} 세트, 예상 운동 시간: ${exercise.time} 분`;
+
+                            exerciseDiv.appendChild(exerciseTitle);
+                            exerciseDiv.appendChild(exerciseDetails);
+
+                            dayDiv.appendChild(exerciseDiv);
+                        });
+                    }
+
+                    calendarDiv.appendChild(dayDiv);
                 });
-              }
-              
-              calendarDiv.appendChild(dayDiv);
+                resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultAnimationTag.style.display = 'none';
             });
-            resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
-          },
-          error: function(error) {
-            console.error('Error:', error);
-            resultAnimationTag.style.display = 'none';
-          }
+          });
         });
       });
-    });
-  </script>
+    </script>
   <aside class="aside_right">
     <a href="/goals/create">목표 등록</a>
      <span class="menu_devide">│</span>
@@ -348,18 +341,19 @@
      
      
 
-
-      <input type="hidden" id="goalsno" name="goalsno" value="{{ goalsno }}">
-      <input type="hidden" id="mhno" name="mhno" value="{{ mhno }}">
+<form id="recomForm" action="/healthrecom/create" method="POST">
+      
+      <input type="hidden" id="mhno" name="mhno" th:value="${mhVO.mhno}">
+      
       <select id="level" name="level">
         <option value="초급">초급</option>
         <option value="중급">중급</option>
         <option value="상급">상급</option>
       </select>
-      <button type="button" id="list" onclick="window.location.href='http://192.168.12.147:9093/foodrecom/list_all'" class="btn">목록</button>
+      <button type="button" id="list" onclick="window.location.href='/foodrecom/list_all'" class="btn">목록</button>
    
    
-   
+   </form>
       
     <div id="result_animation">
       <img id="progress" src="/static/images/progress.gif" alt="progress">
@@ -391,13 +385,13 @@
       <div class="delete-container" style="display: flex;">
         <span th:text="${goalsVO.gdate.substring(0, 10)}"></span>
         <div style="display: block; margin-left: auto; margin-bottom:3px;">
-           <a th:href="@{http://localhost:5000/healthrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}"
-            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">운동 추천</a>&nbsp;&nbsp;
+           <button type="button" class="btn register-button"  th:data-goalsno="${goalsVO.goalsno}"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">운동 추천</button>&nbsp;&nbsp;
           <a th:href="@{http://localhost:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}"
             style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">식단 추천</a>
           
-          <input class="goalsno" type="hidden" th:value="${goalsVO.goalsno}">
-   
+          
+          
         </div>
       </div>
       <div style="background-color: rgb(192, 192, 192); border-radius: 10px; height: auto; padding: 15px;">
@@ -436,10 +430,5 @@
 
 </div>
 </html>
-
-
-
-
-
 
 
