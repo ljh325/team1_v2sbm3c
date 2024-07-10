@@ -22,6 +22,8 @@ public class KeywordVO {
   private String  word;
   /* 리뷰 번호*/
   private int reviewno;
+  /* 갯수 */
+  private int cnt;
 
   
   

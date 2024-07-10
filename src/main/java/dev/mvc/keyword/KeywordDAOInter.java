@@ -25,6 +25,12 @@ public interface KeywordDAOInter {
   public KeywordVO keyword_read(int reviewno);
   
   /**
+   * 키워드 그룹별로 조회
+   * @return
+   */
+  public ArrayList<KeywordVO> keyword_and_count();
+  
+  /**
    * 키워드 삭제
    * @param reviewno
    * @return

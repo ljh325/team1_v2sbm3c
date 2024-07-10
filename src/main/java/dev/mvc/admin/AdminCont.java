@@ -1,10 +1,9 @@
 package dev.mvc.admin;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -13,11 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.adcontents.AdcontentsProcInter;
+import dev.mvc.adcontents.AdcontentsVO;
 import dev.mvc.alogin.AloginProcInter;
 import dev.mvc.alogin.AloginVO;
+import dev.mvc.keyword.KeywordProcInter;
+import dev.mvc.keyword.KeywordVO;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.mlogin.MloginProcInter;
+import dev.mvc.review.ReviewProcInter;
+import dev.mvc.reviewImage.ReviewImageProcInter;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +47,27 @@ public class AdminCont {
   private AloginProcInter aloginProc;
   
   @Autowired
+  @Qualifier("dev.mvc.adcontents.AdcontentsProc")
+  private AdcontentsProcInter adcontentsProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.keyword.KeywordProc")
+  private KeywordProcInter keywordProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.review.ReviewProc")
+  private ReviewProcInter reviewProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.reviewImage.ReviewImageProc")
+  private ReviewImageProcInter reviewImageProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.mlogin.MloginProc")
+  private MloginProcInter mloginProc;
+  
+  
+  @Autowired
   private Security security;
 
   public AdminCont() {
@@ -50,19 +76,7 @@ public class AdminCont {
 
 
 
-  @GetMapping(value="/admin_form")
-  public String admin_form(Model model,HttpSession session) {
-    
-    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
-      int adminsno = (int)session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
-      
-      return "admin_index";
-      
-    } else { // 로그인이 안되어있으면
-      return "admin/login_need";
-    } 
-    
-  }
+
 
   /**
    * 관리자 목록 조회
@@ -162,7 +176,15 @@ public class AdminCont {
                            AloginVO aloginVO,
                            @RequestParam(value="id_save", defaultValue = "") String id_save,
                            @RequestParam(value="passwd_save", defaultValue = "") String passwd_save) {
-
+    
+    //-------------- 주찬 추가 ----------------------//
+    // 회원이 로그인 한 상태에서 관리자 로그인할 경우 세션에 두개가 저장됨
+    // 세션에 있는 모든 데이터 지움
+    //session.invalidate();
+    // 그리고 관리자계정을 세션에 등록시킴 - > 즉 세션에 한 계정만 등록시킬 수 있음
+    //-------------- 주찬 추가 ----------------------//
+    
+    
     String ip = request.getRemoteAddr(); // IP
     System.out.println("-> 접속 IP: " + ip);
 
@@ -250,10 +272,80 @@ public class AdminCont {
   }
 
 
-
-
-
+/* =============================== 주찬 코드 =================================== */
+/* ========================================================================== */
+/* ========================================================================== */
+  /**
+   * 관리자 메인 페이지
+   * @param model
+   * @param session
+   * @return
+   */
+  @GetMapping(value="/admin_form")
+  public String admin_form(Model model,HttpSession session) {
+    
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int)session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+      
+      // 신규 등록자 수
+      int new_user = this.memberProc.new_user_count();
+      // 일반회원 전체 수 
+      int user_cnt = this.memberProc.user_count_normal();
+      
+      AdcontentsVO adcontentsVO = this.adcontentsProc.list_ones();
+      
+      model.addAttribute("new_user", new_user);
+      model.addAttribute("user_cnt", user_cnt);
+      model.addAttribute("adcontentsVO", adcontentsVO);
+      
+      return "admin_index";
+      
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    } 
+    
+  }
   
+  /**
+   * 메뉴 페이지
+   * @param model
+   * @return
+   */
+  @GetMapping(value = "/menu")
+  public String admin_menu(Model model, HttpSession session) {
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int) session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+
+      
+      
+      return "admin/menu";
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    }
+  }
+  
+  /**
+   * 리뷰 관리 모니터링
+   * @param model
+   * @param session
+   * @return
+   */
+  @GetMapping(value = "/review_management")
+  public String review_management(Model model, HttpSession session) {
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int) session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+
+      ArrayList<KeywordVO> word_list = this.keywordProc.keyword_and_count();
+      model.addAttribute("word_list", word_list);
+      
+      return "admin/review_management";
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    }
+  }
+/* =============================== 주찬 코드 여기까지 =================================== */
+/* ========================================================================== */
+/* ========================================================================== */
   
   /**
    * 로그아웃
@@ -267,3 +359,4 @@ public class AdminCont {
     return "redirect:/";
   }
 }
+

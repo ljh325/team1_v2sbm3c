@@ -66,6 +66,18 @@ public interface MemberProcInter {
    */
   public boolean isMemberAdmin(HttpSession session);
   
+  /**
+   * 신규 등록자 수
+   * @return
+   */
+  public int new_user_count();
+  
+  /**
+   * 일반회원 전체 수
+   * @return
+   */
+  public int user_count_normal();
+  
   
   /**
    * 수정 처리

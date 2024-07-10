@@ -156,4 +156,12 @@ public interface AdcontentsDAOInter {
    */
   public int recom_cancel(int adcontentsno);
   
+  
+  //----------------------------------------------------------------------------
+  /**
+   * 최신 공지사항 하나 추출
+   * @return
+   */
+  public AdcontentsVO list_ones();
+  //----------------------------------------------------------------------------  
 }

@@ -406,6 +406,18 @@ public int profile_nickIntro(MemberVO memberVO) {
   return cnt;
 }
 
+@Override
+public int new_user_count() {
+  int cnt = this.memberDAO.new_user_count();
+  return cnt;
+}
+
+@Override
+public int user_count_normal() {
+  int cnt = this.memberDAO.user_count_normal();
+  return cnt;
+}
+
 
 
 

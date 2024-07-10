@@ -55,3 +55,26 @@ WHERE l.memberno = m.memberno AND exrecordno = 9;
 
 DELETE FROM likesyesno
 WHERE exrecordno = 9 AND memberno = 5;
+
+
+
+SELECT COUNT(*) as cnt
+FROM likesyesno
+WHERE exrecordno = (
+    SELECT exrecordno
+    FROM (
+        SELECT exrecordno
+        FROM recordimage
+        WHERE exrecordno = 9
+    )
+    WHERE ROWNUM = 1
+);
+commit;
+        SELECT exrecordno
+        FROM recordimage
+        WHERE exrecordno = 9;
+        
+        
+    SELECT keywordname, count(*) as cnt
+    FROM keyword
+    GROUP BY keywordname;

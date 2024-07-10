@@ -183,4 +183,13 @@ public interface AdcontentsProcInter {
    */ 
   public String pagingBox_all(int now_page, String word, String list_file, int search_count, int record_per_page,
       int page_per_block);
+  
+  
+  //----------------------------------------------------------------------------
+  /**
+   * 최신 공지사항 하나 추출
+   * @return
+   */
+  public AdcontentsVO list_ones();
+  //---------------------------------------------------------------------------- 
 }
