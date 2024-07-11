@@ -38,6 +38,12 @@ public class KeywordProc implements KeywordProcInter{
     return cnt;
   }
 
+  @Override
+  public ArrayList<KeywordVO> keyword_and_count() {
+    ArrayList<KeywordVO> list = this.keywordDAO.keyword_and_count();
+    return list;
+  }
+
   
   
 

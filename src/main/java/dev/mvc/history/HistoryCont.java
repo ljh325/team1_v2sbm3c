@@ -128,6 +128,24 @@ public class HistoryCont {
       } 
   }
   
+  /***************************************************************************************/
+  /**
+   * 운동 기록 메인 화면
+   * @param model
+   * @return
+   */
+  @GetMapping(value="/full_analysis")
+  public String full_analysis_form(Model model, HttpSession session) {
+    
+    if (this.memberProc.isMember(session)) {
+      //int memberno = (int)session.getAttribute("memberno");  
+  
+      return "history/full_analysis";
+      }
+      else {
+        return "member/login";
+      } 
+  }
   
   /***************************************************************************************/
   /**

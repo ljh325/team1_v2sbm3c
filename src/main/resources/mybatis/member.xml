@@ -46,7 +46,6 @@
     ORDER BY grade ASC, id ASC
   </select>
   
-  
   <!-- (o) memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
     SELECT memberno, id, passwd, mname, nickname, tel, address1, address2, mdate, grade, point, birth, sex,
@@ -62,6 +61,19 @@
     WHERE id = #{id}
   </select>
   
+  <!-- 신규 등록자 수 -->
+  <select id="new_user_count" resultType="int">
+    SELECT COUNT(*) AS count
+    FROM member
+    WHERE TO_CHAR(mdate, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+  </select>
+  
+  <!-- 일반회원 전체 수 -->
+  <select id="user_count_normal" resultType="int">
+    SELECT COUNT(*) AS count
+    FROM member
+    WHERE grade = 1
+  </select> 
   <!-- (o) 수정 처리 -->
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 

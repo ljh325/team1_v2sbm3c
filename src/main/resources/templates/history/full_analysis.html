@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+   사용자들의 운동 기록 분석
+  </div>
+  
+  <aside class="aside_right">
+    
+  </aside>
+  <div class="menu_line"></div>
+  
+<head>
+    <meta charset="UTF-8">
+    <title>Bar Chart</title>
+     <style>
+        #barChartImage {
+            display: none;
+        }
+        #scatterplotImage {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bar Chart</h1>
+    <img id="barChartImage" src="" alt="Bar Chart">
+    <br>
+    <button onclick="loadBarChart()">Load Bar Chart</button>
+    <h1>scatterplot</h1>
+    <img id="scatterplotImage" src="" alt="scatterplot">
+    <br>
+    <button onclick="loadScatterplot()">Load scatterplot</button>
+
+    <script>
+        function loadBarChart() {
+            fetch('http://localhost:5000/full_analysis/bargraph')
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const imgElement = document.getElementById('barChartImage');
+                    imgElement.src = url;
+                    imgElement.style.display = 'block'; 
+                })
+                .catch(error => console.error('Error loading bar chart:', error));
+        }
+         function loadScatterplot() {
+        fetch('http://localhost:5000/full_analysis/scatterplot')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const imgElement = document.getElementById('scatterplotImage');
+                imgElement.src = url;
+                imgElement.style.display = 'block'; 
+            })
+            .catch(error => console.error('Error loading scatterplot:', error));
+        }
+   
+    </script>
+</body>
+
+</html>

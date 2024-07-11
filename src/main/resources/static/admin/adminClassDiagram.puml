@@ -1,0 +1,80 @@
+@startuml
+left to right direction
+
+class AdminProc [[java:dev.mvc.admin.AdminProc]] {
+	~security: Security
+	+read(adminsno: int): AdminVO
+	+read_by_id(id: String): AdminVO
+	+login(map: HashMap<String,Object>): int
+	+isAdmin(session: HttpSession): boolean
+	+isMemberAdmin(session: HttpSession): boolean
+	+update(adminVO: AdminVO): int
+}
+class AdminDAOInter {
+}
+AdminProc --> "1" AdminDAOInter : adminDAO
+class AdminVO {
+}
+AdminProc --> "*" AdminVO : list()
+interface AdminProcInter {
+}
+AdminProcInter <|.. AdminProc
+class AdminVO [[java:dev.mvc.admin.AdminVO]] {
+	-adminsno: int
+	-id: String
+	-passwd: String
+	-aname: String
+	-adate: String
+	-grade: int
+	+getAdminsno(): int
+	+getId(): String
+	+getPasswd(): String
+	+getAname(): String
+	+getAdate(): String
+	+getGrade(): int
+	+setAdminsno(adminsno: int): void
+	+setId(id: String): void
+	+setPasswd(passwd: String): void
+	+setAname(aname: String): void
+	+setAdate(adate: String): void
+	+setGrade(grade: int): void
+}
+class AdminCont [[java:dev.mvc.admin.AdminCont]] {
+	-memberProc: MemberProcInter
+	-aloginProc: AloginProcInter
+	-security: Security
+	+AdminCont()
+	+list(session: HttpSession, model: Model): String
+	+read(session: HttpSession, model: Model, adminsno: int): String
+	+update_proc(model: Model, adminVO: AdminVO): String
+	+login_form(model: Model, request: HttpServletRequest): String
+	+login_need(model: Model, request: HttpServletRequest): String
+	+login_proc(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, model: Model, id: String, passwd: String, aloginVO: AloginVO, id_save: String, passwd_save: String): String
+	+logout(session: HttpSession, model: Model): String
+}
+class AdminProcInter {
+}
+AdminCont --> "1" AdminProcInter : adminProc
+interface AdminProcInter [[java:dev.mvc.admin.AdminProcInter]] {
+	read(adminsno: int): AdminVO
+	read_by_id(id: String): AdminVO
+	isAdmin(session: HttpSession): boolean
+	isMemberAdmin(session: HttpSession): boolean
+	login(map: HashMap<String,Object>): int
+	update(adminVO: AdminVO): int
+}
+class AdminVO {
+}
+AdminProcInter --> "*" AdminVO : list()
+interface AdminDAOInter [[java:dev.mvc.admin.AdminDAOInter]] {
+	read(adminsno: int): AdminVO
+	read_by_id(id: String): AdminVO
+	isAdmin(session: HttpSession): boolean
+	isMemberAdmin(session: HttpSession): boolean
+	login(map: HashMap<String,Object>): int
+	update(adminVO: AdminVO): int
+}
+class AdminVO {
+}
+AdminDAOInter --> "*" AdminVO : list()
+@enduml

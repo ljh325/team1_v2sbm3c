@@ -434,4 +434,10 @@ public class AdcontentsProc implements AdcontentsProcInter {
     return str.toString();
   }
 
+  @Override
+  public AdcontentsVO list_ones() {
+    AdcontentsVO adcontentsVO = this.adcontentsDAO.list_ones();
+    return adcontentsVO;
+  }
+
 }

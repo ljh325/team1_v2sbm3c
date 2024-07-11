@@ -34,7 +34,12 @@
     WHERE k.reviewno = r.reviewno AND k.reviewno = #{reviewno}
   </select>
   
-  
+  <!-- 키워드 그룹별로 조회 -->
+  <select id="keyword_and_count" resultType="dev.mvc.keyword.KeywordVO">
+    SELECT keywordname, count(*) as cnt
+    FROM keyword
+    GROUP BY keywordname
+  </select>
     
   <!-- 리뷰 수정 | 수정일 확인 필요 -->
 

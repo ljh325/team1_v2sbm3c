@@ -8,6 +8,7 @@
    운동 목표
   </div>
   <script>
+       
         document.addEventListener("DOMContentLoaded", function() {
           var chart = document.querySelector('.doughnut1');
           var bmi = chart.textContent;
@@ -52,6 +53,87 @@
           }
         });
       </script>
+        <style>
+   
+
+   
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #result_animation {
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    #progress {
+      width: 50px;
+      height: 50px;
+    }
+
+    #exercise_routine {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      justify-items: center; /* 그리드 내에서 가운데 정렬 */
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .day {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center; /* 가운데 정렬 */
+      width: 90%;
+    }
+
+    .meal {
+      margin-bottom: 10px;
+    }
+
+    .meal h3 {
+      margin-bottom: 5px;
+      text-align: center; /* 가운데 정렬 */
+    }
+
+    .meal-item {
+      margin-bottom: 3px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      appearance: none; /* 기본 스타일링 제거 (크로스 브라우징) */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+
+    #recomForm select {
+      margin-bottom: 10px; /* 원하는 간격 값 설정 */
+    }
+
+
+    a {
+      color: black;
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    a:hover {
+      text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+    }
+  </style>
   
     <style>
   .row {
@@ -121,6 +203,163 @@
             gap: 10px;
         }
       </style>
+      
+    <script>
+      $(document).ready(() => {
+
+        const registerButtons = document.querySelectorAll('.register-button');
+        const foodrecomButtons = document.querySelectorAll('.foodrecom-button');
+        const resultAnimationTag = document.getElementById('result_animation');
+        const calendarDiv = document.getElementById('exercise_routine');
+
+        registerButtons.forEach(button => {
+          button.addEventListener('click', function() {
+           const goalsno = button.dataset.goalsno; // 버튼의 data-goalsno 속성 가져오기
+           console.log(goalsno)
+            const formData = new FormData(document.getElementById('recomForm'));
+         
+            formData.set('goalsno', goalsno); // FormData에 goalsno 추가
+          
+            // 결과 표시 영역 초기화
+            calendarDiv.innerHTML = '';
+
+            // 진행 중 애니메이션을 표시합니다.
+            resultAnimationTag.style.display = 'block';
+           
+
+            // 데이터를 POST 요청으로 서버에 보냅니다.
+            fetch("http://localhost:5000/healthrecom/create", {
+                method: "POST",
+      
+                body: formData,
+               
+            })
+            .then(response => response.json())
+            .then(data => {
+               console.log(data);
+                // 서버에서 받은 JSON 데이터를 파싱합니다.
+
+
+                // 요일별 운동 루틴을 출력
+                data.healths["rutin"].forEach(dayData => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.classList.add('day');
+                    dayDiv.innerHTML = `<h2>${dayData.day}</h2>`;
+                    if (dayData.health == "휴식") {
+                        const exerciseDiv = document.createElement('div');
+                        exerciseDiv.classList.add('exercise');
+
+                        const exerciseTitle = document.createElement('h3');
+                        exerciseTitle.textContent = '휴식';
+
+                        exerciseDiv.appendChild(exerciseTitle);
+                        dayDiv.appendChild(exerciseDiv);
+
+                    } else {
+                        dayData.health.forEach(exercise => {
+                            const exerciseDiv = document.createElement('div');
+                            exerciseDiv.classList.add('exercise');
+
+                            const exerciseTitle = document.createElement('h3');
+                            exerciseTitle.textContent = `${exercise.exname} (${exercise.musclesub})`;
+
+                            const exerciseUrl = `http://localhost:9093/health/list_by_htcno?htcno=${exercise.body}&word=${exercise.exname}`;
+                            exerciseTitle.innerHTML = `<a href="${exerciseUrl}" target="_blank">${exercise.exname} (${exercise.musclesub})</a>`;
+
+                            const exerciseDetails = document.createElement('p');
+                            exerciseDetails.textContent = `칼로리 소모: ${exercise.cal} kcal, 세트: ${exercise.set} 세트, 예상 운동 시간: ${exercise.time} 분`;
+
+                            exerciseDiv.appendChild(exerciseTitle);
+                            exerciseDiv.appendChild(exerciseDetails);
+
+                            dayDiv.appendChild(exerciseDiv);
+                        });
+                    }
+
+                    calendarDiv.appendChild(dayDiv);
+                });
+                resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultAnimationTag.style.display = 'none';
+            });
+          });
+        });
+        
+         foodrecomButtons.forEach(button => {
+          button.addEventListener('click', function() {
+           const goalsno = button.dataset.goalsno; // 버튼의 data-goalsno 속성 가져오기
+           console.log(goalsno)
+            const formData = new FormData(document.getElementById('recomForm'));
+         
+            formData.set('goalsno', goalsno); // FormData에 goalsno 추가
+          
+            // 결과 표시 영역 초기화
+            calendarDiv.innerHTML = '';
+
+            // 진행 중 애니메이션을 표시합니다.
+            resultAnimationTag.style.display = 'block';
+           
+
+            // 데이터를 POST 요청으로 서버에 보냅니다.
+            fetch("http://localhost:5000/foodrecom/create", {
+                method: "POST",
+      
+                body: formData,
+               
+            })
+            .then(response => response.json())
+            .then(data => {
+              const mealData2 = data;
+          mealData2.res.forEach(dayData => {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+            dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+            dayData.meals.forEach(meal => {
+              const mealDiv = document.createElement('div');
+              mealDiv.classList.add('meal');
+              
+              // Add image if the first item exists
+              if (meal.items.length > 0) {
+                const firstItem = meal.items[0];
+                const mealTitle = document.createElement('h3');
+                mealTitle.textContent = meal.meal;
+                const mealImage = document.createElement('img');
+                mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+                mealImage.alt = firstItem.food;
+                
+                mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
+                    this.style.display = 'none';
+                };
+                
+                mealTitle.appendChild(mealImage);
+                mealDiv.appendChild(mealTitle);
+              } else {
+                mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+              }
+
+              meal.items.forEach(item => {
+                const mealItem = document.createElement('p');
+                mealItem.classList.add('meal-item');
+                mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                mealDiv.appendChild(mealItem);
+              });
+              dayDiv.appendChild(mealDiv);
+            });
+            calendarDiv.appendChild(dayDiv);
+          });
+          resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultAnimationTag.style.display = 'none';
+            });
+          });
+        });
+        
+      });
+    </script>
   <aside class="aside_right">
     <a href="/goals/create">목표 등록</a>
      <span class="menu_devide">│</span>
@@ -137,8 +376,7 @@
     <div style="height: auto; padding: 10px; background-color:#E6E6E6; border-radius: 15px;">
 
 
-        
-
+      
       
       <div class='wrap'>
         <div class='chart_container'>
@@ -160,7 +398,7 @@
         
       </div>
       
-    
+  
       
     </div>
     
@@ -171,6 +409,31 @@
            </div>
         </div>
       </div>
+     
+     
+     
+     
+
+<form id="recomForm" action="/healthrecom/create" method="POST">
+      
+      <input type="hidden" id="mhno" name="mhno" th:value="${mhVO.mhno}">
+      
+      <select id="level" name="level">
+        <option value="초급">초급</option>
+        <option value="중급">중급</option>
+        <option value="상급">상급</option>
+      </select>
+      
+   
+   
+   </form>
+      
+    <div id="result_animation">
+      <img id="progress" src="/images/progress.gif" alt="progress">
+    </div>
+    
+    <div id="exercise_routine"></div>
+
 
 
 
@@ -195,13 +458,13 @@
       <div class="delete-container" style="display: flex;">
         <span th:text="${goalsVO.gdate.substring(0, 10)}"></span>
         <div style="display: block; margin-left: auto; margin-bottom:3px;">
-           <a th:href="@{http://localhost:5000/healthrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}"
-            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">운동 추천</a>&nbsp;&nbsp;
-          <a th:href="@{http://localhost:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}"
+           <button type="button" class="btn register-button"  th:data-goalsno="${goalsVO.goalsno}"
+            style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">운동 추천</button>&nbsp;&nbsp;
+          <button type="button" class="btn foodrecom-button"  th:data-goalsno="${goalsVO.goalsno}"
             style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">식단 추천</a>
           
-          <input class="goalsno" type="hidden" th:value="${goalsVO.goalsno}">
-   
+          
+          
         </div>
       </div>
       <div style="background-color: rgb(192, 192, 192); border-radius: 10px; height: auto; padding: 15px;">
@@ -240,10 +503,5 @@
 
 </div>
 </html>
-
-
-
-
-
 
 

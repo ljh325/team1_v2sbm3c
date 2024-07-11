@@ -21,6 +21,20 @@
     ORDER BY adcontentsno DESC
   </select>
   
+  <!-- ============================  주찬 수정 =================================================== -->
+    <select id = "list_ones" resultType = "dev.mvc.adcontents.AdcontentsVO">
+      SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+             file1saved, thumb1, size1, id
+      FROM (
+          SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,
+                 file1saved, thumb1, size1, id
+          FROM adcontents
+          ORDER BY rdate DESC
+      )
+      WHERE ROWNUM = 1
+  </select>
+  <!-- ===============================  주찬 수정 ================================================ -->
+  
   <!-- 특정 관리자 카테고리 게시글 목록 -->
   <select id = "list_cate" resultType="dev.mvc.adcontents.AdcontentsVO" parameterType="int">
     SELECT adcontentsno, adminsno, cateno, title, content, recom, viewcnt, commentcnt, passwd, tag, rdate, file1,

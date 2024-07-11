@@ -2,39 +2,183 @@
 <html lang="ko" layout:decorate="~{admin_layout}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Index</title>
-    <style>
-      .content_body {
-        width: 100%;
-      }
-    </style>
+  <meta charset="UTF-8">
+  <title>Admin Index</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background-color: black;
+    }
+
+    .content_body {
+      width: 95%;
+    }
+
+    .header {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 10px 15px 10px;
+      margin-bottom: 15px;
+      background-color: #2c2d30;
+      border-radius: 10px;
+    }
+
+    .date {
+      font-size: 14px;
+      color: #999;
+      margin: 0;
+    }
+
+    .order-summary {
+      /*background-color: white;*/
+      /*border-style: solid; */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .order,
+    .confirmation {
+      font-size: 16px;
+    }
+
+    .order {
+      background-color: #007bff;
+      padding: 30px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+
+    .count {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #2c2d30;
+      border-radius: 10px;
+    }
+
+    .stat {
+      text-align: center;
+      position: relative;
+      margin: 20px 0 10px 0;
+    }
+
+    .stat i {
+      font-size: 30px;
+      color: #007bff;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .badge-on-icon {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      transform: translate(50%, -50%);
+      background-color: #dc3545;
+      color: white;
+      border-radius: 40%;
+      padding: 2px 7px;
+      font-size: 12px;
+    }
+
+    .stat p {
+      margin: 5px 0 0 0;
+      font-size: 14px;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+      padding: 20px 0 20px 0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .status:hover {
+      background-color: #5e6069;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #999;
+      padding: 10px 0;
+    }
+  </style>
 </head>
 
-<body>
+<!-- admin_content 관리자 메인 페이지 -->
 <div layout:fragment="admin_content" style="width: 100%;  text-align: center;">
-  
-<div style="background-color: white; height: auto">
   <br>
   <br>
-  <span style="font-size: 40px;">관리자 페이지</span>
   <br>
-  <br><br><br><br>
-</div>
-  <div style="background-color: black; height:700px;">
-    <br>
-    <br>
-    <div class="d-flex justify-content-between">
-      <div style="background-color: blue; width:40%; height:100px; padding:15px;">
-        <span>버튼 1</span>
-      </div>
-      <div style="background-color: red; width:40%; height:100px; padding:15px;">
-        <span>버튼 2</span>
+  <br>
+  <div class="footer">
+    <p th:if="${adcontentsVO.title != null}" th:text="${adcontentsVO.title}" style="color:white; font-size: 15px;">공지:
+      굿스플로 시스템 정기 점검 안내</p>
+    <p th:if="${adcontentsVO.title == null}" style="color:white; font-size: 15px;">공지: 시스템 정기 점검 안내</p>
+  </div>
+  <div class="header">
+    <div>
+      <span style="font-size: 27px; color:white">관리자 페이지</span>
+    </div>
+    <p class="date">2017.08.06</p>
+  </div>
+  <div class="order-summary">
+    <div style="background-color: white; width:50%; height:50%;  padding:18px; border-radius: 50%;">
+      <div class="order">
+        <p style="color:white; margin-top:10px; ">현재 접속자수</p>
+        <p class="count" style="color:white;">10 <span style="color:white;">명</span></p>
       </div>
     </div>
   </div>
+  <div>
+    <span th:if="${session.aname != null}" th:text="${session.aname}" style="color:white; font-size: 23px;">admin</span>
+    <span th:if="${session.aname == null}" style="color:white; font-size: 23px;">admin</span>
+  </div>
+  <br>
+  <br>
+  <div class="stats">
+    <div class="stat">
+      <i class="bi bi-person" style="border-style: solid; border-radius: 30%;"></i>
+      <span th:if="${new_user != null}" th:text="${new_user}" class="badge-on-icon">4</span>
+      <span th:if="${new_user == null}" class="badge-on-icon">0</span>
+      <p style="color:white">신규회원</p>
+    </div>
+    <div class="stat">
+      <i class="bi bi-people" style="border-style: solid; border-radius: 30%;"></i>
+      <span th:if="${user_cnt != null}" th:text="${user_cnt}" class="badge-on-icon">999+</span>
+      <span th:if="${user_cnt == null}" class="badge-on-icon">0</span>
+      <p style="color:white">전체회원</p>
+    </div>
+    <div class="stat">
+      <i class="bi bi-chat-dots" style="padding:0 6px 0 6px; border-style: solid; border-radius: 30%;"></i>
+      <span class="badge-on-icon">20</span>
+      <p style="color:white">1:1 문의</p>
+    </div>
+    <div class="stat">
+      <i class="bi bi-robot" style="border-style: solid; border-radius: 30%;"></i>
+      <span class="badge-on-icon">20</span>
+      <p style="color:white">챗봇 문의</p>
+    </div>
+  </div>
+  <div class="status">
+    <span style="font-size: 18px; color: white;" onclick="location.href='/'">홈으로</span>
+  </div>
+  <div class="status">
+    <span style="font-size: 18px; color: white;" onclick="location.href='/member/logout'">로그 아웃</span>
+  </div>
 
 </div>
-</body>
+<!-- admin_content 관리자 메인 페이지 -->
 
 </html>
