@@ -16,6 +16,7 @@ import seaborn as sns
 import matplotlib.font_manager as fm
 from matplotlib import font_manager, rc
 import platform 
+from scipy.interpolate import make_interp_spline
 
 
 client = OpenAI(
@@ -592,8 +593,10 @@ def bargraph_proc():
 
     file_path = 'exercise_records.xlsx'
     df.to_excel(file_path, index=False)
-
-    file_path = './exercise_records.xlsx'
+    
+    #file_path = './exercise_records.xlsx' 
+    #분석 테스트를 위하여 다른 엑셀 파일을 사용
+    file_path = './exercise_records2.xlsx'
 
     # 엑셀 파일 읽기
     df = pd.read_excel(file_path)
@@ -611,6 +614,8 @@ def bargraph_proc():
     plt.xlabel('EXTYPE')
     plt.ylabel('Count')
     plt.xticks(rotation=90)  # x축 레이블 회전
+    
+
       
     img = io.BytesIO()
     plt.savefig(img, format='png')
@@ -618,6 +623,62 @@ def bargraph_proc():
     plt.close()    
     
     return send_file(img, mimetype='image/png')
+
+@app.route('/full_analysis/line')
+def line_proc():
+   
+    
+    file_path = './monthly_data_count.xlsx'
+
+        # 엑셀 파일 읽기
+    df = pd.read_excel(file_path)
+    # 데이터프레임 생성
+
+
+    # Month 열을 datetime 형식으로 변환
+    df['Month'] = pd.to_datetime(df['Month'])
+
+    # x 축 데이터
+    x = df['Month']
+
+    # y 축 데이터
+    y = df['Count']
+
+    # 보간 기법을 사용하여 부드러운 곡선 생성
+    x_smooth = pd.date_range(start=x.min(), end=x.max(), freq='D')
+    spl = make_interp_spline(x, y, k=3)
+    y_smooth = spl(x_smooth)
+
+    # 선차트 생성 (동그라미 없이)
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_smooth, y_smooth, linestyle='-', color='b', label='Count')
+
+    # 축과 제목 설정
+    plt.xlabel('Month')
+    plt.ylabel('Count')
+    plt.title('Smooth Line Chart')
+
+    # x 축 레이블 포맷 설정 (옵션)
+    plt.gca().xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%Y-%m'))
+
+    # 범례 표시
+    plt.legend()
+
+    # 그리드 설정 (옵션)
+    plt.grid(True)
+
+    # 차트 출력
+    plt.tight_layout()
+    
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plt.close()    
+    
+    return send_file(img, mimetype='image/png')
+
+
+
 
 @app.route('/full_analysis/scatterplot')
 def scatterplot_proc():
@@ -641,7 +702,7 @@ def scatterplot_proc():
     file_path = 'exercise_records.xlsx'
     df.to_excel(file_path, index=False)
 
-    file_path = './exercise_records.xlsx'
+    file_path = './exercise_records2.xlsx'
 
     # 엑셀 파일 읽기
     df = pd.read_excel(file_path)
