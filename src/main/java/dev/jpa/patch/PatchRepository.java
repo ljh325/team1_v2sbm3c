@@ -42,7 +42,7 @@ public interface PatchRepository extends JpaRepository<Patch, Integer> {
   // Page<Patch> findAllByOrderByRdateDesc(Pageable pageable);
   
   // Oracle 11G
-  @Query(value="SELECT patchno, title, content, viewcnt, id, rdate, r FROM ( SELECT patchno, title, content, viewcnt, rdate, rownum as r FROM ( SELECT patchno, title, content, viewcnt, rdate FROM patch ORDER BY rdate DESC )) WHERE r <= 500", nativeQuery = true)
+  @Query(value="SELECT patchno, title, content, viewcnt, id, rdate, r FROM ( SELECT patchno, title, content, viewcnt, id, rdate, rownum as r FROM ( SELECT patchno, title, content, viewcnt, id, rdate FROM patch ORDER BY rdate DESC )) WHERE r <= 500", nativeQuery = true)
   List<Patch> findAllByOrderByRdateDesc();
   
   // SQL 사용, 컬럼을 모두 명시해야함, 날짜 구간 검색, 날짜 내림 차순 정렬
