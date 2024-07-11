@@ -208,6 +208,7 @@
       $(document).ready(() => {
 
         const registerButtons = document.querySelectorAll('.register-button');
+        const foodrecomButtons = document.querySelectorAll('.foodrecom-button');
         const resultAnimationTag = document.getElementById('result_animation');
         const calendarDiv = document.getElementById('exercise_routine');
 
@@ -285,6 +286,78 @@
             });
           });
         });
+        
+         foodrecomButtons.forEach(button => {
+          button.addEventListener('click', function() {
+           const goalsno = button.dataset.goalsno; // 버튼의 data-goalsno 속성 가져오기
+           console.log(goalsno)
+            const formData = new FormData(document.getElementById('recomForm'));
+         
+            formData.set('goalsno', goalsno); // FormData에 goalsno 추가
+          
+            // 결과 표시 영역 초기화
+            calendarDiv.innerHTML = '';
+
+            // 진행 중 애니메이션을 표시합니다.
+            resultAnimationTag.style.display = 'block';
+           
+
+            // 데이터를 POST 요청으로 서버에 보냅니다.
+            fetch("http://localhost:5000/foodrecom/create", {
+                method: "POST",
+      
+                body: formData,
+               
+            })
+            .then(response => response.json())
+            .then(data => {
+              const mealData2 = data;
+          mealData2.res.forEach(dayData => {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+            dayDiv.innerHTML = `<h2>Day ${dayData.day}</h2>`;
+            dayData.meals.forEach(meal => {
+              const mealDiv = document.createElement('div');
+              mealDiv.classList.add('meal');
+              
+              // Add image if the first item exists
+              if (meal.items.length > 0) {
+                const firstItem = meal.items[0];
+                const mealTitle = document.createElement('h3');
+                mealTitle.textContent = meal.meal;
+                const mealImage = document.createElement('img');
+                mealImage.src = `/foodcate/images/f${firstItem.code}.png`; // Assuming image file name matches the code
+                mealImage.alt = firstItem.food;
+                
+                mealImage.onerror = function() { // 이미지가 없으면 표시하지 않음
+                    this.style.display = 'none';
+                };
+                
+                mealTitle.appendChild(mealImage);
+                mealDiv.appendChild(mealTitle);
+              } else {
+                mealDiv.innerHTML = `<h3>${meal.meal}</h3>`;
+              }
+
+              meal.items.forEach(item => {
+                const mealItem = document.createElement('p');
+                mealItem.classList.add('meal-item');
+                mealItem.textContent = `${item.food} (${item.amount_g}g)`;
+                mealDiv.appendChild(mealItem);
+              });
+              dayDiv.appendChild(mealDiv);
+            });
+            calendarDiv.appendChild(dayDiv);
+          });
+          resultAnimationTag.style.display = 'none'; // 애니메이션을 숨김
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultAnimationTag.style.display = 'none';
+            });
+          });
+        });
+        
       });
     </script>
   <aside class="aside_right">
@@ -350,13 +423,13 @@
         <option value="중급">중급</option>
         <option value="상급">상급</option>
       </select>
-      <button type="button" id="list" onclick="window.location.href='/foodrecom/list_all'" class="btn">목록</button>
+      
    
    
    </form>
       
     <div id="result_animation">
-      <img id="progress" src="/static/images/progress.gif" alt="progress">
+      <img id="progress" src="/images/progress.gif" alt="progress">
     </div>
     
     <div id="exercise_routine"></div>
@@ -387,7 +460,7 @@
         <div style="display: block; margin-left: auto; margin-bottom:3px;">
            <button type="button" class="btn register-button"  th:data-goalsno="${goalsVO.goalsno}"
             style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">운동 추천</button>&nbsp;&nbsp;
-          <a th:href="@{http://localhost:5000/foodrecom/create/{goalsno}/{mhno}(goalsno=${goalsVO.goalsno}, mhno=${mhVO.mhno})}"
+          <button type="button" class="btn foodrecom-button"  th:data-goalsno="${goalsVO.goalsno}"
             style="color: white; font-size: 13px; background-color: skyblue; padding: 3px; border-radius: 7px;">식단 추천</a>
           
           
