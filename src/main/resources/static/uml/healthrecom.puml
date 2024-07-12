@@ -1,0 +1,71 @@
+@startuml
+left to right direction
+
+
+class HealthrecomCont [[java:dev.mvc.healthrecom.HealthrecomCont]] {
+	-memberProc: MemberProcInter
+	+record_per_page: int
+	+page_per_block: int
+	-healthrecomVO: Object
+	+HealthrecomCont()
+	+read(session: HttpSession, model: Model, healthrecomno: int, word: String, now_page: int): String
+	+create(session: HttpSession, model: Model): String
+	+create_process(session: HttpSession, model: Model, mhVO: MhVO, goalsVO: GoalsVO, bindingResult: BindingResult): String
+	+list_all(session: HttpSession, model: Model, word: String, now_page: int): String
+	+delete(session: HttpSession, model: Model, healthrecomno: int, word: String, now_page: int): String
+	+delete_process(session: HttpSession, model: Model, requestBody: Map<String,Integer>, word: String, now_page: int): String
+}
+class HealthrecomProcInter {
+}
+HealthrecomCont --> "1" HealthrecomProcInter : healthrecomProc
+interface HealthrecomProcInter [[java:dev.mvc.healthrecom.HealthrecomProcInter]] {
+	create(mhVO: MhVO, goalsVO: GoalsVO): int
+	list_all(memberno: int): ArrayList<HealthrecomVO>
+	read(healthrecomno: int): HealthrecomVO
+	delete(healthrecomno: int): int
+	list_search_paging(word: String, memberno: int, now_page: int, record_per_page: int): ArrayList<HealthrecomVO>
+	pagingBox(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+	list_search_count(word: String, memberno: int): int
+}
+class HealthrecomProc [[java:dev.mvc.healthrecom.HealthrecomProc]] {
+	+HealthrecomProc()
+	+create(mhVO: MhVO, goalsVO: GoalsVO): int
+	+list_all(memberno: int): ArrayList<HealthrecomVO>
+	+read(healthrecomno: int): HealthrecomVO
+	+list_search_paging(word: String, memberno: int, now_page: int, record_per_page: int): ArrayList<HealthrecomVO>
+	+delete(healthrecomno: int): int
+	+list_search_count(word: String, memberno: int): int
+	+pagingBox(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+}
+class HealthrecomDAOInter {
+}
+HealthrecomProc --> "1" HealthrecomDAOInter : healthrecomDAO
+interface HealthrecomProcInter {
+}
+HealthrecomProcInter <|.. HealthrecomProc
+class HealthrecomVO [[java:dev.mvc.healthrecom.HealthrecomVO]] {
+	-healthrecomno: int
+	-mhno: int
+	-goalsno: int
+	-hrecom: String
+	-rdate: String
+	+setHealthrecomno(healthrecomno: int): void
+	+setMhno(mhno: int): void
+	+setGoalsno(goalsno: int): void
+	+setHrecom(hrecom: String): void
+	+setRdate(rdate: String): void
+	+getHealthrecomno(): int
+	+getMhno(): int
+	+getGoalsno(): int
+	+getHrecom(): String
+	+getRdate(): String
+}
+interface HealthrecomDAOInter [[java:dev.mvc.healthrecom.HealthrecomDAOInter]] {
+	create(hrecom: String, goals: int, mhno: int): int
+	list_all(memberno: int): ArrayList<HealthrecomVO>
+	read(healthrecomno: int): HealthrecomVO
+	delete(healthrecomno: int): int
+	list_search_paging(map: Map<String,Object>): ArrayList<HealthrecomVO>
+	list_search_count(map: Map<String,Object>): int
+}
+@enduml

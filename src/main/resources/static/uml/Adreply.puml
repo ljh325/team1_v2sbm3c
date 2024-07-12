@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+class LikesyesnoVO [[java:dev.mvc.likesyesno.LikesyesnoVO]] {
+  -likesno: int
+  -likesdate: String
+  -exrecordno: int
+  -memberno: int
+  -id: String
+  -passwd: String
+  -mname: String
+  -tel: String
+  -mdate: String
+  -grade: int
+  -point: int
+  -birth: String
+  -sex: String
+  -nickname: String
+  -introduce: String
+  -files1MF: MultipartFile
+  -sizes_label: String
+  -profile: String
+  -profilesaved: String
+  -thumbs: String
+  -sizes: long
+  +setLikesno(likesno: int): void
+  +setLikesdate(likesdate: String): void
+  +setExrecordno(exrecordno: int): void
+  +setMemberno(memberno: int): void
+  +setId(id: String): void
+  +setPasswd(passwd: String): void
+  +setMname(mname: String): void
+  +setTel(tel: String): void
+  +setMdate(mdate: String): void
+  +setGrade(grade: int): void
+  +setPoint(point: int): void
+  +setBirth(birth: String): void
+  +setSex(sex: String): void
+  +setNickname(nickname: String): void
+  +setIntroduce(introduce: String): void
+  +setFiles1MF(files1MF: MultipartFile): void
+  +setSizes_label(sizes_label: String): void
+  +setProfile(profile: String): void
+  +setProfilesaved(profilesaved: String): void
+  +setThumbs(thumbs: String): void
+  +setSizes(sizes: long): void
+  +getLikesno(): int
+  +getLikesdate(): String
+  +getExrecordno(): int
+  +getMemberno(): int
+  +getId(): String
+  +getPasswd(): String
+  +getMname(): String
+  +getTel(): String
+  +getMdate(): String
+  +getGrade(): int
+  +getPoint(): int
+  +getBirth(): String
+  +getSex(): String
+  +getNickname(): String
+  +getIntroduce(): String
+  +getFiles1MF(): MultipartFile
+  +getSizes_label(): String
+  +getProfile(): String
+  +getProfilesaved(): String
+  +getThumbs(): String
+  +getSizes(): long
+}
+@enduml

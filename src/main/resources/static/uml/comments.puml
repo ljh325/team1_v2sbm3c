@@ -1,0 +1,107 @@
+@startuml
+
+left to right direction
+class CommentsCont [[java:dev.mvc.comments.CommentsCont]] {
+  -memberProc: MemberProcInter
+  -contentsProc: ContentsProcInter
+  +CommentsCont()
+  +create(session: HttpSession, commentsVO: CommentsVO): String
+  +list_by_contentsno_join(contentsno: int): String
+  +read(commentsno: int): String
+  +update(session: HttpSession, commentsVO: CommentsVO): String
+  +delete(session: HttpSession, commentsVO: CommentsVO): String
+}
+class CommentsProcInter {
+}
+CommentsCont --> "1" CommentsProcInter : commentsProc
+class CommentsVO [[java:dev.mvc.comments.CommentsVO]] {
+  -commentsno: int
+  -contents: String
+  -rdate: String
+  -id: String
+  -memberno: int
+  -contentsno: int
+  +toString(): String
+  +getCommentsno(): int
+  +getContents(): String
+  +getRdate(): String
+  +getId(): String
+  +getMemberno(): int
+  +getContentsno(): int
+  +setCommentsno(commentsno: int): void
+  +setContents(contents: String): void
+  +setRdate(rdate: String): void
+  +setId(id: String): void
+  +setMemberno(memberno: int): void
+  +setContentsno(contentsno: int): void
+}
+class CommentsProc [[java:dev.mvc.comments.CommentsProc]] {
+  +create(commentsVO: CommentsVO): int
+  +comment_list(contentsno: int): ArrayList<CommentsMemberVO>
+  +read(commentsno: int): CommentsMemberVO
+  +comments_count(contentsno: int): int
+  +update(commentsVO: CommentsVO): int
+  +delete(commentsno: int): int
+  +increase_replycnt(commentsno: int): int
+  +decrease_replycnt(commentsno: int): int
+}
+class CommentsDAOInter {
+}
+CommentsProc --> "1" CommentsDAOInter : commentsDAO
+interface CommentsProcInter {
+}
+CommentsProcInter <|.. CommentsProc
+interface CommentsDAOInter [[java:dev.mvc.comments.CommentsDAOInter]] {
+  create(commentsVO: CommentsVO): int
+  comment_list(contentsno: int): ArrayList<CommentsMemberVO>
+  read(commentsno: int): CommentsMemberVO
+  comments_count(contentsno: int): int
+  update(commentsVO: CommentsVO): int
+  delete(commentsno: int): int
+  increase_replycnt(commentsno: int): int
+  decrease_replycnt(commentsno: int): int
+}
+interface CommentsProcInter [[java:dev.mvc.comments.CommentsProcInter]] {
+  create(commentsVO: CommentsVO): int
+  comment_list(contentsno: int): ArrayList<CommentsMemberVO>
+  read(commentsno: int): CommentsMemberVO
+  comments_count(contentsno: int): int
+  update(commentsVO: CommentsVO): int
+  delete(commentsno: int): int
+  increase_replycnt(commentsno: int): int
+  decrease_replycnt(commentsno: int): int
+}
+class CommentsMemberVO [[java:dev.mvc.comments.CommentsMemberVO]] {
+  -commentsno: int
+  -contents: String
+  -rdate: String
+  -id: String
+  -replycnt: String
+  -memberno: int
+  -contentsno: int
+  -thumbs: String
+  -grade: int
+  -nickname: String
+  +getCommentsno(): int
+  +getContents(): String
+  +getRdate(): String
+  +getId(): String
+  +getReplycnt(): String
+  +getMemberno(): int
+  +getContentsno(): int
+  +getThumbs(): String
+  +getGrade(): int
+  +getNickname(): String
+  +setCommentsno(commentsno: int): void
+  +setContents(contents: String): void
+  +setRdate(rdate: String): void
+  +setId(id: String): void
+  +setReplycnt(replycnt: String): void
+  +setMemberno(memberno: int): void
+  +setContentsno(contentsno: int): void
+  +setThumbs(thumbs: String): void
+  +setGrade(grade: int): void
+  +setNickname(nickname: String): void
+  +toString(): String
+}
+@enduml
