@@ -44,6 +44,12 @@ public class KeywordProc implements KeywordProcInter{
     return list;
   }
 
+  @Override
+  public ArrayList<KeywordVO> keyword_all_read(int reviewno) {
+    ArrayList<KeywordVO> list = this.keywordDAO.keyword_all_read(reviewno);
+    return list;
+  }
+
   
   
 

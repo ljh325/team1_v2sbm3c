@@ -26,12 +26,24 @@
     FROM keyword k, REVIEW r
     WHERE k.reviewno = r.reviewno
   </select>
+  
+  <select id="keyword_all_read" resultType="dev.mvc.keyword.KeywordVO">
+    SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
+    FROM keyword k, REVIEW r
+    WHERE k.reviewno = r.reviewno AND k.reviewno = #{reviewno}
+  </select>
 
     <!-- 회원 리뷰 조회 -->
   <select id="keyword_read" resultType="dev.mvc.keyword.KeywordVO">
     SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
     FROM keyword k, review r
     WHERE k.reviewno = r.reviewno AND k.reviewno = #{reviewno}
+  </select>
+  
+  <select id="keywordname" parameterType="string">
+    SELECT k.keywordno, k.keywordname, r.temperater, k.word, k.reviewno
+    FROM keyword k, review r
+    WHERE k.reviewno = r.reviewno AND k.keywordname = #{keywordname}
   </select>
   
   <!-- 키워드 그룹별로 조회 -->

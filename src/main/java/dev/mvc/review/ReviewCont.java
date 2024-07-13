@@ -223,13 +223,20 @@ public class ReviewCont {
         ArrayList<ReviewImageVO> images = this.reviewImageProc.read_image(review.getReviewno());
         MemberVO members = this.memberProc.read(review.getMemberno());
         AdreplyVO adreply = this.adreplyProc.admin_read(review.getReviewno());
+        ArrayList<KeywordVO> keywordlist = this.keywordProc.keyword_all_read(review.getReviewno());
         JSONObject reviewJson = new JSONObject();
         reviewJson.put("reviewno", review.getReviewno());
         reviewJson.put("id", review.getId());
         reviewJson.put("star", review.getStar());
         reviewJson.put("rdate", review.getRdate());
         reviewJson.put("udate", review.getUdate());
-        reviewJson.put("contents", highlightKeywords(review.getContents(), keywords));
+        if(review.getTemperater() == 2) {
+          reviewJson.put("contents", highlightKeywords(review.getContents(), keywordlist));
+        } else if(review.getTemperater() == 1) {
+          reviewJson.put("contents", negativeKeywords(review.getContents(), keywordlist));
+        } else {
+          reviewJson.put("contents", review.getContents());
+        }
         
         reviewJson.put("nickname", members.getNickname());
         reviewJson.put("profile", members.getProfile());
@@ -243,7 +250,14 @@ public class ReviewCont {
           reviewJson.put("adupdate", adreply.getAdupdate());
         } 
 
-
+        
+//        JSONArray keywordlists = new JSONArray();
+//        for (KeywordVO keyword : keywordlist) {
+//          JSONObject  keywordJson = new JSONObject();
+//          keywordJson.put("contents", highlightKeywords(review.getContents(), keywordlist));
+//        }
+//        reviewJson.put("keywordlists", keywordlists);
+        
         JSONArray imageArray = new JSONArray();
         for (ReviewImageVO image : images) {
             JSONObject imageJson = new JSONObject();
@@ -355,10 +369,23 @@ public class ReviewCont {
   /***************************************************************************************/
   /***************************************************************************************/
   /***************************************************************************************/
-  // 긍정 또는 부정의 리뷰 키워드 색깔 입히기
+  // 긍정 의 리뷰 키워드 색깔 입히기
   private String highlightKeywords(String content, ArrayList<KeywordVO> keywords) {
+    
     for (KeywordVO keyword : keywords) {
+        System.out.println("keywords--?>" + keyword.getWord());
         content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#81F79F;'>" + keyword.getWord() + "</span>");
+        System.out.println("content--?>" + content);
+    }
+    return content;
+}
+  // 부정 의 리뷰 키워드 색깔 입히기
+  private String negativeKeywords(String content, ArrayList<KeywordVO> keywords) {
+    
+    for (KeywordVO keyword : keywords) {
+        System.out.println("keywords--?>" + keyword.getWord());
+        content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#FF90FF;'>" + keyword.getWord() + "</span>");
+        System.out.println("content--?>" + content);
     }
     return content;
 }
