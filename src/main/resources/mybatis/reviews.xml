@@ -66,7 +66,7 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
   <!-- 회원 리뷰 조회 -->
   <select id="review_read" resultType="dev.mvc.review.ReviewVO" parameterType="map">
-    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    SELECT m.id, r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, m.memberno
     FROM review r, member m
     WHERE m.memberno = r.memberno AND r.memberno=#{memberno} AND r.reviewno=#{reviewno}
   </select>
@@ -87,7 +87,7 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
   <!-- 별점에 따른 리뷰 조회(별점 높은 순) -->
   <select id="list_star_high" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    SELECT m.id, r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, m.memberno
     FROM review r, member m
     WHERE m.memberno = r.memberno
     ORDER BY r.star DESC
@@ -95,14 +95,14 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
     <!-- 별점에 따른 리뷰 조회(별점 낮은 순) -->
   <select id="list_star_low" resultType="dev.mvc.review.ReviewVO" parameterType="int">
-    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    SELECT m.id, r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, m.memberno
     FROM review r, member m
     WHERE m.memberno = r.memberno
     ORDER BY r.star ASC
   </select>
   <!-- 최근 작성순 -->
   <select id="recent_review" resultType="dev.mvc.review.ReviewVO">
-    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    SELECT m.id, r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, m.memberno
     FROM review r, member m
     WHERE m.memberno = r.memberno
     ORDER BY COALESCE(r.udate, r.rdate) DESC
@@ -112,7 +112,7 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   
   <!-- 오래된 작성순 -->
   <select id="old_review" resultType="dev.mvc.review.ReviewVO">
-    SELECT m.id, r.reviewno, r.star, r.contents, r.rdate, r.udate, m.memberno
+    SELECT m.id, r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, m.memberno
     FROM review r, member m
     WHERE m.memberno = r.memberno
     ORDER BY COALESCE(r.udate, r.rdate) asc

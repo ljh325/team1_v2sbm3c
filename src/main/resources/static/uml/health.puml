@@ -1,0 +1,190 @@
+
+@startuml
+left to right direction
+
+interface HealthDAOInter [[java:dev.mvc.health.HealthDAOInter]] {
+  create(healthVO: HealthVO): int
+  list_by_htcno(htcno: int): ArrayList<HealthVO>
+  read(healthno: int): HealthVO
+  map(map: HashMap<String,Object>): int
+  youtube(map: HashMap<String,Object>): int
+  list_by_htcno_search(hashMap: HashMap<String,Object>): ArrayList<HealthVO>
+  list_by_htcno_search_count(hashMap: HashMap<String,Object>): int
+  list_by_htcno_search_paging(map: HashMap<String,Object>): ArrayList<HealthVO>
+  password_check(hashMap: HashMap<String,Object>): int
+  update_text(healthVO: HealthVO): int
+  update_file(healthVO: HealthVO): int
+  delete(healthno: int): int
+  count_by_htcno(htcno: int): int
+  delete_by_htcno(htcno: int): int
+  count_by_adminsno(adminsno: int): int
+  delete_by_adminsno(adminsno: int): int
+  recom(healthno: int): int
+  recom_cancel(healthno: int): int
+}
+
+class HealthVO {
+}
+
+HealthDAOInter --> "*" HealthVO : list_all()
+
+class HealthCont [[java:dev.mvc.health.HealthCont]] {
+  -adminProc: AdminProcInter
+  -htcProc: HtcProcInter
+  -memberProc: MemberProcInter
+  +HealthCont()
+  +msg(model: Model, url: String): String
+  +create(model: Model, healthVO: HealthVO, htcno: int): String
+  +create(request: HttpServletRequest, session: HttpSession, model: Model, healthVO: HealthVO, ra: RedirectAttributes): String
+  +list_all(session: HttpSession, model: Model, word: String, now_page: int): String
+  +list_by_htcno_search_paging(session: HttpSession, model: Model, htcno: int, word: String, now_page: int): String
+  +list_by_htcno_search_paging_grid(session: HttpSession, model: Model, htcno: int, word: String, now_page: int): String
+  +read(model: Model, healthno: int, word: String, now_page: int): String
+  +map(model: Model, healthno: int): String
+  +map_update(model: Model, healthno: int, map: String): String
+  +youtube(model: Model, healthno: int, word: String, now_page: int): String
+  +youtube_update(model: Model, ra: RedirectAttributes, healthno: int, youtube: String, word: String, now_page: int): String
+  +update_text(session: HttpSession, model: Model, healthno: int, ra: RedirectAttributes, word: String, now_page: int): String
+  +update_text(session: HttpSession, model: Model, healthVO: HealthVO, ra: RedirectAttributes, search_word: String, now_page: int): String
+  +update_file(session: HttpSession, model: Model, healthno: int, word: String, now_page: int): String
+  +update_file(session: HttpSession, model: Model, ra: RedirectAttributes, healthVO: HealthVO, word: String, now_page: int): String
+  +delete(session: HttpSession, model: Model, ra: RedirectAttributes, htcno: int, healthno: int, word: String, now_page: int): String
+  +delete(ra: RedirectAttributes, healthno: int, htcno: int, word: String, now_page: int): String
+  +recom(session: HttpSession, model: Model, healthno: int, ra: RedirectAttributes, word: String, now_page: int): String
+}
+
+class HealthProcInter {
+}
+
+HealthCont --> "1" HealthProcInter : healthProc
+
+interface HealthProcInter [[java:dev.mvc.health.HealthProcInter]] {
+  create(healthVO: HealthVO): int
+  list_by_htcno(htcno: int): ArrayList<HealthVO>
+  read(healthno: int): HealthVO
+  map(map: HashMap<String,Object>): int
+  youtube(map: HashMap<String,Object>): int
+  list_by_htcno_search(hashMap: HashMap<String,Object>): ArrayList<HealthVO>
+  list_by_htcno_search_count(hashMap: HashMap<String,Object>): int
+  list_by_htcno_search_paging(map: HashMap<String,Object>): ArrayList<HealthVO>
+  pagingBox(htcno: int, now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+  password_check(hashMap: HashMap<String,Object>): int
+  update_text(healthVO: HealthVO): int
+  update_file(healthVO: HealthVO): int
+  delete(healthVO: int): int
+  count_by_htcno(htcno: int): int
+  delete_by_htcno(htcno: int): int
+  count_by_adminsno(adminsno: int): int
+  delete_by_adminsno(adminsno: int): int
+  recom(healthno: int): int
+  recom_cancel(healthno: int): int
+}
+
+class HealthVO {
+}
+
+HealthProcInter --> "*" HealthVO : list_all()
+
+class HealthVO [[java:dev.mvc.health.HealthVO]] {
+  -healthno: int
+  -adminsno: int
+  -htcno: int
+  -title: String
+  -explan: String
+  -recom: int
+  -cnt: int
+  -replycnt: int
+  -passwd: String
+  -word: String
+  -rdate: String
+  -map: String
+  -youtube: String
+  -mp4: String
+  -file1MF: MultipartFile
+  -size1_label: String
+  -file1: String
+  -file1saved: String
+  -thumb1: String
+  -size1: long
+  +getHealthno(): int
+  +getAdminsno(): int
+  +getHtcno(): int
+  +getTitle(): String
+  +getExplan(): String
+  +getRecom(): int
+  +getCnt(): int
+  +getReplycnt(): int
+  +getPasswd(): String
+  +getWord(): String
+  +getRdate(): String
+  +getMap(): String
+  +getYoutube(): String
+  +getMp4(): String
+  +getFile1MF(): MultipartFile
+  +getSize1_label(): String
+  +getFile1(): String
+  +getFile1saved(): String
+  +getThumb1(): String
+  +getSize1(): long
+  +setHealthno(healthno: int): void
+  +setAdminsno(adminsno: int): void
+  +setHtcno(htcno: int): void
+  +setTitle(title: String): void
+  +setExplan(explan: String): void
+  +setRecom(recom: int): void
+  +setCnt(cnt: int): void
+  +setReplycnt(replycnt: int): void
+  +setPasswd(passwd: String): void
+  +setWord(word: String): void
+  +setRdate(rdate: String): void
+  +setMap(map: String): void
+  +setYoutube(youtube: String): void
+  +setMp4(mp4: String): void
+  +setFile1MF(file1MF: MultipartFile): void
+  +setSize1_label(size1_label: String): void
+  +setFile1(file1: String): void
+  +setFile1saved(file1saved: String): void
+  +setThumb1(thumb1: String): void
+  +setSize1(size1: long): void
+  +toString(): String
+}
+
+class HealthProc [[java:dev.mvc.health.HealthProc]] {
+  ~security: Security
+  +create(healthVO: HealthVO): int
+  +list_by_htcno(htcno: int): ArrayList<HealthVO>
+  +read(healthno: int): HealthVO
+  +map(map: HashMap<String,Object>): int
+  +youtube(map: HashMap<String,Object>): int
+  +list_by_htcno_search(hashMap: HashMap<String,Object>): ArrayList<HealthVO>
+  +list_by_htcno_search_count(hashMap: HashMap<String,Object>): int
+  +list_by_htcno_search_paging(map: HashMap<String,Object>): ArrayList<HealthVO>
+  +pagingBox(htcno: int, now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+  +password_check(map: HashMap<String,Object>): int
+  +update_text(healthVO: HealthVO): int
+  +update_file(healthVO: HealthVO): int
+  +delete(healthno: int): int
+  +count_by_htcno(htcno: int): int
+  +delete_by_htcno(htcno: int): int
+  +count_by_adminsno(adminsno: int): int
+  +delete_by_adminsno(adminsno: int): int
+  +recom(healthno: int): int
+  +recom_cancel(healthno: int): int
+}
+
+class HealthDAOInter {
+}
+
+HealthProc --> "1" HealthDAOInter : healthDAO
+
+class HealthVO {
+}
+
+HealthProc --> "*" HealthVO : list_all()
+
+class Health [[java:dev.mvc.health.Health]] {
+  +{static} RECORD_PER_PAGE: int
+  +{static} PAGE_PER_BLOCK: int
+  +{static} getUploadDir(): String
+}
+@enduml

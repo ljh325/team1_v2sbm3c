@@ -1,0 +1,210 @@
+@startuml
+left to right direction
+class Member [[java:dev.mvc.member.Member]] {
+	+{static} RECORD_PER_PAGE: int
+	+{static} PAGE_PER_BLOCK: int
+	+{static} getUploadDir(): String
+}
+class MemberCont [[java:dev.mvc.member.MemberCont]] {
+	-mloginProc: MloginProcInter
+	~security: Security
+	+MemberCont()
+	+checkID(id: String): String
+	+nickCheck(nickname: String): String
+	+profile_nickIntro(model: Model, session: HttpSession, memberVO: MemberVO): String
+	+profile_update_proc(model: Model, memberVO: MemberVO, session: HttpSession, ra: RedirectAttributes): String
+	+find_id_form(model: Model): String
+	+find_id(model: Model, memberVO: MemberVO): String
+	+find_passwd_form(model: Model): String
+	+find_passwd(model: Model, memberVO: MemberVO): String
+	+create_form(model: Model, memberVO: MemberVO): String
+	+create_proc(model: Model, memberVO: MemberVO): String
+	+profile(model: Model, session: HttpSession, memberno: int): String
+	+profile_update(model: Model, session: HttpSession): String
+	+read(memberno: int, model: Model): String
+	+list(session: HttpSession, model: Model, word: String, now_page: int): String
+	+admin_read_form(model: Model, memberno: int): String
+	+admin_read(model: Model, memberVO: MemberVO, ra: RedirectAttributes): String
+	+login_form(model: Model, request: HttpServletRequest): String
+	+login_proc(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, model: Model, mloginVO: MloginVO, id: String, passwd: String, id_save: String, passwd_save: String): String
+	+login_json(model: Model, payload: Map<String,String>): String
+	+logout(session: HttpSession, model: Model): String
+	+update_form(session: HttpSession, model: Model): String
+	+update_proc(model: Model, memberVO: MemberVO, request: HttpServletRequest, ra: RedirectAttributes): String
+	+delete(model: Model, memberno: int): String
+	+delete_process(model: Model, memberno: Integer, session: HttpSession): String
+}
+class MemberProcInter {
+}
+MemberCont --> "1" MemberProcInter : memberProc
+interface MemberDAOInter [[java:dev.mvc.member.MemberDAOInter]] {
+	checkID(id: String): int
+	nickCheck(nickname: String): int
+	create(memberVO: MemberVO): int
+	read(memberno: int): MemberVO
+	readById(id: String): MemberVO
+	new_user_count(): int
+	user_count_normal(): int
+	update(memberVO: MemberVO): int
+	profile_update_proc(memberVO: MemberVO): int
+	profile_nickIntro(memberVO: MemberVO): int
+	update_profile(memberVO: MemberVO): int
+	grade_update(memberVO: MemberVO): int
+	delete(memberno: int): int
+	login(map: HashMap<String,Object>): int
+	find_id(memberVO: MemberVO): ArrayList<MemberVO>
+	find_passwd(memberVO: MemberVO): MemberVO
+	list_by_search(hashMap: HashMap<String,Object>): ArrayList<MemberVO>
+	list_by_search_count(hashMap: HashMap<String,Object>): int
+	list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+	grade_list_by_search_count(hasMap: HashMap<String,Object>): int
+	grade_list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+}
+class MemberVO {
+}
+MemberDAOInter --> "*" MemberVO : list()
+class MemberProc [[java:dev.mvc.member.MemberProc]] {
+	~security: Security
+	+MemberProc()
+	+checkID(id: String): int
+	+create(memberVO: MemberVO): int
+	+read(memberno: int): MemberVO
+	+readById(id: String): MemberVO
+	+isMember(session: HttpSession): boolean
+	+isMemberAdmin(session: HttpSession): boolean
+	+update(memberVO: MemberVO): int
+	+update_profile(memberVO: MemberVO): int
+	+grade_update(memberVO: MemberVO): int
+	+delete(memberno: int): int
+	+login(map: HashMap<String,Object>): int
+	+find_id(memberVO: MemberVO): ArrayList<MemberVO>
+	+find_passwd(memberVO: MemberVO): MemberVO
+	+list_by_search(hashMap: HashMap<String,Object>): ArrayList<MemberVO>
+	+list_by_search_count(hashMap: HashMap<String,Object>): int
+	+list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+	+grade_list_by_search_count(hasMap: HashMap<String,Object>): int
+	+grade_list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+	+pagingBox(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+	+nickCheck(nickname: String): int
+	+profile_update_proc(memberVO: MemberVO): int
+	+profile_nickIntro(memberVO: MemberVO): int
+	+new_user_count(): int
+	+user_count_normal(): int
+}
+class MemberDAOInter {
+}
+MemberProc --> "1" MemberDAOInter : memberDAO
+class MemberVO {
+}
+MemberProc --> "*" MemberVO : list()
+interface MemberProcInter {
+}
+MemberProcInter <|.. MemberProc
+interface MemberProcInter [[java:dev.mvc.member.MemberProcInter]] {
+	checkID(id: String): int
+	nickCheck(nickname: String): int
+	create(memberVO: MemberVO): int
+	read(memberno: int): MemberVO
+	readById(id: String): MemberVO
+	isMember(session: HttpSession): boolean
+	isMemberAdmin(session: HttpSession): boolean
+	new_user_count(): int
+	user_count_normal(): int
+	update(memberVO: MemberVO): int
+	profile_update_proc(memberVO: MemberVO): int
+	profile_nickIntro(memberVO: MemberVO): int
+	update_profile(memberVO: MemberVO): int
+	grade_update(memberVO: MemberVO): int
+	delete(memberno: int): int
+	login(map: HashMap<String,Object>): int
+	find_id(memberVO: MemberVO): ArrayList<MemberVO>
+	find_passwd(memberVO: MemberVO): MemberVO
+	list_by_search(hashMap: HashMap<String,Object>): ArrayList<MemberVO>
+	list_by_search_count(hashMap: HashMap<String,Object>): int
+	list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+	grade_list_by_search_count(hasMap: HashMap<String,Object>): int
+	grade_list_by_search_paging(map: HashMap<String,Object>): ArrayList<MemberVO>
+	pagingBox(now_page: int, word: String, list_file: String, search_count: int, record_per_page: int, page_per_block: int): String
+}
+class MemberVO {
+}
+MemberProcInter --> "*" MemberVO : list()
+class MemberVO [[java:dev.mvc.member.MemberVO]] {
+	-memberno: int
+	-id: String
+	-passwd: String
+	-mname: String
+	-tel: String
+	-zipcode: String
+	-address1: String
+	-address2: String
+	-mdate: String
+	-grade: int
+	-point: int
+	-birth: String
+	-sex: String
+	-nickname: String
+	-introduce: String
+	-old_passwd: String
+	-id_save: String
+	-passwd_save: String
+	-url_address: String
+	-files1MF: MultipartFile
+	-sizes_label: String
+	-profile: String
+	-profilesaved: String
+	-thumbs: String
+	-sizes: long
+	+isEmpty(): boolean
+	+setMemberno(memberno: int): void
+	+setId(id: String): void
+	+setPasswd(passwd: String): void
+	+setMname(mname: String): void
+	+setTel(tel: String): void
+	+setZipcode(zipcode: String): void
+	+setAddress1(address1: String): void
+	+setAddress2(address2: String): void
+	+setMdate(mdate: String): void
+	+setGrade(grade: int): void
+	+setPoint(point: int): void
+	+setBirth(birth: String): void
+	+setSex(sex: String): void
+	+setNickname(nickname: String): void
+	+setIntroduce(introduce: String): void
+	+setOld_passwd(old_passwd: String): void
+	+setId_save(id_save: String): void
+	+setPasswd_save(passwd_save: String): void
+	+setUrl_address(url_address: String): void
+	+setFiles1MF(files1MF: MultipartFile): void
+	+setSizes_label(sizes_label: String): void
+	+setProfile(profile: String): void
+	+setProfilesaved(profilesaved: String): void
+	+setThumbs(thumbs: String): void
+	+setSizes(sizes: long): void
+	+getMemberno(): int
+	+getId(): String
+	+getPasswd(): String
+	+getMname(): String
+	+getTel(): String
+	+getZipcode(): String
+	+getAddress1(): String
+	+getAddress2(): String
+	+getMdate(): String
+	+getGrade(): int
+	+getPoint(): int
+	+getBirth(): String
+	+getSex(): String
+	+getNickname(): String
+	+getIntroduce(): String
+	+getOld_passwd(): String
+	+getId_save(): String
+	+getPasswd_save(): String
+	+getUrl_address(): String
+	+getFiles1MF(): MultipartFile
+	+getSizes_label(): String
+	+getProfile(): String
+	+getProfilesaved(): String
+	+getThumbs(): String
+	+getSizes(): long
+}
+@enduml

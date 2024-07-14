@@ -24,6 +24,8 @@ public class ReviewVO {
   private int star;
   /** 내용 */
   private String contents = "";
+  /** 댓글 온도 */
+  private int temperater;
   /** 등록일 */
   private String rdate = "";
   /** 수정일 */

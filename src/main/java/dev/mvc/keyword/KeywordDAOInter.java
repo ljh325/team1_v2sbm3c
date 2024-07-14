@@ -18,6 +18,13 @@ public interface KeywordDAOInter {
   public ArrayList<KeywordVO> keyword_all();
   
   /**
+   * 키워드 별 조회 
+   * @param reviewno
+   * @return
+   */
+  public ArrayList<KeywordVO> keyword_all_read(int reviewno);
+  
+  /**
    * 키워드 조회
    * @param reviewno
    * @return
