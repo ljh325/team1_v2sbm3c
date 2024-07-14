@@ -44,7 +44,8 @@ import com.zaxxer.hikari.HikariDataSource;
                                          "dev.mvc.adrecom",
                                          "dev.mvc.recordImage",
                                          "dev.mvc.follows",
-                                         "dev.mvc.likesyesno"
+                                         "dev.mvc.likesyesno",
+                                         "dev.mvc.alarm"
 
                                          }) // 개발 package(테이블)
 public class DatabaseConfiguration {
