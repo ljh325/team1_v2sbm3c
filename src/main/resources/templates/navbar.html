@@ -1,264 +1,487 @@
 <div th:fragment="navbarFragment">
   <style>
     .notification-bell {
-            position: relative;
-            display: flex;
-            font-size: 30px;
-            margin-left:10px;
-            margin-top:5px;
-            
-            color: black;
-            cursor: pointer;
-            transition: color 0.15s ease;
-        }
-        .notification-bell .badge {
-            position: absolute;
-            top: 20px;
-            left: 15px;
-            
-            border-radius: 50%;
-            background: red;
-            color: white;
-            font-size: 10px;
-        }
-        .notification-bell i {
-            color: black; /* 기본 색상 설정 */
-            transition: color 0.15s ease; /* 색상 전환 애니메이션 */
-        }
-        .notification-bell:hover i {
-            color: #333;
-            transition: color 0.15s;
-        }
-        .notification-bell:active i {
-            color: #111;
-        }
-        
+      position: relative;
+      display: flex;
+      font-size: 30px;
+      margin-left: 10px;
+      margin-top: 5px;
+
+      color: black;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .notification-bell .badge {
+      position: absolute;
+      top: 20px;
+      left: 15px;
+
+      border-radius: 50%;
+      background: red;
+      color: white;
+      font-size: 10px;
+    }
+
+    .notification-bell i {
+      color: black;
+      /* 기본 색상 설정 */
+      transition: color 0.15s ease;
+      /* 색상 전환 애니메이션 */
+    }
+
+    .notification-bell:hover i {
+      color: #333;
+      transition: color 0.15s;
+    }
+
+    .notification-bell:active i {
+      color: #111;
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      right: 1;
+      top: 30px;
+      width: 300px;
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 1000;
+
+    }
+
+    .notification-dropdown ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    .notification-dropdown ul li {
+      padding: 10px 15px;
+      border-bottom: 1px solid #eee;
+      word-wrap: break-word;
+      transition: background-color 0.3s;
+      font-size: 15px;
+    }
+
+    .notification-dropdown ul li:last-child {
+      border-bottom: none;
+      font-size: 15px;
+    }
+
+    .notification-dropdown ul li:hover {
+      background-color: #f1f1f1;
+      font-size: 15px;
+    }
+
+    .notification-dropdown ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .notification-dropdown ul li a:hover {
+      color: #007bff;
+      font-size: 15px;
+    }
   </style>
-  
+
+  <script>
+    let memberno = "[[${session.memberno}]]";
+    let localIncrementCount = 0;
+
+    window.onload = () => {
+      if (memberno != "") {
+        alarm_count(memberno);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      var socket = new SockJS('/ws');
+      var stompClient = Stomp.over(socket);
+
+      stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/notifications', function (notification) {
+
+          if (memberno != "") {
+            console.log('Notification received: ' + notification.body);
+            increaseBadgeCount();
+            alarm_count(memberno);
+          }
+        });
+      });
+    });
+
+    function alarm_list(memberno) {
+
+      fetch("/alarm/alarm_list?memberno=[[${session.memberno}]]", {
+        "method": "get" // get 방식은 header 와 body 불필요
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          let alarm_data = data['res'];
+          let cnt = alarm_data.length;
+
+          for (let i = 0; i < cnt; i++) {
+            let row = data['res'][i];
+
+            // 시간을 연도, 월, 일, 시간, 분, 초 단위로 나누는 부분
+            let [datePart, timePart] = row.rdate.split(' ');
+            let [year, month, day] = datePart.split('-');
+            let [hour, minute, second] = timePart.split(':');
+            let postDate = new Date(year, month - 1, day, hour, minute, second);
+
+            msg += "<li id='alarm" + row.alarmno + "'>";
+            msg += "<a href='http://localhost:3000/patch/" + row.patchno + "' style='text-decoration: none;' onclick='alarm_delete(" + row.alarmno + ")'>" + row.title + "</a>";
+            msg += "<span>&nbsp;&nbsp;&nbsp;" + timeSince(postDate) + "</span>"; // 시간 표시 부분
+            msg += "</li>";
+
+
+          }
+
+          document.getElementById('notification_list').innerHTML = msg;
+
+        });
+    }
+
+
+    function toggleDropdown() {
+      let memberno = "[[${session.memberno}]]";
+
+      if (memberno != "") {
+        alarm_list(memberno);
+      }
+
+      var dropdown = document.getElementById('notification-dropdown');
+      if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    async function alarm_count(memberno) {
+      console.log("카운트 함수 실행");
+      try {
+        const response = await fetch(`/alarm/alarm_cnt?memberno=${memberno}`, {
+          method: 'get'
+        });
+        const data = await response.json();
+        console.log("카운트 fetch함수 실행");
+
+        let count = data.cnt;
+        setBadgeCount(count + localIncrementCount);
+      } catch (error) {
+        console.error("Error fetching alarm count:", error);
+      }
+    }
+
+    function setBadgeCount(count) {
+      let badge = document.getElementById('notification_badge');
+      badge.innerText = count;
+
+      if (count != 0) {
+        badge.style.display = '';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function increaseBadgeCount() {
+      if (localIncrementCount < 1) {
+        localIncrementCount += 1;
+      }
+      let badge = document.getElementById('notification_badge');
+      let currentCount = parseInt(badge.innerText, 10);
+      let newCount = currentCount + 1;
+      setBadgeCount(newCount);
+    }
+
+    function alarm_delete(alarmno) {
+      fetch("/alarm/delete", {
+        "method": "post",
+        "headers": {"Content-Type": "application/json"},
+        body: JSON.stringify({"alarmno": alarmno}),
+        credentials: "include"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+        });
+    }
+
+    function timeSince(date) { // 작성일자 표시 함수
+      const seconds = Math.floor((new Date() - date) / 1000);
+      let interval = seconds / 31536000;
+
+      if (interval > 1) {
+        return Math.floor(interval) + "년 전";
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + "달 전";
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + "일 전";
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + "시간 전";
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + "분 전";
+      }
+      return Math.floor(seconds) + "초 전";
+    }
+
+
+  </script>
+
   <div class="top_menu">
     <!-- top_navigation -->
     <div class="top_navigation">
-      
-      <div class="notification-bell">
+
+      <div class="notification-bell" onclick="toggleDropdown()">
         <i class="fas fa-bell"></i>
-        <span class="badge">3</span>
-      </div> 
+        <span class="badge" id="notification_badge" style="display: none;">0</span>
+        <div class="notification-dropdown" id="notification-dropdown">
+          <ul id="notification_list"></ul>
+        </div>
+
+      </div>
       <a href="/" aria-label="홈버튼" style='font-weight: bold; margin-left:0px;'>Health Care
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
         aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span><img src="/home/menu.png" class="icon"title="더 보기"></span>
+        <span><img src="/home/menu.png" class="icon" title="더 보기"></span>
       </button>
     </div>
     <!-- top_navigation -->
-    
-    
-       <!-- offcanvas offcanvas-end text-bg-dark -->
+
+
+    <!-- offcanvas offcanvas-end text-bg-dark -->
     <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
       aria-labelledby="offcanvasDarkNavbarLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Health Care</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-      
 
-      
-     <!-- offcanvas-body-->
+
+
+      <!-- offcanvas-body-->
       <div class="offcanvas-body">
-      
-      <div>
-        <span th:text="${session.id}"></span>
-      </div>
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            
-                 <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
-                    
-       <!-- 이메일 및 아이디 회원 이름-->
-                    <div style="display: flex; justify-content: space-around;">
-                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown0"
-                                 aria-controls="navbarSupportedContent" >계정
-                             </button> 
-                     </div>
-                     <div class="collapse navbar-collapse" id="navDropdown0">
-                          <ul class="nav-top" style="font-size: 10px;">
-                            <!-- 로그인 -->
-                            <a class="review_title_line" th:if="${session.memberno == null}" th:href="@{/member/login}" >로그인 </a>
-                            
-                               <!-- 회원가입 --> 
-                            <a class="review_title_line" th:if="${session.memberno == null}" href="/member/create">회원가입</a>
-                            
-                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/read?memberno=${session.memberno}|}">회원정보</a>
-                            
-                            <!-- 회원수정 -->
-                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/update_form?memberno=${session.memberno}|}">회원수정</a> 
-                            
-                            <!-- 회원 탈퇴 -->
-                            <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원탈퇴</a>   
-   
-                            <!-- 로그인시 로그아웃 -->
-                            <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그아웃</a>
-                            
-                          
-                            
 
-                          </ul>
-                      </div>
-                        
-                        
-                        <div style="display: flex; justify-content: space-around;">
-                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdownrecom"
-                                 aria-controls="navbarSupportedContent" >추천
-                             </button> 
-                     </div>
-                     <div class="collapse navbar-collapse" id="navDropdownrecom">
-                          <ul class="nav-top" style="font-size: 10px;">
-                            <!-- 로그인 -->
-                            <a class="review_title_line"  href="/mh/list_all" >회원 건강 정보 </a>
-                            
-                               <!-- 회원가입 --> 
-                            <a class="review_title_line"href="/goals/list_all">운동 목표</a>
-                            
-                 
-                            <!-- 회원수정 -->
-                            <a class="review_title_line" href="/healthrecom/list_all">운동 추천</a> 
-                            
-                            
-                            <a class="review_title_line" href="/foodrecom/list_all">식단 추천</a>
-                             
+        <div>
+          <span th:text="${session.id}"></span>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                          
-          
-                          </ul>
-                      </div>
-                        
-                        
-                        
-        <!-- 카테 목록 바로 가기-->
-                        <div style="display: flex; justify-content: space-around;">
-                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown"
-                                 aria-controls="navbarSupportedContent" aria-label="Toggle navigation">바로가기
-                             </button> 
-                        </div>
-                        <div class="collapse navbar-collapse" id="navDropdown">
-                              <ul class="nav-top" style="font-size: 10px;">
-                                <li class="review_title_line" th:each="htcVOMenu:${menu}">
-                                      <a class="review_title_line" href="#" id="navbarDropdownMenuLink" 
-                                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">                                                            
-                                      </a>
-                                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                          <a th:each="htcVO:${htcVOMenu.list_namesub}">
-                                          <a class="member_title_line" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}|}" th:text="${htcVO.namesub}"></a>
-                                          </a>
-                                      </ul>
-                                </li>
-                                
-                                <li class="review_title_line" th:each="cateVOMenu:${menu1}">
-                                      <a class="review_title_line" href="#" id="navbarDropdownMenuLink" 
-                                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
-                                      </a>
-                                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                          <a th:each="cateVO:${cateVOMenu.list_namesub}">
-                                          <span th:if="${cateVO.admins == 'N'}">
-                                          <a class="member_title_line" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
-                                          </span>
-                                          <span th:if="${cateVO.admins == 'Y'}">
-                                          <a class="member_title_line" th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a>
-                                          </span>
-                                          </a>
-                                      </ul>
-                                </li>
-          
-                              </ul>
-                         </div>
+          <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
 
-                        
-                     <!-- 리뷰남기기, 문의-->
-                     <div style="display: flex; justify-content: space-around;">
-                       <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown2"
-                           aria-controls="navbarSupportedContent" >리뷰
-                       </button> 
-                     </div>
-                     <div class="collapse navbar-collapse" id="navDropdown2">
-                          <ul class="nav-top" style="font-size: 10px;">
-                                <div style="display: flex; justify-content: space-around;">
-                                  <a class="review_title_line" th:if="${session.memberno != null}" th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰</a>
-                                </div>
-                                <div style="display: flex; justify-content: space-around;">
-                                  <a class="review_title_line" href="/review/review_list_form">리뷰 목록</a>
-                                </div>
-                          </ul>
-                      </div>
-                      
-                      
-                       <!-- 정보-->
-                        <div style="display: flex; justify-content: space-around;">
-                            <div class="review_title_line">정보 </div>
-                              <aside class="aside_right">
-                                <!-- 정보, 이용약관 등록 -->
-                              </aside>
-                       </div>
-                       
-                    <!-- admin 권한 -->
-                    <div style="display: flex; justify-content: space-around;">
-                             <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
-                                 aria-controls="navbarSupportedContent" >관리자
-                             </button> 
-                     </div>
-                     <div class="collapse navbar-collapse" id="navDropdown1">
-                          <ul class="nav-top" style="font-size: 10px;">
-                          
-                            <!-- 관리자 -->
-                            <a class="review_title_line" th:if="${session.adminno == null}" th:href="@{/admin/login_need}" >관리자로그인 </a>
+            <!-- 이메일 및 아이디 회원 이름-->
+            <div style="display: flex; justify-content: space-around;">
+              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown0"
+                aria-controls="navbarSupportedContent">계정
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navDropdown0">
+              <ul class="nav-top" style="font-size: 10px;">
+                <!-- 로그인 -->
+                <a class="review_title_line" th:if="${session.memberno == null}" th:href="@{/member/login}">로그인 </a>
 
-                            <a class="review_title_line" th:if="${session.adminno != null}" th:href="@{|/admin/read?adminno=${session.adminno}|}">정보</a>
-                            
-                            <!-- 관리자 로그인시 로그아웃 -->
-                            <a class="review_title_line" th:if="${session.adminno != null}" href="/admin/logout">로그아웃</a>
-                          
-                            <!-- admin 전체 회원 목록 -->
-                                <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/member/list">회원 목록</a>
-                                </div>
-                              <!-- admin 운동 글 전체  --> 
-                                <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/health/list_all?now_page=1">운동 글 전체 목록</a>
-                                </div>
+                <!-- 회원가입 -->
+                <a class="review_title_line" th:if="${session.memberno == null}" href="/member/create">회원가입</a>
 
-                                                    <!-- admin 운동 카테 등록 목록 -->
-                                <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/htc/list_search">운동 카테 등록, 목록 </a>
-                                </div>
+                <a class="review_title_line" th:if="${session.memberno != null}"
+                  th:href="@{|/member/read?memberno=${session.memberno}|}">회원정보</a>
 
-                                <!-- admin 커뮤니티 카테고리 등록 목록 -->
-                                <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/cate/list_search">커뮤니티 카테고리 등록, 목록 </a>
-                                </div>
+                <!-- 회원수정 -->
+                <a class="review_title_line" th:if="${session.memberno != null}"
+                  th:href="@{|/member/update_form?memberno=${session.memberno}|}">회원수정</a>
 
-                                 <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/foodcate/list_all">식단카테고리 목록</a>
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-around;">
-                                    <a class="review_title_line" href="/history/full_analysis">사용자 운동 기록 분석</a>
-                                </div>
+                <!-- 회원 탈퇴 -->
+                <a class="review_title_line" th:if="${session.memberno != null}"
+                  th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원탈퇴</a>
 
-                          </ul>
-                      </div>
-                 </span>
+                <!-- 로그인시 로그아웃 -->
+                <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그아웃</a>
 
-          
-                   
-          </ul>
+
+
+
+              </ul>
+            </div>
+
+
+            <div style="display: flex; justify-content: space-around;">
+              <button class="member_title_line" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navDropdownrecom" aria-controls="navbarSupportedContent">추천
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navDropdownrecom">
+              <ul class="nav-top" style="font-size: 10px;">
+                <!-- 로그인 -->
+                <a class="review_title_line" href="/mh/list_all">회원 건강 정보 </a>
+
+                <!-- 회원가입 -->
+                <a class="review_title_line" href="/goals/list_all">운동 목표</a>
+
+
+                <!-- 회원수정 -->
+                <a class="review_title_line" href="/healthrecom/list_all">운동 추천</a>
+
+
+                <a class="review_title_line" href="/foodrecom/list_all">식단 추천</a>
+
+
+
+
+              </ul>
+            </div>
+
+
+
+            <!-- 카테 목록 바로 가기-->
+            <div style="display: flex; justify-content: space-around;">
+              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown"
+                aria-controls="navbarSupportedContent" aria-label="Toggle navigation">바로가기
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navDropdown">
+              <ul class="nav-top" style="font-size: 10px;">
+                <li class="review_title_line" th:each="htcVOMenu:${menu}">
+                  <a class="review_title_line" href="#" id="navbarDropdownMenuLink" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a th:each="htcVO:${htcVOMenu.list_namesub}">
+                      <a class="member_title_line" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}|}"
+                        th:text="${htcVO.namesub}"></a>
+                    </a>
+                  </ul>
+                </li>
+
+                <li class="review_title_line" th:each="cateVOMenu:${menu1}">
+                  <a class="review_title_line" href="#" id="navbarDropdownMenuLink" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a th:each="cateVO:${cateVOMenu.list_namesub}">
+                      <span th:if="${cateVO.admins == 'N'}">
+                        <a class="member_title_line" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}"
+                          th:text="${cateVO.namesub}"></a>
+                      </span>
+                      <span th:if="${cateVO.admins == 'Y'}">
+                        <a class="member_title_line" th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}|}"
+                          th:text="${cateVO.namesub}"></a>
+                      </span>
+                    </a>
+                  </ul>
+                </li>
+
+              </ul>
+            </div>
+
+
+            <!-- 리뷰남기기, 문의-->
+            <div style="display: flex; justify-content: space-around;">
+              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown2"
+                aria-controls="navbarSupportedContent">리뷰
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navDropdown2">
+              <ul class="nav-top" style="font-size: 10px;">
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" th:if="${session.memberno != null}"
+                    th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰</a>
+                </div>
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/review/review_list_form">리뷰 목록</a>
+                </div>
+              </ul>
+            </div>
+
+
+            <!-- 정보-->
+            <div style="display: flex; justify-content: space-around;">
+              <div class="review_title_line">정보 </div>
+              <aside class="aside_right">
+                <!-- 정보, 이용약관 등록 -->
+              </aside>
+            </div>
+
+            <!-- admin 권한 -->
+            <div style="display: flex; justify-content: space-around;">
+              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
+                aria-controls="navbarSupportedContent">관리자
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navDropdown1">
+              <ul class="nav-top" style="font-size: 10px;">
+
+                <!-- 관리자 -->
+                <a class="review_title_line" th:if="${session.adminno == null}" th:href="@{/admin/login_need}">관리자로그인
+                </a>
+
+                <a class="review_title_line" th:if="${session.adminno != null}"
+                  th:href="@{|/admin/read?adminno=${session.adminno}|}">정보</a>
+
+                <!-- 관리자 로그인시 로그아웃 -->
+                <a class="review_title_line" th:if="${session.adminno != null}" href="/admin/logout">로그아웃</a>
+
+                <!-- admin 전체 회원 목록 -->
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/member/list">회원 목록</a>
+                </div>
+                <!-- admin 운동 글 전체  -->
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/health/list_all?now_page=1">운동 글 전체 목록</a>
+                </div>
+
+                <!-- admin 운동 카테 등록 목록 -->
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/htc/list_search">운동 카테 등록, 목록 </a>
+                </div>
+
+                <!-- admin 커뮤니티 카테고리 등록 목록 -->
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/cate/list_search">커뮤니티 카테고리 등록, 목록 </a>
+                </div>
+
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/foodcate/list_all">식단카테고리 목록</a>
+                </div>
+
+                <div style="display: flex; justify-content: space-around;">
+                  <a class="review_title_line" href="/history/full_analysis">사용자 운동 기록 분석</a>
+                </div>
+
+              </ul>
+            </div>
+          </span>
+
+
+
+        </ul>
       </div>
       <!-- offcanvas-body-->
-              
+
     </div>
     <!-- offcanvas offcanvas-end text-bg-dark -->
- 
+
   </div><!-- top_menu -->
 
-           
+
 
 
 </div>
- 

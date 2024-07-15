@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.alarm.AlarmDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <!-- 이재호 xml -->
+  
+  <!-- 알림 등록 -->
+  <insert id="create" parameterType="dev.mvc.alarm.AlarmVO">
+    INSERT INTO alarm(alarmno, memberno, patchno)
+    VALUES(alarm_seq.nextval, #{memberno}, #{patchno})
+  </insert>
+  
+  <!-- 회원 전체 알림 목록 -->
+  <select id = "list_all" resultType="dev.mvc.alarm.AlarmPatchVO">
+    SELECT a.alarmno, a.memberno, a.patchno, p.title, p.rdate
+    FROM alarm a, patch p
+    WHERE a.patchno = p.patchno
+  </select>
+  
+  <!-- 회원별 알림 목록 -->
+  <select id = "alarm_list" resultType="dev.mvc.alarm.AlarmPatchVO" parameterType="int">
+    SELECT a.alarmno, a.memberno, a.patchno, p.title, p.rdate
+    FROM alarm a, patch p
+    WHERE a.patchno = p.patchno AND a.memberno = #{memberno}
+    ORDER BY alarmno DESC
+  </select>
+  
+  <select id = "read" resultType="dev.mvc.alarm.AlarmVO" parameterType="int">
+    SELECT alarmno, memberno, patchno
+    FROM alarm
+    WHERE alarmno = #{alarmno}
+    
+  </select>
+  
+  <!-- 회원별 알림 갯수 -->
+  <select id = "alarm_cnt" resultType = "int">
+    SELECT COUNT(alarmno) as cnt
+    FROM alarm
+    WHERE memberno = #{memberno}
+  </select>
+  
+  <!-- 알림 제거 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM alarm
+    WHERE alarmno = #{alarmno}
+  </delete>
+  
+</mapper>
