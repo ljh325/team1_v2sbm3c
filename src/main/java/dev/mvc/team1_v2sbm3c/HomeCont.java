@@ -56,6 +56,7 @@ public class HomeCont {
       ArrayList<HtcVOMenu> menu = this.htcProc.menu();
       MhVO mhVO = this.mhProc.read_n(memberno);
       MemberVO memberVO = this.memberProc.read(memberno);
+      
       if (mhVO != null) {
         float kg = mhVO.getKg();
         float cm = mhVO.getCm() / 100;
