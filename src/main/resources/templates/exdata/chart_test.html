@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <style>
+    span,
+    div {
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr {
+      cursor: pointer;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    .button-style {
+      border: none;
+    }
+
+    .button-style:hover {
+      color: dimgrey;
+    }
+
+
+    .chart-container {
+      height: 800px;
+      /* 원하는 높이로 설정 */
+      overflow: auto;
+      /* 차트가 넘칠 경우 스크롤 생성 */
+    }
+
+    #chart_div {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <div class='title_line'>
+    <span th:text="|추천 운동 데이터&nbsp;&nbsp;|" class="title_line_text"></span>
+    > &nbsp;<span th:text="|${memberVO.id} 님|" class="title_line_text"></span>
+
+  </div>
+
+  <div class='menu_line'></div>
+
+  <script>
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+      fetch("/exdata/list_part_exdata?part=가슴", {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+
+          let data_array = [
+            ["운동명", "근육활성도", "부상위험도"]
+          ];
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
+            data_array.push([row.exname, row.lowact, row.lowrisk]);
+          }
+
+          let chart_data = google.visualization.arrayToDataTable(data_array);
+
+
+          var options = {
+            title: '운동 데이터',
+            chartArea: {width: '50%'},
+            hAxis: {
+              title: '',
+              minValue: 0
+            },
+            vAxis: {
+              title: ''
+            }
+          };
+
+
+          var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+
+          chart.draw(chart_data, options);
+        });
+    }
+  </script>
+  <h2>추천 운동 데이터</h2>
+
+  <label for="ex_intensity">운동강도&nbsp;</label>
+  <select id="ex_intensity">
+    <option value="1">낮음</option>
+    <option value="2">보통</option>
+    <option value="3">높음</option>
+  </select>
+
+
+  <label for="ex_group">&nbsp;&nbsp;&nbsp;부위별 조회&nbsp;</label>
+  <select id="ex_group">
+    <option value="all">모두보기</option>
+    <option value="가슴">가슴</option>
+    <option value="등">등</option>
+    <option value="어깨">어깨</option>
+    <option value="팔">팔</option>
+    <option value="하체">하체</option>
+    <option value="복근">복근</option>
+    <option value="유산소">유산소</option>
+  </select>
+
+  <label for="ex_time">&nbsp;&nbsp;운동시간&nbsp;</label>
+  <select id="ex_time">
+    <option value="1">1분</option>
+    <option value="5">5분</option>
+    <option value="15">15분</option>
+    <option value="30">30분</option>
+    <option value="60">60분</option>
+  </select>
+
+
+  <div id="chart-container">
+    <div id="chart_div" style="height:800px;"></div>
+  </div>
+
+  <br><br>
+  <h2 style="float:left;">효율적인 운동&nbsp;</h2>
+  <h6 style="margin-top:10px">- 목적에 맞는 각 부위별 효율적인 운동 제공</h6>
+  <br>
+
+  <label for="effect_intensity">운동강도&nbsp;</label>
+  <select id="effect_intensity">
+    <option value="1">낮음</option>
+    <option value="2">보통</option>
+    <option value="3">높음</option>
+  </select>
+
+  <label for="effect_purpose">&nbsp;운동목적&nbsp;</label>
+  <select id="effect_purpose">
+    <option value="muscle">근육량 증가</option>
+    <option value="weight">체중 감소</option>
+  </select>
+
+
+
+
+
+
+</div>
+
+
+</html>

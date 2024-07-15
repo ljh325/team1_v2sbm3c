@@ -98,8 +98,8 @@
     let localIncrementCount = 0;
 
     window.onload = () => {
-      if (memberno != "") {
-        alarm_count(memberno);
+      if (no != "") {
+        alarm_count(no);
       }
     }
     document.addEventListener('DOMContentLoaded', function () {
@@ -110,16 +110,16 @@
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/notifications', function (notification) {
 
-          if (memberno != "") {
+          if (no != "") {
             console.log('Notification received: ' + notification.body);
             increaseBadgeCount();
-            alarm_count(memberno);
+            alarm_count(no);
           }
         });
       });
     });
 
-    function alarm_list(memberno) {
+    function alarm_list(no) {
 
       fetch("/alarm/alarm_list?memberno=[[${session.memberno}]]", {
         "method": "get" // get 방식은 header 와 body 불필요
@@ -154,10 +154,10 @@
 
 
     function toggleDropdown() {
-      let memberno = "[[${session.memberno}]]";
+      let no = "[[${session.memberno}]]";
 
-      if (memberno != "") {
-        alarm_list(memberno);
+      if (no != "") {
+        alarm_list(no);
       }
 
       var dropdown = document.getElementById('notification-dropdown');
@@ -168,10 +168,10 @@
       }
     }
 
-    async function alarm_count(memberno) {
+    async function alarm_count(no) {
       console.log("카운트 함수 실행");
       try {
-        const response = await fetch(`/alarm/alarm_cnt?memberno=${memberno}`, {
+        const response = await fetch(`/alarm/alarm_cnt?memberno=${no}`, {
           method: 'get'
         });
         const data = await response.json();
