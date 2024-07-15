@@ -76,8 +76,9 @@
   <br>
 
 
-    <div style="background-color: white; padding: 12px; margin-bottom: 10px;">
-      <span>프로필</span>
+    <div style="background-color: white; padding: 12px; margin-bottom: 10px; cursor: pointer;"
+         th:onclick="|location.href='/member/profile_update?memberno=${session.memberno}'|">
+      <span>프로필 수정</span>
     </div>
     <br>
 

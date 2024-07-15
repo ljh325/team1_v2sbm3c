@@ -39,6 +39,9 @@
       color: #111;
     }
 
+
+
+
     .notification-dropdown {
       position: absolute;
       right: 1;
@@ -91,9 +94,84 @@
       color: #007bff;
       font-size: 15px;
     }
+    
+    /* ==================================================================== */
+
+.slide-opend {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+.burgurd {
+  right: 15px;
+  top: 23px;
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: #000000;
+}
+.burgurd .top-lined {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  bottom: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition: -webkit-transform .3s;
+  transition: transform .3s;
+}
+.burgurd .bot-lined {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  top: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition: -webkit-transform .3s;
+  transition: transform .3s;
+}
+.burgurd.on {
+  width: 0;
+}
+.burgurd.on .bot-lined {
+  -webkit-transform: translateY(5px) rotate(135deg);
+  transform: translateY(5px) rotate(135deg);
+}
+.burgurd.on .top-lined {
+  -webkit-transform: translateY(-5px) rotate(-135deg);
+  transform: translateY(-5px) rotate(-135deg);
+}
+/*------------- 아코디언 ------------------------------------------*/
+.accordion-button {
+  background-color: #212529;
+  color: #ffffff;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #212529;
+  color: #ffffff;
+}
+
+.accordion-body {
+  background-color: #5e6069;
+  color: #ffffff;
+}
+
+.accordion-header {
+  background-color: #212529;
+  color: #ffffff;
+}
+
   </style>
 
   <script>
+ 
+
     let no = "[[${session.memberno}]]";
     let localIncrementCount = 0;
 
@@ -262,7 +340,12 @@
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
         aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span><img src="/home/menu.png" class="icon" title="더 보기"></span>
+        <div class="slide-opend" id="slide-opend">
+          <span class="burgurd" id="burgurd">
+          <span class="top-lined"></span>
+          <span class="bot-lined"></span>
+       </span>
+       </div>
       </button>
     </div>
     <!-- top_navigation -->
@@ -271,211 +354,125 @@
     <!-- offcanvas offcanvas-end text-bg-dark -->
     <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
       aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
+      <div class="offcanvas-header" style="width:100%;">
         <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Health Care</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
 
-
-
       <!-- offcanvas-body-->
-      <div class="offcanvas-body">
+<br>
+<br>
+<br>
 
-        <div>
-          <span th:text="${session.id}"></span>
-        </div>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-          <span style="background-color: rgb(192, 192, 192); text-align:center;">로고
-
-            <!-- 이메일 및 아이디 회원 이름-->
-            <div style="display: flex; justify-content: space-around;">
-              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown0"
-                aria-controls="navbarSupportedContent">계정
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navDropdown0">
-              <ul class="nav-top" style="font-size: 10px;">
-                <!-- 로그인 -->
-                <a class="review_title_line" th:if="${session.memberno == null}" th:href="@{/member/login}">로그인 </a>
-
-                <!-- 회원가입 -->
-                <a class="review_title_line" th:if="${session.memberno == null}" href="/member/create">회원가입</a>
-
-                <a class="review_title_line" th:if="${session.memberno != null}"
-                  th:href="@{|/member/read?memberno=${session.memberno}|}">회원정보</a>
-
-                <!-- 회원수정 -->
-                <a class="review_title_line" th:if="${session.memberno != null}"
-                  th:href="@{|/member/update_form?memberno=${session.memberno}|}">회원수정</a>
-
-                <!-- 회원 탈퇴 -->
-                <a class="review_title_line" th:if="${session.memberno != null}"
-                  th:href="@{|/member/delete_form?memberno=${session.memberno}|}">회원탈퇴</a>
-
-                <!-- 로그인시 로그아웃 -->
-                <a class="review_title_line" th:if="${session.memberno != null}" href="/member/logout">로그아웃</a>
-
-
-
-
-              </ul>
-            </div>
-
-
-            <div style="display: flex; justify-content: space-around;">
-              <button class="member_title_line" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navDropdownrecom" aria-controls="navbarSupportedContent">추천
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navDropdownrecom">
-              <ul class="nav-top" style="font-size: 10px;">
-                <!-- 로그인 -->
-                <a class="review_title_line" href="/mh/list_all">회원 건강 정보 </a>
-
-                <!-- 회원가입 -->
-                <a class="review_title_line" href="/goals/list_all">운동 목표</a>
-
-
-                <!-- 회원수정 -->
-                <a class="review_title_line" href="/healthrecom/list_all">운동 추천</a>
-
-
-                <a class="review_title_line" href="/foodrecom/list_all">식단 추천</a>
-
-
-
-
-              </ul>
-            </div>
-
-
-
-            <!-- 카테 목록 바로 가기-->
-            <div style="display: flex; justify-content: space-around;">
-              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown"
-                aria-controls="navbarSupportedContent" aria-label="Toggle navigation">바로가기
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navDropdown">
-              <ul class="nav-top" style="font-size: 10px;">
-                <li class="review_title_line" th:each="htcVOMenu:${menu}">
-                  <a class="review_title_line" href="#" id="navbarDropdownMenuLink" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false" th:text="${htcVOMenu.name}">
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a th:each="htcVO:${htcVOMenu.list_namesub}">
-                      <a class="member_title_line" th:href="@{|/health/list_by_htcno?htcno=${htcVO.htcno}|}"
-                        th:text="${htcVO.namesub}"></a>
-                    </a>
-                  </ul>
-                </li>
-
-                <li class="review_title_line" th:each="cateVOMenu:${menu1}">
-                  <a class="review_title_line" href="#" id="navbarDropdownMenuLink" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a th:each="cateVO:${cateVOMenu.list_namesub}">
-                      <span th:if="${cateVO.admins == 'N'}">
-                        <a class="member_title_line" th:href="@{|/contents/list_cate?cateno=${cateVO.cateno}|}"
-                          th:text="${cateVO.namesub}"></a>
-                      </span>
-                      <span th:if="${cateVO.admins == 'Y'}">
-                        <a class="member_title_line" th:href="@{|/adcontents/list_cate?cateno=${cateVO.cateno}|}"
-                          th:text="${cateVO.namesub}"></a>
-                      </span>
-                    </a>
-                  </ul>
-                </li>
-
-              </ul>
-            </div>
-
-
-            <!-- 리뷰남기기, 문의-->
-            <div style="display: flex; justify-content: space-around;">
-              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown2"
-                aria-controls="navbarSupportedContent">리뷰
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navDropdown2">
-              <ul class="nav-top" style="font-size: 10px;">
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" th:if="${session.memberno != null}"
-                    th:href="@{|/review/review_insert_form?memberno=${session.memberno}|}">리뷰</a>
-                </div>
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/review/review_list_form">리뷰 목록</a>
-                </div>
-              </ul>
-            </div>
-
-
-            <!-- 정보-->
-            <div style="display: flex; justify-content: space-around;">
-              <div class="review_title_line">정보 </div>
-              <aside class="aside_right">
-                <!-- 정보, 이용약관 등록 -->
-              </aside>
-            </div>
-
-            <!-- admin 권한 -->
-            <div style="display: flex; justify-content: space-around;">
-              <button class="member_title_line" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown1"
-                aria-controls="navbarSupportedContent">관리자
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navDropdown1">
-              <ul class="nav-top" style="font-size: 10px;">
-
-                <!-- 관리자 -->
-                <a class="review_title_line" th:if="${session.adminno == null}" th:href="@{/admin/login_need}">관리자로그인
-                </a>
-
-                <a class="review_title_line" th:if="${session.adminno != null}"
-                  th:href="@{|/admin/read?adminno=${session.adminno}|}">정보</a>
-
-                <!-- 관리자 로그인시 로그아웃 -->
-                <a class="review_title_line" th:if="${session.adminno != null}" href="/admin/logout">로그아웃</a>
-
-                <!-- admin 전체 회원 목록 -->
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/member/list">회원 목록</a>
-                </div>
-                <!-- admin 운동 글 전체  -->
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/health/list_all?now_page=1">운동 글 전체 목록</a>
-                </div>
-
-                <!-- admin 운동 카테 등록 목록 -->
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/htc/list_search">운동 카테 등록, 목록 </a>
-                </div>
-
-                <!-- admin 커뮤니티 카테고리 등록 목록 -->
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/cate/list_search">커뮤니티 카테고리 등록, 목록 </a>
-                </div>
-
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/foodcate/list_all">식단카테고리 목록</a>
-                </div>
-
-                <div style="display: flex; justify-content: space-around;">
-                  <a class="review_title_line" href="/history/full_analysis">사용자 운동 기록 분석</a>
-                </div>
-
-              </ul>
-            </div>
-          </span>
-
-
-
-        </ul>
+<div th:if="${session.memberno != null}">
+  <div style="background-color: #343a40; padding:12px 16px 12px 16px; border-radius: 7px;">
+  
+    <!-- 프로필 이미지 -->
+    <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}"
+         style="width:100%; padding:14px; text-align: center;">
+      <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img" style="width:80px; height:80px; border-radius: 50%;">
+    </div>    
+    <div th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+      <span th:text="${memberVO.profile}" style="width:80px; height:80px; border-radius: 50%;"></span>
+    </div>    
+    <div th:if="${memberVO.sizes == 0}">
+      <img src="/images/none.jpg" class="default-img" style="width:80px; height:80px; border-radius: 50%;">
+    </div>
+    <!-- 프로필 이미지 -->
+    
+    <div style="text-align: center;">
+      <span th:text="|${memberVO.nickname}님|" style="color: white;"></span><br>
+      <span style="color: white; font-size: 12px;">반가워요.</span>
+    </div>
+  </div>
+</div>
+<div th:if="${session.memberno == null}">
+  <span style="color: white;">로그인을 해주세요.</span>
+</div>
+<br>
+<br>
+<!-- ============================================================== -->
+<div class="accordion accordion-flush" id="accordionFlushExample" style="width:100%;">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        계정
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body" th:if="${session.memberno == null}" onclick="location.href='/member/login'">
+        <span style="margin-left: 23px; color: white;">로그인</span>
       </div>
+      <div class="accordion-body" th:if="${session.memberno == null}" onclick="location.href='/member/create'">
+        <span style="margin-left: 23px; color: white;">회원가입</span>
+      </div>
+      <div class="accordion-body" th:if="${session.memberno != null}"
+                  th:onclick="|location.href='/member/read?memberno=${session.memberno}'|">
+        <span style="margin-left: 23px; color: white;">회원정보</span>
+      </div>
+      <div class="accordion-body" th:if="${session.memberno != null}" onclick="location.href='/member/logout'">
+        <span style="margin-left: 23px; color: white;">로그아웃</span>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" th:if="${session.memberno != null}">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        추천
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body" onclick="location.href='/mh/list_all'">
+        <span style="margin-left: 23px; color: white;">회원 건강 정보</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/goals/list_all'">
+        <span style="margin-left: 23px; color: white;">운동 목표</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/healthrecom/list_all'">
+        <span style="margin-left: 23px; color: white;">운동 추천</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/foodrecom/list_all'">
+        <span style="margin-left: 23px; color: white;">식단 추천</span>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" th:if="${session.adminsno != null}">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        관리자
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body" onclick="location.href='/health/list_all?now_page=1'">
+        <span style="margin-left: 23px; color: white;">운동 글 전체 목록</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/htc/list_search'">
+        <span style="margin-left: 23px; color: white;">운동 카테 등록, 목록</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/cate/list_search'">
+        <span style="margin-left: 23px; color: white;">커뮤니티 카테고리 등록, 목록</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/foodcate/list_all'">
+        <span style="margin-left: 23px; color: white;">식단카테고리 목록</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/history/full_analysis'">
+        <span style="margin-left: 23px; color: white;">사용자 운동 기록 분석</span>
+      </div>
+      <div class="accordion-body" onclick="location.href='/admin/logout'">
+        <span style="margin-left: 23px; color: white;">관리자 로그아웃</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ============================================================== -->
+
       <!-- offcanvas-body-->
 
+
+<div style="width:100%; padding:14px; margin-top:870px; margin-right:100px; margin-left:15px; position: fixed;
+            text-align: left;" onclick="location.href='/admin/login_need'">
+  <span style="color: white;">관리자 로그인 ▷</span>
+</div>
     </div>
     <!-- offcanvas offcanvas-end text-bg-dark -->
 

@@ -138,7 +138,9 @@ public class HistoryCont {
   public String full_analysis_form(Model model, HttpSession session) {
     
     if (this.memberProc.isMember(session)) {
-      //int memberno = (int)session.getAttribute("memberno");  
+      int memberno = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
   
       return "history/full_analysis";
       }
@@ -157,6 +159,9 @@ public class HistoryCont {
   public String history_record_form(Model model, HttpSession session) {
     
     if (this.memberProc.isMember(session)) {
+      int memberno = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       
       return "history/history_record_form";
     }
@@ -196,6 +201,9 @@ public class HistoryCont {
   @GetMapping(value="/activity_record") // http://localhost:9093/history/activity_record
   public String activity_record(Model model, HttpSession session) {
     if (this.memberProc.isMember(session)) {
+      int memberno = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       
       return "/history/activity_record";
     }
@@ -372,7 +380,9 @@ public class HistoryCont {
   public String profile_followng(Model model, HttpSession session, int memberno) {
     
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      //int memberno = (int)session.getAttribute("memberno");
+      int membernos = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(membernos);
+      model.addAttribute("memberVO", memberVO);
       
       int follower_cnt = this.followsProc.follower_cnt(memberno);
       int following_cnt = this.followsProc.following_cnt(memberno);
@@ -397,7 +407,9 @@ public class HistoryCont {
     
     
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      //model. memberno = (int)session.getAttribute("memberno");
+      int membernos = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(membernos);
+      model.addAttribute("memberVO", memberVO);
       
       int follower_cnt = this.followsProc.follower_cnt(memberno);
       int following_cnt = this.followsProc.following_cnt(memberno);
@@ -442,7 +454,10 @@ public class HistoryCont {
   public String sns_comunity_form(Model model, HttpSession session) {
    
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      //int memberno = (int)session.getAttribute("memberno");
+      int memberno = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+      
       int cnt = this.recordImageProc.all_image_cnt();
       if (cnt == 0) {
         model.addAttribute("msg", "0");
@@ -485,6 +500,8 @@ public class HistoryCont {
    
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
       int memberno = (int)session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       int count = this.followsProc.following_cnt(memberno);
       System.out.println("count " + count);
       if(count == 0) {
@@ -559,9 +576,15 @@ public class HistoryCont {
    * @return
    */
   @GetMapping(value="/recored_ssuccess")
-  public String recored_ssuccess(Model model) {
-    
+  public String recored_ssuccess(HttpSession session, Model model) {
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+    int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     return "history/recored_ssuccess";
+    }else {
+      return "member/login";
+    }
   }
   
   /**
@@ -575,6 +598,9 @@ public class HistoryCont {
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
       
     int memberno = (int)session.getAttribute("memberno"); 
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
     ArrayList<MhVO> list = this.mhProc.list_all(memberno); // 로그인한 계정에 대한 건강정보 리스트 전부 출력
     
     model.addAttribute("list", list); 
@@ -694,6 +720,9 @@ public class HistoryCont {
     //System.out.println("스타또 데이트" + startdate);
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면
       int memberno = (int)session.getAttribute("memberno"); // 세션에서 memberno를 꺼내옴
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+      
       System.out.println("memberno-->" + memberno);
       HashMap<String, Object> map = new HashMap<String, Object>();
       
@@ -720,6 +749,8 @@ public class HistoryCont {
   public String record_read_update(@RequestParam int exrecordno, Model model, HttpSession session) {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     
     HistoryVO historyVO = new HistoryVO();
     HashMap<String, Object> map = new HashMap<String, Object>();
