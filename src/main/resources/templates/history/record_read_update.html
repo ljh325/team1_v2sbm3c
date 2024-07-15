@@ -357,27 +357,36 @@
           let notes = document.getElementById("notes").value.trim() || "No notes";     
           let memberno = '[[${session.memberno}]]';   
          
-
-          fetch('/history/history_record_proc' , {
+         
+          let params = getQueryParams();
+          let exrecordno = params['exrecordno'];
+          console.log('memberno' + exrecordno)
+          console.log('exname' + exname)
+          console.log('extype' + extype)
+          console.log('hiscalorie' + hiscalorie)
+          console.log('duration' + duration)
+          
+          fetch('/history/record_read_update_proc' , {
             method : 'POST',
             headers: {
               'Content-Type': 'application/json'  // 요청의 콘텐츠 타입을 JSON으로 설정
             },
             body: JSON.stringify({
-              exname:exname,
-              extype:extype,
-              hiscalorie:parseInt(hiscalorie), // 정수로 변환
-              duration:duration,
-              recorddate:recorddate,
-              notes:notes,
-              memberno:memberno
+              "exrecordno":exrecordno,
+              "exname":exname,
+              "extype":extype,
+              "hiscalorie":parseInt(hiscalorie), // 정수로 변환
+              "duration":duration,
+              "recorddate":recorddate,
+              "notes":notes,
+              "memberno":memberno
             })
           })
           .then(response => response.json())
           .then(data => {
             if(data['cnt'] == 1){
               console.log('성공;');
-              window.location.href = '/history/history_form';
+              window.location.href = '/history/history_form?memberno=' + memberno;
               
             } else{
               console.log('실패');
@@ -407,6 +416,20 @@
             duration += 30;
             durationElement.innerText = duration;
         });
+        
+        
+        
+            function getQueryParams() {
+      let params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        let [key, value] = pair.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      });
+      return params;
+    }
+
+
+
     </script>
     <!-- 캐러셀 자바스크립트 코드 끝 -->
 

@@ -37,4 +37,10 @@ public class LikesyesnoProc implements LikesyesnoProcInter{
     return cnt;
   }
 
+  @Override
+  public LikesyesnoVO like_read_one(HashMap<String, Object> map) {
+    LikesyesnoVO like = this.likesyesnoDAO.like_read_one(map);
+    return like;
+  }
+
 }

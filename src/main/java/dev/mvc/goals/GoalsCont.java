@@ -28,6 +28,7 @@ import dev.mvc.healthrecom.HealthrecomVO;
 import dev.mvc.cate.CateVO;
 import dev.mvc.cate.CateVOMenu;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.tool.Tool;
@@ -80,6 +81,8 @@ public class GoalsCont {
   public String read(HttpSession session,Model model,@RequestParam("goalsno") int goalsno ) {
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");  
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     GoalsVO goalsVO = this.goalsProc.read(goalsno);
     goalsVO.setMemberno(memberno);  
     model.addAttribute("goalsVO", goalsVO);
@@ -112,6 +115,8 @@ public class GoalsCont {
    
   if (this.memberProc.isMember(session)) {
   int memberno = (int)session.getAttribute("memberno");
+  MemberVO memberVO = this.memberProc.read(memberno);
+  model.addAttribute("memberVO", memberVO);
   GoalsVO goalsVO = new GoalsVO();
   goalsVO.setMemberno(memberno);
   model.addAttribute("goalsVO", goalsVO);
@@ -198,6 +203,9 @@ public class GoalsCont {
       
       
     int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
     model.addAttribute("list", list);
     GoalsVO goalsVO = this.goalsProc.read_n(memberno);
@@ -335,6 +343,8 @@ public class GoalsCont {
 
     if (this.memberProc.isMember(session)) {
     int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
     model.addAttribute("list", list);
     GoalsVO goalsVO = this.goalsProc.read(goalsno);
@@ -405,6 +415,8 @@ public class GoalsCont {
 
     
     int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     ArrayList<GoalsVO> list = this.goalsProc.list_all(memberno);
     model.addAttribute("list", list);
     

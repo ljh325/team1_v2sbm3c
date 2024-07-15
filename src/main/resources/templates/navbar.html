@@ -368,20 +368,26 @@
   <div style="background-color: #343a40; padding:12px 16px 12px 16px; border-radius: 7px;">
   
     <!-- 프로필 이미지 -->
-    <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}"
-         style="width:100%; padding:14px; text-align: center;">
-      <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img" style="width:80px; height:80px; border-radius: 50%;">
-    </div>    
-    <div th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
-      <span th:text="${memberVO.profile}" style="width:80px; height:80px; border-radius: 50%;"></span>
-    </div>    
-    <div th:if="${memberVO.sizes == 0}">
+    <div th:if="${memberVO != null}">
+      <div th:if="${memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')}"
+           style="width:100%; padding:14px; text-align: center;">
+        <img th:src="@{|/member/storage/${memberVO.thumbs}|}" class="profile-img" style="width:80px; height:80px; border-radius: 50%;">
+      </div>    
+      <div th:if="${((memberVO.profile.endsWith('jpg') or memberVO.profile.endsWith('png')  or memberVO.profile.endsWith('gif')) == false) and (memberVO.sizes > 0)}">
+        <span th:text="${memberVO.profile}" style="width:80px; height:80px; border-radius: 50%;"></span>
+      </div>    
+      <div th:if="${memberVO.sizes == 0}">
+        <img src="/images/none.jpg" class="default-img" style="width:80px; height:80px; border-radius: 50%;">
+      </div>
+    </div>
+    <div th:if="${memberVO == null}">
       <img src="/images/none.jpg" class="default-img" style="width:80px; height:80px; border-radius: 50%;">
     </div>
     <!-- 프로필 이미지 -->
     
     <div style="text-align: center;">
-      <span th:text="|${memberVO.nickname}님|" style="color: white;"></span><br>
+      <span th:if="${memberVO != null}" th:text="|${memberVO.nickname}님|" style="color: white;"></span><br>
+      <span th:if="${memberVO == null}" th:text="홍길동님" style="color: white;"></span><br>
       <span style="color: white; font-size: 12px;">반가워요.</span>
     </div>
   </div>

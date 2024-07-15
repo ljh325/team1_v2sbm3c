@@ -27,6 +27,7 @@ import dev.mvc.follows.FollowsVO;
 import dev.mvc.goals.GoalsProcInter;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.likesyesno.LikesyesnoProcInter;
+import dev.mvc.likesyesno.LikesyesnoVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhProcInter;
@@ -183,7 +184,6 @@ public class HistoryCont {
                                     HttpSession session) {
     
     JSONObject obj = new JSONObject();
-    
     int cnt = this.historyProc.insert_history(historyVO);
     
     System.out.println("cnt->" + cnt);
@@ -358,6 +358,10 @@ public class HistoryCont {
       model.addAttribute("memberVO", memberVO);
       
       HashMap<String, Object> map = new HashMap<String, Object>();
+      // 좋아요수
+      HashMap<Integer, Integer> likeCountMap = new HashMap<>();
+      int like_cnt = this.likesyesnoProc.like_cnt(exrecordno);
+      likeCountMap.put(exrecordno, like_cnt);
       
       map.put("memberno", memberno);
       map.put("exrecordno", exrecordno);
@@ -449,15 +453,12 @@ public class HistoryCont {
     return obj.toString();
   }
   
-  
+
   @GetMapping(value="/sns_comunity_form")
   public String sns_comunity_form(Model model, HttpSession session) {
    
     if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
-      int memberno = (int)session.getAttribute("memberno");
-      MemberVO memberVO = this.memberProc.read(memberno);
-      model.addAttribute("memberVO", memberVO);
-      
+      //int memberno = (int)session.getAttribute("memberno");
       int cnt = this.recordImageProc.all_image_cnt();
       if (cnt == 0) {
         model.addAttribute("msg", "0");
@@ -502,6 +503,7 @@ public class HistoryCont {
       int memberno = (int)session.getAttribute("memberno");
       MemberVO memberVO = this.memberProc.read(memberno);
       model.addAttribute("memberVO", memberVO);
+      
       int count = this.followsProc.following_cnt(memberno);
       System.out.println("count " + count);
       if(count == 0) {
@@ -512,17 +514,27 @@ public class HistoryCont {
         model.addAttribute("msg", "1");
       
         HashMap<Integer, ArrayList<RecordImageVO>> imageMap = new HashMap<>();
-           
+        HashMap<Integer, Integer> likeCountMap = new HashMap<>();
+        
         for (FollowsVO item : list) {
           HashMap<String, Object> map = new HashMap<String, Object>();
+          HashMap<String, Object> list_map = new HashMap<>();
+          
           map.put("memberno", item.getMemberno());
           map.put("exrecordno", item.getExrecordno());
          
+          int exrecordno = item.getExrecordno();
+          int like_cnt = this.likesyesnoProc.like_cnt(exrecordno);
+          likeCountMap.put(exrecordno, like_cnt);
+   
+          
           ArrayList<RecordImageVO> imageList = this.recordImageProc.rec_images_read(map);
           imageMap.put(item.getExrecordno(), imageList);
         }
        
+        model.addAttribute("likeCountMap", likeCountMap);
         model.addAttribute("imageMap", imageMap);
+
         }
       return "history/sns_following_form";
     }else{
@@ -780,13 +792,14 @@ public class HistoryCont {
   @PostMapping(value="/record_read_update_proc")
   @ResponseBody
   public String record_read_update_proc(Model model,
-                                    @RequestParam int exrecordno,
+                                    //@RequestParam int exrecordno,
                                     @RequestBody HistoryVO historyVO,
                                     HttpSession session) {
     //int memberno = (int)session.getAttribute("memberno");
     JSONObject obj = new JSONObject();
-    
-    historyVO.setExrecordno(exrecordno);
+    //System.out.println("exrecordno: ->" +historyVO.getExrecordno());
+    //historyVO.setExrecordno(exrecordno);
+    System.out.println("historyVO-memberno" + historyVO.getMemberno());
     int cnt = this.historyProc.history_update(historyVO);
     System.out.println("cnt->" + cnt);
     

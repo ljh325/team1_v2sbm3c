@@ -25,7 +25,7 @@
   </insert>
   
 
-  <!-- 좋아요 한 회원 조회 -->
+  <!-- 좋아요 한 회원들 조회 -->
   <select id="like_read" resultType="dev.mvc.likesyesno.LikesyesnoVO" parameterType="int">
       SELECT l.likesno, l.likesdate, l.exrecordno, l.memberno, 
              m.id, m.mname, m.nickname, m.mdate, m.grade, 
@@ -34,7 +34,14 @@
       WHERE l.memberno = m.memberno AND exrecordno = #{exrecordno}
   </select> 
 
-
+  <!-- 좋아요 한 회원 조회 -->
+  <select id="like_read_one" resultType="dev.mvc.likesyesno.LikesyesnoVO" parameterType="map">
+      SELECT l.likesno, l.likesdate, l.exrecordno, l.memberno, 
+             m.id, m.mname, m.nickname, m.mdate, m.grade, 
+             m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes, m.introduce
+      FROM likesyesno l, member m
+      WHERE l.memberno = m.memberno AND l.exrecordno = #{exrecordno} AND l.memberno = #{memberno}
+  </select> 
   
   <!-- 좋아요 수  -->
   <select id="like_cnt" resultType="int" parameterType="int">
@@ -44,7 +51,7 @@
   
   
     <!-- 좋아요 삭제 -->
-  <delete id="unlike" parameterType="HashMap">
+  <delete id="unlike" parameterType="Map">
     DELETE FROM likesyesno
     WHERE exrecordno = #{exrecordno} AND memberno = #{memberno}
   </delete>

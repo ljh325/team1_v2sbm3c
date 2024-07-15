@@ -27,6 +27,7 @@ import dev.mvc.cate.CateVOMenu;
 import dev.mvc.foodrecom.FoodrecomVO;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhVO;
 import dev.mvc.healthrecom.HealthrecomVO;
 import dev.mvc.tool.Tool;
@@ -95,6 +96,8 @@ public class HealthrecomCont {
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     
     ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
@@ -144,6 +147,9 @@ public class HealthrecomCont {
    
   if (this.memberProc.isMember(session)) {
   int memberno = (int)session.getAttribute("memberno");
+  MemberVO memberVO = this.memberProc.read(memberno);
+  model.addAttribute("memberVO", memberVO);
+  
   HealthrecomVO healthrecomVO = new HealthrecomVO();
   model.addAttribute("healthrecomVO", healthrecomVO);
   ArrayList<HealthrecomVO> list = this.healthrecomProc.list_all(memberno);
@@ -248,7 +254,9 @@ public class HealthrecomCont {
    if (this.memberProc.isMember(session)) {
      
    int memberno = (int)session.getAttribute("memberno");
-  
+   MemberVO memberVO = this.memberProc.read(memberno);
+   model.addAttribute("memberVO", memberVO);
+   
    ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
    model.addAttribute("list", list);
   
@@ -308,7 +316,8 @@ public class HealthrecomCont {
       int memberno = (int) session.getAttribute("memberno");
       ArrayList<HealthrecomVO> list = this.healthrecomProc.list_search_paging(word,memberno,now_page, this.record_per_page);    
       model.addAttribute("list", list);
-   
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       
 
       int search_count = this.healthrecomProc.list_search_count(word,memberno);

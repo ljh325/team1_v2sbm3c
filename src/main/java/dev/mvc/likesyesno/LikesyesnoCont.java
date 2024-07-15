@@ -63,14 +63,14 @@ public class LikesyesnoCont {
     System.out.println("exrecordno-->>" + exrecordno);
     HashMap<String, Object> map = new HashMap<String, Object>();
     JSONObject obj = new JSONObject();
-    
+    System.out.println("memberno--->" + memberno);
     map.put("memberno", memberno);
     map.put("exrecordno", exrecordno);
     
     
     int cnt = this.likesyesnoProc.unlike(map);
     obj.put("cnt", cnt);
-    
+    System.out.println("cnt-->>" + cnt);
     return obj.toString();
   }
   

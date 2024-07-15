@@ -27,6 +27,7 @@ import dev.mvc.cate.CateVOMenu;
 import dev.mvc.goals.GoalsVO;
 import dev.mvc.healthrecom.HealthrecomProcInter;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.member.MemberVO;
 import dev.mvc.mh.MhVO;
 import dev.mvc.foodrecom.FoodrecomVO;
 import dev.mvc.tool.Tool;
@@ -74,7 +75,8 @@ public class FoodrecomCont {
       @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     if (this.memberProc.isMember(session) ) {
     int memberno = (int)session.getAttribute("memberno");  
-    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
     
@@ -141,6 +143,8 @@ public class FoodrecomCont {
     if (this.memberProc.isMember(session) ) {
       
       int memberno = (int)session.getAttribute("memberno");  
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       model.addAttribute("goalsno", goalsno);
       model.addAttribute("mhno", mhno);
       ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
@@ -241,7 +245,8 @@ public class FoodrecomCont {
     if (this.memberProc.isMember(session)) {
       
     int memberno = (int)session.getAttribute("memberno");
-   
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
     ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
     model.addAttribute("list", list);
    
@@ -272,7 +277,8 @@ public class FoodrecomCont {
       int memberno = (int)session.getAttribute("memberno");
       ArrayList<FoodrecomVO> list = this.foodrecomProc.list_search_paging(word,memberno, now_page, this.record_per_page);    
       model.addAttribute("list", list);
-   
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
       
 
       int search_count = this.foodrecomProc.list_search_count(word,memberno);

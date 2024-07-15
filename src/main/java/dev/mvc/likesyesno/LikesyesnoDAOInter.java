@@ -20,6 +20,13 @@ public interface LikesyesnoDAOInter {
   public ArrayList<LikesyesnoVO> like_read(int exrecordno);
   
   /**
+   * 좋아요 한 회원 조회
+   * @param map
+   * @return
+   */
+  public LikesyesnoVO like_read_one(HashMap<String, Object> map);
+  
+  /**
    * 좋아요 수
    * @param exrecordno
    * @return
