@@ -608,5 +608,33 @@ public class ExdataCont {
       return null;
     }
   }
+  
+  /**
+   * 운동 데이터 차트 조회 폼
+   * 
+   * @param commentsno
+   * @return
+   */
+  @GetMapping(value = "/chart")
+  public String list_exdata_chart_form(HttpSession session, Model model) {
+    if (session.getAttribute("memberno") != null) {
+      ArrayList<CateVOMenu> menu1 = this.cateProc.menu();
+      model.addAttribute("menu1", menu1);
+
+      ArrayList<HtcVOMenu> menu = this.htcProc.menu();
+      model.addAttribute("menu", menu);
+
+      int memberno = (int) session.getAttribute("memberno");
+      MemberVO memberVO = this.memberProc.read(memberno);
+      model.addAttribute("memberVO", memberVO);
+
+      MhVO mhVO = this.mhProc.read(59);
+      model.addAttribute("mhVO", mhVO);
+
+      return "exdata/chart_test";
+    } else {
+      return "redirect:/member/login";
+    }
+  }
 
 }
