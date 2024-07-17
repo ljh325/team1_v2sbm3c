@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{admin_layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="admin_content" style="width: 100%;  text-align: center;">
+  <style>
+    body {
+      background-color: black;
+    }
+        /* =========기록 활동 버튼=============== */
+    .button-container {
+      width: 100%;
+      margin-bottom: 10px;
+      display: flex;
+    }
+
+    .button {
+      width: 50%;
+      background-color: gray;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .button span {
+      font-size: 17px;
+      color: white;
+    }
+
+    .button:hover {
+      background-color: lightgray;
+      transform: scale(1.05);
+    }
+    /* 운동 기록 요소 div */
+    .record_ex_div {
+      background-color: black; 
+      padding: 6px 10px 14px 14px;
+      margin: 10px;
+      border-radius: 7px;
+    }
+    
+    /* 운동 기록 span */
+    .record_ex_div_name{
+      color: white;
+    }
+    .startdate_span{
+      text-align: left;
+      margin-bottom: 12px;
+      }
+    .record_ex_parents{
+      background-color: #2d2e30;
+      padding: 10px;
+      border-radius: 13px;
+    }
+    #historyData{
+      display: none;
+    }
+    /* ===============기록 활동 버튼=============== */
+  </style>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div style="text-align: left;  margin-bottom:8px;">
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;" onclick="location.href='/admin/review_management'">◀
+      뒤로가기</span>
+  </div>
+  <div style="background-color: white; padding:12px; margin-bottom:10px;">
+    <span th:text="${keywordname}">안녕</span>
+  </div>
+  
+  
+  
+  <div class="button-container">
+    <div id="record_btn" class="button" 
+      style="background-color: #E6E6E6;">
+      <span style="color: black;">긍정</span>
+    </div>
+    <div id="activity_btn" class="button">
+      <span>부정</span>
+    </div>
+  </div>
+
+  <br>
+
+  
+<table class="table table-striped-columns">
+  <thead>
+    <tr>
+      <th style="background-color: #2b2f33; color: white; font-size: 14px;" scope="col">아이디</th>
+      <th style="background-color: #1C1C1C; color: white; font-size: 14px;" scope="col">댓글</th>
+      <th style="background-color: #1C1C1C; color: white; font-size: 14px;" scope="col">등록시간</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="list : ${list}">
+      <td th:text="${list.id}" style="font-size: 12px;">Keyword Name</td>
+      <td th:text="|${list.contents.substring(0, 20)}...|" style="font-size: 12px;">Keyword Name</td>
+      <td th:attr="data-date=${list.rdate}" style="font-size: 12px;">Count</td>
+    </tr>
+  </tbody>
+</table>
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      
+      let params = getQueryParams();
+      let keywordname = params['keywordname'];
+
+      document.getElementById('record_btn').onclick = function () {
+        location.href = `/admin/review_admin_list/warm?keywordname=${keywordname}`;
+      };
+
+      document.getElementById('activity_btn').onclick = function () {
+        location.href = `/admin/review_admin_list/cold?keywordname=${keywordname}`;
+      };
+
+
+      const dateCells = document.querySelectorAll('td[data-date]');
+      dateCells.forEach(function(cell) {
+        cell.textContent = timeSince(cell.getAttribute('data-date'));
+      });
+      // URL에 memberno의 값을 추출
+      function getQueryParams() {
+        let params = {};
+        window.location.search.substring(1).split("&").forEach(pair => {
+          let [key, value] = pair.split("=");
+          params[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return params;
+      }
+    });
+    
+    
+    function timeSince(date) {
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate)) {
+        return "잘못된 날짜";
+      }
+      const seconds = Math.floor((new Date() - parsedDate) / 1000);
+      let interval = seconds / 31536000;
+    
+      if (interval > 1) {
+        return Math.floor(interval) + "년 전";
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + "달 전";
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + "일 전";
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + "시간 전";
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + "분 전";
+      }
+      return Math.floor(seconds) + "초 전";
+    }
+  </script>
+  
+  
+  
+  
+  
+  
+  
+</div>
+
+</html>

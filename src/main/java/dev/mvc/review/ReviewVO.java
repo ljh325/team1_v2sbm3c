@@ -39,10 +39,38 @@ public class ReviewVO {
   
   
   
+  /* ------------------------------------- */
+
+
+  /** 회원 성명 */
+  private String mname = "";
+  /** 가입일 */
+  private String mdate = "";
+  /** 등급 */
+  private int grade;
+  /** 포인트 */
+  private int point = 0;
+  /** 닉네임 */
+  private String nickname="";
+  /** 소개글 */
+  private String introduce;
   
   
   
   
+  /** 메인 이미지 크기 단위, 파일 크기 */
+  private String sizes_label = "";
+  
+  /** 등록 파일 */
+  private String profile = "";
+  
+  /** 저장된 등록 파일 */
+  private String profilesaved = "";
+  
+  /** 미리보기 이미지*/
+  private String thumbs = "";
+  /** 메인 이미지 크기 */
+  private long sizes;
   
   
   

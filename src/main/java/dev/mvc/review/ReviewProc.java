@@ -115,6 +115,24 @@ public class ReviewProc implements ReviewProcInter {
     return cnt;
   }
 
+  @Override
+  public ArrayList<ReviewVO> admin_read_review(String keywordname) {
+    ArrayList<ReviewVO> list = this.reviewDAO.admin_read_review(keywordname);
+    return list;
+  }
+
+  @Override
+  public ArrayList<ReviewVO> admin_read_review_cold(String keywordname) {
+    ArrayList<ReviewVO> list = this.reviewDAO.admin_read_review_cold(keywordname);
+    return list;
+  }
+
+  @Override
+  public ReviewVO admin_review_detail(int reviewno) {
+    ReviewVO reviewVO = this.reviewDAO.admin_review_detail(reviewno);
+    return reviewVO;
+  }
+
 
 
 }

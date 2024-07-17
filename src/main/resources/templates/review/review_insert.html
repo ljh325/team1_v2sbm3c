@@ -175,6 +175,8 @@
           } else {
             //var formData = new FormData(document.forms['frm']);
 
+            document.forms['frm'].submit(); // 모달이 닫힌 후 폼 제출
+            
             fetch("http://127.0.0.1:5000/emotion", {
               method: "post",
               headers: {"Content-Type": "application/json"},
@@ -185,11 +187,12 @@
 
                 let res = data['res']; // flask에서  1이면 긍정 0이면 부정의 값을 받아 res에 저장
                 let word = data['word']; // 긍부정 단어 
-                let keywordname = data['keywordname']; // 핵심 키워드 
-                showModal("등록이 완료되었습니다."); // 경고 모달창 표시
-                $('#warningModal').on('hidden.bs.modal', function () {
-                  document.forms['frm'].submit(); // 모달이 닫힌 후 폼 제출
-                });
+                let keywordname = data['keywordname']; // 핵심 키워드
+                
+                 
+                //showModal("등록이 완료되었습니다."); // 경고 모달창 표시
+                //$('#warningModal').on('hidden.bs.modal', function () {
+                //});
               })
               .catch(error => {
                 // 에러 발생 시 경고 모달창 표시

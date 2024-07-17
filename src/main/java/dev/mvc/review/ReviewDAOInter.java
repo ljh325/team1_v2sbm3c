@@ -103,5 +103,26 @@ public interface ReviewDAOInter {
    */
   public int star_cnt(int star);
   
+  /**
+   * 관리자 리뷰 조회
+   * @param reviewno
+   * @return
+   */
+  public ArrayList<ReviewVO> admin_read_review(String keywordname);
+  
+  /**
+   * 관리자 리뷰 조회
+   * @param reviewno
+   * @return
+   */
+  public ArrayList<ReviewVO> admin_read_review_cold(String keywordname);
+  
+  /**
+   * 관리자 리뷰 상세 조회
+   * @param reviewno
+   * @return
+   */
+  public ReviewVO admin_review_detail(int reviewno);
+  
   
 }

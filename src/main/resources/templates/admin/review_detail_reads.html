@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{admin_layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="admin_content" style="width: 100%;  text-align: center;">
+  <style>
+    body {
+      background-color: black;
+    }
+  </style>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div style="text-align: left;  margin-bottom:8px;">
+    <span id="history_back" style="font-size: 15px; color: white; cursor: pointer;"
+      onclick="location.href='/admin/review_management'">◀
+      뒤로가기</span>
+  </div>
+  <div style="background-color: white; padding:12px;">
+    <span>리뷰글</span>
+  </div>
+  <br>
+  
+  
+  <div>
+  
+    <div style="text-align: left;">
+      <div
+        th:if="${reviewVO.profile.endsWith('jpg') or reviewVO.profile.endsWith('png')  or reviewVO.profile.endsWith('gif')}">
+        <img th:src="@{|/member/storage/${reviewVO.thumbs}|}" class="profile-img"
+          style="border-radius: 50%; width:21%; height:30%; margin-right: 17px;">
+      </div>
+      <div>
+        <span th:text="${reviewVO.id}"></span>
+      </div>
+    </div>
+    <div
+      th:if="${((reviewVO.profile.endsWith('jpg') or reviewVO.profile.endsWith('png')  or reviewVO.profile.endsWith('gif')) == false) and (reviewVO.sizes > 0)}">
+      <span th:text="${reviewVO.profile}" style="border-radius: 50%; width:20%; margin-right: 17px;"></span>
+    </div>
+  
+    <div th:if="${reviewVO.sizes == 0}">
+      <img src="/images/none.jpg" class="default-img" style="border-radius: 50%; width:20%; margin-right: 17px;">
+    </div>
+  
+  </div>
+  
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label">리뷰글</label>
+    <textarea th:utext="${contents}" class="form-control" id="review" rows="3" disabled></textarea>
+  </div>
+  
+  <div style="background-color: white; padding:10px; border-radius: 7px;">
+    <span th:utext="${contents}"></span>
+  </div>
+
+
+
+
+
+
+
+
+  <script>
+
+  </script>
+
+
+
+
+
+
+
+</div>
+
+</html>

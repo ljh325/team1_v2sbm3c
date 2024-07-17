@@ -51,7 +51,7 @@ SELECT l.likesno, l.likesdate, l.exrecordno, l.memberno,
        m.id, m.mname, m.nickname, m.mdate, m.grade, 
        m.point, m.birth, m.sex, m.profile, m.profilesaved, m.thumbs, m.sizes, m.introduce
 FROM likesyesno l, member m
-WHERE l.memberno = m.memberno AND exrecordno = 9;
+WHERE l.memberno = m.memberno AND exrecordno = 14;
 
 DELETE FROM likesyesno
 WHERE exrecordno = 9 AND memberno = 5;
@@ -78,3 +78,15 @@ commit;
     SELECT keywordname, count(*) as cnt
     FROM keyword
     GROUP BY keywordname;
+
+
+
+
+
+
+
+
+
+    
+    
+    

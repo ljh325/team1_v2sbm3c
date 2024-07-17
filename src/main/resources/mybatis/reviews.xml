@@ -134,9 +134,32 @@ FOODCATENO  NUMBER(10)    NOT NULL, (푸드 카테고리번호) (FK)
   </select>
 
 
+  <select id="admin_read_review" parameterType="string" resultType="dev.mvc.review.ReviewVO">
+    SELECT k.keywordname, 
+    r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, r.memberno,
+    m.id, m.memberno, m.mname, m.nickname, m.profile, m.profilesaved, m.thumbs, m.sizes, m.grade
+    FROM keyword k, review r, member m
+    WHERE k.reviewno = r.reviewno AND r.memberno = m.memberno AND k.keywordname = #{keywordname} AND r.temperater = 2
+  </select>
   
   
+  <select id="admin_read_review_cold" parameterType="string" resultType="dev.mvc.review.ReviewVO">
+    SELECT k.keywordname, 
+    r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, r.memberno,
+    m.id, m.memberno, m.mname, m.nickname, m.profile, m.profilesaved, m.thumbs, m.sizes, m.grade
+    FROM keyword k, review r, member m
+    WHERE k.reviewno = r.reviewno AND r.memberno = m.memberno AND  k.keywordname = #{keywordname} AND r.temperater = 1
+  </select>
   
   
+  <select id="admin_review_detail" parameterType="int" resultType="dev.mvc.review.ReviewVO">
+    SELECT k.keywordname, 
+    r.reviewno, r.star, r.contents, r.temperater, r.rdate, r.udate, r.memberno,
+    m.id, m.memberno, m.mname, m.nickname, m.profile, m.profilesaved, m.thumbs, m.sizes, m.grade
+    FROM keyword k, review r, member m
+    WHERE k.reviewno = r.reviewno AND r.memberno = m.memberno AND r.reviewno = #{reviewno}
+  </select>
   
+  
+
 </mapper>

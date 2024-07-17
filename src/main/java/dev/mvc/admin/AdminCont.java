@@ -22,7 +22,9 @@ import dev.mvc.keyword.KeywordVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.mlogin.MloginProcInter;
 import dev.mvc.review.ReviewProcInter;
+import dev.mvc.review.ReviewVO;
 import dev.mvc.reviewImage.ReviewImageProcInter;
+import dev.mvc.reviewImage.ReviewImageVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,6 +67,8 @@ public class AdminCont {
   @Autowired
   @Qualifier("dev.mvc.mlogin.MloginProc")
   private MloginProcInter mloginProc;
+  
+  
   
   
   @Autowired
@@ -343,6 +347,92 @@ public class AdminCont {
       return "admin/login_need";
     }
   }
+  
+  
+  @GetMapping(value="/review_admin_list/warm")
+  public String review_admin_list_warm(Model model, HttpSession session, String keywordname) {
+    System.out.println("keywordname-->" + keywordname);
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int) session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+      
+      ArrayList<ReviewVO> list = this.reviewProc.admin_read_review(keywordname);
+      model.addAttribute("list", list);
+      model.addAttribute("keywordname", keywordname);
+      
+      return "admin/review_admin_list_warm";
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    }
+  }
+  
+  @GetMapping(value="/review_admin_list/cold")
+  public String review_admin_list_cold(Model model, HttpSession session, String keywordname) {
+    System.out.println("keywordname-->" + keywordname);
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int) session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+      
+      ArrayList<ReviewVO> lists = this.reviewProc.admin_read_review_cold(keywordname);
+      model.addAttribute("lists", lists);
+      model.addAttribute("keywordname", keywordname);
+      
+      return "admin/review_admin_list_cold";
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    }
+  }
+  
+  @GetMapping(value="/review_detail_reads")
+  public String review_detail_reads(Model model, HttpSession session, int reviewno) {
+      System.out.println("reviewno-->d" + reviewno);
+    if (this.adminProc.isAdmin(session)) { // 로그인이 되어있으면
+      int adminsno = (int) session.getAttribute("adminsno"); // 세션에서 memberno를 꺼내옴
+    
+      ReviewVO reviewVO = this.reviewProc.admin_review_detail(reviewno);
+      ArrayList<KeywordVO> keywordlist = this.keywordProc.keyword_all_read(reviewno);
+      String contents = reviewVO.getContents(); 
+      model.addAttribute("reviewVO", reviewVO);
+      if (reviewVO.getTemperater() == 2) {
+        
+        model.addAttribute("contents", highlightKeywords(contents, keywordlist));
+        
+      } else if(reviewVO.getTemperater() == 1) {
+        
+        model.addAttribute("contents", highlightKeywords(contents, keywordlist));
+        
+      }
+      
+      
+      ArrayList<ReviewImageVO> review_image = this.reviewImageProc.read_image(reviewno);
+      model.addAttribute("review_image", review_image);
+      
+    return "admin/review_detail_reads";
+    } else { // 로그인이 안되어있으면
+      return "admin/login_need";
+    }
+  }
+  
+  
+  
+  
+  private String highlightKeywords(String content, ArrayList<KeywordVO> keywords) {
+    
+    for (KeywordVO keyword : keywords) {
+        System.out.println("keywords--?>" + keyword.getWord());
+        content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#81F79F;'>" + keyword.getWord() + "</span>");
+        System.out.println("content--?>" + content);
+    }
+    return content;
+}
+  // 부정 의 리뷰 키워드 색깔 입히기
+  private String negativeKeywords(String content, ArrayList<KeywordVO> keywords) {
+    
+    for (KeywordVO keyword : keywords) {
+        System.out.println("keywords--?>" + keyword.getWord());
+        content = content.replaceAll("(?i)" + keyword.getWord(), "<span style='background-color:#FF90FF;'>" + keyword.getWord() + "</span>");
+        System.out.println("content--?>" + content);
+    }
+    return content;
+}
 /* =============================== 주찬 코드 여기까지 =================================== */
 /* ========================================================================== */
 /* ========================================================================== */

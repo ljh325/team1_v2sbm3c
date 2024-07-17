@@ -82,7 +82,157 @@ def receive_comments():
     conn.commit()
     conn.close()
 
+    import warnings
+    warnings.filterwarnings(action='ignore')
 
+    # 데이터 처리 및 시각화를 위한 라이브러리
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from matplotlib import font_manager, rc
+    import platform
+    from IPython.core.interactiveshell import InteractiveShell
+
+    # Jupyter notebook 설정
+    InteractiveShell.ast_node_interactivity = "all"
+
+    # 한글 폰트 설정
+    if platform.system() == 'Windows':
+        rc('font', family=font_manager.FontProperties(fname="C:/Windows/Fonts/malgun.ttf").get_name())
+    else:
+        plt.rc('font', family='NanumBarunGothic')
+
+    # matplotlib 기본 설정
+    plt.rcParams["font.size"] = 12
+    plt.rcParams["figure.figsize"] = (6, 3)
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # pandas 출력 옵션 설정
+    pd.set_option('display.max_rows', 200)
+    pd.set_option('display.max_columns', None)
+
+    # matplotlib 그래프를 Jupyter notebook에 표시
+    #%matplotlib inline
+
+    # Oracle 연결
+    import cx_Oracle
+    from sqlalchemy import create_engine
+
+    conn = cx_Oracle.connect('team1/69017000@3.39.75.85:1521/XE')
+    cursor = conn.cursor()
+
+    # 댓글 목록 조회
+    sql = '''
+    SELECT reviewno, contents
+    FROM review
+    ORDER BY reviewno ASC
+    '''
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+
+    # 댓글 내용 리스트 생성
+    total = [row[1] for row in rows]
+
+    # 한글이 아닌 모든 문자 제거, 공백으로 변경
+    import re
+    data = re.sub('[^가-힣]', ' ', "".join(total))
+
+    # 한글 형태소 분석기
+    import konlpy
+    from konlpy.tag import Kkma
+
+    parser = Kkma()
+    nouns = parser.nouns(data)
+
+    # 불용어 제거
+    STOPWORDS = ['나', '마세', '때', '절', '럼', '확대', '해결', '효율', '제', '새', '대', '내', '편', '네', '오늘', '고사', '언덕', '수', '앞', '거리', '저', '끝', '한번', '여러분', '대한민국', '국민', '우리', '상황', '대부분', '동안', '아래', '무엇', '채택', '때문', '추구', '창출', '그것', '위로', '요구', '이상', '진정한', '전환', '대통령', '나라']
+    nouns = [noun for noun in nouns if noun not in STOPWORDS]
+
+    # 데이터프레임 생성 및 단어 길이 계산
+    df = pd.DataFrame({'word': nouns})
+    df['len'] = df['word'].str.len()
+    df = df.query('len >= 2').sort_values(by=['len'], ascending=True)
+
+    # 단어 빈도 계산
+    df2 = df.groupby(['word'], as_index=False).agg(n=('word', 'count')).sort_values(['n'], ascending=[False])
+
+    # 상위 100개 단어 추출
+    top100 = df2.reset_index(drop=True).head(100)
+
+    # 시각화 준비
+    top100 = top100.set_index('word')
+    dict_df = top100.to_dict()['n']
+
+    # 이미지 파일 이름에 사용할 번호 증가 로직
+    import os
+
+    def get_next_filename(directory, prefix='chart_', extension='.png'):
+        files = os.listdir(directory)
+        numbers = [int(f.replace(prefix, '').replace(extension, '')) for f in files if f.startswith(prefix) and f.endswith(extension)]
+        if numbers:
+            return f"{prefix}{max(numbers) + 1}{extension}"
+        else:
+            return f"{prefix}1{extension}"
+
+    # 워드클라우드 생성 및 시각화
+    from wordcloud import WordCloud
+
+    if platform.system() == 'Windows':
+        font_path = "C:/Windows/Fonts/malgun.ttf"
+    else:
+        font_path = "/Users/$USER/Library/Fonts/AppleGothic.ttf"
+
+    wc = WordCloud(
+        random_state=1234,
+        font_path=font_path,
+        width=800,
+        height=400,
+        background_color='white'
+    )
+    wc_img = wc.generate_from_frequencies(dict_df)
+
+    plt.figure(figsize=(15, 10))
+    plt.axis('off')
+    plt.imshow(wc_img)
+
+    # 저장할 디렉토리 및 파일 이름 설정
+    save_directory = 'C:/kd/deploy/team1_v2sbm3c/wordcloud/storage'
+    save_filename = get_next_filename(save_directory)
+
+    # 이미지 저장
+    file_path = os.path.join(save_directory, save_filename)
+    plt.savefig(file_path)
+    plt.show()
+
+    # 테이블이 없으면 생성
+    create_table_sql = '''
+    CREATE TABLE chart (
+        chartno NUMBER PRIMARY KEY,
+        chartimages VARCHAR2(255)
+    )
+    '''
+    try:
+        cursor.execute(create_table_sql)
+        conn.commit()
+    except cx_Oracle.DatabaseError as e:
+        error, = e.args
+        if error.code == 955:  # ORA-00955: name is already used by an existing object
+            print("Table already exists.")
+        else:
+            print(f"Database error: {e}")
+            raise
+
+    # 이미지 파일 이름을 DB에 삽입
+    insert_sql = '''
+    INSERT INTO chart (chartno, chartimages) VALUES (chart_seq.nextval, :chartimages)
+    '''
+    cursor.execute(insert_sql, {'chartimages': save_filename})
+    conn.commit()
+
+    # 연결 종료
+    cursor.close()
+    conn.close()
     return response
 
 # @app.route('/emotion', methods=['POST'])

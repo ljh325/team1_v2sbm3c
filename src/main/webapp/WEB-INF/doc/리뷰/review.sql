@@ -129,3 +129,17 @@ GROUP BY star
 ORDER BY star;
   
 commit;
+reviewno, star, contents, rdate, udate, memberno
+SELECT *
+from review;
+WHERE reviewno=11;
+
+SELECT keywordno, keywordname, word, reviewno
+from keyword;
+WHERE reviewno=11;
+
+    SELECT k.keywordname, r.temperater, r.reviewno,
+    r.star, r.contents, r.temperater, r.rdate, r.udate, r.memberno
+    FROM keyword k, review r
+    WHERE k.reviewno = r.reviewno AND  k.keywordname = '사용자 경험 관련';
+;
