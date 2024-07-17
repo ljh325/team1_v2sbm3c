@@ -2,9 +2,11 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <style>
-    span,div{
+    span,
+    div {
       font-size: 13px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -40,6 +42,37 @@
     .button-style:hover {
       color: dimgrey;
     }
+
+    .btn-chart {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-chart:hover {
+            background-color: #0056b3;
+        }
+        .chart-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+        }
+        .title-with-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .title-with-button h2 {
+            margin-right: 10px;
+            margin: 0; /* 제목 요소의 기본 여백 제거 */
+        }
   </style>
   <div class='title_line'>
     <span th:text="|추천 운동 데이터&nbsp;&nbsp;|" class="title_line_text"></span>
@@ -1102,13 +1135,26 @@
 
         });
     }
-    
-    
+
+
 
 
   </script>
-  <h2>추천 운동 데이터</h2>
+  <div class="title-with-button">
+    <h2 class="inline-block">추천 운동 데이터</h2>
+    <button class="btn-chart" style="margin-left:70px;" onclick="location.href='/exdata/chart'">
+        <svg class="chart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="12" width="4" height="9" fill="#ffffff"/>
+            <rect x="10" y="6" width="4" height="15" fill="#ffffff"/>
+            <rect x="17" y="3" width="4" height="18" fill="#ffffff"/>
+        </svg>
+        차트조회
+    </button>
+</div>
+<br>
 
+  
+  
   <label for="ex_intensity">운동강도&nbsp;</label>
   <select id="ex_intensity">
     <option value="1">낮음</option>
@@ -1179,6 +1225,14 @@
   <br><br>
   <h2 style="float:left;">효율적인 운동&nbsp;</h2>
   <h6 style="margin-top:10px">- 목적에 맞는 각 부위별 효율적인 운동 제공</h6>
+  <button class="btn-chart"  onclick="location.href='/exdata/chart_effect'">
+        <svg class="chart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="12" width="4" height="9" fill="#ffffff"/>
+            <rect x="10" y="6" width="4" height="15" fill="#ffffff"/>
+            <rect x="17" y="3" width="4" height="18" fill="#ffffff"/>
+        </svg>
+        차트조회
+    </button>
   <br>
 
   <label for="effect_intensity">운동강도&nbsp;</label>
@@ -1203,7 +1257,7 @@
         <th>협응근</th>
         <th>난이도 </th>
         <th>효율점수</th>
-        
+
 
       </tr>
     </thead>

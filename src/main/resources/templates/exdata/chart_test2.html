@@ -68,6 +68,7 @@
   <script>
     google.charts.load('current', {packages: ['corechart', 'bar']});
     google.charts.setOnLoadCallback(drawBasic);
+    
     window.onload = () => {
       document.getElementById('ex_group').addEventListener("change", () => {
         google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -78,8 +79,13 @@
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawBasic);
       });
+      
+      document.getElementById('effect_purpose').addEventListener("change", () => {
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawBasic);
+      });
     }
-    
+
     function drawBasic() {
 
       let list_exdata_tag = document.getElementById('list_exdata');
@@ -88,6 +94,9 @@
 
       let intensity_tag = document.getElementById('ex_intensity');
       let intensity = intensity_tag.value;
+      
+      let purpose_tag = document.getElementById('effect_purpose');
+      let purpose = purpose_tag.value;
 
       fetch("/exdata/list_part_exdata?part=" + group, {
         "method": "get",
@@ -101,12 +110,36 @@
           ];
           for (let i = 0; i < data['res'].length; i++) {
             let row = data['res'][i];
+            
+            if (purpose == "muscle") {
+
+              let loweffect = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.lowact * 0.7 - row.lowrisk * 0.2).toFixed(2));
+              row.loweffect = loweffect;
+
+              let mideffect = parseFloat((row.midmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.midact * 0.7 - row.midrisk * 0.2).toFixed(2));
+              row.mideffect = mideffect;
+
+              let higheffect = parseFloat((row.highmet * "[[${mhVO.kg}]]" * 0.0167 * 0.8 + row.highact * 0.7 - row.highrisk * 0.2).toFixed(2));
+              row.higheffect = higheffect;
+
+            } else if (purpose == "weight") {
+
+              let loweffect = parseFloat((row.lowmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.lowact * 0.1 - row.lowrisk * 0.2).toFixed(2));
+              row.loweffect = loweffect;
+
+              let mideffect = parseFloat((row.midmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.midact * 0.1 - row.midrisk * 0.2).toFixed(2));
+              row.mideffect = mideffect;
+
+              let higheffect = parseFloat((row.highmet * "[[${mhVO.kg}]]" * 0.0167 * 5.6 + row.highact * 0.1 - row.highrisk * 0.2).toFixed(2));
+              row.higheffect = higheffect;
+            }
+            
             if (intensity == 1) {
-              data_array.push([row.exname, row.lowact]);
+              data_array.push([row.exname, row.loweffect]);
             } else if (intensity == 2) {
-              data_array.push([row.exname, row.midact]);
+              data_array.push([row.exname, row.mideffect]);
             } else if (intensity == 3) {
-              data_array.push([row.exname, row.highact]);
+              data_array.push([row.exname, row.higheffect]);
             }
           }
 
@@ -114,11 +147,12 @@
 
 
           var options = {
-            title: '운동 데이터',
+            title: ' 각 운동마다 운동 효율성에 대한 데이터',
             chartArea: {width: '50%'},
             hAxis: {
               title: '',
-              minValue: 0
+              minValue: 0,
+              maxValue: 80
             },
             vAxis: {
               title: ''
@@ -132,7 +166,10 @@
         });
     }
   </script>
-  <h2>운동 효율 데이터</h2>
+  <h2>운동 효율 데이터
+    <span><a href="/exdata/" style="margin-left:20px; font-size: 15px;">돌아가기</a></span>
+  </h2>
+  
 
   <label for="ex_intensity">운동강도&nbsp;</label>
   <select id="ex_intensity">
@@ -152,7 +189,7 @@
     <option value="복근">복근</option>
     <option value="유산소">유산소</option>
   </select>
-  
+
   <label for="effect_purpose">&nbsp;운동목적&nbsp;</label>
   <select id="effect_purpose">
     <option value="muscle">근육량 증가</option>
