@@ -79,7 +79,7 @@
         google.charts.setOnLoadCallback(drawBasic);
       });
     }
-
+    
     function drawBasic() {
 
       let list_exdata_tag = document.getElementById('list_exdata');
@@ -97,16 +97,16 @@
         .then((data) => {
 
           let data_array = [
-            ["운동명", "근육활성도", "부상위험도"]
+            ["운동명", "효율 점수"]
           ];
           for (let i = 0; i < data['res'].length; i++) {
             let row = data['res'][i];
             if (intensity == 1) {
-              data_array.push([row.exname, row.lowact, row.lowrisk]);
+              data_array.push([row.exname, row.lowact]);
             } else if (intensity == 2) {
-              data_array.push([row.exname, row.midact, row.midrisk]);
+              data_array.push([row.exname, row.midact]);
             } else if (intensity == 3) {
-              data_array.push([row.exname, row.highact, row.highrisk]);
+              data_array.push([row.exname, row.highact]);
             }
           }
 
@@ -132,7 +132,7 @@
         });
     }
   </script>
-  <h2>추천 운동 데이터</h2>
+  <h2>운동 효율 데이터</h2>
 
   <label for="ex_intensity">운동강도&nbsp;</label>
   <select id="ex_intensity">
@@ -151,6 +151,12 @@
     <option value="하체">하체</option>
     <option value="복근">복근</option>
     <option value="유산소">유산소</option>
+  </select>
+  
+  <label for="effect_purpose">&nbsp;운동목적&nbsp;</label>
+  <select id="effect_purpose">
+    <option value="muscle">근육량 증가</option>
+    <option value="weight">체중 감소</option>
   </select>
 
 
