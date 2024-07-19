@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
+     <div class='title_line'>분석 결과 조회[파이 챠트 데이터]</div>  
+     <div id="piechart_3d" style="width: 900px; height: 500px; margin-left: 20%;"></div>
+     
+     <script>
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        let chart_data = `[[${chart_data}]]`;
+        console.log('-> chart_data: ' + chart_data);
+        chart_data = chart_data.replace(/&#39;/g, "'");
+        console.log('-> chart_data: ' + chart_data);
+        // chart_data = JSON.parse(chart_data); // ERROR
+        chart_data = eval(chart_data); // 문자열 -> 자바스크립트 코드로 변경
+            
+        var data = google.visualization.arrayToDataTable(chart_data);
+
+        var options = {
+          title: '[[${title}]]',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+     </script>
+  </div>
+  
+  <div>'[[${legend}]]'</div>
+</html>

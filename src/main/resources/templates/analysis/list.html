@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <script>
+    function delete_chart(event, analysisno, page) {
+      event.stopPropagation(); // <tr>태그로 클릭 이벤트 전파 막기
+      
+      let sw = confirm('챠트를 삭제 하시겠습니까?\n 삭제하면 복구 할 수 없습니다.');
+      if (sw == true) {
+        var form = document.forms['frm_delete'];
+        form.elements['analysisno'].value = analysisno;
+        form.elements['page'].value = page;
+        
+        alert(form.elements['analysisno'].value + '번 분석결과를 삭제합니다.');
+        form.submit();
+      }
+    }
+  </script>
+  <div class='title_line'>분석 목록</div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside> 
+  <div class='menu_line'></div>
+    
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 50%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>
+    </colgroup>
+    <tr>
+      <th class='th_bs'>번호</TH>
+      <th class='th_bs'>제목</th>
+      <th class='th_bs'>조회수</th>
+      <th class='th_bs'>등록일</th>
+      <th class='th_bs'>기타</th>
+    </tr>
+   
+    <tr th:each="analysis, status:${list}" 
+         th:attr="onclick=|location.href='/analysis/read_chart?analysisno=${analysis.analysisno}&page=${page}'|"
+         style="cursor: pointer;">
+      <td class='td_basic' th:text="${analysis.analysisno}"></td>
+      <td class='td_left' th:text="${analysis.title}"></td>
+      <td class='td_basic' th:text="${analysis.cnt}"></td>
+      <td class='td_left' th:text="${analysis.rdate}"></td>
+      <td class='td_left'>
+        <a th:href='@{|./read?analysisno=${analysis.analysisno}&page=${page}|}'><img src="/analysis/images/read.png" class="icon" title="챠트 정보 조회"></a>
+        <a th:href='@{|./update_form?analysisno=${analysis.analysisno}&page=${page}|}'><img src="/analysis/images/update.png" class="icon" title="수정"></a>
+        <a href="#" th:onclick="'delete_chart(event, ' + ${analysis.analysisno} + ', ' + ${page} + ');'">
+          <img src="/analysis/images/delete.png" class="icon" title="삭제">
+        </a>
+      </td>
+    </tr>
+  </table>
+  <!-- 페이징 처리 시작 -->
+  <div th:if="${!list.isEmpty()}">
+    <ul class="pagination justify-content-center">
+        <!-- 이전 페이지가 존재하는 경우 이전 페이지로 이동 -->
+        <li class="page-item" th:classappend="${!list.hasPrevious} ? 'disabled'">
+          <a class="page-link" th:href="@{|./list?page=${list.number-1}|}" th:data-page="${list.number-1}">
+            <span>이전</span>
+          </a>
+        </li>
+        <!-- 페이지 번호 생성, 현재 페이지 이전 5개, 다음 5개 출력 -->
+        <li th:each="page: ${#numbers.sequence(0, list.totalPages-1)}"
+          th:if="${page >= list.number-5 and page <= list.number+5}"
+          th:classappend="${page == list.number} ? 'active'" class="page-item">
+          <a th:text="${page+1}" class="page-link" th:href="@{|./list?page=${page}|}" th:data-page="${page}"></a>
+        </li>
+        <!-- 다음 페이지가 존재하는 경우 다음 페이지로 이동 -->
+        <li class="page-item" th:classappend="${!list.hasNext} ? 'disabled'">
+          <a class="page-link" th:href="@{|./list?page=${list.number+1}|}" th:data-page="${list.number+1}">
+            <span>다음</span>
+          </a>
+        </li>
+      </ul>
+  </div>  
+  <!-- 페이징 처리 종료 -->
+  <div class='bottom_menu'>
+    <button type='button' onclick="location.href='/analysis/create_column_simple';" class="btn btn-primary btn-sm">결과 등록[컬럼 챠트]</button>
+    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+  </div>
+
+  <form name='frm_delete' id='frm_delete' method='post' action='/analysis/delete_proc'>
+    <input type="hidden" name="analysisno" id="analysisno">
+    <input type="hidden" name="page" id="page">
+  </form>
+</div>
+</html>
+

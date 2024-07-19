@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
+      <script>
+      function delete_chart(event, analysisno, page) {
+        event.stopPropagation(); // <tr>태그로 클릭 이벤트 전파 막기
+        
+        let sw = confirm('챠트를 삭제 하시겠습니까?\n 삭제하면 복구 할 수 없습니다.');
+        if (sw == true) {
+          var form = document.forms['frm_delete'];
+          form.elements['analysisno'].value = analysisno;
+          form.elements['page'].value = page;
+          
+          alert(form.elements['analysisno'].value + '번 분석결과를 삭제합니다.');
+          form.submit();
+        }
+      }
+    </script>
+    
+     <div class='title_line'>분석 결과 조회[라인 챠트]</div>
+     
+     <aside class="aside_right">
+      <a th:href="@{|/analysis/list|}">목록</a>
+      <span class="menu_devide">│</span>
+      <a th:href="@{|/analysis/update_form?analysisno=${analysis.analysisno}&page=${page}|}">수정</a>
+      <span class="menu_devide">│</span>
+      <a href="#" th:onclick="'delete_chart(event,' + ${analysis.analysisno} + ',' + ${page} +');'">삭제</a>
+      <span class="menu_devide">│</span>         
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside> 
+    <div class='menu_line'></div>    
+      
+     <div id="chart_div" style='height: 500px;'></div>
+     
+     <script>
+      // Google Charts 라이브러리 로드
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Google Charts 라이브러리 로드가 완료되면 차트를 그리는 함수 호출
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        let chart_data = `[[${analysis.data}]]`;
+        console.log('-> chart_data: ' + chart_data);
+        chart_data = chart_data.replace(/&#39;/g, "'");
+        console.log('-> chart_data: ' + chart_data);
+            
+        // chart_data = JSON.parse(chart_data); // ERROR
+        chart_data = eval(chart_data); // 문자열 -> 자바스크립트 코드로 변경
+        
+        var data = google.visualization.arrayToDataTable(chart_data);
+        
+        // 차트 옵션 설정
+        var options = {
+          title: '[[${analysis.title}]]',
+          curveType: 'function', // 부드러운 곡선
+          legend: { position: 'top', alignment: 'end' },
+          hAxis: {
+            title: '[[${analysis.xlabel}]]'
+          },
+          vAxis: {
+            title: '[[${analysis.ylabel}]]'
+          }
+        };
+
+        // 차트 그리기
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+     </script>
+    <hr>
+    <div th:utext = '${analysis.content}' style='text-align: left; width: 40%; margin: 0px auto;'></div>
+
+    <form name='frm_delete' id='frm_delete' method='post' action='/analysis/delete_proc'>
+      <input type="hidden" name="analysisno" id="analysisno">
+      <input type="hidden" name="page" id="page">
+    </form>
+
+  </div>
+</html>
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>조회</div>
+  
+  <aside class="aside_right" th:if="${session.grade <= 5}">  <!-- 관리자 -->
+    <a th:href="@{|/analysis/create|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/analysis/update_form?analysisno=${analysis.analysisno}&page=${page}|}">수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/analysis/delete?analysisno=${analysis.analysisno}&page=${page}|}">삭제</a>
+    <span class='menu_divide' >│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|/analysis/list?page=${page}|}">목록형</a>    
+  </aside> 
+
+  <aside class="aside_right" th:if="${session.grade > 5}"> <!-- 회원 -->
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|/analysis/list?page=${page}|}">목록형</a>  
+  </aside> 
+ 
+  <div class='menu_line'></div>
+  <style>
+    .read_item {
+      width:640px; 
+      margin: 0px auto;
+    }
+  </style>
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|분류 코드: ${analysis.code }|"></div>
+      </li>
+      
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|분류 제목: ${analysis.title }|"></div>
+      </li>      
+ 
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item'>분석 내용:</div>
+        <div class='read_item' th:text = "${analysis.title }"></div>
+      </li>      
+
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|챠트 종류: ${analysis.chart }|"></div>
+      </li>   
+         
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item'>챠트 데이터:</div>
+        <div class='read_item' th:text = "${analysis.data }"></div>
+      </li> 
+      
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|X label: ${analysis.xlabel }|"></div>
+      </li>
+      
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|Y label: ${analysis.ylabel }|"></div>
+      </li>   
+      
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|범례: ${analysis.legend }|"></div>
+      </li>                  
+
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|조회수: ${analysis.cnt }|"></div>
+      </li>   
+
+      <li class="li_none" style="padding-top: 0px; padding-bottom: 0px;">
+        <div class='read_item' th:text = "|등록 날짜: ${analysis.rdate }|"></div>
+      </li>   
+    </ul>
+  </fieldset>
+
+</div>
+
+</html>
+

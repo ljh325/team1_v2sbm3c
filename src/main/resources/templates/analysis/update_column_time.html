@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+
+    <div class='title_line'>분석 결과 수정[시간 컬럼 챠트]</div>
+    
+    <aside class="aside_right">
+      <a th:href="@{|/analysis/list|}">목록</a>
+      <span class="menu_devide">│</span>
+   
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside> 
+    <div class='menu_line'></div>
+  
+    <div style="width: 60%; margin: 0px auto ">
+        <form name="frm" id="frm" th:object="${analysisForm}" method="post" 
+                 action="/analysis/update_proc">
+            <!-- /templates/errors.html -->     
+            <div th:replace="~{errors :: errorsFragment}"></div>
+            
+            <input type="hidden" name="analysisno" id="analysisno" th:field="*{analysisno}">
+            <input type="hidden" name="page" id="analysisno" th:field="*{page}">            
+
+            <div>
+                <label for="title">분석 제목*</label>
+                <input type="text" name="title" id="title" value=""
+                       class="form-control form-control-sm" style="width: 50%;" th:field="*{title}">
+            </div>
+
+            <div>
+              <label for='content'>분석 내용(스토리 텔링)*</label>
+                <textarea name='content' required="required" class="form-control" rows="12" th:field="*{content}"
+                               style='width: 100%;'></textarea>
+             </div>
+    
+            <div>
+                <label for="chart">차트 종류*</label>
+                <input type="text" name="chart" id="chart" th:field="*{chart}" 
+                       class="form-control form-control-sm" style="width: 50%;">
+                <span>1: 열 챠트(변수1), 2: 열 챠트(시간), 3: 원 챠트, 4: 라인 챠트</span>       
+            </div>
+
+            <div>
+              <label for='data'>차트 데이터*</label>
+              <textarea name='data' required="required" class="form-control" rows="12" th:field="*{data}" 
+                             style='width: 100%;'></textarea>
+            </div>
+
+            <div>
+                <label for="xlabel">X축 레이블</label>
+                <input type="text" name="xlabel" id="xlabel" value=""
+                       class="form-control form-control-sm" style="width: 50%;" th:field="*{xlabel}">
+            </div>
+
+            <div>
+                <label for="ylabel">Y축 레이블</label>
+                <input type="text" name="ylabel" id="ylabel" value=""
+                       class="form-control form-control-sm" style="width: 50%;" th:field="*{ylabel}">
+            </div>
+
+            <div>
+                <label for="legend">범례 이름</label>
+                <input type="text" name="legend" id="legend" value=""
+                       class="form-control form-control-sm" style="width: 50%;" th:field="*{legend}">
+            </div>
+            
+            <div class="content_body_bottom">
+                <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+                <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</html>

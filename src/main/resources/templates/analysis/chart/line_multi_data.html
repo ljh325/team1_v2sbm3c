@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
+     <div class='title_line'>분석 결과 조회[다양한 컬럼의 라인 챠트 데이터]</div>
+      
+     <div id="chart_div" style='height: 500px;'></div>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     <script>
+      // Google Charts 라이브러리 로드
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Google Charts 라이브러리 로드가 완료되면 차트를 그리는 함수 호출
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        let chart_data = `[[${chart_data}]]`;
+        console.log('-> chart_data: ' + chart_data);
+        chart_data = chart_data.replace(/&#39;/g, "'");
+        console.log('-> chart_data: ' + chart_data);
+            
+        // chart_data = JSON.parse(chart_data); // ERROR
+        chart_data = eval(chart_data); // 문자열 -> 자바스크립트 코드로 변경
+        
+        var data = google.visualization.arrayToDataTable(chart_data);
+        
+        // 차트 옵션 설정
+        var options = {
+          title: '[[${title}]]',
+          curveType: 'function', // 부드러운 곡선
+          legend: { position: 'top', alignment: 'end' },
+          hAxis: {
+            title: '[[${xlabel}]]'
+          },
+          vAxis: {
+            title: '[[${ylabel}]]'
+          }
+        };
+
+        // 차트 그리기
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+     </script>
+  </div>
+  
+</html>

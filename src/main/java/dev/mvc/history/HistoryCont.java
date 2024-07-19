@@ -109,6 +109,21 @@ public class HistoryCont {
 //  }
 //
 //  }
+  
+  @GetMapping(value="/read")
+  public String read(HttpSession session, Model model) {
+    if (this.memberProc.isMember(session)) { // 로그인이 되어있으면 = 세션에 값이 있으면
+    int memberno = (int)session.getAttribute("memberno");
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    return "history/read";
+    }else {
+      return "member/login";
+    }
+  }
+  
+  
   /***************************************************************************************/
   /**
    * 운동 기록 메인 화면
