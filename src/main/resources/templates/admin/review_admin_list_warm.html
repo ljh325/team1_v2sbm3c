@@ -93,7 +93,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr th:each="list : ${list}">
+    <tr th:each="list : ${list}" th:onclick="|location.href='/admin/review_detail_reads?reviewno=${list.reviewno}'|">
       <td th:text="${list.id}" style="font-size: 12px;">Keyword Name</td>
       <td th:text="|${list.contents.substring(0, 20)}...|" style="font-size: 12px;">Keyword Name</td>
       <td th:attr="data-date=${list.rdate}" style="font-size: 12px;">Count</td>

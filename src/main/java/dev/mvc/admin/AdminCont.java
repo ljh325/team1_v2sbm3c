@@ -397,7 +397,7 @@ public class AdminCont {
         
       } else if(reviewVO.getTemperater() == 1) {
         
-        model.addAttribute("contents", highlightKeywords(contents, keywordlist));
+        model.addAttribute("contents", negativeKeywords(contents, keywordlist));
         
       }
       
